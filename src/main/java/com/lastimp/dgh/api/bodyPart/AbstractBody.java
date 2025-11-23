@@ -27,7 +27,6 @@ SOFTWARE.
 
 package com.lastimp.dgh.api.bodyPart;
 
-import com.lastimp.dgh.Config;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.core.HolderLookup;
@@ -103,22 +102,13 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         return this;
     }
 
+    public abstract float updateVitalityLost(PlayerHealthCapability health, Player player);
+
     public void updateDisplayValue(PlayerHealthCapability health) {
         for (BodyCondition condition : this.getBodyConditions()) {
             ConditionState state = this.getCondition(condition);
-            if (state.getTickCounter() > 20) continue;
-            float weight = this.easeOutQuart(state.getTickCounter());
-            float displayValue = state.getLastDisplayValue() * (1 - weight) + state.getValue() * weight;
-            state.setDisplayValue(displayValue);
-            state.setTickCounter(state.getTickCounter() + 1);
-            if (state.getTickCounter() > 20) {
-                state.setLastDisplayValue(state.getValue());
-            }
+            state.tick();
         }
-    }
-
-    protected float easeOutQuart(int tick) {
-        return ConditionState.EASE_OUT_QUART[tick];
     }
 
     protected boolean abnormalWithHidden(BodyCondition condition) {
