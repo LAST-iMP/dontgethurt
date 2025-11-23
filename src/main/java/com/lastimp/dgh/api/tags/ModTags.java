@@ -33,9 +33,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 public class ModTags {
-    public static final TagKey<Item> SHEARS = ItemTags.create(new ResourceLocation("c", "shears"));
-    public static final TagKey<Item> NUGGETS = ItemTags.create(new ResourceLocation("c", "nuggets"));
-    public static final TagKey<Item> STRING = ItemTags.create(new ResourceLocation("c", "string"));
-    public static final TagKey<Item> IRON_INGOT = ItemTags.create(new ResourceLocation("c", "iron_ingots"));
-    public static final TagKey<Item> IRON_NUGGET = ItemTags.create(new ResourceLocation("c", "iron_nuggets"));
+    public static final TagKey<Item> SHEARS = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "shears"));
+    public static final TagKey<Item> NUGGETS = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "nuggets"));
+    public static final TagKey<Item> STRING = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "string"));
+    public static final TagKey<Item> IRON_INGOT = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "iron_ingots"));
+    public static final TagKey<Item> IRON_NUGGET = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "iron_nuggets"));
 }

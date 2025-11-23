@@ -39,21 +39,21 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 
 import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
-@EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = DontGetHurt.MODID)
 public class InjuryHandler {
 
     @SubscribeEvent
-    public static void onPlayerInjury(LivingHurtEvent event) {
+    public static void onPlayerInjury(LivingDamageEvent.Pre event) {
         if (event.getEntity().level().isClientSide) return;
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
 
-        float damageAmount = event.getAmount();
+        float damageAmount = event.getNewDamage();
         DamageSource source = event.getSource();
 
         if (source.is(DamageTypeTags.IS_FALL)) {
@@ -73,7 +73,7 @@ public class InjuryHandler {
         }
     }
 
-    public static void handleFalling(float damageAmount, Player player, LivingHurtEvent event) {
+    public static void handleFalling(float damageAmount, Player player, LivingDamageEvent.Pre event) {
         PlayerHealthCapability.getAndSet(player, h -> {
             AbstractBody[] legs = h.legs();
             float[] weight = Utils.getRandom(1, 1);
@@ -82,10 +82,10 @@ public class InjuryHandler {
             }
             return h;
         });
-        event.setAmount(0f);
+        event.setNewDamage(0f);
     }
 
-    public static void handleBurning(float damageAmount, Player player, LivingHurtEvent event) {
+    public static void handleBurning(float damageAmount, Player player, LivingDamageEvent.Pre event) {
         PlayerHealthCapability.getAndSet(player, h -> {
             BodyComponents randomComponent = BodyComponents.random();
             AbstractBody body = h.getComponent(randomComponent);
@@ -93,19 +93,19 @@ public class InjuryHandler {
             body.injury(BURN, damageAmount / BURN.factor);
             return h;
         });
-        event.setAmount(0f);
+        event.setNewDamage(0f);
     }
 
-    public static void handleDrowning(float damageAmount, Player player, LivingHurtEvent event) {
+    public static void handleDrowning(float damageAmount, Player player, LivingDamageEvent.Pre event) {
         PlayerHealthCapability.getAndSet(player, h -> {
             AbstractBody torso = h.getComponent(BodyComponents.TORSO);
             torso.injury(INTERNAL_INJURY, damageAmount / INTERNAL_INJURY.factor);
             return h;
         });
-        event.setAmount(0f);
+        event.setNewDamage(0f);
     }
 
-    public static void handleExplosion(float damageAmount, Player player, LivingHurtEvent event) {
+    public static void handleExplosion(float damageAmount, Player player, LivingDamageEvent.Pre event) {
         PlayerHealthCapability.getAndSet(player, h -> {
             AbstractBody[] body = h.visibleParts();
             float[] weight = Utils.getRandom(1.5f,3,2,2,1.5f,1.5f);
@@ -115,10 +115,10 @@ public class InjuryHandler {
             }
             return h;
         });
-        event.setAmount(0f);
+        event.setNewDamage(0f);
     }
 
-    public static void handleEntityAttack(float damageAmount, Player player, LivingHurtEvent event) {
+    public static void handleEntityAttack(float damageAmount, Player player, LivingDamageEvent.Pre event) {
         PlayerHealthCapability.getAndSet(player, h -> {
             AbstractBody[] body = h.visibleParts();
             float[] weight = Utils.getRandom(1,2,2,2,0.5f,0.5f);
@@ -127,15 +127,15 @@ public class InjuryHandler {
             }
             return h;
         });
-        event.setAmount(0f);
+        event.setNewDamage(0f);
     }
 
-    public static void handleMagicDamage(float damageAmount, Player player, LivingHurtEvent event) {
+    public static void handleMagicDamage(float damageAmount, Player player, LivingDamageEvent.Pre event) {
         handleDefaultDamage(damageAmount / 2, player, event);
-        event.setAmount(damageAmount / 2);
+        event.setNewDamage(damageAmount / 2);
     }
 
-    public static void handleDefaultDamage(float damageAmount, Player player, LivingHurtEvent event) {
+    public static void handleDefaultDamage(float damageAmount, Player player, LivingDamageEvent.Pre event) {
         PlayerHealthCapability.getAndSet(player, h -> {
             AbstractBody[] body = h.visibleParts();
             float[] weight = Utils.getRandom(1,2,2,2,0.5f,0.5f);
@@ -144,6 +144,6 @@ public class InjuryHandler {
             }
             return h;
         });
-        event.setAmount(0f);
+        event.setNewDamage(0f);
     }
 }

@@ -41,7 +41,7 @@ import java.util.function.Supplier;
 public class ModCapabilities {
     public static final EntityCapability<PlayerHealthCapability, Void> PLAYER_HEALTH_HANDLER =
             EntityCapability.createVoid(
-                    new ResourceLocation(DontGetHurt.MODID, "player_health_handler"),
+                    ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "player_health_handler"),
                     PlayerHealthCapability.class
             );
 

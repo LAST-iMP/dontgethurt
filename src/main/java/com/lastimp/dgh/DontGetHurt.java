@@ -88,7 +88,7 @@ public class DontGetHurt
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
-    @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = DontGetHurt.MODID, value = Dist.CLIENT)
     static class ClientModEvents {
 
         @SubscribeEvent

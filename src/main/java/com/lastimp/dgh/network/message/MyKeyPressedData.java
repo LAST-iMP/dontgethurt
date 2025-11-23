@@ -37,7 +37,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 public record MyKeyPressedData (String key) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<MyKeyPressedData> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(DontGetHurt.MODID, "my_key_press_data"));
+    public static final CustomPacketPayload.Type<MyKeyPressedData> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "my_key_press_data"));
 
     public static final StreamCodec<ByteBuf, MyKeyPressedData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8,

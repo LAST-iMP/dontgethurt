@@ -41,7 +41,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.UUID;
 
 public record MyReadAllConditionData(long id_most, long id_least, CompoundTag tag, String oper) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<MyReadAllConditionData> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(DontGetHurt.MODID, "my_read_all_condition"));
+    public static final CustomPacketPayload.Type<MyReadAllConditionData> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "my_read_all_condition"));
 
     public static final StreamCodec<ByteBuf, MyReadAllConditionData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_LONG,

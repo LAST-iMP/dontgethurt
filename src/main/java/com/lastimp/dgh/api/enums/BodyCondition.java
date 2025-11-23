@@ -94,7 +94,7 @@ public enum BodyCondition {
         this.maxValue = maxValue;
         this.factor = factor;
         this.color = color;
-        this.texture = path == null ? null : new ResourceLocation(DontGetHurt.MODID, path);
+        this.texture = path == null ? null : ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, path);
     }
 
     public boolean abnormal(float value) {

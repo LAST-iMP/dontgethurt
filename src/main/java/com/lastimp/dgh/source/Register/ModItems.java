@@ -45,7 +45,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import static com.lastimp.dgh.DontGetHurt.MODID;
 
-@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = MODID)
 public class ModItems {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);

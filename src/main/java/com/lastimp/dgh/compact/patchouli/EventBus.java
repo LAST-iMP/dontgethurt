@@ -47,7 +47,7 @@ public class EventBus {
         var key = "dgh_has_book";
 
         if (!data.getBoolean(key)) {
-            ItemStack book = PatchouliAPI.get().getBookStack(new ResourceLocation(DontGetHurt.MODID, "medical_guide"));
+            ItemStack book = PatchouliAPI.get().getBookStack(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "medical_guide"));
             player.getInventory().add(book);
             data.putBoolean(key, true);
         }

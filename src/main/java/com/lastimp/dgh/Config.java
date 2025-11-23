@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@EventBusSubscriber(modid = DontGetHurt.MODID,bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = DontGetHurt.MODID)
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder()
             .comment("General settings")
@@ -91,7 +91,7 @@ public class Config {
     // 检验item名称是否合法
     private static boolean validateItemName(final Object obj)
     {
-        return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(new ResourceLocation(itemName));
+        return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(ResourceLocation.withDefaultNamespace(itemName));
     }
 
     // 构建配置

@@ -38,7 +38,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.UUID;
 
 public record MyHealingItemUseData (long id_most, long id_least, int slotNum, String component) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<MyHealingItemUseData> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(DontGetHurt.MODID, "my_healing_item_use_data"));
+    public static final CustomPacketPayload.Type<MyHealingItemUseData> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "my_healing_item_use_data"));
 
     public static final StreamCodec<ByteBuf, MyHealingItemUseData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_LONG,

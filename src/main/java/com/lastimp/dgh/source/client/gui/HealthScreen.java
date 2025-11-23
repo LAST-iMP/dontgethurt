@@ -53,7 +53,7 @@ import static com.lastimp.dgh.api.enums.OperationType.HEALTH_SCANN;
 import static com.lastimp.dgh.source.client.gui.HealthComponentWidget.*;
 
 public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
-    private static final ResourceLocation HUD_BACKGROUND = new ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
+    private static final ResourceLocation HUD_BACKGROUND = ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "textures/gui/health_hud.png");
 
     private static final int PANEL_WIDTH = 238;   // 面板宽度
     private static final int PANEL_HEIGHT = 214;  // 面板高度

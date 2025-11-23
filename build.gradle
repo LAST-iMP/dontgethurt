@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.116'
+    id 'net.neoforged.moddev' version '2.0.120'
     id 'idea'
 }
 
@@ -127,8 +127,8 @@ configurations {
 }
 
 dependencies {
-    compileOnly "vazkii.patchouli:Patchouli:${mc_version}-86.1-NEOFORGE:api"
-    localRuntime "vazkii.patchouli:Patchouli:${mc_version}-86.1-NEOFORGE"
+    compileOnly "vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api"
+    localRuntime "vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}"
 
     compileOnly "mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}"
     localRuntime "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"

@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 public class ModTagsProvider extends TagsProvider<Item> {
-    public static final ResourceKey<Item> SHEARS = ResourceKey.create(Registries.ITEM, new ResourceLocation("minecraft", "shears"));
+    public static final ResourceKey<Item> SHEARS = ResourceKey.create(Registries.ITEM, ResourceLocation.withDefaultNamespace("shears"));
 
     protected ModTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, Registries.ITEM, lookupProvider, modId, existingFileHelper);

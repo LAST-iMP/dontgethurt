@@ -39,7 +39,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 
-@EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = DontGetHurt.MODID)
 public class HealingUpdateHandler {
 
     @SubscribeEvent

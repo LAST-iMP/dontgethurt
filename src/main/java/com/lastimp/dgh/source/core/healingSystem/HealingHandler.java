@@ -45,7 +45,7 @@ import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
-@EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = DontGetHurt.MODID)
 public class HealingHandler {
     private static HealthScreen healthScreen = null;
 

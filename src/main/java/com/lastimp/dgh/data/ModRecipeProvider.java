@@ -58,11 +58,11 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('a', Items.IRON_NUGGET)
                 .define('b', Items.LEATHER)
                 .unlockedBy("has_leather", has(Items.LEATHER))
-                .save(recipeOutput, new ResourceLocation(DontGetHurt.MODID, "blood_pack_empty"));
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "blood_pack_empty"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.BLOOD_PACK_EMPTY)
                 .requires(ModItems.BLOOD_PACK.get(), 1)
                 .unlockedBy("has_blood_pack", has(ModItems.BLOOD_PACK))
-                .save(recipeOutput, new ResourceLocation(DontGetHurt.MODID, "blood_pack_empty_unfill"));
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "blood_pack_empty_unfill"));
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SUTURE.get(), 8)
                 .pattern("c a")
                 .pattern("ca ")
@@ -91,11 +91,11 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_bandage", has(ModItems.BANDAGE))
                 .save(recipeOutput);
 
-        var book = PatchouliAPI.get().getBookStack(new ResourceLocation(DontGetHurt.MODID, "medical_guide"));
+        var book = PatchouliAPI.get().getBookStack(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "medical_guide"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, book)
                 .requires(Items.BOOK, 1)
                 .requires(ModItems.BANDAGE, 1)
                 .unlockedBy("has_book", has(Items.BOOK))
-                .save(recipeOutput, new ResourceLocation(DontGetHurt.MODID, "medical_guide"));
+                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "medical_guide"));
     }
 }
