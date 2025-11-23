@@ -67,6 +67,11 @@ public class WholeBody extends AbstractBody {
     }
 
     @Override
+    public float getVitalityWeight() {
+        return 1;
+    }
+
+    @Override
     public AbstractBody update(PlayerHealthCapability health, Player player) {
         this.updateComponent(LEFT_ARM, health, player);
         this.updateComponent(RIGHT_ARM, health, player);

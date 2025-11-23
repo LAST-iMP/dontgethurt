@@ -68,6 +68,11 @@ public class PlayerBlood extends AbstractBody {
     }
 
     @Override
+    public float getVitalityWeight() {
+        return 1;
+    }
+
+    @Override
     public AbstractBody update(PlayerHealthCapability health, Player player) {
         this.handleBloodVolume(health);
         return this;
