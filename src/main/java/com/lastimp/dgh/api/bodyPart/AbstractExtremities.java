@@ -27,16 +27,41 @@ SOFTWARE.
 
 package com.lastimp.dgh.api.bodyPart;
 
+import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.List;
+
+import static com.lastimp.dgh.api.enums.BodyCondition.*;
+import static com.lastimp.dgh.api.enums.BodyCondition.ANALGESIA;
+import static com.lastimp.dgh.api.enums.BodyCondition.PLASTER_CAST;
+
 public abstract class AbstractExtremities extends AbstractVisibleBody {
+    private static List<BodyCondition> EXTREMITY_CONDITIONS;
+
     public AbstractExtremities() {
         super();
     }
 
     public AbstractExtremities(Void unused) {
         this();
+    }
+
+    @Override
+    public List<BodyCondition> getBodyConditions() {
+        if (EXTREMITY_CONDITIONS == null) {
+            EXTREMITY_CONDITIONS = super.getBodyConditions();
+            EXTREMITY_CONDITIONS.addAll(List.of(
+                    DISLOCATION,
+                    FRACTURE,
+                    INTENSE_PAIN,
+                    PLASTER_CAST,
+
+                    ANALGESIA
+            ));
+        }
+        return EXTREMITY_CONDITIONS;
     }
 
     @Override

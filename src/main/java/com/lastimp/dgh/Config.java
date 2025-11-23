@@ -44,19 +44,13 @@ import java.util.stream.Collectors;
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder()
             .comment("General settings")
-            .push("general");
+            .push("general_1.1.0");
 
     public static final ModConfigSpec.DoubleValue DIRTY_BANDAGE_RATIO = BUILDER
             .defineInRange("DIRTY_BANDAGE_RATIO",0.05,0,1);
 
-    public static final ModConfigSpec.DoubleValue BANDAGE_BURN_ACC = BUILDER
-            .defineInRange("BANDAGE_BURN_ACC",2.0,0,10);
-
-    public static final ModConfigSpec.DoubleValue BANDAGE_INTERNAL_ACC = BUILDER
-            .defineInRange("BANDAGE_INTERNAL_ACC",1.0,0,10);
-
-    public static final ModConfigSpec.DoubleValue BANDAGE_OPEN_WOUND_ACC = BUILDER
-            .defineInRange("BANDAGE_OPEN_WOUND_ACC",1.3,0,10);
+    public static final ModConfigSpec.DoubleValue BANDAGE_ACC = BUILDER
+            .defineInRange("BANDAGE_ACC",2.0,0,10);
 
     public static final ModConfigSpec.DoubleValue BURN_BLEED_RATIO = BUILDER
             .defineInRange("BURN_BLEED_RATIO",0.6,0,10);
@@ -73,17 +67,11 @@ public class Config {
     public static final ModConfigSpec.DoubleValue BLEED_VOLUME_RATIO = BUILDER
             .defineInRange("BLEED_VOLUME_RATIO",0.03,0, Float.MAX_VALUE);
 
-    public static final ModConfigSpec.IntValue BURN_SELF_HEALING_TIME = BUILDER
-            .defineInRange("BURN_SELF_HEALING_TIME",500,1, Integer.MAX_VALUE);
+    public static final ModConfigSpec.IntValue BASE_SELF_HEALING_TIME = BUILDER
+            .defineInRange("BASE_SELF_HEALING_TIME",500,1, Integer.MAX_VALUE);
 
-    public static final ModConfigSpec.IntValue INTERNAL_SELF_HEALING_TIME = BUILDER
-            .defineInRange("INTERNAL_SELF_HEALING_TIME",500,1, Integer.MAX_VALUE);
-
-    public static final ModConfigSpec.IntValue OPEN_WOUND_SELF_HEALING_TIME = BUILDER
-            .defineInRange("OPEN_WOUND_SELF_HEALING_TIME",500,1, Integer.MAX_VALUE);
-
-    public static final ModConfigSpec.IntValue BANDAGE_AVAILABLE_TIME = BUILDER
-            .defineInRange("BANDAGE_AVAILABLE_TIME",200,1, Integer.MAX_VALUE);
+    public static final ModConfigSpec.IntValue BASE_MED_AVAILABLE_TIME = BUILDER
+            .defineInRange("BASE_MED_AVAILABLE_TIME",100,1, Integer.MAX_VALUE);
 
     public static final ModConfigSpec.IntValue VOLUME_SELF_HEALING_TIME = BUILDER
             .defineInRange("VOLUME_SELF_HEALING_TIME",50,1, Integer.MAX_VALUE);
@@ -98,37 +86,29 @@ public class Config {
     public static final ModConfigSpec SPEC = BUILDER.pop().build();
 
     public static float dirty_bandage_ratio;
-    public static float bandage_burn_acc;
-    public static float bandage_internal_acc;
-    public static float bandage_open_wound_acc;
+    public static float bandage_acc;
     public static float burn_bleed_ratio;
     public static float internal_bleed_ratio;
     public static float open_wound_bleed_ratio;
     public static float internal_food_healing;
     public static float bleed_volume_ratio;
 
-    public static int burn_self_healing_time;
-    public static int internal_self_healing_time;
-    public static int open_wound_self_healing_time;
-    public static int bandage_available_time;
+    public static int base_self_healing_time;
+    public static int base_med_available_time;
     public static int volume_self_healing_time;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         dirty_bandage_ratio = (float) DIRTY_BANDAGE_RATIO.getAsDouble();
-        bandage_burn_acc = (float) BANDAGE_BURN_ACC.getAsDouble();
-        bandage_internal_acc = (float) BANDAGE_INTERNAL_ACC.getAsDouble();
-        bandage_open_wound_acc = (float) BANDAGE_OPEN_WOUND_ACC.getAsDouble();
+        bandage_acc = (float) BANDAGE_ACC.getAsDouble();
         burn_bleed_ratio = (float) BURN_BLEED_RATIO.getAsDouble();
         internal_bleed_ratio = (float) INTERNAL_BLEED_RATIO.getAsDouble();
         open_wound_bleed_ratio = (float) OPEN_WOUND_BLEED_RATIO.getAsDouble();
         internal_food_healing = (float) INTERNAL_FOOD_HEALING.getAsDouble();
         bleed_volume_ratio = (float) BLEED_VOLUME_RATIO.getAsDouble();
 
-        burn_self_healing_time = BURN_SELF_HEALING_TIME.getAsInt();
-        internal_self_healing_time = INTERNAL_SELF_HEALING_TIME.getAsInt();
-        open_wound_self_healing_time = OPEN_WOUND_SELF_HEALING_TIME.getAsInt();
-        bandage_available_time = BANDAGE_AVAILABLE_TIME.getAsInt();
+        base_self_healing_time = BASE_SELF_HEALING_TIME.getAsInt();
+        base_med_available_time = BASE_MED_AVAILABLE_TIME.getAsInt();
         volume_self_healing_time = VOLUME_SELF_HEALING_TIME.getAsInt();
     }
 
