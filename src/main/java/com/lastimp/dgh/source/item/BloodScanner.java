@@ -27,6 +27,7 @@ SOFTWARE.
 
 package com.lastimp.dgh.source.item;
 
+import com.lastimp.dgh.Config;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.api.enums.OperationType;
@@ -59,15 +60,18 @@ public class BloodScanner extends Item {
 
     public static List<BodyCondition> bloodScannerConditions() {
         if (BLOOD_SCANNER_CONDITIONS == null) {
-            BLOOD_SCANNER_CONDITIONS = List.of(new BodyCondition[]{
+            BLOOD_SCANNER_CONDITIONS = List.of(
                     BLOOD_VOLUME,
                     SEPSIS,
                     HEMOTRANSFUSION,
                     BLOOD_LOSS,
                     BLOOD_PRESSURE,
                     PH_LEVEL,
-                    IMMUNITY
-            });
+                    IMMUNITY,
+
+                    OPIATE_OVERDOSE,
+                    OPIATE_ADDICTED
+            );
         }
         return BLOOD_SCANNER_CONDITIONS;
     }

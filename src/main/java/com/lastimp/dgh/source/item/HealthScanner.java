@@ -52,7 +52,7 @@ public class HealthScanner extends Item {
 
     public static List<BodyCondition> healthScannerConditions() {
         if (HEALTH_SCANNER_CONDITIONS == null) {
-            HEALTH_SCANNER_CONDITIONS = List.of(new BodyCondition[]{
+            HEALTH_SCANNER_CONDITIONS = List.of(
                     BURN,
                     INTERNAL_INJURY,
                     OPEN_WOUND,
@@ -63,7 +63,16 @@ public class HealthScanner extends Item {
                     BANDAGED,
                     BANDAGED_DIRTY,
                     OINMENTED,
-            });
+
+                    DISLOCATION,
+                    FRACTURE,
+                    INTENSE_PAIN,
+                    PLASTER_CAST,
+
+                    ANALGESIA,
+
+                    WITHDRAW
+            );
         }
         return HEALTH_SCANNER_CONDITIONS;
     }
