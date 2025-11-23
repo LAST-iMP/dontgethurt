@@ -61,7 +61,7 @@ public class HealingUpdateHandler {
         PlayerHealthCapability health = PlayerHealthCapability.get(player);
         float maxHealth = player.getMaxHealth() * health.playerVitality();
 
-        if ((int)maxHealth < (int)player.getHealth())
+        if ((int)maxHealth != (int)player.getHealth())
             player.setHealth(maxHealth);
         if (maxHealth <= 0)
             player.setHealth(0);

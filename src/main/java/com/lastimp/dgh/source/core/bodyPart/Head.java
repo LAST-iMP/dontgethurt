@@ -33,6 +33,7 @@ import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.lastimp.dgh.api.enums.BodyCondition.*;
@@ -61,7 +62,7 @@ public class Head extends AbstractVisibleBody {
     @Override
     public List<BodyCondition> getBodyConditions() {
         if (HEAD_CONDITIONS == null) {
-            HEAD_CONDITIONS = super.getBodyConditions();
+            HEAD_CONDITIONS = new ArrayList<>(super.getBodyConditions());
             HEAD_CONDITIONS.addAll(List.of(
                     WITHDRAW
             ));

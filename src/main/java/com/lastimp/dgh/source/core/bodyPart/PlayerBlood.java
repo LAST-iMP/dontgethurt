@@ -34,6 +34,7 @@ import com.lastimp.dgh.api.enums.BodyCondition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
@@ -65,6 +66,11 @@ public class PlayerBlood extends AbstractBody {
             });
         }
         return BLOOD_CONDITIONS;
+    }
+
+    @Override
+    public float getVitalityWeight() {
+        return 1;
     }
 
     @Override
