@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_blood_pack": {
+      "conditions": {
+        "items": [
+          {
+            "items": "dgh:blood_pack"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "dgh:blood_pack_empty_unfill"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_blood_pack"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "dgh:blood_pack_empty_unfill"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_bandage": {
+      "conditions": {
+        "items": [
+          {
+            "items": "dgh:bandage"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "dgh:health_scanner"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_bandage"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "dgh:health_scanner"
+    ]
+  }
+}

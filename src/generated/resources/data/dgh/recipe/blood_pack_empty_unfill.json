@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "dgh:blood_pack"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:blood_pack_empty"
+  }
+}
