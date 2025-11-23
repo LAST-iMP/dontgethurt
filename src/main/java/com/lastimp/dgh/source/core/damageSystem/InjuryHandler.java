@@ -78,7 +78,7 @@ public class InjuryHandler {
             AbstractBody[] legs = h.legs();
             float[] weight = Utils.getRandom(1, 1);
             for (int i = 0; i < legs.length; i++) {
-                legs[i].injury(INTERNAL_INJURY, damageAmount * weight[i] / INTERNAL_INJURY.factor);
+                legs[i].injury(INTERNAL_INJURY, damageAmount * weight[i] / player.getMaxHealth());
             }
             return h;
         });
@@ -90,7 +90,7 @@ public class InjuryHandler {
             BodyComponents randomComponent = BodyComponents.random();
             AbstractBody body = h.getComponent(randomComponent);
 
-            body.injury(BURN, damageAmount / BURN.factor);
+            body.injury(BURN, damageAmount / player.getMaxHealth());
             return h;
         });
         event.setNewDamage(0f);
@@ -99,7 +99,7 @@ public class InjuryHandler {
     public static void handleDrowning(float damageAmount, Player player, LivingDamageEvent.Pre event) {
         PlayerHealthCapability.getAndSet(player, h -> {
             AbstractBody torso = h.getComponent(BodyComponents.TORSO);
-            torso.injury(INTERNAL_INJURY, damageAmount / INTERNAL_INJURY.factor);
+            torso.injury(INTERNAL_INJURY, damageAmount / player.getMaxHealth());
             return h;
         });
         event.setNewDamage(0f);
@@ -110,8 +110,8 @@ public class InjuryHandler {
             AbstractBody[] body = h.visibleParts();
             float[] weight = Utils.getRandom(1.5f,3,2,2,1.5f,1.5f);
             for (int i = 0; i < body.length; i++) {
-                body[i].injury(OPEN_WOUND,      0.5f * damageAmount * weight[i] / OPEN_WOUND.factor);
-                body[i].injury(INTERNAL_INJURY, 0.5f * damageAmount * weight[i] / INTERNAL_INJURY.factor);
+                body[i].injury(OPEN_WOUND,      0.5f * damageAmount * weight[i] / player.getMaxHealth());
+                body[i].injury(INTERNAL_INJURY, 0.5f * damageAmount * weight[i] / player.getMaxHealth());
             }
             return h;
         });
@@ -123,7 +123,7 @@ public class InjuryHandler {
             AbstractBody[] body = h.visibleParts();
             float[] weight = Utils.getRandom(1,2,2,2,0.5f,0.5f);
             for (int i = 0; i < body.length; i++) {
-                body[i].injury(OPEN_WOUND, damageAmount * weight[i] / OPEN_WOUND.factor);
+                body[i].injury(OPEN_WOUND, damageAmount * weight[i] / player.getMaxHealth());
             }
             return h;
         });
@@ -140,7 +140,7 @@ public class InjuryHandler {
             AbstractBody[] body = h.visibleParts();
             float[] weight = Utils.getRandom(1,2,2,2,0.5f,0.5f);
             for (int i = 0; i < body.length; i++) {
-                body[i].injury(INTERNAL_INJURY, damageAmount * weight[i] / INTERNAL_INJURY.factor);
+                body[i].injury(INTERNAL_INJURY, damageAmount * weight[i] / player.getMaxHealth());
             }
             return h;
         });
