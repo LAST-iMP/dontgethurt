@@ -46,4 +46,9 @@ public class Torso extends AbstractVisibleBody {
         return super.update(health, player);
     }
 
+    @Override
+    public float getVitalityWeight() {
+        return 1;
+    }
+
 }

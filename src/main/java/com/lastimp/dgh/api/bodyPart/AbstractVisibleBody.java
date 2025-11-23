@@ -123,9 +123,9 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         float delta = INTERNAL_INJURY.healingSpeed * DELTA;
         if (saturation > 0) {
             if (INTERNAL_INJURY.abnormal(this.getCondition(INTERNAL_INJURY).getHiddenValue()))
-                this.injuryHidden(INTERNAL_INJURY, -delta);
+                this.healingHidden(INTERNAL_INJURY, -delta);
             else
-                this.injury(INTERNAL_INJURY, -delta * Config.internal_food_healing);
+                this.healing(INTERNAL_INJURY, -delta * Config.internal_food_healing);
             player.causeFoodExhaustion(delta * Config.internal_food_healing * 2);
         }
     }
@@ -178,6 +178,6 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.getCondition(BLEED).setValue(this.nextTickBleed);
 
         PlayerBlood blood = (PlayerBlood) health.getComponent(BLOOD);
-        blood.injury(BLOOD_VOLUME, -this.nextTickBleed * DELTA * Config.bleed_volume_ratio);
+        blood.addConditionValue(BLOOD_VOLUME, -this.nextTickBleed * DELTA * Config.bleed_volume_ratio);
     }
 }
