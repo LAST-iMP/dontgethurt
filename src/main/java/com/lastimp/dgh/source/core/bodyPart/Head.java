@@ -54,6 +54,11 @@ public class Head extends AbstractVisibleBody {
     }
 
     @Override
+    public float getVitalityWeight() {
+        return 2f;
+    }
+
+    @Override
     public List<BodyCondition> getBodyConditions() {
         if (HEAD_CONDITIONS == null) {
             HEAD_CONDITIONS = super.getBodyConditions();

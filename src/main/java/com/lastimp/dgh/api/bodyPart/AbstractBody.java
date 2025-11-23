@@ -54,6 +54,8 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     public abstract List<BodyCondition> getBodyConditions();
 
+    public abstract float getVitalityWeight();
+
     public float getConditionValue(BodyCondition key) {
         return this.getCondition(key).getValue();
     }

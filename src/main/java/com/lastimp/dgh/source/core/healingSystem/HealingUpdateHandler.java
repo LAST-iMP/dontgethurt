@@ -51,11 +51,11 @@ public class HealingUpdateHandler {
             return h;
         });
 
-        float maxHealth = player.getMaxHealth() * health.getComponent(BLOOD).getConditionValue(BodyCondition.BLOOD_VOLUME);
+        float maxHealth = player.getMaxHealth() * health.playerVitality();
 
         if ((int)maxHealth < (int)player.getHealth())
             player.setHealth(maxHealth);
         if (maxHealth <= 0)
-            player.kill();
+            player.setHealth(0);
     }
 }

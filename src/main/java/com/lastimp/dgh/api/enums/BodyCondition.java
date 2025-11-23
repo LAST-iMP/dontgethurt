@@ -44,7 +44,7 @@ public enum BodyCondition {
     INFECTION       ("感染", 0.0f, 0.0f),
     FOREIGN_OBJECT  ("体内异物", 0.0f, 0.0f),
 
-    BANDAGED        ("绷带包扎", 1.0f / Config.base_med_available_time, 1.0f, 0xFF00FF00, BodyCondition.pathRoot+"bandage.png"),
+    BANDAGED        ("绷带包扎", 1.0f / Config.base_med_available_time / 2, 0.75f, 0xFF00FF00, BodyCondition.pathRoot+"bandage.png"),
     BANDAGED_DIRTY  ("脏绷带", 0.0f, 1.0f, BodyCondition.pathRoot+"bandage_dirty.png"),
     OINMENTED       ("药膏涂抹", 0.0f, 0.0f),
     //四肢
@@ -57,7 +57,7 @@ public enum BodyCondition {
     //头脑
     WITHDRAW        ("戒断", 1.0f/ Config.base_med_available_time, 1.0f, BodyCondition.pathRoot+"withdraw.png"),
     //血液
-    BLOOD_VOLUME    ("血容量", 1.0f / Config.volume_self_healing_time, 0.0f, 1.0f, 0.0f, 2.0f, 20.0f, null),
+    BLOOD_VOLUME    ("血容量", 1.0f / Config.volume_self_healing_time, 0.0f, 1.0f, 0.0f, 2.0f, null),
     SEPSIS          ("败血症", 0.0f, 0.0f),
     HEMOTRANSFUSION ("输血性休克", 0.0f, 0.0f),
     BLOOD_LOSS      ("失血", 0.0f, 0.0f),
@@ -73,7 +73,6 @@ public enum BodyCondition {
     public final float defaultValue;
     public final float minValue;
     public final float maxValue;
-    public final float factor;
 
     public final float healingSpeed;
     public final float healingTS;
@@ -86,25 +85,24 @@ public enum BodyCondition {
     }
 
     BodyCondition(String translation, float healingSpeed, float healingTS, String path) {
-        this(translation, healingSpeed, healingTS, 0.0f, 0.0f, 1.0f, 10.0f, path);
+        this(translation, healingSpeed, healingTS, 0.0f, 0.0f, 1.0f, path);
     }
 
     BodyCondition(String translation, float healingSpeed, float healingTS, int color, String path) {
-        this(translation, healingSpeed, healingTS, 0.0f, 0.0f, 1.0f, 10.0f, color, path);
+        this(translation, healingSpeed, healingTS, 0.0f, 0.0f, 1.0f, color, path);
     }
 
-    BodyCondition(String translation, float healingSpeed, float healingTS, float defaultValue, float minValue, float maxValue, float factor, String path) {
-        this(translation, healingSpeed, healingTS, defaultValue, minValue, maxValue, factor, 0xFFFF0000, path);
+    BodyCondition(String translation, float healingSpeed, float healingTS, float defaultValue, float minValue, float maxValue, String path) {
+        this(translation, healingSpeed, healingTS, defaultValue, minValue, maxValue, 0xFFFF0000, path);
     }
 
-    BodyCondition(String translation, float healingSpeed, float healingTS, float defaultValue, float minValue, float maxValue, float factor, int color, String path) {
+    BodyCondition(String translation, float healingSpeed, float healingTS, float defaultValue, float minValue, float maxValue, int color, String path) {
         this.translation = translation;
         this.healingSpeed = healingSpeed;
         this.healingTS = healingTS;
         this.defaultValue = defaultValue;
         this.minValue = minValue;
         this.maxValue = maxValue;
-        this.factor = factor;
         this.color = color;
         this.texture = path == null ? null : ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, path);
     }
