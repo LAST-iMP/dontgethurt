@@ -35,29 +35,40 @@ import net.minecraft.resources.ResourceLocation;
 import static com.lastimp.dgh.DontGetHurt.EPS;
 
 public enum BodyCondition {
-    //any body conditions
-    BURN            ("烧伤", 1.0f / Config.burn_self_healing_time, 0.2f, BodyCondition.parentPath+"burn.png"),
-    INTERNAL_INJURY ("内伤", 1.0f / Config.internal_self_healing_time, 1.0f, BodyCondition.parentPath+"internal_injury.png"),
-    OPEN_WOUND      ("开放伤", 1.0f / Config.open_wound_self_healing_time, 0.5f, BodyCondition.parentPath+"open_wound.png"),
-    BLEED           ("出血", 0.0f, 0.0f, BodyCondition.parentPath+"bleeding.png"),
+
+    //肢体
+    BURN            ("烧伤", 1.0f / Config.base_self_healing_time, 0.2f, BodyCondition.pathRoot+"burn.png"),
+    INTERNAL_INJURY ("内伤", 1.0f / Config.base_self_healing_time, 1.0f, BodyCondition.pathRoot+"internal_injury.png"),
+    OPEN_WOUND      ("开放伤", 1.0f / Config.base_self_healing_time, 0.5f, BodyCondition.pathRoot+"open_wound.png"),
+    BLEED           ("出血", 0.0f, 0.0f, BodyCondition.pathRoot+"bleeding.png"),
     INFECTION       ("感染", 0.0f, 0.0f),
     FOREIGN_OBJECT  ("体内异物", 0.0f, 0.0f),
 
-    BANDAGED        ("绷带包扎", 1.0f / Config.bandage_available_time, 1.0f, 0xFF7DFF49, BodyCondition.parentPath+"bandage.png"),
-    BANDAGED_DIRTY  ("脏绷带", 0.0f, 1.0f, BodyCondition.parentPath+"bandage_dirty.png"),
+    BANDAGED        ("绷带包扎", 1.0f / Config.base_med_available_time, 1.0f, 0xFF00FF00, BodyCondition.pathRoot+"bandage.png"),
+    BANDAGED_DIRTY  ("脏绷带", 0.0f, 1.0f, BodyCondition.pathRoot+"bandage_dirty.png"),
     OINMENTED       ("药膏涂抹", 0.0f, 0.0f),
-
-    // blood conditions
+    //四肢
+    DISLOCATION     ("脱臼", 0.0f, 1.0f, 0xFFFFFF00, BodyCondition.pathRoot+"dislocation.png"),
+    FRACTURE        ("骨折", 0.0f, 1.0f, BodyCondition.pathRoot+"fracture.png"),
+    INTENSE_PAIN    ("剧痛", 0.0f, 1.0f, 0xFFFFFF00, BodyCondition.pathRoot+"intense_pain.png"),
+    PLASTER_CAST    ("石膏固定", 0.0f, 1.0f, 0xFF00FF00, BodyCondition.pathRoot+"plaster_cast.png"),
+    //躯干
+    ANALGESIA       ("镇痛", 1.0f/ Config.base_med_available_time, 1.0f, 0xFF00FF00, BodyCondition.pathRoot+"analgesia.png"),
+    //头脑
+    WITHDRAW        ("戒断", 1.0f/ Config.base_med_available_time, 1.0f, BodyCondition.pathRoot+"withdraw.png"),
+    //血液
     BLOOD_VOLUME    ("血容量", 1.0f / Config.volume_self_healing_time, 0.0f, 1.0f, 0.0f, 2.0f, 20.0f, null),
     SEPSIS          ("败血症", 0.0f, 0.0f),
     HEMOTRANSFUSION ("输血性休克", 0.0f, 0.0f),
     BLOOD_LOSS      ("失血", 0.0f, 0.0f),
     BLOOD_PRESSURE  ("血压", 0.0f, 0.0f),
     PH_LEVEL        ("酸碱性", 0.0f, 0.0f),
-    IMMUNITY        ("免疫力", 0.0f, 0.0f)
+    IMMUNITY        ("免疫力", 0.0f, 0.0f),
+    OPIATE_OVERDOSE ("阿片中毒", 1.0f / Config.base_self_healing_time, 1.0f),
+    OPIATE_ADDICTED ("阿片成瘾", 1.0f / (Config.base_self_healing_time * 5), 1.0f)
     ;
 
-    private static final String parentPath = "textures/gui/sprites/container/condition_icons/";
+    private static final String pathRoot = "textures/gui/sprites/container/condition_icons/";
     public final String translation;
     public final float defaultValue;
     public final float minValue;
@@ -83,7 +94,7 @@ public enum BodyCondition {
     }
 
     BodyCondition(String translation, float healingSpeed, float healingTS, float defaultValue, float minValue, float maxValue, float factor, String path) {
-        this(translation, healingSpeed, healingTS, defaultValue, minValue, maxValue, factor, 0xFFFF7471, path);
+        this(translation, healingSpeed, healingTS, defaultValue, minValue, maxValue, factor, 0xFFFF0000, path);
     }
 
     BodyCondition(String translation, float healingSpeed, float healingTS, float defaultValue, float minValue, float maxValue, float factor, int color, String path) {

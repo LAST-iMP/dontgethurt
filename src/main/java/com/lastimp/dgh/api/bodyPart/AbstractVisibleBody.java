@@ -101,7 +101,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void handleBurning(PlayerHealthCapability health) {
         if (!this.abnormalWithHidden(BURN)) return;
-        this.handleCover(BURN, Config.bandage_burn_acc);
+        this.handleCover(BURN, Config.bandage_acc);
 
         if (isBandaged()) return;
         this.nextTickBleed += this.getCondition(BURN).getValue() * Config.burn_bleed_ratio;
@@ -109,7 +109,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void handleInternalInjury(PlayerHealthCapability health, Player player) {
         if (!this.abnormalWithHidden(INTERNAL_INJURY)) return;
-        this.handleCover(INTERNAL_INJURY, Config.bandage_internal_acc);
+        this.handleCover(INTERNAL_INJURY, 1.0f);
 
         this.nextTickBleed += this.getCondition(INTERNAL_INJURY).getValue() * Config.internal_bleed_ratio;
 
@@ -126,7 +126,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void handleOpenWound(PlayerHealthCapability health) {
         if (!this.abnormalWithHidden(OPEN_WOUND)) return;
-        this.handleCover(OPEN_WOUND, Config.bandage_open_wound_acc);
+        this.handleCover(OPEN_WOUND, Config.bandage_acc);
 
         if (isBandaged()) return;
         this.nextTickBleed += this.getCondition(OPEN_WOUND).getValue() * Config.open_wound_bleed_ratio;
