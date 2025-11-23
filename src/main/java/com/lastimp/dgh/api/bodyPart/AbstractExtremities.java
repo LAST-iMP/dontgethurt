@@ -47,6 +47,11 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
     }
 
     @Override
+    public float getVitalityWeight() {
+        return 0.5f;
+    }
+
+    @Override
     public List<BodyCondition> getBodyConditions() {
         if (EXTREMITY_CONDITIONS == null) {
             EXTREMITY_CONDITIONS = super.getBodyConditions();

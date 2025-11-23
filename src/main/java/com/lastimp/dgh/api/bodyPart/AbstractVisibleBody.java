@@ -83,8 +83,12 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void handleBandaged(PlayerHealthCapability health) {
         if (isBandaged()) {
-            ConditionState state = this.getCondition(BANDAGED);
-            state.setValue(state.getValue() - BANDAGED.healingSpeed * DELTA);
+            ConditionState bandage = this.getCondition(BANDAGED);
+            ConditionState burn = this.getCondition(BURN);
+            bandage.setValue(bandage.getValue() - BANDAGED.healingSpeed * DELTA);
+            if (BURN.abnormal(burn.getValue())) {
+                bandage.setValue(bandage.getValue() - BANDAGED.healingSpeed * DELTA);
+            }
             if (!isBandaged()) {
                 this.getCondition(BANDAGED_DIRTY).setValue(BANDAGED_DIRTY.maxValue);
             }
@@ -101,7 +105,9 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void handleBurning(PlayerHealthCapability health) {
         if (!this.abnormalWithHidden(BURN)) return;
-        this.handleCover(BURN, Config.bandage_acc);
+        this.handleBandageAcc(BURN, Config.bandage_acc);
+        this.handleCover(BURN);
+        this.handleSelfHealing(BURN, true);
 
         if (isBandaged()) return;
         this.nextTickBleed += this.getCondition(BURN).getValue() * Config.burn_bleed_ratio;
@@ -109,7 +115,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void handleInternalInjury(PlayerHealthCapability health, Player player) {
         if (!this.abnormalWithHidden(INTERNAL_INJURY)) return;
-        this.handleCover(INTERNAL_INJURY, 1.0f);
+        this.handleSelfHealing(INTERNAL_INJURY, false);
 
         this.nextTickBleed += this.getCondition(INTERNAL_INJURY).getValue() * Config.internal_bleed_ratio;
 
@@ -126,26 +132,37 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void handleOpenWound(PlayerHealthCapability health) {
         if (!this.abnormalWithHidden(OPEN_WOUND)) return;
-        this.handleCover(OPEN_WOUND, Config.bandage_acc);
+        this.handleBandageAcc(OPEN_WOUND, Config.bandage_acc);
+        this.handleCover(OPEN_WOUND);
+        this.handleSelfHealing(OPEN_WOUND, true);
 
         if (isBandaged()) return;
         this.nextTickBleed += this.getCondition(OPEN_WOUND).getValue() * Config.open_wound_bleed_ratio;
     }
 
-    private void handleCover(BodyCondition condition, float acc) {
+    private void handleBandageAcc(BodyCondition condition, float acc) {
         ConditionState state = this.getCondition(condition);
 
-        if (isBandaged() || isBadBandaged()) {
+        if (isBandaged()) {
             state.setHiddenValue(
                     Mth.clamp(state.getHiddenValue() - condition.healingSpeed * DELTA * (isBadBandaged() ? 1.0f : acc),
-                    condition.minValue, condition.maxValue)
+                            condition.minValue, condition.maxValue)
             );
-        } else {
+        }
+    }
+
+    private void handleCover(BodyCondition condition) {
+        ConditionState state = this.getCondition(condition);
+        if (!isBandaged() && !isBadBandaged()) {
             state.setValue(condition.abnormal(state.getHiddenValue())? state.getHiddenValue() : state.getValue());
             state.setHiddenValue(condition.defaultValue);
-            if (state.getValue() < condition.healingTS + EPS) {
-                state.setValue(state.getValue() - condition.healingSpeed * DELTA);
-            }
+        }
+    }
+
+    private void handleSelfHealing(BodyCondition condition, boolean hidden) {
+        ConditionState state = this.getCondition(condition);
+        if (state.getValue() + (hidden ? state.getHiddenValue() : 0) < condition.healingTS + EPS) {
+            state.setValue(state.getValue() - condition.healingSpeed * DELTA);
         }
     }
 

@@ -35,6 +35,7 @@ import com.lastimp.dgh.source.core.bodyPart.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
@@ -45,6 +46,7 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     private final WholeBody body = new WholeBody();
     protected ServerPlayer player;
+    private float playerVitality = 1.0f;
 
     public static PlayerHealthCapability get(Player player) {
         return player.getData(ModCapabilities.PLAYER_HEALTH);
@@ -104,5 +106,13 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         if (nbt == null) return;
         this.body.deserializeNBT(provider, nbt);
+    }
+
+    public float playerVitality() {
+        return playerVitality;
+    }
+
+    public void setPlayerVitality(float playerVitality) {
+        this.playerVitality = Mth.clamp(playerVitality, 0.0f, 1.0f);
     }
 }

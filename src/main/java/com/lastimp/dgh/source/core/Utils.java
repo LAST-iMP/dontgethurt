@@ -44,4 +44,9 @@ public abstract class Utils {
         }
         return weight;
     }
+
+    public static boolean randomCheck(float value, float k, float middle, float p_max) {
+        var check = Mth.randomBetween(randomSource, 0.0f, 1.0f);
+        return check > (1.0f / (1 + Math.exp(-k * (value - middle))) * p_max);
+    }
 }
