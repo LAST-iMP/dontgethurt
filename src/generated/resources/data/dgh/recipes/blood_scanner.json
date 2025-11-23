@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:iron_ingot"
+    },
+    "b": {
+      "item": "minecraft:redstone"
+    },
+    "c": {
+      "item": "dgh:blood_pack_empty"
+    }
+  },
+  "pattern": [
+    " a ",
+    "bcb",
+    "aaa"
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:blood_scanner"
+  }
+}
