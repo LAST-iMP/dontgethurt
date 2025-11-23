@@ -61,7 +61,10 @@ public class PlayerBlood extends AbstractBody {
                     BLOOD_LOSS,
                     BLOOD_PRESSURE,
                     PH_LEVEL,
-                    IMMUNITY
+                    IMMUNITY,
+
+                    OPIATE_OVERDOSE,
+                    OPIATE_ADDICTED
             });
         }
         return BLOOD_CONDITIONS;

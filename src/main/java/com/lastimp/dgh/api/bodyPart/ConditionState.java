@@ -79,10 +79,6 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
         return displayValue;
     }
 
-    public void setDisplayValue(float displayValue) {
-        this.displayValue = displayValue;
-    }
-
     public float getHiddenValue() {
         return hiddenValue;
     }
@@ -99,14 +95,6 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
         isInjury = injury;
     }
 
-    public float getLastDisplayValue() {
-        return lastDisplayValue;
-    }
-
-    public void setLastDisplayValue(float lastDisplayValue) {
-        this.lastDisplayValue = lastDisplayValue;
-    }
-
     public int getStateLevel() {
         return stateLevel;
     }
@@ -115,12 +103,19 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
         this.stateLevel = stateLevel;
     }
 
-    public int getTickCounter() {
-        return tickCounter;
-    }
+    public void tick() {
+        if (this.tickCounter >= 20) {
+            this.displayValue = this.value;
+            return;
+        }
 
-    public void setTickCounter(int tickCounter) {
-        this.tickCounter = tickCounter;
+        this.tickCounter++;
+        float weight = ConditionState.EASE_OUT_QUART[this.tickCounter];
+        this.displayValue = this.lastDisplayValue * (1 - weight) + this.value * weight;
+        if (this.tickCounter >= 20) {
+            this.displayValue = this.value;
+            this.lastDisplayValue = this.displayValue;
+        }
     }
 
     public float getValue() {
@@ -128,7 +123,7 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
     }
 
     public void setValue(float value) {
-        this.lastDisplayValue = this.value;
+        this.lastDisplayValue = this.displayValue;
         this.value = value;
         this.tickCounter = 0;
     }
