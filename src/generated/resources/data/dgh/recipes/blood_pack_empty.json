@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:iron_nugget"
+    },
+    "b": {
+      "item": "minecraft:leather"
+    }
+  },
+  "pattern": [
+    " a ",
+    "b b",
+    " b "
+  ],
+  "result": {
+    "item": "dgh:blood_pack_empty"
+  },
+  "show_notification": true
+}

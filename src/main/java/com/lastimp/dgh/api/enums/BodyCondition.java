@@ -36,15 +36,15 @@ import static com.lastimp.dgh.DontGetHurt.EPS;
 
 public enum BodyCondition {
     //any body conditions
-    BURN            ("烧伤", 1.0f / Config.burn_self_healing_time, 0.2f, "container/condition_icons/burn"),
-    INTERNAL_INJURY ("内伤", 1.0f / Config.internal_self_healing_time, 1.0f, "container/condition_icons/internal_injury"),
-    OPEN_WOUND      ("开放伤", 1.0f / Config.open_wound_self_healing_time, 0.5f, "container/condition_icons/open_wound"),
-    BLEED           ("出血", 0.0f, 0.0f, "container/condition_icons/bleeding"),
+    BURN            ("烧伤", 1.0f / Config.burn_self_healing_time, 0.2f, BodyCondition.parentPath+"burn.png"),
+    INTERNAL_INJURY ("内伤", 1.0f / Config.internal_self_healing_time, 1.0f, BodyCondition.parentPath+"internal_injury.png"),
+    OPEN_WOUND      ("开放伤", 1.0f / Config.open_wound_self_healing_time, 0.5f, BodyCondition.parentPath+"open_wound.png"),
+    BLEED           ("出血", 0.0f, 0.0f, BodyCondition.parentPath+"bleeding.png"),
     INFECTION       ("感染", 0.0f, 0.0f),
     FOREIGN_OBJECT  ("体内异物", 0.0f, 0.0f),
 
-    BANDAGED        ("绷带包扎", 1.0f / Config.bandage_available_time, 1.0f, 0xFF7DFF49, "container/condition_icons/bandage"),
-    BANDAGED_DIRTY  ("脏绷带", 0.0f, 1.0f, "container/condition_icons/bandage_dirty"),
+    BANDAGED        ("绷带包扎", 1.0f / Config.bandage_available_time, 1.0f, 0xFF7DFF49, BodyCondition.parentPath+"bandage.png"),
+    BANDAGED_DIRTY  ("脏绷带", 0.0f, 1.0f, BodyCondition.parentPath+"bandage_dirty.png"),
     OINMENTED       ("药膏涂抹", 0.0f, 0.0f),
 
     // blood conditions
@@ -57,6 +57,7 @@ public enum BodyCondition {
     IMMUNITY        ("免疫力", 0.0f, 0.0f)
     ;
 
+    private static final String parentPath = "textures/gui/sprites/container/condition_icons/";
     public final String translation;
     public final float defaultValue;
     public final float minValue;
@@ -70,7 +71,7 @@ public enum BodyCondition {
     public final int color;
 
     BodyCondition(String translation, float healingSpeed, float healingTS) {
-        this(translation, healingSpeed, healingTS,"container/condition_icons/burn");
+        this(translation, healingSpeed, healingTS,null);
     }
 
     BodyCondition(String translation, float healingSpeed, float healingTS, String path) {

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:iron_nugget"
+    },
+    "b": {
+      "item": "minecraft:iron_ingot"
+    },
+    "c": {
+      "item": "minecraft:string"
+    }
+  },
+  "pattern": [
+    "c a",
+    "ca ",
+    "bcc"
+  ],
+  "result": {
+    "count": 8,
+    "item": "dgh:suture"
+  },
+  "show_notification": true
+}

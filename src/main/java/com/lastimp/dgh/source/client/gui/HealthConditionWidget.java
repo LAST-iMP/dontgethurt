@@ -68,8 +68,24 @@ public class HealthConditionWidget extends AbstractWidget {
         guiGraphics.fill(this.getX() + 1, this.getY() + 1, Mth.clamp(this.getX() + filled, this.getX() + 1, this.getX() + this.width - 1), this.getY() + this.height - 1, fgColor);
 
         // draw icon from texture (if you want to use atlas, supply proper tex size)
-        guiGraphics.blit(texture, this.getX() + 2, this.getY() + 2, 0, 0, 0, iconSize, iconSize, 32, 32);
 
+        guiGraphics.pose().pushPose();
+        float scale = (float) iconSize / 64f;
+        guiGraphics.pose().scale(scale, scale, 1f);
+
+        int drawX = (int) ((this.getX() + 2) / scale);
+        int drawY = (int) ((this.getY() + 2) / scale);
+
+        guiGraphics.blit(
+                texture,
+                drawX, drawY,
+                0,      // blitOffset
+                0f, 0f, // uOffset, vOffset
+                64, 64, // regionWidth, regionHeight = 整个纹理
+                64, 64  // textureWidth, textureHeight
+        );
+
+        guiGraphics.pose().popPose();
 
         int stringColor = 0xFF000000;
         Minecraft mc = GuiOpenWrapper.MINECRAFT.get();

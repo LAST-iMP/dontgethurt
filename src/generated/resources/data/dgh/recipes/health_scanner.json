@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:iron_ingot"
+    },
+    "b": {
+      "item": "minecraft:redstone"
+    },
+    "c": {
+      "item": "dgh:bandage"
+    }
+  },
+  "pattern": [
+    " a ",
+    "bcb",
+    "aaa"
+  ],
+  "result": {
+    "item": "dgh:health_scanner"
+  },
+  "show_notification": true
+}
