@@ -49,8 +49,8 @@ public enum BodyCondition {
     OINMENTED       ("药膏涂抹", 0.0f, 0.0f),
     //四肢
     DISLOCATION     ("脱臼", 0.0f, 1.0f, 0xFFFFFF00, BodyCondition.pathRoot+"dislocation.png"),
-    FRACTURE        ("骨折", 0.0f, 1.0f, BodyCondition.pathRoot+"fracture.png"),
-    INTENSE_PAIN    ("剧痛", 0.0f, 1.0f, 0xFFFFFF00, BodyCondition.pathRoot+"intense_pain.png"),
+    FRACTURE        ("骨折", 1.0f / Config.base_self_healing_time * 10, 0.0f, BodyCondition.pathRoot+"fracture.png"),
+    INTENSE_PAIN    ("剧痛", 0.2f, 1.0f, 0xFFFFFF00, BodyCondition.pathRoot+"intense_pain.png"),
     PLASTER_CAST    ("石膏固定", 0.0f, 1.0f, 0xFF00FF00, BodyCondition.pathRoot+"plaster_cast.png"),
     //躯干
     ANALGESIA       ("镇痛", 1.0f/ Config.base_med_available_time, 1.0f, 0xFF00FF00, BodyCondition.pathRoot+"analgesia.png"),
@@ -64,7 +64,7 @@ public enum BodyCondition {
     PH_LEVEL        ("酸碱性", 0.0f, 0.0f),
     IMMUNITY        ("免疫力", 0.0f, 0.0f),
     OPIATE_OVERDOSE ("阿片中毒", 1.0f / Config.base_self_healing_time, 1.0f),
-    OPIATE_ADDICTED ("阿片成瘾", 1.0f / (Config.base_self_healing_time * 5), 1.0f)
+    OPIATE_ADDICTED ("阿片成瘾", 1.0f / Config.base_self_healing_time / 5, 1.0f)
     ;
 
     private static final String pathRoot = "textures/gui/sprites/container/condition_icons/";

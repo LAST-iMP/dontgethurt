@@ -29,10 +29,18 @@ package com.lastimp.dgh.source.core.bodyPart;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.lastimp.dgh.DontGetHurt.DELTA;
+import static com.lastimp.dgh.api.enums.BodyCondition.ANALGESIA;
+
 public class Torso extends AbstractVisibleBody {
+    private static List<BodyCondition> TORSO_CONDITIONS;
     public Torso() {
         super();
     }
@@ -42,8 +50,14 @@ public class Torso extends AbstractVisibleBody {
     }
 
     @Override
-    public AbstractBody update(PlayerHealthCapability health, Player player) {
-        return super.update(health, player);
+    public List<BodyCondition> getBodyConditions() {
+        if (TORSO_CONDITIONS == null) {
+            TORSO_CONDITIONS = new ArrayList<>(super.getBodyConditions());
+            TORSO_CONDITIONS.addAll(List.of(
+                    ANALGESIA
+            ));
+        }
+        return TORSO_CONDITIONS;
     }
 
     @Override
@@ -51,4 +65,16 @@ public class Torso extends AbstractVisibleBody {
         return 1;
     }
 
+    @Override
+    public AbstractBody update(PlayerHealthCapability health, Player player) {
+        super.update(health, player);
+        this.handleAnalgesia(health, player);
+        return this;
+    }
+
+    private void handleAnalgesia(PlayerHealthCapability health, Player player) {
+        if (!ANALGESIA.abnormal(this.getConditionValue(ANALGESIA))) return;
+
+        this.healing(ANALGESIA, -ANALGESIA.healingSpeed * DELTA);
+    }
 }

@@ -115,6 +115,13 @@ public class ModItems {
             )
     );
 
+    public static final DeferredItem<Gypsum> PLASTER = ITEMS.registerItem(
+            "gypsum",
+            Gypsum::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
     public static final RegistryObject<Sutures> SUTURE = ITEMS.register(
             "suture",
             () -> new Sutures(
