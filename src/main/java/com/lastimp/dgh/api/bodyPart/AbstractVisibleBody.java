@@ -91,6 +91,10 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         return lost;
     }
 
+    public int slowDownLevel() {
+        return (this.isBandaged() || isBadBandaged()) ? 1 : 0;
+    }
+
     private void handleBandaged(PlayerHealthCapability health) {
         if (isBandaged()) {
             ConditionState bandage = this.getCondition(BANDAGED);
