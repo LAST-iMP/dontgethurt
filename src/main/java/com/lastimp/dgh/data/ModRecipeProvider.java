@@ -90,6 +90,14 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('c', ModItems.BANDAGE)
                 .unlockedBy("has_bandage", has(ModItems.BANDAGE))
                 .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.GYPSUM.get(), 1)
+                .pattern(" a ")
+                .pattern("aba")
+                .pattern(" a ")
+                .define('a', Items.CLAY_BALL)
+                .define('b', Items.BONE_MEAL)
+                .unlockedBy("has_clay", has(Items.CLAY_BALL))
+                .save(recipeOutput);
 
         var book = PatchouliAPI.get().getBookStack(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "medical_guide"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, book)
