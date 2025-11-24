@@ -176,12 +176,12 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
     }
 
-    private boolean isBandaged() {
-        return this.getConditionValue(BANDAGED) > BANDAGED.defaultValue + EPS;
+    public boolean isBandaged() {
+        return BANDAGED.abnormal(this.getConditionValue(BANDAGED));
     }
 
-    private boolean isBadBandaged() {
-        return this.getConditionValue(BANDAGED_DIRTY) > BANDAGED.defaultValue + EPS;
+    public boolean isBadBandaged() {
+        return BANDAGED_DIRTY.abnormal(this.getConditionValue(BANDAGED_DIRTY));
     }
 
     private void handleBleeding(PlayerHealthCapability health) {

@@ -134,13 +134,20 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         for (BodyComponents component : BodyComponents.getVisibleBodies()) {
             AbstractBody body = healthData.getComponent(component);
             float injury = 0.0f;
+            float pain = 0.0f;
+            float comfort = 0.0f;
             for (BodyCondition condition : body.getBodyConditions()) {
-                if (!condition.isInjury()) continue;
                 float value = body.getCondition(condition).getDisplayValue();
                 if (!condition.abnormal(value)) continue;
-                injury += Mth.abs(value - condition.defaultValue);
+                if (condition.isInjury()) injury += Mth.abs(value - condition.defaultValue);
+                else if (condition.isPain()) pain += Mth.abs(value - condition.defaultValue);
+                else if (condition.isComfort()) comfort += Mth.abs(value - condition.defaultValue);
             }
-            this.componentWidgets.get(component).setConditionValue(Mth.clamp(injury, 0.0f, 1.0f) * 0.7f);
+            float condition = (injury >= 0.01) ? injury : (pain > 0.01)? pain : (comfort > 0.01)? comfort : 0.0f;
+            this.componentWidgets.get(component).setConditionValue(Mth.clamp(condition, 0.0f, 1.0f) * 0.7f);
+            if (injury >= 0.01)     this.componentWidgets.get(component).setRedAndGreen(1.0f, 0.0f);
+            else if (pain > 0.01)   this.componentWidgets.get(component).setRedAndGreen(1.0f, 1.0f);
+            else if (comfort > 0.01)this.componentWidgets.get(component).setRedAndGreen(0.0f, 1.0f);
         }
     }
 

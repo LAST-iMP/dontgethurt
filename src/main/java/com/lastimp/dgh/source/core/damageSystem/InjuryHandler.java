@@ -78,7 +78,7 @@ public class InjuryHandler {
             AbstractBody[] legs = h.legs();
             float[] weight = Utils.getRandom(1, 1);
             for (int i = 0; i < legs.length; i++) {
-                legs[i].injury(INTERNAL_INJURY, damageAmount * weight[i] / player.getMaxHealth());
+                InternalInjuryHandler.handleBluntTrauma(h, legs[i], damageAmount * weight[i] / player.getMaxHealth(), player.getMaxHealth());
             }
             return h;
         });
@@ -99,7 +99,7 @@ public class InjuryHandler {
     public static void handleDrowning(float damageAmount, Player player, LivingDamageEvent.Pre event) {
         PlayerHealthCapability.getAndSet(player, h -> {
             AbstractBody torso = h.getComponent(BodyComponents.TORSO);
-            torso.injury(INTERNAL_INJURY, damageAmount / player.getMaxHealth());
+            InternalInjuryHandler.handle(h, torso, damageAmount / player.getMaxHealth());
             return h;
         });
         event.setNewDamage(0f);
@@ -111,7 +111,7 @@ public class InjuryHandler {
             float[] weight = Utils.getRandom(1.5f,3,2,2,1.5f,1.5f);
             for (int i = 0; i < body.length; i++) {
                 body[i].injury(OPEN_WOUND,      0.5f * damageAmount * weight[i] / player.getMaxHealth());
-                body[i].injury(INTERNAL_INJURY, 0.5f * damageAmount * weight[i] / player.getMaxHealth());
+                InternalInjuryHandler.handleExplosion(h, body[i], 0.5f * damageAmount * weight[i] / player.getMaxHealth(), player.getMaxHealth());
             }
             return h;
         });
@@ -121,10 +121,8 @@ public class InjuryHandler {
     public static void handleEntityAttack(float damageAmount, Player player, LivingDamageEvent.Pre event) {
         PlayerHealthCapability.getAndSet(player, h -> {
             AbstractBody[] body = h.visibleParts();
-            float[] weight = Utils.getRandom(1,2,2,2,0.5f,0.5f);
-            for (int i = 0; i < body.length; i++) {
-                body[i].injury(OPEN_WOUND, damageAmount * weight[i] / player.getMaxHealth());
-            }
+            int index = Utils.getRandomIndex(1,2,2,2,0.5f,0.5f);
+            body[index].injury(OPEN_WOUND, damageAmount / player.getMaxHealth());
             return h;
         });
         event.setNewDamage(0f);
@@ -138,10 +136,8 @@ public class InjuryHandler {
     public static void handleDefaultDamage(float damageAmount, Player player, LivingDamageEvent.Pre event) {
         PlayerHealthCapability.getAndSet(player, h -> {
             AbstractBody[] body = h.visibleParts();
-            float[] weight = Utils.getRandom(1,2,2,2,0.5f,0.5f);
-            for (int i = 0; i < body.length; i++) {
-                body[i].injury(INTERNAL_INJURY, damageAmount * weight[i] / player.getMaxHealth());
-            }
+            int index = Utils.getRandomIndex(1,2,2,2,0.5f,0.5f);
+            InternalInjuryHandler.handleBluntTrauma(h, body[index], damageAmount / player.getMaxHealth(), player.getMaxHealth());
             return h;
         });
         event.setNewDamage(0f);
