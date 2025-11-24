@@ -75,7 +75,6 @@ public class HealthConditionWidget extends AbstractWidget {
 
         int drawX = (int) ((this.getX() + 2) / scale);
         int drawY = (int) ((this.getY() + 2) / scale);
-
         guiGraphics.blit(
                 texture,
                 drawX, drawY,
@@ -84,7 +83,6 @@ public class HealthConditionWidget extends AbstractWidget {
                 64, 64, // regionWidth, regionHeight = 整个纹理
                 64, 64  // textureWidth, textureHeight
         );
-
         guiGraphics.pose().popPose();
 
         int stringColor = 0xFF000000;

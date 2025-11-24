@@ -53,6 +53,8 @@ public class HealthComponentWidget extends Button {
     private final ResourceLocation resource;
     private final ResourceLocation resourceLighted;
     private float conditionValue;
+    public float red;
+    private float green;
 
     public HealthComponentWidget(int x, int y, int width, int height, Component message, OnPress onPress, BodyComponents id, ResourceLocation resource, ResourceLocation resourceLighted) {
         super(x, y, width, height, message, onPress, DEFAULT_NARRATION);
@@ -63,7 +65,7 @@ public class HealthComponentWidget extends Button {
 
     @Override
     protected void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
-        gui.setColor(1.0F, 0.2F, 0.2F, this.conditionValue);
+        gui.setColor(this.red, this.green, 0.2F, this.conditionValue);
 
         RenderSystem.enableBlend();
         gui.blit(this.resource, this.getX(), this.getY(), 0, 0, this.width, this.height, this.width, this.height);
@@ -75,5 +77,10 @@ public class HealthComponentWidget extends Button {
 
     public void setConditionValue(float conditionValue) {
         this.conditionValue = conditionValue;
+    }
+
+    public void setRedAndGreen(float red, float green) {
+        this.red = red;
+        this.green = green;
     }
 }
