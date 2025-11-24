@@ -69,11 +69,8 @@ public class HealthConditionWidget extends AbstractWidget {
 
         // draw icon from texture (if you want to use atlas, supply proper tex size)
         guiGraphics.blitSprite(texture, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
-        guiGraphics.blitSprite(texture, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
-//        guiGraphics.blitSprite(texture, 100, 32, 0, 0, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
 
-
-            int stringColor = 0xFF000000;
+        int stringColor = 0xFF000000;
         Minecraft mc = GuiOpenWrapper.MINECRAFT.get();
         guiGraphics.drawCenteredString(mc.font, this.getMessage(),
                 this.getX() + 3 + (this.width + iconSize) / 2,

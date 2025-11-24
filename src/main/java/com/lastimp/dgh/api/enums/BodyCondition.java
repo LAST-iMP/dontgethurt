@@ -111,7 +111,16 @@ public enum BodyCondition {
 
     public boolean isInjury() {
         return this == BURN || this == INTERNAL_INJURY || this == OPEN_WOUND || this == BLEED ||
-                this == INFECTION || this == FOREIGN_OBJECT || this == BANDAGED_DIRTY;
+                this == INFECTION || this == FOREIGN_OBJECT || this == BANDAGED_DIRTY || this == FRACTURE ||
+                this == WITHDRAW;
+    }
+
+    public boolean isPain() {
+        return this == DISLOCATION || this == INTENSE_PAIN;
+    }
+
+    public boolean isComfort() {
+        return this == BANDAGED || this == PLASTER_CAST || this == ANALGESIA;
     }
 
     @Override
