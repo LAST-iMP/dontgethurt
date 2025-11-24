@@ -68,8 +68,7 @@ public class BloodScanner extends Item {
                     PH_LEVEL,
                     IMMUNITY,
 
-                    OPIATE_OVERDOSE,
-                    OPIATE_ADDICTED
+                    OPIATE_OVERDOSE
             );
         }
         return BLOOD_SCANNER_CONDITIONS;

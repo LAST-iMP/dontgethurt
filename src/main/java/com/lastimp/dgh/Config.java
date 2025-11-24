@@ -27,18 +27,12 @@ SOFTWARE.
 
 package com.lastimp.dgh;
 
-import com.lastimp.dgh.DontGetHurt;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID,bus = EventBusSubscriber.Bus.MOD)
 public class Config {
@@ -67,6 +61,9 @@ public class Config {
     public static final ModConfigSpec.DoubleValue BLEED_VOLUME_RATIO = BUILDER
             .defineInRange("BLEED_VOLUME_RATIO",0.03,0, Float.MAX_VALUE);
 
+    public static final ModConfigSpec.DoubleValue WITHDRAW_RATIO = BUILDER
+            .defineInRange("WITHDRAW_RATIO",0.03,0, Float.MAX_VALUE);
+
     public static final ModConfigSpec.IntValue BASE_SELF_HEALING_TIME = BUILDER
             .defineInRange("BASE_SELF_HEALING_TIME",500,1, Integer.MAX_VALUE);
 
@@ -92,6 +89,7 @@ public class Config {
     public static float open_wound_bleed_ratio;
     public static float internal_food_healing;
     public static float bleed_volume_ratio;
+    public static float withdraw_ratio;
 
     public static int base_self_healing_time;
     public static int base_med_available_time;
@@ -106,6 +104,7 @@ public class Config {
         open_wound_bleed_ratio = (float) OPEN_WOUND_BLEED_RATIO.getAsDouble();
         internal_food_healing = (float) INTERNAL_FOOD_HEALING.getAsDouble();
         bleed_volume_ratio = (float) BLEED_VOLUME_RATIO.getAsDouble();
+        withdraw_ratio = (float) WITHDRAW_RATIO.getAsDouble();
 
         base_self_healing_time = BASE_SELF_HEALING_TIME.getAsInt();
         base_med_available_time = BASE_MED_AVAILABLE_TIME.getAsInt();

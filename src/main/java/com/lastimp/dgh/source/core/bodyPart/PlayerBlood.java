@@ -1,32 +1,7 @@
-/*
-* MIT License
-
-Copyright (c) 2023 NeoForged project
-
-This license applies to the template files as supplied by github.com/NeoForged/MDK
-
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
 
 package com.lastimp.dgh.source.core.bodyPart;
 
+import com.lastimp.dgh.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.ConditionState;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
@@ -34,11 +9,11 @@ import com.lastimp.dgh.api.enums.BodyCondition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.DontGetHurt.EPS;
+import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
 import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 public class PlayerBlood extends AbstractBody {
@@ -78,6 +53,8 @@ public class PlayerBlood extends AbstractBody {
     @Override
     public AbstractBody update(PlayerHealthCapability health, Player player) {
         this.handleBloodVolume(health);
+        this.handleOpiateOverdose();
+        this.handleOpiateAddicted(health);
         return this;
     }
 
@@ -105,5 +82,21 @@ public class PlayerBlood extends AbstractBody {
                 return true;
         }
         return false;
+    }
+
+    private void handleOpiateOverdose() {
+        if (!this.abnormal(OPIATE_OVERDOSE)) return;
+
+        this.healing(OPIATE_OVERDOSE, -OPIATE_OVERDOSE.healingSpeed * DELTA);
+    }
+
+    private void handleOpiateAddicted(PlayerHealthCapability health) {
+        if (!this.abnormal(OPIATE_ADDICTED)) return;
+
+        this.healing(OPIATE_ADDICTED, -OPIATE_ADDICTED.healingSpeed * DELTA);
+
+        Head head = (Head) health.getComponent(HEAD);
+        if (head.getConditionValue(WITHDRAW) < this.getConditionValue(OPIATE_ADDICTED))
+            head.healing(WITHDRAW, this.getConditionValue(OPIATE_ADDICTED) * DELTA * Config.withdraw_ratio);
     }
 }
