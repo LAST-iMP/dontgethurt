@@ -44,7 +44,7 @@ import net.minecraftforge.fml.common.Mod;
 import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class InjuryHandler {
+public class InjuryEventHandler {
 
     @SubscribeEvent
     public static void onPlayerInjury(LivingHurtEvent event) {
