@@ -112,9 +112,13 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         }
     }
 
-    protected boolean abnormalWithHidden(BodyCondition condition) {
+    public boolean abnormalWithHidden(BodyCondition condition) {
         ConditionState state = this.getCondition(condition);
         return condition.abnormal(state.getValue()) || condition.abnormal(state.getHiddenValue());
+    }
+
+    public boolean abnormal(BodyCondition condition) {
+        return condition.abnormal(this.getConditionValue(condition));
     }
 
     @Override

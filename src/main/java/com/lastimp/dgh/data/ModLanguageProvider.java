@@ -56,6 +56,7 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.BLOOD_PACK_EMPTY.get(), "空血袋");
         this.add(ModItems.BANDAGE.get(), "绷带");
         this.add(ModItems.MORPHINE.get(), "吗啡");
+        this.add(ModItems.PLASTER.get(), "石膏");
         this.add(ModItems.SUTURE.get(), "缝合线");
         this.add(ModItems.OPERATING_BED_BLOCK_ITEM.get(), "手术床");
 
