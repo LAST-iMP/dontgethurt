@@ -161,7 +161,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
     }
 
-    private void handleCover(BodyCondition condition) {
+    protected void handleCover(BodyCondition condition) {
         ConditionState state = this.getCondition(condition);
         if (!isBandaged() && !isBadBandaged()) {
             state.setValue(condition.abnormal(state.getHiddenValue())? state.getHiddenValue() : state.getValue());

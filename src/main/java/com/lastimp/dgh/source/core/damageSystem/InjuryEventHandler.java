@@ -44,7 +44,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID)
-public class InjuryHandler {
+public class InjuryEventHandler {
 
     @SubscribeEvent
     public static void onPlayerInjury(LivingDamageEvent.Pre event) {

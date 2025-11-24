@@ -28,19 +28,15 @@ SOFTWARE.
 package com.lastimp.dgh.source.core.healingSystem;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-import static com.lastimp.dgh.api.enums.BodyComponents.*;
-
 
 @EventBusSubscriber(modid = DontGetHurt.MODID)
-public class HealingUpdateHandler {
+public class HealingEventHandler {
 
     @SubscribeEvent
     public static void onHealingUpdate(PlayerTickEvent.Pre event) {
