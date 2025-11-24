@@ -36,6 +36,7 @@ import com.lastimp.dgh.source.client.gui.HealthScreen;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.item.Bandages;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
+import com.lastimp.dgh.source.item.Gypsum;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -87,6 +88,7 @@ public class HealingHandler {
         if (target == null) return;
         if (itemStack.is(ModTags.SHEARS)) {
             Bandages.cut(target, component);
+            Gypsum.cut(target, component);
             return;
         }
         boolean consume = false;
