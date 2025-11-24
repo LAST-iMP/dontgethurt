@@ -115,7 +115,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<Gypsum> PLASTER = ITEMS.register(
+    public static final RegistryObject<Gypsum> GYPSUM = ITEMS.register(
             "gypsum",
             () -> new Gypsum(
                     new Item.Properties()

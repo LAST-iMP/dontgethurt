@@ -104,6 +104,8 @@ public class BloodScanner extends Item {
         for (BodyCondition condition : BloodScanner.bloodScannerConditions()) {
             float value = blood.getConditionValue(condition);
             if (condition.abnormal(value)) {
+                if (!hasAbnormal)
+                    player.sendSystemMessage(Component.literal(name + "的血液状态为："));
                 hasAbnormal = true;
                 player.sendSystemMessage(
                         Component.literal(condition + ": " + String.format("%.2f", value))

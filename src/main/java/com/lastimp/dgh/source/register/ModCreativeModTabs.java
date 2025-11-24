@@ -51,6 +51,7 @@ public class ModCreativeModTabs {
                         output.accept(ModItems.BLOOD_PACK.get());
                         output.accept(ModItems.BLOOD_PACK_EMPTY.get());
                         output.accept(ModItems.BANDAGE.get());
+                        output.accept(ModItems.GYPSUM.get());
                         output.accept(ModItems.MORPHINE.get());
                         output.accept(ModItems.SUTURE.get());
                     })

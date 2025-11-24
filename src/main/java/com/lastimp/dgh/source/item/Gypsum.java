@@ -1,6 +1,7 @@
 package com.lastimp.dgh.source.item;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
+import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
@@ -16,8 +17,6 @@ public class Gypsum extends AbstractPartlyHealItem {
     private static final HashSet<BodyComponents> applicableComponents = new HashSet<>();
 
     static {
-        applicableComponents.add(BodyComponents.HEAD);
-        applicableComponents.add(BodyComponents.TORSO);
         applicableComponents.add(BodyComponents.LEFT_ARM);
         applicableComponents.add(BodyComponents.RIGHT_ARM);
         applicableComponents.add(BodyComponents.LEFT_LEG);
@@ -33,9 +32,9 @@ public class Gypsum extends AbstractPartlyHealItem {
         if (!this.getApplicableComponents().contains(component)) return false;
 
         return PlayerHealthCapability.getAndSet(target, health -> {
-            AbstractBody body = health.getComponent(component);
-            if (PLASTER_CAST.abnormal(body.getConditionValue(PLASTER_CAST))) return false;
-            if (FRACTURE.abnormal(body.getConditionValue(PLASTER_CAST))) return false;
+            AbstractExtremities body = (AbstractExtremities) health.getComponent(component);
+            if (body.abnormal(PLASTER_CAST)) return false;
+            if (body.isBandaged() || body.isBadBandaged()) return false;
 
             body.healing(PLASTER_CAST, PLASTER_CAST.maxValue);
             return true;

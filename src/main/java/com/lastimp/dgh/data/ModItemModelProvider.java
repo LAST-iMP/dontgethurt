@@ -49,6 +49,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         this.basicItem(ModItems.BLOOD_PACK_EMPTY.get());
         this.basicItem(ModItems.BLOOD_SCANNER.get());
         this.basicItem(ModItems.BANDAGE.get());
+        this.basicItem(ModItems.GYPSUM.get());
         this.basicItem(ModItems.MORPHINE.get());
         this.basicItem(ModItems.SUTURE.get());
     }
