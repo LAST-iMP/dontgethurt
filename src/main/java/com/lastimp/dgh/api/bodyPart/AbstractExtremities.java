@@ -96,7 +96,8 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
     }
 
     private void handleFracture(PlayerHealthCapability health, Player player) {
-        if (!this.abnormal(FRACTURE)) return;
+        if (!this.abnormalWithHidden(FRACTURE)) return;
+        this.handleCover(FRACTURE);
 
         Torso torso = (Torso) health.getComponent(TORSO);
         if (!torso.abnormal(ANALGESIA) && !this.isBandaged() && !this.isBadBandaged()) {
