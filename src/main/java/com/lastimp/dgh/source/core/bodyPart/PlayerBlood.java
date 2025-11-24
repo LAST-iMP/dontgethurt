@@ -67,6 +67,11 @@ public class PlayerBlood extends AbstractBody {
         return lost;
     }
 
+    @Override
+    public int slowDownLevel() {
+        return 0;
+    }
+
     private void handleBloodVolume(PlayerHealthCapability health) {
         if (!this.abnormalWithHidden(BLOOD_LOSS)) return;
         if (this.isBleeding(health)) return;
