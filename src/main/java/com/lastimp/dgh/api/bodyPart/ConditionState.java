@@ -84,6 +84,10 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
         return hiddenValue;
     }
 
+    public float getTotalValue() {
+        return hiddenValue + value;
+    }
+
     public void setHiddenValue(float hiddenValue) {
         this.hiddenValue = hiddenValue;
     }
