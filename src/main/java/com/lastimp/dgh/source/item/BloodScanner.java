@@ -60,7 +60,6 @@ public class BloodScanner extends Item {
     public static List<BodyCondition> bloodScannerConditions() {
         if (BLOOD_SCANNER_CONDITIONS == null) {
             BLOOD_SCANNER_CONDITIONS = List.of(
-                    BLOOD_VOLUME,
                     SEPSIS,
                     HEMOTRANSFUSION,
                     BLOOD_LOSS,

@@ -55,7 +55,6 @@ public class PlayerBlood extends AbstractBody {
     public List<BodyCondition> getBodyConditions() {
         if (BLOOD_CONDITIONS == null) {
             BLOOD_CONDITIONS = List.of(new BodyCondition[]{
-                    BLOOD_VOLUME,
                     SEPSIS,
                     HEMOTRANSFUSION,
                     BLOOD_LOSS,
@@ -81,15 +80,22 @@ public class PlayerBlood extends AbstractBody {
         return this;
     }
 
+    @Override
+    public float updateVitalityLost(PlayerHealthCapability health, Player player) {
+        float lost = 0;
+        var blood_loss = this.getCondition(BLOOD_LOSS);
+        if (BLOOD_LOSS.abnormal(blood_loss.getValue()))
+            lost += blood_loss.getValue();
+        return lost;
+    }
+
     private void handleBloodVolume(PlayerHealthCapability health) {
-        if (!this.abnormalWithHidden(BLOOD_VOLUME)) return;
+        if (!this.abnormalWithHidden(BLOOD_LOSS)) return;
         if (this.isBleeding(health)) return;
 
-        ConditionState state = this.getCondition(BLOOD_VOLUME);
-        if (state.getValue() > BLOOD_VOLUME.defaultValue)
-            state.setValue(Mth.clamp(state.getValue() - BLOOD_VOLUME.healingSpeed * DELTA, BLOOD_VOLUME.minValue, BLOOD_VOLUME.maxValue));
-        else if (state.getValue() <= BLOOD_VOLUME.defaultValue - EPS)
-            state.setValue(Mth.clamp(state.getValue() + BLOOD_VOLUME.healingSpeed * DELTA, BLOOD_VOLUME.minValue, BLOOD_VOLUME.maxValue));
+        ConditionState state = this.getCondition(BLOOD_LOSS);
+        if (state.getValue() > BLOOD_LOSS.defaultValue + EPS)
+            state.setValue(Mth.clamp(state.getValue() - BLOOD_LOSS.healingSpeed * DELTA, BLOOD_LOSS.minValue, BLOOD_LOSS.maxValue));
     }
 
     private boolean isBleeding(PlayerHealthCapability health) {

@@ -81,6 +81,16 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         return this;
     }
 
+    @Override
+    public float updateVitalityLost(PlayerHealthCapability health, Player player) {
+        float lost = 0;
+        var burn = this.getCondition(BURN);
+        var open_wound = this.getCondition(OPEN_WOUND);
+        var internal_injury = this.getCondition(INTERNAL_INJURY);
+        lost += (burn.getTotalValue() + open_wound.getTotalValue() + internal_injury.getValue()) * this.getVitalityWeight();
+        return lost;
+    }
+
     private void handleBandaged(PlayerHealthCapability health) {
         if (isBandaged()) {
             ConditionState bandage = this.getCondition(BANDAGED);
@@ -178,6 +188,6 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.getCondition(BLEED).setValue(this.nextTickBleed);
 
         PlayerBlood blood = (PlayerBlood) health.getComponent(BLOOD);
-        blood.addConditionValue(BLOOD_VOLUME, -this.nextTickBleed * DELTA * Config.bleed_volume_ratio);
+        blood.addConditionValue(BLOOD_LOSS, this.nextTickBleed * DELTA * Config.bleed_volume_ratio);
     }
 }
