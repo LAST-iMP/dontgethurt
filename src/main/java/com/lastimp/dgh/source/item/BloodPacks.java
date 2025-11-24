@@ -49,10 +49,10 @@ public class BloodPacks extends AbstractDirectHealItems {
     public boolean heal(@NotNull ServerPlayer source, @NotNull ServerPlayer target) {
         return PlayerHealthCapability.getAndSet(target, health -> {
             PlayerBlood blood = (PlayerBlood) health.getComponent(BodyComponents.BLOOD);
-            float currCondition = blood.getConditionValue(BLOOD_VOLUME);
-            if (currCondition >= BLOOD_VOLUME.defaultValue - EPS) return false;
+            float currCondition = blood.getConditionValue(BLOOD_LOSS);
+            if (!BLOOD_LOSS.abnormal(currCondition)) return false;
 
-            blood.healing(BLOOD_VOLUME, 0.25f);
+            blood.healing(BLOOD_LOSS, -0.25f);
 
             ItemStack stack = new ItemStack(ModItems.BLOOD_PACK_EMPTY.get());
             if (!source.addItem(stack)) {

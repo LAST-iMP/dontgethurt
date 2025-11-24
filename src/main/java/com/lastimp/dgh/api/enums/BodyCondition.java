@@ -57,10 +57,9 @@ public enum BodyCondition {
     //头脑
     WITHDRAW        ("戒断", 1.0f/ Config.base_med_available_time, 1.0f, BodyCondition.pathRoot+"withdraw.png"),
     //血液
-    BLOOD_VOLUME    ("血容量", 1.0f / Config.volume_self_healing_time, 0.0f, 1.0f, 0.0f, 2.0f, null),
     SEPSIS          ("败血症", 0.0f, 0.0f),
     HEMOTRANSFUSION ("输血性休克", 0.0f, 0.0f),
-    BLOOD_LOSS      ("失血", 0.0f, 0.0f),
+    BLOOD_LOSS      ("失血", 1.0f / Config.volume_self_healing_time, 0.0f),
     BLOOD_PRESSURE  ("血压", 0.0f, 0.0f),
     PH_LEVEL        ("酸碱性", 0.0f, 0.0f),
     IMMUNITY        ("免疫力", 0.0f, 0.0f),
