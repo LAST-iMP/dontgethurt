@@ -2,6 +2,7 @@
 package com.lastimp.dgh;
 
 import com.lastimp.dgh.network.message.Network;
+import com.lastimp.dgh.source.client.gui.HealthCareBagScreen;
 import com.lastimp.dgh.source.register.ModCreativeModTabs;
 import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModItems;
@@ -62,9 +63,10 @@ public class DontGetHurt
         @SubscribeEvent
         static void onClientSetup(FMLClientSetupEvent event) {
             LOGGER.info("Menu rege");
-            event.enqueueWork(
-                    () -> MenuScreens.register(ModMenus.HEALTH_MENU.get(), HealthScreen::new)
-            );
+            event.enqueueWork(() -> {
+                MenuScreens.register(ModMenus.HEALTH_MENU.get(), HealthScreen::new);
+                MenuScreens.register(ModMenus.HEALTHCARE_BAG_MENU.get(), HealthCareBagScreen::new);
+            });
         }
     }
 }

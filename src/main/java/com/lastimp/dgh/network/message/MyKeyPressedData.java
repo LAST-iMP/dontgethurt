@@ -1,29 +1,3 @@
-/*
-* MIT License
-
-Copyright (c) 2023 NeoForged project
-
-This license applies to the template files as supplied by github.com/NeoForged/MDK
-
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
 
 package com.lastimp.dgh.network.message;
 
@@ -33,8 +7,10 @@ import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.ServerPayloadHandler;
+import com.lastimp.dgh.source.client.gui.MenuProvider.HealthCareBagMenuProvider;
 import com.lastimp.dgh.source.client.gui.MenuProvider.HealthMenuProvider;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.register.ModItems;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -46,17 +22,21 @@ import java.util.function.Supplier;
 
 public class MyKeyPressedData {
     private String key;
+    private int index;
 
     public MyKeyPressedData(FriendlyByteBuf buffer) {
         this.key = buffer.readUtf();
+        this.index = buffer.readInt();
     }
 
-    public MyKeyPressedData(String key) {
+    public MyKeyPressedData(String key, int index) {
         this.key = key;
+        this.index = index;
     }
 
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeUtf(this.key);
+        buf.writeInt(this.index);
     }
 
     public static void handlerServer(final MyKeyPressedData data, Supplier<NetworkEvent.Context> ctx) {
@@ -64,14 +44,24 @@ public class MyKeyPressedData {
         ServerPlayer player = ctx.get().getSender();
         if (key == KeyPressedType.KEY_HEALTH_MENU) {
             HealthMenuProvider.open(player, player.getUUID(), false);
+        } else if (key == KeyPressedType.KEY_SLOT_USE) {
+            var slot = player.getInventory().getItem(data.index());
+            if (slot.is(ModItems.HEALTH_SCANNER.get()))
+                HealthMenuProvider.open(player, player.getUUID(), true);
+            if (slot.is(ModItems.HEALTH_CARE_BAG.get()))
+                HealthCareBagMenuProvider.open(player, slot);
         }
     }
 
-    public static MyKeyPressedData getInstance(KeyPressedType key) {
-        return new MyKeyPressedData(key.name());
+    public static MyKeyPressedData getInstance(KeyPressedType key, int index) {
+        return new MyKeyPressedData(key.name(), index);
     }
 
     public String key() {
         return key;
+    }
+
+    public int index() {
+        return index;
     }
 }

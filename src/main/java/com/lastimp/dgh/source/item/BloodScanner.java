@@ -4,6 +4,7 @@ package com.lastimp.dgh.source.item;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.api.enums.OperationType;
+import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
@@ -23,7 +24,7 @@ import java.util.List;
 
 import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
-public class BloodScanner extends Item {
+public class BloodScanner extends AbstractHealingItem {
     private static List<BodyCondition> BLOOD_SCANNER_CONDITIONS;
 
     public BloodScanner(Properties properties) {

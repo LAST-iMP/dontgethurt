@@ -5,6 +5,7 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.source.register.ModEffects;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -24,7 +25,8 @@ public class HealingEventHandler {
             return h;
         });
 
-        updatePlayerHealth(health, player);
+        if (player.level().getDifficulty() != Difficulty.PEACEFUL)
+            updatePlayerHealth(health, player);
     }
 
     private static void updatePlayerHealth(PlayerHealthCapability health, ServerPlayer player) {

@@ -131,6 +131,14 @@ public class ModItems {
             )
     );
 
+    public static final RegistryObject<HealthCareBag> HEALTH_CARE_BAG = ITEMS.register(
+            "health_care_bag",
+            () -> new HealthCareBag(
+                    new Item.Properties()
+                            .stacksTo(1)
+            )
+    );
+
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);
         ITEMS.register(eventBus);
