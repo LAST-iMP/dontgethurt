@@ -80,7 +80,7 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     public abstract float updateVitalityLost(PlayerHealthCapability health, Player player);
 
-    public abstract int slowDownLevel();
+    public abstract int slowDownLevel(PlayerHealthCapability health);
 
     public void updateDisplayValue(PlayerHealthCapability health) {
         for (BodyCondition condition : this.getBodyConditions()) {

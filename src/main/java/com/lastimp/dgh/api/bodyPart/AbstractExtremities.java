@@ -60,8 +60,8 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
     }
 
     @Override
-    public int slowDownLevel() {
-        int slowDown = super.slowDownLevel();
+    public int slowDownLevel(PlayerHealthCapability health) {
+        int slowDown = super.slowDownLevel(health);
         slowDown += this.abnormal(PLASTER_CAST)? 1 : 0;
         return slowDown;
     }

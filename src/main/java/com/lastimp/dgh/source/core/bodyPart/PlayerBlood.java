@@ -68,7 +68,7 @@ public class PlayerBlood extends AbstractBody {
     }
 
     @Override
-    public int slowDownLevel() {
+    public int slowDownLevel(PlayerHealthCapability health) {
         return 0;
     }
 

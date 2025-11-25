@@ -69,10 +69,10 @@ public class WholeBody extends AbstractBody {
     }
 
     @Override
-    public int slowDownLevel() {
+    public int slowDownLevel(PlayerHealthCapability health) {
         int slowDown = 0;
         for (var body : this.components.values()) {
-            slowDown += body.slowDownLevel();
+            slowDown += body.slowDownLevel(health);
         }
         return Mth.clamp(slowDown, 0, 10);
     }
