@@ -64,7 +64,7 @@ public class Torso extends AbstractVisibleBody {
 
     @Override
     public float getVitalityWeight() {
-        return 1;
+        return 0.8f;
     }
 
     @Override

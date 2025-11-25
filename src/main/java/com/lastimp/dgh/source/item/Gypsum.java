@@ -4,6 +4,7 @@ import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
+import com.lastimp.dgh.source.Register.ModItems;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -46,6 +47,8 @@ public class Gypsum extends AbstractPartlyHealItem {
     }
 
     public static boolean cut(ServerPlayer target, BodyComponents component) {
+        if (!ModItems.GYPSUM.get().getApplicableComponents().contains(component)) return false;
+
         return PlayerHealthCapability.getAndSet(target, health -> {
             AbstractBody body = health.getComponent(component);
             if (PLASTER_CAST.abnormal(body.getConditionValue(PLASTER_CAST))) {

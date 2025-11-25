@@ -25,7 +25,7 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
 
     @Override
     public float getVitalityWeight() {
-        return 0.5f;
+        return 0.25f;
     }
 
     @Override
@@ -95,7 +95,6 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
 
     private void handlePlasterCast(PlayerHealthCapability health, Player player) {
         if (!this.abnormal(PLASTER_CAST) || !this.abnormalWithHidden(FRACTURE)) return;
-        if (!this.isBandaged() && !this.isBadBandaged()) return;
 
         this.healingHidden(FRACTURE, -FRACTURE.healingSpeed * DELTA);
     }
