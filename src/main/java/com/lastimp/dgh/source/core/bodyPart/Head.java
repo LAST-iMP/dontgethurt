@@ -28,7 +28,7 @@ public class Head extends AbstractVisibleBody {
 
     @Override
     public float getVitalityWeight() {
-        return 2f;
+        return 1f;
     }
 
     @Override

@@ -28,7 +28,7 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
 
     @Override
     public float getVitalityWeight() {
-        return 0.5f;
+        return 0.25f;
     }
 
     @Override
