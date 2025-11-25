@@ -32,7 +32,6 @@ public class HealingEventHandler {
         PlayerHealthCapability health = PlayerHealthCapability.get(player);
 
         updatePlayerHealth(health, player);
-        updateEffects(health, player);
     }
 
     private static void updatePlayerHealth(PlayerHealthCapability health, ServerPlayer player) {
@@ -42,15 +41,5 @@ public class HealingEventHandler {
             player.setHealth(maxHealth);
         if (maxHealth <= 0)
             player.setHealth(0);
-    }
-
-    private static void updateEffects(PlayerHealthCapability health, ServerPlayer player) {
-        if (health.slowDown() > 0 && !player.hasEffect(ModEffects.STAGGER_EFFECT)) {
-            var newEffect = new MobEffectInstance(
-                    ModEffects.STAGGER_EFFECT,
-                    10, health.slowDown() - 1
-            );
-            player.addEffect(newEffect);
-        }
     }
 }

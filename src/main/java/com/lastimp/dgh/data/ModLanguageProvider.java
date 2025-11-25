@@ -36,6 +36,9 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.OPERATING_BED_BLOCK_ITEM.get(), "手术床");
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");
+        this.add(ModEffects.INTENSE_PAIN_EFFECT.get(), "剧痛");
+        this.add(ModEffects.SWEATING_EFFECT.get(), "出汗");
+        this.add(ModEffects.CRAVING_EFFECT.get(), "渴望");
 
     }
 }
