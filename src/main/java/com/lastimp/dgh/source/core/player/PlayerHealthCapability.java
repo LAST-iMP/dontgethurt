@@ -41,7 +41,7 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     public PlayerHealthCapability update(Player player) {
         this.body.update(this, player);
         this.playerVitality = 1.0f - this.body.updateVitalityLost(this, player);
-        this.slowDown = this.body.slowDownLevel();
+        this.slowDown = this.body.slowDownLevel(this);
         return this;
     }
 

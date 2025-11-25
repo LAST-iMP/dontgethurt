@@ -1,5 +1,8 @@
 package com.lastimp.dgh.api.bodyPart;
 
+import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+
+import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 public class AbstractLeg extends AbstractExtremities{
@@ -8,9 +11,10 @@ public class AbstractLeg extends AbstractExtremities{
     }
 
     @Override
-    public int slowDownLevel() {
+    public int slowDownLevel(PlayerHealthCapability health) {
         boolean available = this.isBandaged() || this.isBadBandaged() || !this.abnormal(DISLOCATION);
-        available &= this.abnormal(PLASTER_CAST) || !this.abnormal(FRACTURE);
-        return super.slowDownLevel() + (available? 0 : 4);
+        available &= this.abnormal(PLASTER_CAST) || !this.abnormalWithHidden(FRACTURE);
+        available |= health.getComponent(TORSO).abnormal(ANALGESIA);
+        return super.slowDownLevel(health) + (available? 0 : 4);
     }
 }

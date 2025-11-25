@@ -29,7 +29,7 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     public abstract float getVitalityWeight();
 
-    public abstract int slowDownLevel();
+    public abstract int slowDownLevel(PlayerHealthCapability health);
 
     public float getConditionValue(BodyCondition key) {
         return this.getCondition(key).getValue();
