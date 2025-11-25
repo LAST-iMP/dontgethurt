@@ -63,7 +63,7 @@ public class PlayerBlood extends AbstractBody {
         float lost = 0;
         var blood_loss = this.getCondition(BLOOD_LOSS);
         if (BLOOD_LOSS.abnormal(blood_loss.getValue()))
-            lost += blood_loss.getValue();
+            lost += blood_loss.getValue() * this.getVitalityWeight();
         return lost;
     }
 
