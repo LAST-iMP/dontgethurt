@@ -34,6 +34,7 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.GYPSUM.get(), "石膏");
         this.add(ModItems.SUTURE.get(), "缝合线");
         this.add(ModItems.OPERATING_BED_BLOCK_ITEM.get(), "手术床");
+        this.add(ModItems.HEALTH_CARE_BAG.get(), "医疗包");
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");
         this.add(ModEffects.INTENSE_PAIN_EFFECT.get(), "剧痛");

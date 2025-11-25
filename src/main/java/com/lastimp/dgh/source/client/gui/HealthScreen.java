@@ -1,29 +1,3 @@
-/*
-* MIT License
-
-Copyright (c) 2023 NeoForged project
-
-This license applies to the template files as supplied by github.com/NeoForged/MDK
-
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
 
 package com.lastimp.dgh.source.client.gui;
 
@@ -113,18 +87,13 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (!check()) return;
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null || mc.player == null || mc.options.hideGui) return;
         this.refreshComponent();
         this.refreshCondition();
 
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
-    }
-
-    private boolean check() {
-        Minecraft mc = GuiOpenWrapper.MINECRAFT.get();
-        // 跳过：菜单界面、无玩家、隐藏GUI（按F1)
-        return !(mc.level == null || mc.player == null || mc.options.hideGui);
     }
 
     private void refreshComponent() {
@@ -137,6 +106,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
             float pain = 0.0f;
             float comfort = 0.0f;
             for (BodyCondition condition : body.getBodyConditions()) {
+                if (!this.visibilityCheck(body, condition)) continue;
                 float value = body.getCondition(condition).getDisplayValue();
                 if (!condition.abnormal(value)) continue;
                 if (condition.isInjury()) injury += Mth.abs(value - condition.defaultValue);
@@ -161,24 +131,26 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
         int widgetCount = 0;
         AbstractBody bodyPart = healthData.getComponent(this.selectedComponent);
-        List<BodyCondition> conditions = bodyPart.getBodyConditions();
-        for (BodyCondition condition : conditions) {
+        for (BodyCondition condition : bodyPart.getBodyConditions()) {
             HealthConditionWidget widget = this.conditionWidgets.get(condition);
-            if (!HealthScanner.healthScannerConditions().contains(condition)) continue;
-            if (!condition.abnormal(bodyPart.getCondition(condition).getDisplayValue())) continue;
+            if (!this.visibilityCheck(bodyPart, condition)) continue;
             if (widgetCount > 12) break;
 
             widget.setPosition(
                     this.leftPos + 85 + (widgetCount % 2) * 72,
                     this.topPos + 11 + (widgetCount / 2) * 18
             );
-            if (this.menu.isDevice)
-                widget.setSeverity(bodyPart.getCondition(condition).getDisplayValue());
-            else
-                widget.setSeverity(0);
+            widget.setSeverity(bodyPart.getCondition(condition).getDisplayValue());
             widget.visible = true;
             widgetCount += 1;
         }
+    }
+
+    private boolean visibilityCheck(AbstractBody body, BodyCondition condition) {
+        if (!HealthScanner.healthScannerConditions().contains(condition)) return false;
+        if (!this.menu.isDevice && !HealthScanner.eyesightConditions().contains(condition)) return false;
+        if (!condition.abnormal(body.getCondition(condition).getDisplayValue())) return false;
+        return true;
     }
 
     @Override
@@ -187,11 +159,6 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         int panelY = (guiGraphics.guiHeight() - PANEL_HEIGHT) / 2;
 
         guiGraphics.blit(HUD_BACKGROUND, panelX, panelY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT);
-    }
-
-    @Override
-    public boolean isPauseScreen() {
-        return false;
     }
 
     @Override
@@ -213,12 +180,6 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
                 this.menu.targetPlayer, null, HEALTH_SCANN, Minecraft.getInstance().player.registryAccess()
         ));
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        boolean result = super.mouseClicked(mouseX, mouseY, button);
-        return result;
     }
 
     public void setHealthData(PlayerHealthCapability healthData) {
