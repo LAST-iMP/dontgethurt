@@ -28,6 +28,7 @@ SOFTWARE.
 package com.lastimp.dgh.source.Register;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.source.client.gui.HealthCareBagMenu;
 import com.lastimp.dgh.source.client.gui.HealthMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -43,6 +44,7 @@ public class ModMenus {
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(Registries.MENU, DontGetHurt.MODID);
 
     public static final Supplier<MenuType<HealthMenu>> HEALTH_MENU = registerMenuType(HealthMenu::new, "health_menu");
+    public static final Supplier<MenuType<HealthCareBagMenu>> HEALTHCARE_BAG_MENU = registerMenuType(HealthCareBagMenu::new, "healthcare_bag_menu");
 
     private static <T extends AbstractContainerMenu> Supplier<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
         return MENU_TYPES.register(name, () -> IMenuTypeExtension.create(factory));

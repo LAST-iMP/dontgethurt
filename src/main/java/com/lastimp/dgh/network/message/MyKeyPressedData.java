@@ -36,12 +36,14 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
-public record MyKeyPressedData (String key) implements CustomPacketPayload {
+public record MyKeyPressedData (String key, int index) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<MyKeyPressedData> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(DontGetHurt.MODID, "my_key_press_data"));
 
     public static final StreamCodec<ByteBuf, MyKeyPressedData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8,
             MyKeyPressedData::key,
+            ByteBufCodecs.VAR_INT,
+            MyKeyPressedData::index,
             MyKeyPressedData::new
     );
 
@@ -50,7 +52,7 @@ public record MyKeyPressedData (String key) implements CustomPacketPayload {
         return TYPE;
     }
 
-    public static MyKeyPressedData getInstance(KeyPressedType key) {
-        return new MyKeyPressedData(key.name());
+    public static MyKeyPressedData getInstance(KeyPressedType key, int index) {
+        return new MyKeyPressedData(key.name(), index);
     }
 }

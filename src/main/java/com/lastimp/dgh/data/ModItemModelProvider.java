@@ -52,6 +52,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         this.basicItem(ModItems.GYPSUM.get());
         this.basicItem(ModItems.MORPHINE.get());
         this.basicItem(ModItems.SUTURE.get());
+        this.basicItem(ModItems.HEALTH_CARE_BAG.get());
     }
 
     public ResourceLocation getResourceLocation(Item item){

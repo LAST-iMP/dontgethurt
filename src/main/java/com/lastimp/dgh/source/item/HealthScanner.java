@@ -27,6 +27,7 @@ SOFTWARE.
 
 package com.lastimp.dgh.source.item;
 
+import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.source.client.gui.MenuProvider.HealthMenuProvider;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import net.minecraft.world.InteractionHand;
@@ -43,8 +44,9 @@ import java.util.List;
 
 import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
-public class HealthScanner extends Item {
+public class HealthScanner extends AbstractHealingItem {
     private static List<BodyCondition> HEALTH_SCANNER_CONDITIONS;
+    private static List<BodyCondition> EYESIGHT_CONDITIONS;
 
     public HealthScanner(Properties properties) {
         super(properties);
@@ -75,6 +77,26 @@ public class HealthScanner extends Item {
             );
         }
         return HEALTH_SCANNER_CONDITIONS;
+    }
+
+    public static List<BodyCondition> eyesightConditions() {
+        if (EYESIGHT_CONDITIONS == null) {
+            EYESIGHT_CONDITIONS = List.of(
+                    BURN,
+                    OPEN_WOUND,
+                    BLEED,
+                    INFECTION,
+
+                    BANDAGED,
+                    BANDAGED_DIRTY,
+                    OINMENTED,
+
+                    DISLOCATION,
+                    INTENSE_PAIN,
+                    PLASTER_CAST
+            );
+        }
+        return EYESIGHT_CONDITIONS;
     }
 
     @Override

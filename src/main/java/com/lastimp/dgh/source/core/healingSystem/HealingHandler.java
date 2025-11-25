@@ -80,10 +80,6 @@ public class HealingHandler {
         return true;
     }
 
-    public static boolean isConsumableHealingItem(ItemStack itemStack) {
-        return itemStack.getItem() instanceof AbstractHealingItem;
-    }
-
     public static void useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, ServerPlayer target, BodyComponents component) {
         if (target == null) return;
         if (itemStack.is(ModTags.SHEARS)) {
@@ -100,10 +96,6 @@ public class HealingHandler {
         if (consume) {
             itemStack.consume(1, target);
         }
-    }
-
-    public static HealthScreen getHealthScreen() {
-        return HealingHandler.healthScreen;
     }
 
     public static void setHealthScreen(HealthScreen healthScreen) {

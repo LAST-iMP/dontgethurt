@@ -5,6 +5,7 @@ import com.lastimp.dgh.source.Register.ModEffects;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -31,7 +32,8 @@ public class HealingEventHandler {
         ServerPlayer player = (ServerPlayer) event.getEntity();
         PlayerHealthCapability health = PlayerHealthCapability.get(player);
 
-        updatePlayerHealth(health, player);
+        if (player.level().getDifficulty() != Difficulty.PEACEFUL)
+            updatePlayerHealth(health, player);
     }
 
     private static void updatePlayerHealth(PlayerHealthCapability health, ServerPlayer player) {
