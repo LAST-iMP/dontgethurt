@@ -14,6 +14,7 @@ import java.util.List;
 import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.DontGetHurt.EPS;
 import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
+import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 public class PlayerBlood extends AbstractBody {
@@ -61,9 +62,10 @@ public class PlayerBlood extends AbstractBody {
     @Override
     public float updateVitalityLost(PlayerHealthCapability health, Player player) {
         float lost = 0;
-        var blood_loss = this.getCondition(BLOOD_LOSS);
-        if (BLOOD_LOSS.abnormal(blood_loss.getValue()))
-            lost += blood_loss.getValue() * this.getVitalityWeight();
+        if (this.abnormal(BLOOD_LOSS))
+            lost += this.getConditionValue(BLOOD_LOSS) * this.getVitalityWeight();
+        if (this.abnormal(OPIATE_OVERDOSE))
+            lost += Mth.clamp(this.getConditionValue(OPIATE_OVERDOSE) - 0.5f, 0.0f, 0.5f);
         return lost;
     }
 
@@ -101,7 +103,7 @@ public class PlayerBlood extends AbstractBody {
         this.healing(OPIATE_ADDICTED, -OPIATE_ADDICTED.healingSpeed * DELTA);
 
         Head head = (Head) health.getComponent(HEAD);
-        if (head.getConditionValue(WITHDRAW) < this.getConditionValue(OPIATE_ADDICTED))
+        if (head.getConditionValue(WITHDRAW) < this.getConditionValue(OPIATE_ADDICTED) && !health.getComponent(TORSO).abnormal(ANALGESIA))
             head.healing(WITHDRAW, this.getConditionValue(OPIATE_ADDICTED) * DELTA * Config.withdraw_ratio);
     }
 }

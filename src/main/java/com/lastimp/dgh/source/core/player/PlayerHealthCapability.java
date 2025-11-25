@@ -13,6 +13,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import java.util.function.Function;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
+import static com.lastimp.dgh.api.enums.BodyCondition.INTENSE_PAIN;
 
 public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     private final WholeBody body = new WholeBody();
@@ -87,6 +88,13 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
 
     public int slowDown() {
         return slowDown;
+    }
+
+    public boolean intensePain() {
+        return  this.getComponent(LEFT_ARM).abnormal(INTENSE_PAIN) ||
+                this.getComponent(RIGHT_ARM).abnormal(INTENSE_PAIN) ||
+                this.getComponent(LEFT_LEG).abnormal(INTENSE_PAIN) ||
+                this.getComponent(RIGHT_LEG).abnormal(INTENSE_PAIN);
     }
 
     public void setPlayerVitality(float playerVitality) {
