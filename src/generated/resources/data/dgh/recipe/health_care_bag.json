@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "minecraft:wool"
+    },
+    "b": {
+      "item": "minecraft:leather"
+    },
+    "c": {
+      "item": "dgh:bandage"
+    },
+    "d": {
+      "item": "dgh:suture"
+    },
+    "e": {
+      "item": "dgh:morphine"
+    },
+    "f": {
+      "item": "minecraft:chest"
+    }
+  },
+  "pattern": [
+    "bab",
+    "cde",
+    "bfb"
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:health_care_bag"
+  }
+}
