@@ -49,7 +49,7 @@ public enum BodyCondition {
     OINMENTED       ("药膏涂抹", 0.0f, 0.0f),
     //四肢
     DISLOCATION     ("脱臼", 0.0f, 1.0f, 0xFFFFFF00, BodyCondition.pathRoot+"dislocation.png"),
-    FRACTURE        ("骨折", 1.0f / Config.base_self_healing_time * 10, 0.0f, BodyCondition.pathRoot+"fracture.png"),
+    FRACTURE        ("骨折", 1.0f / Config.base_self_healing_time * 3, 0.0f, BodyCondition.pathRoot+"fracture.png"),
     INTENSE_PAIN    ("剧痛", 0.2f, 1.0f, 0xFFFFFF00, BodyCondition.pathRoot+"intense_pain.png"),
     PLASTER_CAST    ("石膏固定", 0.0f, 1.0f, 0xFF00FF00, BodyCondition.pathRoot+"plaster_cast.png"),
     //躯干

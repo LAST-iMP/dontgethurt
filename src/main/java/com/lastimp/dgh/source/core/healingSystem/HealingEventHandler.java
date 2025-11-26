@@ -39,7 +39,7 @@ public class HealingEventHandler {
         float maxHealth = player.getMaxHealth() * health.playerVitality();
 
         if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative())
-            maxHealth = 1.0f;
+            maxHealth = player.getMaxHealth();
         if ((int)maxHealth != (int)player.getHealth() && player.getHealth() > 0)
             player.setHealth(maxHealth);
         if (maxHealth <= 0)
