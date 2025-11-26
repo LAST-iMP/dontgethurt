@@ -28,6 +28,18 @@
     {
       "type": "crafting",
       "recipe": "dgh:blood_scanner"
+    },
+    {
+      "type": "spotlight",
+      "title": "木扳手",
+      "item": "dgh:wood_wrench",
+      "scale": 1.2,
+      "text": "给脱臼的四肢狠狠来一下。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:wood_wrench"
     }
   ]
 }

@@ -1,6 +1,7 @@
 package com.lastimp.dgh.source.core.buffSystem;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.api.bodyPart.AbstractArm;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.source.Register.ModEffects;
 import com.lastimp.dgh.source.core.bodyPart.Head;
@@ -25,6 +26,7 @@ public class BuffEventHandler {
         PlayerHealthCapability health = PlayerHealthCapability.get(player);
 
         updateStaggerEffects(health, player);
+        updateArmEffects(health, player);
         updateWithdrawEffects(health, player);
         updateSymptomsEffects(health, player);
     }
@@ -36,6 +38,22 @@ public class BuffEventHandler {
                     40, health.slowDown() - 1
             );
             player.addEffect(newEffect);
+        }
+    }
+
+    private static void updateArmEffects(PlayerHealthCapability health, ServerPlayer player) {
+        AbstractArm[] arms = (AbstractArm[]) health.arms();
+        int slowDown = (arms[0].available(health) ? 0 : 1) + (arms[1].available(health) ? 0 : 1);
+        if (slowDown == 0) return;
+
+        var newEffect = new MobEffectInstance(
+                MobEffects.DIG_SLOWDOWN,
+                40, slowDown - 1
+        );
+        if (!player.hasEffect(MobEffects.DIG_SLOWDOWN)) {
+            player.addEffect(newEffect);
+        } else if (player.getEffect(MobEffects.DIG_SLOWDOWN).getAmplifier() >= slowDown) {
+            player.getEffect(MobEffects.DIG_SLOWDOWN).update(newEffect);
         }
     }
 

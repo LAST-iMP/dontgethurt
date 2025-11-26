@@ -11,11 +11,16 @@
       "text": "所有医疗药品都可以在打开医疗面板并选择部位后使用。血包这种不需要指定部位的，可以直接右键使用。"
     },
     {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(br)$(li)部位指定$(li2)绷带$(li2)缝合线$(li2)石膏$(br)$(li)直接使用$(li2)(空)血包$(li2)吗啡"
+    },
+    {
       "type": "spotlight",
       "title": "血包",
       "item": "dgh:blood_pack",
       "scale": 1.2,
-      "text": "对自己或别人使用空血包来储存血液，紧急的时候可以直接补充血容量。(我的身体里都是你的血！)",
+      "text": "对自己或别人使用空血包来储存血液，紧急的时候可以直接补充血容量。$(br)$(li)效果$(li2)降低失血(血包)$(li2)增加失血(空血包)$(br)$(li)主治$(li2)失血",
       "link_recipe": true
     },
     {
@@ -25,10 +30,22 @@
     },
     {
       "type": "spotlight",
+      "title": "吗啡",
+      "item": "dgh:morphine",
+      "scale": 1.2,
+      "text": "对自己或别人使用吗啡进行镇痛。$(br)$(li)效果$(li2)增加镇痛$(li)负面效果$(li2)增加阿片成瘾$(li2)增加阿片中毒$(br)$(li)主治$(li2)肢体失能、剧痛",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:morphine"
+    },
+    {
+      "type": "spotlight",
       "title": "绷带",
       "item": "dgh:bandage",
       "scale": 1.2,
-      "text": "使用绷带包扎伤口，对烧伤和外伤尤其有效。脏了的绷带要及时用剪刀去除，否则会感染。",
+      "text": "使用绷带包扎伤口，阻止出血，稳定脱臼。$(br)$(li)效果$(li2)阻止出血(内伤无效)$(li)负面效果$(li2)变脏后增加内伤$(li2)降低移动速度$(li)主治$(li2)烧伤$(li)副治$(li2)开放伤、脱臼、骨折",
       "link_recipe": true
     },
     {
@@ -40,12 +57,24 @@
       "title": "缝合线",
       "item": "dgh:suture",
       "scale": 1.2,
-      "text": "把撕裂的皮肤重新缝起来",
+      "text": "把撕裂的皮肤重新缝起来。$(br)$(li)效果$(li2)缝合开放伤$(br)$(li)主治$(li2)开放伤",
       "link_recipe": true
     },
     {
       "type": "crafting",
       "recipe": "dgh:suture"
+    },
+    {
+      "type": "spotlight",
+      "title": "石膏",
+      "item": "dgh:gypsum",
+      "scale": 1.2,
+      "text": "绷带缠绕后使用石膏固定断开的骨头。$(br)$(li)效果$(li2)治疗骨折$(li)负面效果$(li2)降低移动速度$(li2)消除骨折负面效果$(br)$(li)主治$(li2)骨折",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:gypsum"
     }
   ]
 }
