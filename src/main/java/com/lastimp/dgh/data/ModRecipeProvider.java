@@ -37,7 +37,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(ModItems.BLOOD_PACK.get(), 1)
                 .unlockedBy("has_blood_pack", has(ModItems.BLOOD_PACK))
                 .save(recipeOutput, new ResourceLocation(DontGetHurt.MODID, "blood_pack_empty_unfill"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SUTURE.get(), 8)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SUTURE.get(), 4)
                 .pattern("c a")
                 .pattern("ca ")
                 .pattern("bcc")
@@ -89,6 +89,13 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('e', ModItems.MORPHINE)
                 .define('f', Items.CHEST)
                 .unlockedBy("has_chest", has(Items.CHEST))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.WOOD_WRENCH.get(), 1)
+                .pattern("a a")
+                .pattern(" a ")
+                .pattern(" a ")
+                .define('a', ItemTags.PLANKS)
+                .unlockedBy("has_plank", has(ItemTags.PLANKS))
                 .save(recipeOutput);
 
         var book = PatchouliAPI.get().getBookStack(new ResourceLocation(DontGetHurt.MODID, "medical_guide"));

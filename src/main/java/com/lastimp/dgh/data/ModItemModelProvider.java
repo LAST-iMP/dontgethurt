@@ -53,6 +53,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         this.basicItem(ModItems.MORPHINE.get());
         this.basicItem(ModItems.SUTURE.get());
         this.basicItem(ModItems.HEALTH_CARE_BAG.get());
+        this.basicItem(ModItems.WOOD_WRENCH.get());
     }
 
     public ResourceLocation getResourceLocation(Item item){

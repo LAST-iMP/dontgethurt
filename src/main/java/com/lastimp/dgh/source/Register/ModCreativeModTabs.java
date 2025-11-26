@@ -30,6 +30,7 @@ public class ModCreativeModTabs {
                         output.accept(ModItems.MORPHINE.get());
                         output.accept(ModItems.SUTURE.get());
                         output.accept(ModItems.HEALTH_CARE_BAG.get());
+                        output.accept(ModItems.WOOD_WRENCH.get());
                     })
                     .build()
     );

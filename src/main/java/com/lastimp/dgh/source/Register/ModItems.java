@@ -103,6 +103,13 @@ public class ModItems {
                     .component(DataComponents.CONTAINER, ItemContainerContents.EMPTY)
     );
 
+        public static final DeferredItem<WoodWrench> WOOD_WRENCH = ITEMS.registerItem(
+            "wood_wrench",
+            WoodWrench::new,
+            new Item.Properties()
+                    .stacksTo(1)
+    );
+
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);
         ITEMS.register(eventBus);
