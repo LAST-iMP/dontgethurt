@@ -1,6 +1,6 @@
 {
   "name": "伤口",
-  "icon": "minecraft:rotten_flesh",
+  "icon": "minecraft:bone",
   "category": "dgh:health",
   "read_by_default": false,
   "sortnum": 1,
@@ -8,17 +8,96 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "烧伤由各种火焰伤害引起，会导致中等程度的失血。需要绷带包扎。"
+      "text": "本章将对各种伤口进行介绍"
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "开放性伤口由各种生物攻击引起，会导致大量失血。需要使用缝合线进行缝合或绷带包扎。"
+      "text": "$(br2)$(li)致命伤$(li2)烧伤$(li2)开放伤$(li2)内伤$(li)苦痛$(li2)脱臼$(li2)骨折"
+    },
+    {
+      "type": "image",
+      "title": "烧伤",
+      "border": true,
+      "images": [
+        "dgh:textures/book/burn.png"
+      ],
+      "text": "烧伤由各种火焰伤害引起。"
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "内伤由各种撞击或环境伤害引起，会导致少量失血。$(br2)被污染的绷带包裹的伤口会引起感染，也会引发内伤。$(br2)无法包扎止血，不过当玩家有饱和度时，会加快恢复速度。"
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)对生命的直接损害$(li2)中等失血$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)绷带包扎$(br)$(li)注意事项$(li2)使绷带更快变脏"
+    },
+    {
+      "type": "image",
+      "title": "开放伤口",
+      "border": true,
+      "images": [
+        "dgh:textures/book/open_wound.png"
+      ],
+      "text": "开放性伤口由各种生物攻击引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)对生命的直接损害$(li2)快速失血$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)缝合$(br)$(li)注意事项$(li2)需要紧急止血"
+    },
+    {
+      "type": "image",
+      "title": "内伤",
+      "border": true,
+      "images": [
+        "dgh:textures/book/internal_injury.png"
+      ],
+      "text": "内伤由环境伤害或治疗问题引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)对生命的直接损害$(li2)微量失血$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)进食$(br)$(li)注意事项$(li2)轻微内伤通常不用理会"
+    },
+    {
+      "type": "image",
+      "title": "脱臼",
+      "border": true,
+      "images": [
+        "dgh:textures/book/dislocation.png"
+      ],
+      "text": "脱臼由内伤引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)四肢$(br)$(li)影响$(li2)肢体剧痛$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)扳手纠正$(br)$(li)注意事项$(li2)影响肢体功能。"
+    },
+    {
+      "type": "image",
+      "title": "骨折",
+      "border": true,
+      "images": [
+        "dgh:textures/book/fracture.png"
+      ],
+      "text": "骨折由内伤引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)四肢$(br)$(li)影响$(li2)肢体剧痛$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)绷带完全包扎后石膏固定$(br)$(li)注意事项$(li2)影响肢体功能。"
+    },
+    {
+      "type": "image",
+      "title": "戒断",
+      "border": true,
+      "images": [
+        "dgh:textures/book/withdraw.png"
+      ],
+      "text": "由阿片成瘾引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)头部$(br)$(li)影响$(li2)戒断反应$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)疗剂(未实装)"
     }
   ]
 }
