@@ -1,29 +1,3 @@
-/*
-* MIT License
-
-Copyright (c) 2023 NeoForged project
-
-This license applies to the template files as supplied by github.com/NeoForged/MDK
-
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
 
 package com.lastimp.dgh.source.core.damageSystem;
 
@@ -110,7 +84,7 @@ public class InjuryEventHandler {
             AbstractBody[] body = h.visibleParts();
             float[] weight = Utils.getRandom(1.5f,3,2,2,1.5f,1.5f);
             for (int i = 0; i < body.length; i++) {
-                body[i].injury(OPEN_WOUND,      0.5f * damageAmount * weight[i] / player.getMaxHealth());
+                OpenWoundHandler.handleExplosion(h, body[i], 0.5f * damageAmount * weight[i] / player.getMaxHealth(), player.getMaxHealth());
                 InternalInjuryHandler.handleExplosion(h, body[i], 0.5f * damageAmount * weight[i] / player.getMaxHealth(), player.getMaxHealth());
             }
             return h;
@@ -122,15 +96,15 @@ public class InjuryEventHandler {
         PlayerHealthCapability.getAndSet(player, h -> {
             AbstractBody[] body = h.visibleParts();
             int index = Utils.getRandomIndex(1,2,2,2,0.5f,0.5f);
-            body[index].injury(OPEN_WOUND, damageAmount / player.getMaxHealth());
+            OpenWoundHandler.handleEntityAttack(h, body[index], damageAmount / player.getMaxHealth(), player.getMaxHealth());
             return h;
         });
         event.setAmount(0f);
     }
 
     public static void handleMagicDamage(float damageAmount, Player player, LivingHurtEvent event) {
-        handleDefaultDamage(damageAmount / 2, player, event);
-        event.setAmount(damageAmount / 2);
+        handleDefaultDamage(damageAmount, player, event);
+        event.setAmount(0f);
     }
 
     public static void handleDefaultDamage(float damageAmount, Player player, LivingHurtEvent event) {

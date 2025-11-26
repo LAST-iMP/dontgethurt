@@ -21,10 +21,10 @@ public class Config {
             .defineInRange("BANDAGE_ACC",2.0,0,10);
 
     public static final ModConfigSpec.DoubleValue BURN_BLEED_RATIO = BUILDER
-            .defineInRange("BURN_BLEED_RATIO",0.6,0,10);
+            .defineInRange("BURN_BLEED_RATIO",0.5,0,10);
 
     public static final ModConfigSpec.DoubleValue INTERNAL_BLEED_RATIO = BUILDER
-            .defineInRange("INTERNAL_BLEED_RATIO",0.3,0,10);
+            .defineInRange("INTERNAL_BLEED_RATIO",0.2,0,10);
 
     public static final ModConfigSpec.DoubleValue OPEN_WOUND_BLEED_RATIO = BUILDER
             .defineInRange("OPEN_WOUND_BLEED_RATIO",0.8,0,10);
