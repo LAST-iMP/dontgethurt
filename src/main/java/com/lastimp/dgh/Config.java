@@ -24,7 +24,7 @@ public class Config {
             .defineInRange("BURN_BLEED_RATIO",0.6,0,10);
 
     public static final ForgeConfigSpec.DoubleValue INTERNAL_BLEED_RATIO = BUILDER
-            .defineInRange("INTERNAL_BLEED_RATIO",0.4,0,10);
+            .defineInRange("INTERNAL_BLEED_RATIO",0.3,0,10);
 
     public static final ForgeConfigSpec.DoubleValue OPEN_WOUND_BLEED_RATIO = BUILDER
             .defineInRange("OPEN_WOUND_BLEED_RATIO",0.8,0,10);

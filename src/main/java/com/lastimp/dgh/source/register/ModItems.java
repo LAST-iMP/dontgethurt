@@ -139,6 +139,14 @@ public class ModItems {
             )
     );
 
+    public static final RegistryObject<WoodWrench> WOOD_WRENCH = ITEMS.register(
+            "wood_wrench",
+            () -> new WoodWrench(
+                    new Item.Properties()
+                            .stacksTo(1)
+            )
+    );
+
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);
         ITEMS.register(eventBus);

@@ -17,7 +17,7 @@ public abstract class InternalInjuryHandler {
         handle(health, body, damageAmount);
         if (!(body instanceof AbstractExtremities extremities)) return health;
 
-        if (Utils.randomCheck(damageAmount, 2.0f / maxHealth, 0.6f, 0.0f, 1.0f)) {
+        if (Utils.randomCheck(damageAmount, 4.0f / maxHealth, 0.6f, 0.0f, 1.0f)) {
             extremities.setConditionValue(FRACTURE, FRACTURE.maxValue);
             if (PLASTER_CAST.abnormal(body.getConditionValue(PLASTER_CAST)))
                 body.setConditionValue(PLASTER_CAST, PLASTER_CAST.defaultValue);
