@@ -16,12 +16,13 @@ public abstract class InternalInjuryHandler {
         handle(health, body, damageAmount);
         if (!(body instanceof AbstractExtremities extremities)) return;
 
-        if (Utils.randomCheck(damageAmount, 4.0f / maxHealth, 0.6f, 0.0f, 1.0f)) {
+        damageAmount += body.getCondition(INTERNAL_INJURY).getValue();
+        if (Utils.randomCheck(damageAmount, 0.2f, 0.6f, 0.0f, 1.0f)) {
             extremities.setConditionValue(FRACTURE, FRACTURE.maxValue);
             if (PLASTER_CAST.abnormal(body.getConditionValue(PLASTER_CAST)))
                 body.setConditionValue(PLASTER_CAST, PLASTER_CAST.defaultValue);
         }
-        if (Utils.randomCheck(damageAmount, 2.0f / maxHealth, 0.8f, 0.0f, 0.5f)) {
+        if (Utils.randomCheck(damageAmount, 0.1f, 0.8f, 0.0f, 0.5f)) {
             if (!FRACTURE.abnormal(body.getConditionValue(FRACTURE)) && !extremities.isBadBandaged() && !extremities.isBadBandaged())
                 extremities.setConditionValue(DISLOCATION, DISLOCATION.maxValue);
         }
@@ -31,7 +32,8 @@ public abstract class InternalInjuryHandler {
         handle(health, body, damageAmount);
         if (!(body instanceof AbstractExtremities extremities)) return;
 
-        if (Utils.randomCheck(damageAmount, 0, 0.6f, 0.0f, 1.0f)) {
+        damageAmount += body.getCondition(INTERNAL_INJURY).getValue();
+        if (Utils.randomCheck(damageAmount, 0.1f, 0.6f, 0.0f, 1.0f)) {
             extremities.setConditionValue(FRACTURE, FRACTURE.maxValue);
             if (PLASTER_CAST.abnormal(body.getConditionValue(PLASTER_CAST)))
                 body.setConditionValue(PLASTER_CAST, PLASTER_CAST.defaultValue);
