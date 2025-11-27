@@ -2,6 +2,7 @@ package com.lastimp.dgh.source.core.buffSystem;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.AbstractArm;
+import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.source.Register.ModEffects;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,8 +41,8 @@ public class BuffEventHandler {
     }
 
     private static void updateArmEffects(PlayerHealthCapability health, ServerPlayer player) {
-        AbstractArm[] arms = (AbstractArm[]) health.arms();
-        int slowDown = (arms[0].available(health) ? 0 : 1) + (arms[1].available(health) ? 0 : 1);
+        AbstractBody[] arms = health.arms();
+        int slowDown = (((AbstractArm)arms[0]).available(health) ? 0 : 1) + (((AbstractArm)arms[1]).available(health) ? 0 : 1);
         if (slowDown == 0) return;
 
         var newEffect = new MobEffectInstance(
