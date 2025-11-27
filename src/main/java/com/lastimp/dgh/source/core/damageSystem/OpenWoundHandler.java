@@ -16,7 +16,8 @@ public class OpenWoundHandler {
         handle(health, body, damageAmount);
         if (!(body instanceof AbstractExtremities extremities)) return;
 
-        if (Utils.randomCheck(damageAmount, 4.0f / maxHealth, 0.6f, 0.0f, 1.0f)) {
+        damageAmount += body.getCondition(OPEN_WOUND).getValue();
+        if (Utils.randomCheck(damageAmount, 0.2f, 0.6f, 0.0f, 1.0f)) {
             extremities.setConditionValue(FRACTURE, FRACTURE.maxValue);
             if (PLASTER_CAST.abnormal(body.getConditionValue(PLASTER_CAST)))
                 body.setConditionValue(PLASTER_CAST, PLASTER_CAST.defaultValue);
@@ -27,7 +28,8 @@ public class OpenWoundHandler {
         handle(health, body, damageAmount);
         if (!(body instanceof AbstractExtremities extremities)) return;
 
-        if (Utils.randomCheck(damageAmount, 2.0f / maxHealth, 0.6f, 0.0f, 1.0f)) {
+        damageAmount += body.getCondition(OPEN_WOUND).getValue();
+        if (Utils.randomCheck(damageAmount, 0.2f, 0.6f, 0.0f, 1.0f)) {
             extremities.setConditionValue(FRACTURE, FRACTURE.maxValue);
             if (PLASTER_CAST.abnormal(body.getConditionValue(PLASTER_CAST)))
                 body.setConditionValue(PLASTER_CAST, PLASTER_CAST.defaultValue);
