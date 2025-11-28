@@ -1,29 +1,3 @@
-/*
-* MIT License
-
-Copyright (c) 2023 NeoForged project
-
-This license applies to the template files as supplied by github.com/NeoForged/MDK
-
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
 
 package com.lastimp.dgh.source.core.damageSystem;
 
@@ -52,9 +26,15 @@ public class InjuryEventHandler {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
-
-        float damageAmount = event.getNewDamage();
+        float damageAmount = event.getOriginalDamage();
+        float absorption = player.getAbsorptionAmount();
         DamageSource source = event.getSource();
+
+        if (absorption >= damageAmount) return;
+        else if (absorption > 0) {
+            damageAmount = damageAmount - absorption;
+            player.setAbsorptionAmount(0);
+        }
 
         if (source.is(DamageTypeTags.IS_FALL)) {
             handleFalling(damageAmount, player, event);
@@ -88,9 +68,8 @@ public class InjuryEventHandler {
     public static void handleBurning(float damageAmount, Player player, LivingDamageEvent.Pre event) {
         PlayerHealthCapability.getAndSet(player, h -> {
             BodyComponents randomComponent = BodyComponents.random();
-            AbstractBody body = h.getComponent(randomComponent);
 
-            body.injury(BURN, damageAmount / player.getMaxHealth());
+            BurnHandler.handle(h, h.getComponent(randomComponent), damageAmount / player.getMaxHealth());
             return h;
         });
         event.setNewDamage(0f);

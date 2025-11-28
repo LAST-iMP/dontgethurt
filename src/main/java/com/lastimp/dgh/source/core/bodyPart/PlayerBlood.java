@@ -80,7 +80,7 @@ public class PlayerBlood extends AbstractBody {
 
         ConditionState state = this.getCondition(BLOOD_LOSS);
         if (state.getValue() > BLOOD_LOSS.defaultValue + EPS)
-            state.setValue(Mth.clamp(state.getValue() - BLOOD_LOSS.healingSpeed * DELTA, BLOOD_LOSS.minValue, BLOOD_LOSS.maxValue));
+            this.healing(BLOOD_LOSS, - BLOOD_LOSS.healingSpeed * DELTA);
     }
 
     private boolean isBleeding(PlayerHealthCapability health) {

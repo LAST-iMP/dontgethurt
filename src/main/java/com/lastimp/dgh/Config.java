@@ -45,7 +45,13 @@ public class Config {
             .defineInRange("BASE_MED_AVAILABLE_TIME",100,1, Integer.MAX_VALUE);
 
     public static final ModConfigSpec.IntValue VOLUME_SELF_HEALING_TIME = BUILDER
-            .defineInRange("VOLUME_SELF_HEALING_TIME",50,1, Integer.MAX_VALUE);
+            .defineInRange("VOLUME_SELF_HEALING_TIME",100,1, Integer.MAX_VALUE);
+
+    public static final ModConfigSpec.DoubleValue RESISTANCE_CONVERT_RATIO = BUILDER
+            .defineInRange("RESISTANCE_CONVERT_RATIO", 0.01, 0, 1.0);
+
+    public static final ModConfigSpec.DoubleValue RESISTANCE_MAX = BUILDER
+            .defineInRange("RESISTANCE_MAX", 0.4, 0, 1.0);
 
     // 检验item名称是否合法
     private static boolean validateItemName(final Object obj)
@@ -69,6 +75,9 @@ public class Config {
     public static int base_med_available_time;
     public static int volume_self_healing_time;
 
+    public static float resistance_convert_ratio;
+    public static float resistance_max;
+
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         dirty_bandage_ratio = (float) DIRTY_BANDAGE_RATIO.getAsDouble();
@@ -83,6 +92,8 @@ public class Config {
         base_self_healing_time = BASE_SELF_HEALING_TIME.getAsInt();
         base_med_available_time = BASE_MED_AVAILABLE_TIME.getAsInt();
         volume_self_healing_time = VOLUME_SELF_HEALING_TIME.getAsInt();
+        resistance_convert_ratio = (float) RESISTANCE_CONVERT_RATIO.getAsDouble();
+        resistance_max = (float) RESISTANCE_MAX.getAsDouble();
     }
 
 }

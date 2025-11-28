@@ -29,7 +29,6 @@ package com.lastimp.dgh.api.bodyPart;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -87,7 +86,7 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
         return hiddenValue + value;
     }
 
-    public void setHiddenValue(float hiddenValue) {
+    protected void setHiddenValue(float hiddenValue) {
         this.hiddenValue = hiddenValue;
     }
 
@@ -107,7 +106,7 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
         this.stateLevel = stateLevel;
     }
 
-    public void tick() {
+    protected void tick() {
         if (this.tickCounter >= 20) {
             this.displayValue = this.value;
             return;
@@ -126,7 +125,7 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
         return value;
     }
 
-    public void setValue(float value) {
+    protected void setValue(float value) {
         this.lastDisplayValue = this.displayValue;
         this.value = value;
         this.tickCounter = 0;

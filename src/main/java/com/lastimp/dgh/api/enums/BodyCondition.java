@@ -1,30 +1,3 @@
-/*
-* MIT License
-
-Copyright (c) 2023 NeoForged project
-
-This license applies to the template files as supplied by github.com/NeoForged/MDK
-
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-
 package com.lastimp.dgh.api.enums;
 
 import com.lastimp.dgh.Config;
@@ -36,7 +9,7 @@ import static com.lastimp.dgh.DontGetHurt.EPS;
 
 public enum BodyCondition {
     //肢体
-    BURN            ("烧伤", 1.0f / Config.base_self_healing_time, 0.2f, BodyCondition.pathRoot+"burn"),
+    BURN            ("烧伤",1.0f / Config.base_self_healing_time, 0.2f, BodyCondition.pathRoot+"burn"),
     INTERNAL_INJURY ("内伤", 1.0f / Config.base_self_healing_time, 1.0f, BodyCondition.pathRoot+"internal_injury"),
     OPEN_WOUND      ("开放伤", 1.0f / Config.base_self_healing_time, 0.5f, BodyCondition.pathRoot+"open_wound"),
     BLEED           ("出血", 0.0f, 0.0f, BodyCondition.pathRoot+"bleeding"),
@@ -46,6 +19,10 @@ public enum BodyCondition {
     BANDAGED        ("绷带包扎", 1.0f / Config.base_med_available_time / 2, 0.75f, 0xFF00FF00, BodyCondition.pathRoot+"bandage"),
     BANDAGED_DIRTY  ("脏绷带", 0.0f, 1.0f, BodyCondition.pathRoot+"bandage_dirty"),
     OINMENTED       ("药膏涂抹", 0.0f, 0.0f),
+
+    BURN_RES        ("烧伤抗性", 0, 0, 0xFFF4FFA7,BodyCondition.pathRoot+"burn_resist"),
+    INTERNAL_RES    ("内伤抗性", 0, 0, 0xFFF4FFA7, BodyCondition.pathRoot+"internal_injury_resist"),
+    OPEN_WOUND_RES  ("外伤抗性", 0, 0, 0xFFF4FFA7, BodyCondition.pathRoot+"open_wound_resist"),
     //四肢
     DISLOCATION     ("脱臼", 0.0f, 1.0f, 0xFFFFFF00, BodyCondition.pathRoot+"dislocation"),
     FRACTURE        ("骨折", 1.0f / Config.base_self_healing_time * 3, 0.0f, BodyCondition.pathRoot+"fracture"),

@@ -9,10 +9,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public class StaggerEffect extends MobEffect {
-    public static String ID = "efea5782-b172-4048-b0cb-48622290b4b3";
-
     public StaggerEffect(int color) {
         super(MobEffectCategory.HARMFUL, color);
+        this.setBlendDuration(0);
     }
 
     @Override
@@ -20,7 +19,7 @@ public class StaggerEffect extends MobEffect {
         this.addAttributeModifier(
                 Attributes.MOVEMENT_SPEED,
                 ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "stagger_effect"),
-                -0.1f,
+                -0.05f,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
     }

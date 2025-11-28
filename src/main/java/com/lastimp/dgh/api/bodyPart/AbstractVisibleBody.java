@@ -2,9 +2,9 @@
 package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.Config;
+import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
-import com.lastimp.dgh.api.enums.BodyCondition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.DontGetHurt.EPS;
-import static com.lastimp.dgh.api.enums.BodyComponents.*;
+import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 public abstract class AbstractVisibleBody extends AbstractBody {
@@ -31,7 +31,11 @@ public abstract class AbstractVisibleBody extends AbstractBody {
                     FOREIGN_OBJECT,
                     BANDAGED,
                     BANDAGED_DIRTY,
-                    OINMENTED
+                    OINMENTED,
+
+                    BURN_RES,
+                    INTERNAL_RES,
+                    OPEN_WOUND_RES
             });
         }
         return ANY_BODY_CONDITIONS;
@@ -66,6 +70,18 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     @Override
+    public void healing(BodyCondition key, float value) {
+        float heal = Mth.clamp(Math.min(-value, this.getConditionValue(key)), 0.0f, 1.0f) * Config.resistance_convert_ratio;
+        if (key == BURN) {
+            this.addConditionValue(BURN_RES, heal);
+        } else if (key == OPEN_WOUND) {
+            this.addConditionValue(OPEN_WOUND_RES, heal);
+        } else if (key == INTERNAL_INJURY) {
+            this.addConditionValue(INTERNAL_RES, heal);
+        }
+        super.healing(key, value);
+    }
+
     public int slowDownLevel(PlayerHealthCapability health) {
         return (this.isBandaged() || isBadBandaged()) ? 1 : 0;
     }
@@ -84,11 +100,10 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
         ConditionState burn = this.getCondition(BURN);
         ConditionState openWound = this.getCondition(OPEN_WOUND);
-        ConditionState innerInjury = this.getCondition(INTERNAL_INJURY);
         if (this.abnormalWithHidden(BANDAGED_DIRTY) && BURN.abnormal(burn.getHiddenValue())) {
-            innerInjury.setValue(Mth.clamp(innerInjury.getValue() + burn.getHiddenValue() * Config.dirty_bandage_ratio * DELTA, INTERNAL_INJURY.minValue, INTERNAL_INJURY.maxValue));
+            this.injury(BURN, burn.getHiddenValue() * Config.dirty_bandage_ratio * DELTA);
         } else if (this.abnormalWithHidden(BANDAGED_DIRTY) && OPEN_WOUND.abnormal(openWound.getHiddenValue())) {
-            innerInjury.setValue(Mth.clamp(innerInjury.getValue() + openWound.getHiddenValue() * Config.dirty_bandage_ratio * DELTA, INTERNAL_INJURY.minValue, INTERNAL_INJURY.maxValue));
+            this.injury(INTERNAL_INJURY, openWound.getHiddenValue() * Config.dirty_bandage_ratio * DELTA);
         }
     }
 
@@ -130,20 +145,15 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     private void handleBandageAcc(BodyCondition condition, float acc) {
-        ConditionState state = this.getCondition(condition);
-
         if (isBandaged()) {
-            state.setHiddenValue(
-                    Mth.clamp(state.getHiddenValue() - condition.healingSpeed * DELTA * (isBadBandaged() ? 1.0f : acc),
-                            condition.minValue, condition.maxValue)
-            );
+            this.healingHidden(condition, - condition.healingSpeed * DELTA * (isBadBandaged() ? 1.0f : acc));
         }
     }
 
     protected void handleCover(BodyCondition condition) {
         ConditionState state = this.getCondition(condition);
         if (!isBandaged() && !isBadBandaged()) {
-            state.setValue(condition.abnormal(state.getHiddenValue())? state.getHiddenValue() : state.getValue());
+            this.setConditionValue(condition, state.getValue() + state.getHiddenValue());
             state.setHiddenValue(condition.defaultValue);
         }
     }
@@ -151,7 +161,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     private void handleSelfHealing(BodyCondition condition, boolean hidden) {
         ConditionState state = this.getCondition(condition);
         if (state.getValue() + (hidden ? state.getHiddenValue() : 0) < condition.healingTS + EPS) {
-            state.setValue(state.getValue() - condition.healingSpeed * DELTA);
+            this.healing(condition, - condition.healingSpeed * DELTA);
         }
     }
 
