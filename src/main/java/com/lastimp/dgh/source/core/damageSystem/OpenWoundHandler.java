@@ -1,7 +1,9 @@
 package com.lastimp.dgh.source.core.damageSystem;
 
+import com.lastimp.dgh.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
+import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 
@@ -9,6 +11,8 @@ import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 public class OpenWoundHandler {
     public static void handle(PlayerHealthCapability health, AbstractBody body, float damageAmount) {
+        if (body instanceof AbstractVisibleBody visibleBody)
+            damageAmount *= (1.0f - visibleBody.getConditionValue(OPEN_WOUND_RES) * Config.resistance_max);
         body.injury(OPEN_WOUND, damageAmount);
     }
 

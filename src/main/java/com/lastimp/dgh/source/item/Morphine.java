@@ -27,8 +27,8 @@ public class Morphine extends AbstractDirectHealItems {
 
             torso.healing(ANALGESIA, 0.5f);
             head.healing(WITHDRAW, -0.3f);
-            blood.healing(OPIATE_ADDICTED, 0.1f);
-            blood.healing(OPIATE_OVERDOSE, 0.1f);
+            blood.injury(OPIATE_ADDICTED, 0.1f);
+            blood.injury(OPIATE_OVERDOSE, 0.1f);
             return false;
         });
     }

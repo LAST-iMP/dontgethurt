@@ -14,9 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
-
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class InjuryEventHandler {
@@ -27,9 +24,15 @@ public class InjuryEventHandler {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
-
         float damageAmount = event.getAmount();
+        float absorption = player.getAbsorptionAmount();
         DamageSource source = event.getSource();
+
+        if (absorption >= damageAmount) return;
+        else if (absorption > 0) {
+            damageAmount = damageAmount - absorption;
+            player.setAbsorptionAmount(0);
+        }
 
         if (source.is(DamageTypeTags.IS_FALL)) {
             handleFalling(damageAmount, player, event);
@@ -63,9 +66,8 @@ public class InjuryEventHandler {
     public static void handleBurning(float damageAmount, Player player, LivingDamageEvent event) {
         PlayerHealthCapability.getAndSet(player, h -> {
             BodyComponents randomComponent = BodyComponents.random();
-            AbstractBody body = h.getComponent(randomComponent);
 
-            body.injury(BURN, damageAmount / player.getMaxHealth());
+            BurnHandler.handle(h, h.getComponent(randomComponent), damageAmount / player.getMaxHealth());
             return h;
         });
         event.setAmount(0f);

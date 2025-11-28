@@ -20,17 +20,9 @@ public class ModCreativeModTabs {
                     .withTabsBefore(CreativeModeTabs.COMBAT)
                     .icon(() -> ModItems.HEALTH_SCANNER.get().getDefaultInstance())
                     .displayItems((parameters, output) -> {
-                        output.accept(ModItems.HEALTH_SCANNER.get());
-                        output.accept(ModItems.BLOOD_SCANNER.get());
-                        output.accept(ModItems.OPERATING_BED_BLOCK_ITEM.get());
-                        output.accept(ModItems.BLOOD_PACK.get());
-                        output.accept(ModItems.BLOOD_PACK_EMPTY.get());
-                        output.accept(ModItems.BANDAGE.get());
-                        output.accept(ModItems.GYPSUM.get());
-                        output.accept(ModItems.MORPHINE.get());
-                        output.accept(ModItems.SUTURE.get());
-                        output.accept(ModItems.HEALTH_CARE_BAG.get());
-                        output.accept(ModItems.WOOD_WRENCH.get());
+                        for (var item : ModItems.ITEMS_SET) {
+                            output.accept(item.get());
+                        }
                     })
                     .build()
     );

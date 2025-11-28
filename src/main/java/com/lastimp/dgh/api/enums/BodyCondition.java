@@ -9,7 +9,7 @@ import static com.lastimp.dgh.DontGetHurt.EPS;
 
 public enum BodyCondition {
     //肢体
-    BURN            ("烧伤", 1.0f / Config.base_self_healing_time, 0.2f, BodyCondition.pathRoot+"burn"),
+    BURN            ("烧伤",1.0f / Config.base_self_healing_time, 0.2f, BodyCondition.pathRoot+"burn"),
     INTERNAL_INJURY ("内伤", 1.0f / Config.base_self_healing_time, 1.0f, BodyCondition.pathRoot+"internal_injury"),
     OPEN_WOUND      ("开放伤", 1.0f / Config.base_self_healing_time, 0.5f, BodyCondition.pathRoot+"open_wound"),
     BLEED           ("出血", 0.0f, 0.0f, BodyCondition.pathRoot+"bleeding"),
@@ -19,6 +19,10 @@ public enum BodyCondition {
     BANDAGED        ("绷带包扎", 1.0f / Config.base_med_available_time / 2, 0.75f, 0xFF00FF00, BodyCondition.pathRoot+"bandage"),
     BANDAGED_DIRTY  ("脏绷带", 0.0f, 1.0f, BodyCondition.pathRoot+"bandage_dirty"),
     OINMENTED       ("药膏涂抹", 0.0f, 0.0f),
+
+    BURN_RES        ("烧伤抗性", 0, 0, 0xFFF4FFA7,BodyCondition.pathRoot+"burn_resist"),
+    INTERNAL_RES    ("内伤抗性", 0, 0, 0xFFF4FFA7, BodyCondition.pathRoot+"internal_injury_resist"),
+    OPEN_WOUND_RES  ("外伤抗性", 0, 0, 0xFFF4FFA7, BodyCondition.pathRoot+"open_wound_resist"),
     //四肢
     DISLOCATION     ("脱臼", 0.0f, 1.0f, 0xFFFFFF00, BodyCondition.pathRoot+"dislocation"),
     FRACTURE        ("骨折", 1.0f / Config.base_self_healing_time * 3, 0.0f, BodyCondition.pathRoot+"fracture"),

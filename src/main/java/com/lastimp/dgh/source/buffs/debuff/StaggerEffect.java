@@ -13,6 +13,7 @@ public class StaggerEffect extends MobEffect {
 
     public StaggerEffect(int color) {
         super(MobEffectCategory.HARMFUL, color);
+        this.setBlendDuration(0);
     }
 
     @Override
@@ -20,7 +21,7 @@ public class StaggerEffect extends MobEffect {
         this.addAttributeModifier(
                 Attributes.MOVEMENT_SPEED,
                 ID,
-                -0.1f,
+                -0.05f,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
     }

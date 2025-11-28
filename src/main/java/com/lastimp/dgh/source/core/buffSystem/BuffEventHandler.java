@@ -5,15 +5,18 @@ import com.lastimp.dgh.api.bodyPart.AbstractArm;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.source.Register.ModEffects;
+import com.lastimp.dgh.source.buffs.buff.KeepLivingEffect;
 import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
+import static com.lastimp.dgh.DontGetHurt.EPS;
 import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
 import static com.lastimp.dgh.api.enums.BodyCondition.WITHDRAW;
 
@@ -29,6 +32,8 @@ public class BuffEventHandler {
         updateStaggerEffects(health, player);
         updateArmEffects(health, player);
         updateWithdrawEffects(health, player);
+        updateLivingTimeEffects(health, player);
+        updateCureEffects(health, player);
         updateSymptomsEffects(health, player);
     }
 
@@ -43,17 +48,15 @@ public class BuffEventHandler {
     }
 
     private static void updateArmEffects(PlayerHealthCapability health, ServerPlayer player) {
-        AbstractBody[] arms = health.arms();
-        int slowDown = (((AbstractArm)arms[0]).available(health) ? 0 : 1) + (((AbstractArm)arms[1]).available(health) ? 0 : 1);
-        if (slowDown == 0) return;
+        if (health.armBreak() == 0) return;
 
         var newEffect = new MobEffectInstance(
                 MobEffects.DIG_SLOWDOWN,
-                40, slowDown - 1
+                40, health.armBreak() - 1
         );
         if (!player.hasEffect(MobEffects.DIG_SLOWDOWN)) {
             player.addEffect(newEffect);
-        } else if (player.getEffect(MobEffects.DIG_SLOWDOWN).getAmplifier() >= slowDown) {
+        } else if (player.getEffect(MobEffects.DIG_SLOWDOWN).getAmplifier() >= health.armBreak()) {
             player.getEffect(MobEffects.DIG_SLOWDOWN).update(newEffect);
         }
     }
@@ -70,6 +73,34 @@ public class BuffEventHandler {
         if (state.getValue() > 0.4f && !player.hasEffect(MobEffects.CONFUSION)) {
             player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100));
         }
+    }
+
+    private static void updateLivingTimeEffects(PlayerHealthCapability health, ServerPlayer player) {
+        if (player.hasEffect(ModEffects.KEEP_LIVING_EFFECT)) return;
+        int amp = (int) Math.sqrt((double) health.livingTick() / 1000);
+        amp = Math.min(amp, 40);
+        if (amp < 1) return;
+        var newEffect = new MobEffectInstance(
+                ModEffects.KEEP_LIVING_EFFECT,
+                100, amp - 1,
+                false, false, true
+        );
+        player.addEffect(newEffect);
+    }
+
+    private static void updateCureEffects(PlayerHealthCapability health, ServerPlayer player) {
+        if (player.hasEffect(ModEffects.CURE_EFFECT)) return;
+        if (health.playerVitality() < 0.999f) return;
+        if (health.almostDead() < 0.2f) {
+            player.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2400, 2));
+        } else if (health.almostDead() < 0.5f) {
+            player.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2400, 1));
+        } else if (health.almostDead() < 0.8f) {
+            player.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2400, 0));
+        } else {
+            return;
+        }
+        health.resetAlmostDead();
     }
 
     private static void updateSymptomsEffects(PlayerHealthCapability health, ServerPlayer player) {

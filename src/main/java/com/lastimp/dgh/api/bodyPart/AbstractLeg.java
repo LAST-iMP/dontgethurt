@@ -15,6 +15,6 @@ public class AbstractLeg extends AbstractExtremities{
         boolean available = this.isBandaged() || this.isBadBandaged() || !this.abnormal(DISLOCATION);
         available &= this.abnormal(PLASTER_CAST) || !this.abnormalWithHidden(FRACTURE);
         available |= health.getComponent(TORSO).abnormal(ANALGESIA);
-        return super.slowDownLevel(health) + (available? 0 : 4);
+        return super.slowDownLevel(health) + (available? 0 : 8);
     }
 }

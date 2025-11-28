@@ -44,16 +44,9 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        this.basicItem(ModItems.HEALTH_SCANNER.get());
-        this.basicItem(ModItems.BLOOD_PACK.get());
-        this.basicItem(ModItems.BLOOD_PACK_EMPTY.get());
-        this.basicItem(ModItems.BLOOD_SCANNER.get());
-        this.basicItem(ModItems.BANDAGE.get());
-        this.basicItem(ModItems.GYPSUM.get());
-        this.basicItem(ModItems.MORPHINE.get());
-        this.basicItem(ModItems.SUTURE.get());
-        this.basicItem(ModItems.HEALTH_CARE_BAG.get());
-        this.basicItem(ModItems.WOOD_WRENCH.get());
+        for (var item : ModItems.ITEMS_SET) {
+            this.basicItem(item.get());
+        }
     }
 
     public ResourceLocation getResourceLocation(Item item){

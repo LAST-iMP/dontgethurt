@@ -1,29 +1,3 @@
-/*
-* MIT License
-
-Copyright (c) 2023 NeoForged project
-
-This license applies to the template files as supplied by github.com/NeoForged/MDK
-
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
 
 package com.lastimp.dgh.api.bodyPart;
 
@@ -57,7 +31,11 @@ public abstract class AbstractVisibleBody extends AbstractBody {
                     FOREIGN_OBJECT,
                     BANDAGED,
                     BANDAGED_DIRTY,
-                    OINMENTED
+                    OINMENTED,
+
+                    BURN_RES,
+                    INTERNAL_RES,
+                    OPEN_WOUND_RES
             });
         }
         return ANY_BODY_CONDITIONS;
@@ -91,6 +69,19 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         return lost;
     }
 
+    @Override
+    public void healing(BodyCondition key, float value) {
+        float heal = Mth.clamp(Math.min(-value, this.getConditionValue(key)), 0.0f, 1.0f) * Config.resistance_convert_ratio;
+        if (key == BURN) {
+            this.addConditionValue(BURN_RES, heal);
+        } else if (key == OPEN_WOUND) {
+            this.addConditionValue(OPEN_WOUND_RES, heal);
+        } else if (key == INTERNAL_INJURY) {
+            this.addConditionValue(INTERNAL_RES, heal);
+        }
+        super.healing(key, value);
+    }
+
     public int slowDownLevel(PlayerHealthCapability health) {
         return (this.isBandaged() || isBadBandaged()) ? 1 : 0;
     }
@@ -109,11 +100,10 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
         ConditionState burn = this.getCondition(BURN);
         ConditionState openWound = this.getCondition(OPEN_WOUND);
-        ConditionState innerInjury = this.getCondition(INTERNAL_INJURY);
         if (this.abnormalWithHidden(BANDAGED_DIRTY) && BURN.abnormal(burn.getHiddenValue())) {
-            innerInjury.setValue(Mth.clamp(innerInjury.getValue() + burn.getHiddenValue() * Config.dirty_bandage_ratio * DELTA, INTERNAL_INJURY.minValue, INTERNAL_INJURY.maxValue));
+            this.injury(BURN, burn.getHiddenValue() * Config.dirty_bandage_ratio * DELTA);
         } else if (this.abnormalWithHidden(BANDAGED_DIRTY) && OPEN_WOUND.abnormal(openWound.getHiddenValue())) {
-            innerInjury.setValue(Mth.clamp(innerInjury.getValue() + openWound.getHiddenValue() * Config.dirty_bandage_ratio * DELTA, INTERNAL_INJURY.minValue, INTERNAL_INJURY.maxValue));
+            this.injury(INTERNAL_INJURY, openWound.getHiddenValue() * Config.dirty_bandage_ratio * DELTA);
         }
     }
 
@@ -155,20 +145,15 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     private void handleBandageAcc(BodyCondition condition, float acc) {
-        ConditionState state = this.getCondition(condition);
-
         if (isBandaged()) {
-            state.setHiddenValue(
-                    Mth.clamp(state.getHiddenValue() - condition.healingSpeed * DELTA * (isBadBandaged() ? 1.0f : acc),
-                            condition.minValue, condition.maxValue)
-            );
+            this.healingHidden(condition, - condition.healingSpeed * DELTA * (isBadBandaged() ? 1.0f : acc));
         }
     }
 
     protected void handleCover(BodyCondition condition) {
         ConditionState state = this.getCondition(condition);
         if (!isBandaged() && !isBadBandaged()) {
-            state.setValue(condition.abnormal(state.getHiddenValue())? state.getHiddenValue() : state.getValue());
+            this.setConditionValue(condition, state.getValue() + state.getHiddenValue());
             state.setHiddenValue(condition.defaultValue);
         }
     }
@@ -176,7 +161,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     private void handleSelfHealing(BodyCondition condition, boolean hidden) {
         ConditionState state = this.getCondition(condition);
         if (state.getValue() + (hidden ? state.getHiddenValue() : 0) < condition.healingTS + EPS) {
-            state.setValue(state.getValue() - condition.healingSpeed * DELTA);
+            this.healing(condition, - condition.healingSpeed * DELTA);
         }
     }
 

@@ -22,15 +22,4 @@ public class ForgeClientEventHandler {
             PacketDistributor.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.KEY_HEALTH_MENU, 0));
         }
     }
-
-    @SubscribeEvent
-    public static void onPlayerCloned(PlayerEvent.Clone event) {
-        if (!event.isWasDeath()) {
-            var oldHealth = PlayerHealthCapability.get(event.getOriginal());
-            var newHealth = PlayerHealthCapability.get(event.getEntity());
-            newHealth.deserializeNBT(event.getEntity().registryAccess(), oldHealth.serializeNBT(event.getEntity().registryAccess()));
-            PlayerHealthCapability.set(event.getEntity(), newHealth);
-        }
-    }
-
 }
