@@ -53,10 +53,15 @@ public class InjuryEventHandler {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
-
         float damageAmount = event.getAmount();
+        float absorption = player.getAbsorptionAmount();
         DamageSource source = event.getSource();
 
+        if (absorption >= damageAmount) return;
+        else if (absorption > 0) {
+            damageAmount = damageAmount - absorption;
+            player.setAbsorptionAmount(0);
+        }
         if (source.is(DamageTypeTags.IS_FALL)) {
             handleFalling(damageAmount, player, event);
         } else if (source.is(DamageTypeTags.IS_FIRE)) {
@@ -89,9 +94,8 @@ public class InjuryEventHandler {
     public static void handleBurning(float damageAmount, Player player, LivingDamageEvent event) {
         PlayerHealthCapability.getAndSet(player, h -> {
             BodyComponents randomComponent = BodyComponents.random();
-            AbstractBody body = h.getComponent(randomComponent);
 
-            body.injury(BURN, damageAmount / player.getMaxHealth());
+            BurnHandler.handle(h, h.getComponent(randomComponent), damageAmount / player.getMaxHealth());
             return h;
         });
         event.setAmount(0f);

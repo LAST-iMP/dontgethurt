@@ -33,7 +33,7 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.MORPHINE.get(), "吗啡");
         this.add(ModItems.GYPSUM.get(), "石膏");
         this.add(ModItems.SUTURE.get(), "缝合线");
-        this.add(ModItems.OPERATING_BED_BLOCK_ITEM.get(), "手术床");
+//        this.add(ModItems.OPERATING_BED_BLOCK_ITEM.get(), "手术床");
         this.add(ModItems.HEALTH_CARE_BAG.get(), "医疗包");
         this.add(ModItems.WOOD_WRENCH.get(), "木扳手");
 
@@ -41,6 +41,9 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModEffects.INTENSE_PAIN_EFFECT.get(), "剧痛");
         this.add(ModEffects.SWEATING_EFFECT.get(), "出汗");
         this.add(ModEffects.CRAVING_EFFECT.get(), "渴望");
+        this.add(ModEffects.KEEP_LIVING_EFFECT.get(), "长生久视");
+        this.add(ModEffects.CURE_EFFECT.get(), "重振旗鼓");
+
 
     }
 }

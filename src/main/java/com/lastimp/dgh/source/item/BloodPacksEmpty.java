@@ -50,7 +50,7 @@ public class BloodPacksEmpty extends AbstractDirectHealItems {
             float currCondition = blood.getConditionValue(BLOOD_LOSS);
             if (currCondition > BLOOD_LOSS.maxValue - 0.3f) return false;
 
-            blood.healing(BLOOD_LOSS, 0.25f);
+            blood.injury(BLOOD_LOSS, 0.25f);
             if (!source.getStringUUID().equals(target.getStringUUID()))
                 source.attack(target);
 

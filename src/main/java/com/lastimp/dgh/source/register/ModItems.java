@@ -44,6 +44,10 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.HashSet;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import static com.lastimp.dgh.DontGetHurt.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -51,23 +55,25 @@ public class ModItems {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, DontGetHurt.MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, DontGetHurt.MODID);
 
-    public static final RegistryObject<Block> OPERATING_BED_BLOCK = BLOCKS.register(
-            "operating_bed",
-            () -> new OperatingBedBlock(
-                    BlockBehaviour.Properties.copy(Blocks.RED_BED.defaultBlockState().getBlock())
-            )
-    );
+    public static final HashSet<RegistryObject<?>> ITEMS_SET = new HashSet<>();
 
-    public static final RegistryObject<BlockItem> OPERATING_BED_BLOCK_ITEM = ITEMS.register(
-            "operating_bed",
-            () -> new OperatingBedItem(
-                    OPERATING_BED_BLOCK.get(),
-                    new Item.Properties()
-                            .stacksTo(1)
-            )
-    );
+//    public static final RegistryObject<Block> OPERATING_BED_BLOCK = BLOCKS.register(
+//            "operating_bed",
+//            () -> new OperatingBedBlock(
+//                    BlockBehaviour.Properties.copy(Blocks.RED_BED.defaultBlockState().getBlock())
+//            )
+//    );
+//
+//    public static final RegistryObject<BlockItem> OPERATING_BED_BLOCK_ITEM = ITEMS.register(
+//            "operating_bed",
+//            () -> new OperatingBedItem(
+//                    OPERATING_BED_BLOCK.get(),
+//                    new Item.Properties()
+//                            .stacksTo(1)
+//            )
+//    );
 
-    public static final RegistryObject<Item> HEALTH_SCANNER = ITEMS.register(
+    public static final RegistryObject<Item> HEALTH_SCANNER = registerItem(
             "health_scanner",
             () -> new HealthScanner(
                     new Item.Properties()
@@ -75,7 +81,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<Item> BLOOD_PACK = ITEMS.register(
+    public static final RegistryObject<Item> BLOOD_PACK = registerItem(
             "blood_pack",
             () -> new BloodPacks(
                     new Item.Properties()
@@ -83,7 +89,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<Item> BLOOD_PACK_EMPTY = ITEMS.register(
+    public static final RegistryObject<Item> BLOOD_PACK_EMPTY = registerItem(
             "blood_pack_empty",
             () -> new BloodPacksEmpty(
                     new Item.Properties()
@@ -91,7 +97,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<BloodScanner> BLOOD_SCANNER = ITEMS.register(
+    public static final RegistryObject<BloodScanner> BLOOD_SCANNER = registerItem(
             "blood_scanner",
             () -> new BloodScanner(
                     new Item.Properties()
@@ -99,7 +105,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<Bandages> BANDAGE = ITEMS.register(
+    public static final RegistryObject<Bandages> BANDAGE = registerItem(
             "bandage",
             () -> new Bandages(
                     new Item.Properties()
@@ -107,7 +113,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<Morphine> MORPHINE = ITEMS.register(
+    public static final RegistryObject<Morphine> MORPHINE = registerItem(
             "morphine",
             () -> new Morphine(
                     new Item.Properties()
@@ -115,7 +121,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<Gypsum> GYPSUM = ITEMS.register(
+    public static final RegistryObject<Gypsum> GYPSUM = registerItem(
             "gypsum",
             () -> new Gypsum(
                     new Item.Properties()
@@ -123,7 +129,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<Sutures> SUTURE = ITEMS.register(
+    public static final RegistryObject<Sutures> SUTURE = registerItem(
             "suture",
             () -> new Sutures(
                     new Item.Properties()
@@ -131,7 +137,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<HealthCareBag> HEALTH_CARE_BAG = ITEMS.register(
+    public static final RegistryObject<HealthCareBag> HEALTH_CARE_BAG = registerItem(
             "health_care_bag",
             () -> new HealthCareBag(
                     new Item.Properties()
@@ -139,7 +145,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<WoodWrench> WOOD_WRENCH = ITEMS.register(
+    public static final RegistryObject<WoodWrench> WOOD_WRENCH = registerItem(
             "wood_wrench",
             () -> new WoodWrench(
                     new Item.Properties()
@@ -152,10 +158,22 @@ public class ModItems {
         ITEMS.register(eventBus);
     }
 
-    @SubscribeEvent
-    public static void addCreative(BuildCreativeModeTabContentsEvent event)
-    {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
-            event.accept(OPERATING_BED_BLOCK_ITEM);
+    private static <T extends Item> RegistryObject<T> registerItem(final String name, final Supplier<T> sup) {
+        RegistryObject<T> item = ITEMS.register(name, sup);
+        ITEMS_SET.add(item);
+        return item;
     }
+
+//    private static RegistryObject<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block, Item.Properties properties) {
+//        RegistryObject<BlockItem> blockItem = ITEMS.register(name, block, properties);
+//        ITEMS_SET.add(blockItem);
+//        return blockItem;
+//    }
+
+//    @SubscribeEvent
+//    public static void addCreative(BuildCreativeModeTabContentsEvent event)
+//    {
+//        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
+//            event.accept(HEALTH_SCANNER);
+//    }
 }

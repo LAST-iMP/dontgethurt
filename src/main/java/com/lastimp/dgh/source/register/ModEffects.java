@@ -2,6 +2,8 @@ package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.buffs.SymptomsEffect;
+import com.lastimp.dgh.source.buffs.buff.CureEffect;
+import com.lastimp.dgh.source.buffs.buff.KeepLivingEffect;
 import com.lastimp.dgh.source.buffs.debuff.StaggerEffect;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
@@ -26,6 +28,14 @@ public class ModEffects {
 
     public static final RegistryObject<MobEffect> CRAVING_EFFECT = MOB_EFFECTS.register(
             "craving_effect", () -> new SymptomsEffect(0xFFFFBE4F)
+    );
+
+    public static final RegistryObject<MobEffect> KEEP_LIVING_EFFECT = MOB_EFFECTS.register(
+            "keep_living_effect", () -> new KeepLivingEffect(0xFF88FFD4)
+    );
+
+    public static final RegistryObject<MobEffect> CURE_EFFECT = MOB_EFFECTS.register(
+            "cure_effect", () -> new CureEffect(0xFF88FFD4)
     );
 
     public static void register(IEventBus eventBus) {

@@ -73,7 +73,12 @@ public class HealthScanner extends AbstractHealingItem {
 
                     ANALGESIA,
 
-                    WITHDRAW);
+                    WITHDRAW,
+
+                    BURN_RES,
+                    INTERNAL_RES,
+                    OPEN_WOUND_RES
+            );
         }
         return HEALTH_SCANNER_CONDITIONS;
     }
@@ -92,7 +97,11 @@ public class HealthScanner extends AbstractHealingItem {
 
                     DISLOCATION,
                     INTENSE_PAIN,
-                    PLASTER_CAST
+                    PLASTER_CAST,
+
+                    BURN_RES,
+                    INTERNAL_RES,
+                    OPEN_WOUND_RES
             );
         }
         return EYESIGHT_CONDITIONS;

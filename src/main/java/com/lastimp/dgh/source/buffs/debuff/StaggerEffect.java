@@ -21,7 +21,7 @@ public class StaggerEffect extends MobEffect {
         AttributeInstance instance = attributeMap.getInstance(Attributes.MOVEMENT_SPEED);
         if (instance == null) return;
 
-        double amount = -0.1 * (amplifier + 1);
+        double amount = -0.05 * (amplifier + 1);
         AttributeModifier modifier = new AttributeModifier(
                 UUID.fromString(ID),
                 "stagger_effect",

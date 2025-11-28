@@ -83,9 +83,8 @@ public class Bandages extends AbstractPartlyHealItem {
     }
 
     protected void coverCondition(AbstractBody body, BodyCondition condition) {
-        ConditionState state = body.getCondition(condition);
-        state.setHiddenValue(Mth.clamp(state.getHiddenValue() + state.getValue(), condition.minValue, condition.maxValue));
-        state.setValue(condition.defaultValue);
+        body.injuryHidden(condition, body.getConditionValue(condition));
+        body.setConditionValue(condition, condition.defaultValue);
     }
 
     public static boolean cut(ServerPlayer target, BodyComponents component) {
