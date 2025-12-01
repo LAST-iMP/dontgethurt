@@ -1,39 +1,14 @@
-/*
-* MIT License
-
-Copyright (c) 2023 NeoForged project
-
-This license applies to the template files as supplied by github.com/NeoForged/MDK
-
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
 
 package com.lastimp.dgh.data;
 
 import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.neoforge.Common;
+import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 public class ModTagsProvider extends TagsProvider<Item> {
-    public static final ResourceKey<Item> SHEARS = ResourceKey.create(Registries.ITEM, new ResourceLocation("minecraft", "shears"));
+    public static final ResourceKey<Item> SHEARS = ResourceKey.create(Registries.ITEM, Common.ResourceLocation("minecraft", "shears"));
 
     protected ModTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, Registries.ITEM, lookupProvider, modId, existingFileHelper);
@@ -49,6 +24,44 @@ public class ModTagsProvider extends TagsProvider<Item> {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        this.tag(ModTags.SHEARS).add(SHEARS);
+        this.tag(ModTags.MEDICINE)
+                .add(ModItems.BANDAGE.getKey())
+                .add(ModItems.BLOOD_PACK.getKey())
+                .add(ModItems.BLOOD_PACK_EMPTY.getKey())
+                .add(ModItems.GYPSUM.getKey())
+                .add(ModItems.MORPHINE.getKey())
+                .add(ModItems.SUTURE.getKey());
+
+        this.tag(ModTags.MEDICAL_TOOLS)
+                .add(SHEARS)
+                .add(ModItems.HEALTH_SCANNER.getKey())
+                .add(ModItems.BLOOD_SCANNER.getKey())
+                .add(ModItems.WOOD_WRENCH.getKey())
+                .add(ModItems.HEALTH_CARE_BAG.getKey())
+                .add(ModItems.SURGERY_TOOL_BAG.getKey())
+                .add(ModItems.SCALPEL.getKey())
+                .add(ModItems.HEMOSTAT.getKey())
+                .add(ModItems.RETRACTOR.getKey())
+                .add(ModItems.SURGICAL_DRILL.getKey())
+                .add(ModItems.TWEEZER.getKey())
+                .add(ModItems.BONE_IMPLANTS.getKey());
+
+        this.tag(ModTags.MEDICAL_TOOLS_BASIC)
+                .add(SHEARS)
+                .add(ModItems.HEALTH_SCANNER.getKey())
+                .add(ModItems.BLOOD_SCANNER.getKey())
+                .add(ModItems.WOOD_WRENCH.getKey());
+
+        this.tag(ModTags.MEDICAL_TOOLS_SURGERY)
+                .add(ModItems.SCALPEL.getKey())
+                .add(ModItems.HEMOSTAT.getKey())
+                .add(ModItems.RETRACTOR.getKey())
+                .add(ModItems.SURGICAL_DRILL.getKey())
+                .add(ModItems.TWEEZER.getKey())
+                .add(ModItems.BONE_IMPLANTS.getKey());
+
+        this.tag(ModTags.MEDICAL_TOOLS_SHEARS)
+                .add(SHEARS)
+                .add(ModItems.SCALPEL.getKey());
     }
 }

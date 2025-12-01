@@ -1,17 +1,15 @@
 
 package com.lastimp.dgh;
 
-import com.lastimp.dgh.source.Register.*;
-import com.lastimp.dgh.source.client.gui.HealthCareBagScreen;
+import com.lastimp.dgh.source.register.*;
+import com.lastimp.dgh.source.client.gui.BagScreen;
 import com.lastimp.dgh.source.client.gui.HealthScreen;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -52,7 +50,6 @@ public class DontGetHurt
         LOGGER.info("HELLO FROM COMMON SETUP");
     }
 
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
@@ -60,7 +57,6 @@ public class DontGetHurt
         LOGGER.info("HELLO from server starting");
     }
 
-    // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     static class ClientModEvents {
 
@@ -74,7 +70,8 @@ public class DontGetHurt
         @SubscribeEvent
         public static void registerScreens(final RegisterMenuScreensEvent event) {
             event.register(ModMenus.HEALTH_MENU.get(), HealthScreen::new);
-            event.register(ModMenus.HEALTHCARE_BAG_MENU.get(), HealthCareBagScreen::new);
+            event.register(ModMenus.HEALTH_CARE_BAG_MENU.get(), BagScreen::new);
+            event.register(ModMenus.SURGERY_TOOL_BAG_MENU.get(), BagScreen::new);
         }
     }
 }

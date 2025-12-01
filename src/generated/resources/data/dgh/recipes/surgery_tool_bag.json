@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "minecraft:wool"
+    },
+    "b": {
+      "item": "minecraft:leather"
+    },
+    "c": {
+      "item": "dgh:scalpel"
+    },
+    "d": {
+      "item": "dgh:hemostat"
+    },
+    "e": {
+      "item": "dgh:retractor"
+    },
+    "f": {
+      "item": "minecraft:chest"
+    }
+  },
+  "pattern": [
+    "bab",
+    "cde",
+    "bfb"
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:surgery_tool_bag"
+  }
+}

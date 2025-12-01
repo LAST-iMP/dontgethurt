@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:bone_block"
+    },
+    "b": {
+      "item": "minecraft:bone_meal"
+    }
+  },
+  "pattern": [
+    "bbb",
+    "bab",
+    "bbb"
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:bone_implants"
+  }
+}

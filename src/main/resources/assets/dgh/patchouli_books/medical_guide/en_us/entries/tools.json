@@ -40,6 +40,78 @@
     {
       "type": "crafting",
       "recipe": "dgh:wood_wrench"
+    },
+    {
+      "type": "spotlight",
+      "title": "医疗包",
+      "item": "dgh:health_care_bag",
+      "scale": 1.2,
+      "text": "装满你的救命玩意儿。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:health_care_bag"
+    },
+    {
+      "type": "spotlight",
+      "title": "手术刀",
+      "item": "dgh:scalpel",
+      "scale": 1.2,
+      "text": "切开皮肤。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:scalpel"
+    },
+    {
+      "type": "spotlight",
+      "title": "止血钳",
+      "item": "dgh:hemostat",
+      "scale": 1.2,
+      "text": "阻断出血。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:hemostat"
+    },
+    {
+      "type": "spotlight",
+      "title": "牵开器",
+      "item": "dgh:retractor",
+      "scale": 1.2,
+      "text": "拉开皮肤。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:retractor"
+    },
+    {
+      "type": "spotlight",
+      "title": "手术钻",
+      "item": "dgh:surgical_drill",
+      "scale": 1.2,
+      "text": "钻开骨头。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:surgical_drill"
+    },
+    {
+      "type": "spotlight",
+      "title": "骨骼植入物",
+      "item": "dgh:bone_implants",
+      "scale": 1.2,
+      "text": "彻底治好你的骨头。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_implants"
     }
   ]
 }

@@ -40,7 +40,8 @@ public class PlayerBlood extends AbstractBody {
                     IMMUNITY,
 
                     OPIATE_OVERDOSE,
-                    OPIATE_ADDICTED
+                    OPIATE_ADDICTED,
+                    OXYGEN
             });
         }
         return BLOOD_CONDITIONS;
@@ -56,14 +57,13 @@ public class PlayerBlood extends AbstractBody {
         this.handleBloodVolume(health);
         this.handleOpiateOverdose();
         this.handleOpiateAddicted(health);
+        this.handleOxygen(health, player);
         return this;
     }
 
     @Override
     public float updateVitalityLost(PlayerHealthCapability health, Player player) {
         float lost = 0;
-        if (this.abnormal(BLOOD_LOSS))
-            lost += this.getConditionValue(BLOOD_LOSS) * this.getVitalityWeight();
         if (this.abnormal(OPIATE_OVERDOSE))
             lost += Mth.clamp(this.getConditionValue(OPIATE_OVERDOSE) - 0.5f, 0.0f, 0.5f);
         return lost;
@@ -71,15 +71,19 @@ public class PlayerBlood extends AbstractBody {
 
     @Override
     public int slowDownLevel(PlayerHealthCapability health) {
-        return 0;
+        return this.getConditionValue(OPIATE_OVERDOSE) < 0.5f? 0 : 8;
     }
 
     private void handleBloodVolume(PlayerHealthCapability health) {
         if (!this.abnormalWithHidden(BLOOD_LOSS)) return;
-        if (this.isBleeding(health)) return;
+        var value = this.getConditionValue(BLOOD_LOSS);
+        if (value > 0.4f) {
+            if (this.getConditionValue(OXYGEN) < value)
+                this.setConditionValue(OXYGEN, (value - 0.4f) / 0.6f);
+        }
 
-        ConditionState state = this.getCondition(BLOOD_LOSS);
-        if (state.getValue() > BLOOD_LOSS.defaultValue + EPS)
+        if (this.isBleeding(health)) return;
+        if (value > BLOOD_LOSS.defaultValue + EPS)
             this.healing(BLOOD_LOSS, - BLOOD_LOSS.healingSpeed * DELTA);
     }
 
@@ -89,6 +93,15 @@ public class PlayerBlood extends AbstractBody {
                 return true;
         }
         return false;
+    }
+
+    private void handleOxygen(PlayerHealthCapability health, Player player) {
+        if (!this.abnormal(OXYGEN)) return;
+
+        if (this.getConditionValue(OXYGEN) > 0.1f)
+            health.getComponent(HEAD).injury(BRAIN_DAMAGE, this.getConditionValue(OXYGEN) * 0.01f * DELTA);
+        if (!health.getComponent(TORSO).abnormal(RESPIRATORY_ARREST) && player.getAirSupply() >= 1)
+            this.healing(OXYGEN, -OXYGEN.healingSpeed * DELTA);
     }
 
     private void handleOpiateOverdose() {

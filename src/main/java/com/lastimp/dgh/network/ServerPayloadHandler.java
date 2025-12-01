@@ -3,9 +3,10 @@ package com.lastimp.dgh.network;
 
 import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.enums.OperationType;
-import com.lastimp.dgh.source.Register.ModItems;
+import com.lastimp.dgh.source.register.ModItems;
 import com.lastimp.dgh.source.client.gui.MenuProvider.HealthCareBagMenuProvider;
 import com.lastimp.dgh.source.client.gui.MenuProvider.HealthMenuProvider;
+import com.lastimp.dgh.source.client.gui.MenuProvider.SurgeryToolBagMenuProvider;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
@@ -51,6 +52,8 @@ public class ServerPayloadHandler {
                             HealthMenuProvider.open(player, player.getUUID(), true);
                         if (slot.is(ModItems.HEALTH_CARE_BAG))
                             HealthCareBagMenuProvider.open(player, slot);
+                        if (slot.is(ModItems.SURGERY_TOOL_BAG))
+                            SurgeryToolBagMenuProvider.open(player, slot);
                     }
                 })
                 .exceptionally(e -> {

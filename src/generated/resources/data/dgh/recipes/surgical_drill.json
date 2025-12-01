@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:iron_nugget"
+    },
+    "b": {
+      "item": "minecraft:iron_block"
+    },
+    "c": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    " c ",
+    "abc",
+    "  c"
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:surgical_drill"
+  }
+}

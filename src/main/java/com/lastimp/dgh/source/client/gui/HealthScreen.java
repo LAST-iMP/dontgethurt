@@ -2,12 +2,13 @@
 package com.lastimp.dgh.source.client.gui;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
-import com.lastimp.dgh.source.item.HealthScanner;
+import com.lastimp.dgh.source.item.tool.HealthScanner;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import net.minecraft.client.Minecraft;
@@ -20,14 +21,13 @@ import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.HashMap;
-import java.util.List;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.OperationType.HEALTH_SCANN;
 import static com.lastimp.dgh.source.client.gui.HealthComponentWidget.*;
 
 public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
-    private static final ResourceLocation HUD_BACKGROUND = new ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
+    private static final ResourceLocation HUD_BACKGROUND = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
 
     private static final int PANEL_WIDTH = 238;   // 面板宽度
     private static final int PANEL_HEIGHT = 214;  // 面板高度

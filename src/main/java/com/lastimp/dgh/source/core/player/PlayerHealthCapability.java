@@ -3,7 +3,7 @@ package com.lastimp.dgh.source.core.player;
 
 import com.lastimp.dgh.api.bodyPart.AbstractArm;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.source.Register.ModCapabilities;
+import com.lastimp.dgh.source.register.ModCapabilities;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.*;
 import net.minecraft.core.HolderLookup;

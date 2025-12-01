@@ -2,8 +2,8 @@
 package com.lastimp.dgh.data;
 
 import com.lastimp.dgh.api.enums.BodyCondition;
-import com.lastimp.dgh.source.Register.ModEffects;
-import com.lastimp.dgh.source.Register.ModItems;
+import com.lastimp.dgh.source.register.ModEffects;
+import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -35,7 +35,14 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.SUTURE.get(), "缝合线");
 //        this.add(ModItems.OPERATING_BED_BLOCK_ITEM.get(), "手术床");
         this.add(ModItems.HEALTH_CARE_BAG.get(), "医疗包");
+        this.add(ModItems.SURGERY_TOOL_BAG.get(), "手术工具包");
         this.add(ModItems.WOOD_WRENCH.get(), "木扳手");
+        this.add(ModItems.SCALPEL.get(), "手术刀");
+        this.add(ModItems.HEMOSTAT.get(), "止血钳");
+        this.add(ModItems.RETRACTOR.get(), "牵开器");
+        this.add(ModItems.SURGICAL_DRILL.get(), "手术钻");
+        this.add(ModItems.TWEEZER.get(), "镊子");
+        this.add(ModItems.BONE_IMPLANTS.get(), "骨骼植入物");
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");
         this.add(ModEffects.INTENSE_PAIN_EFFECT.get(), "剧痛");
@@ -43,6 +50,8 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModEffects.CRAVING_EFFECT.get(), "渴望");
         this.add(ModEffects.KEEP_LIVING_EFFECT.get(), "长生久视");
         this.add(ModEffects.CURE_EFFECT.get(), "重振旗鼓");
-
+        this.add(ModEffects.PALE_SKIN.get(), "皮肤苍白");
+        this.add(ModEffects.HARD_BREATH.get(), "呼吸困难");
+//        this.add(ModEffects.INCREASED_HEARTRATE.get(), "心跳加快");
     }
 }

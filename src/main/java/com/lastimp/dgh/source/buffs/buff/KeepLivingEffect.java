@@ -22,19 +22,19 @@ public class KeepLivingEffect extends MobEffect {
                 Attributes.MOVEMENT_SPEED,
                 ID_MOVE,
                 0.015f,
-                AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
         this.addAttributeModifier(
                 Attributes.ATTACK_SPEED,
                 ID_ATTACK,
                 0.015f,
-                AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
         this.addAttributeModifier(
                 Attributes.BLOCK_BREAK_SPEED,
                 ID_BREAK,
                 0.015f,
-                AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
     }
 }
