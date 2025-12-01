@@ -9,6 +9,7 @@ import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.ServerPayloadHandler;
 import com.lastimp.dgh.source.client.gui.MenuProvider.HealthCareBagMenuProvider;
 import com.lastimp.dgh.source.client.gui.MenuProvider.HealthMenuProvider;
+import com.lastimp.dgh.source.client.gui.MenuProvider.SurgeryToolBagMenuProvider;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
 import io.netty.buffer.ByteBuf;
@@ -50,6 +51,8 @@ public class MyKeyPressedData {
                 HealthMenuProvider.open(player, player.getUUID(), true);
             if (slot.is(ModItems.HEALTH_CARE_BAG.get()))
                 HealthCareBagMenuProvider.open(player, slot);
+            if (slot.is(ModItems.SURGERY_TOOL_BAG.get()))
+                SurgeryToolBagMenuProvider.open(player, slot);
         }
     }
 

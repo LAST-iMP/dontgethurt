@@ -1,0 +1,69 @@
+package com.lastimp.dgh.source.item.tool;
+
+import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.source.client.gui.MenuProvider.HealthCareBagMenuProvider;
+import com.lastimp.dgh.source.item.bases.BackpackInventory;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
+
+public class HealthCareBag extends Item{
+
+    public HealthCareBag(Properties properties) {
+        super(properties.stacksTo(1));
+    }
+
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+        BackpackInventory inventory = new BackpackInventory(9);
+        inventory.addAllowed(ModTags.MEDICINE);
+        inventory.addAllowed(ModTags.MEDICAL_TOOLS_BASIC);
+
+        // 如果 nbt 不为 null 且有数据，反序列化
+        if (nbt != null && nbt.contains("inv")) {
+            inventory.deserializeNBT(nbt);
+        }
+
+        return new ICapabilitySerializable<CompoundTag>() {
+            private final LazyOptional<IItemHandler> opt = LazyOptional.of(() -> inventory);
+
+            @Override
+            public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
+                return ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, opt);
+            }
+
+            @Override
+            public CompoundTag serializeNBT() {
+                CompoundTag tag = new CompoundTag();
+                tag.put("inv", inventory.serializeNBT());
+                return tag;
+            }
+
+            @Override
+            public void deserializeNBT(CompoundTag nbt) {
+                inventory.deserializeNBT(nbt.getCompound("inv"));
+            }
+        };
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+        if (!level.isClientSide && usedHand == InteractionHand.MAIN_HAND)
+            HealthCareBagMenuProvider.open(player, player.getMainHandItem());
+        return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide());
+    }
+}

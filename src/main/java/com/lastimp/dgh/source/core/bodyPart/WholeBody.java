@@ -52,7 +52,7 @@ public class WholeBody extends AbstractBody {
         for (var body : this.components.values()) {
             slowDown += body.slowDownLevel(health);
         }
-        return Mth.clamp(slowDown, 0, 10);
+        return Mth.clamp(slowDown, 0, 19);
     }
 
     @Override

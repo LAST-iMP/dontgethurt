@@ -45,19 +45,13 @@ public class Config {
             .defineInRange("BASE_MED_AVAILABLE_TIME",100,1, Integer.MAX_VALUE);
 
     public static final ForgeConfigSpec.IntValue VOLUME_SELF_HEALING_TIME = BUILDER
-            .defineInRange("VOLUME_SELF_HEALING_TIME",100,1, Integer.MAX_VALUE);
+            .defineInRange("VOLUME_SELF_HEALING_TIME",200,1, Integer.MAX_VALUE);
 
     public static final ForgeConfigSpec.DoubleValue RESISTANCE_CONVERT_RATIO = BUILDER
             .defineInRange("RESISTANCE_CONVERT_RATIO", 0.01, 0, 1.0);
 
     public static final ForgeConfigSpec.DoubleValue RESISTANCE_MAX = BUILDER
             .defineInRange("RESISTANCE_MAX", 0.4, 0, 1.0);
-
-    // 检验item名称是否合法
-    private static boolean validateItemName(final Object obj)
-    {
-        return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(ResourceLocation.parse(itemName));
-    }
 
     // 构建配置
     public static final ForgeConfigSpec SPEC = BUILDER.pop().build();

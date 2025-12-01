@@ -1,0 +1,10 @@
+{
+  "values": [
+    "dgh:scalpel",
+    "dgh:hemostat",
+    "dgh:retractor",
+    "dgh:surgical_drill",
+    "dgh:tweezer",
+    "dgh:bone_implants"
+  ]
+}

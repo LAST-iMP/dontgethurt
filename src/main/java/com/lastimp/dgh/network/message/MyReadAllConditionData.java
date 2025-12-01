@@ -30,7 +30,7 @@ package com.lastimp.dgh.network.message;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.OperationType;
-import com.lastimp.dgh.source.item.BloodScanner;
+import com.lastimp.dgh.source.item.tool.BloodScanner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;

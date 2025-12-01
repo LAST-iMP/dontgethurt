@@ -29,6 +29,7 @@ package com.lastimp.dgh.source.client.gui;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.neoforge.Common;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -36,18 +37,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class HealthComponentWidget extends Button {
-    public static final ResourceLocation SPRITES_HEAD = ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_head.png");
-    public static final ResourceLocation SPRITES_TORSO = ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_torso.png");
-    public static final ResourceLocation SPRITES_LEFT_ARM = ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_left_arm.png");
-    public static final ResourceLocation SPRITES_RIGHT_ARM = ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_right_arm.png");
-    public static final ResourceLocation SPRITES_LEFT_LEG = ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_left_leg.png");
-    public static final ResourceLocation SPRITES_RIGHT_LEG = ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_right_leg.png");
-    public static final ResourceLocation SPRITES_HEAD_LIGHT = ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_head_lighted.png");
-    public static final ResourceLocation SPRITES_TORSO_LIGHT = ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_torso_lighted.png");
-    public static final ResourceLocation SPRITES_LEFT_ARM_LIGHT = ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_left_arm_lighted.png");
-    public static final ResourceLocation SPRITES_RIGHT_ARM_LIGHT = ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_right_arm_lighted.png");
-    public static final ResourceLocation SPRITES_LEFT_LEG_LIGHT = ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_left_leg_lighted.png");
-    public static final ResourceLocation SPRITES_RIGHT_LEG_LIGHT = ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_right_leg_lighted.png");
+    public static final ResourceLocation SPRITES_HEAD = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_head.png");
+    public static final ResourceLocation SPRITES_TORSO = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_torso.png");
+    public static final ResourceLocation SPRITES_LEFT_ARM = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_left_arm.png");
+    public static final ResourceLocation SPRITES_RIGHT_ARM = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_right_arm.png");
+    public static final ResourceLocation SPRITES_LEFT_LEG = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_left_leg.png");
+    public static final ResourceLocation SPRITES_RIGHT_LEG = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_right_leg.png");
+    public static final ResourceLocation SPRITES_HEAD_LIGHT = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_head_lighted.png");
+    public static final ResourceLocation SPRITES_TORSO_LIGHT = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_torso_lighted.png");
+    public static final ResourceLocation SPRITES_LEFT_ARM_LIGHT = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_left_arm_lighted.png");
+    public static final ResourceLocation SPRITES_RIGHT_ARM_LIGHT = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_right_arm_lighted.png");
+    public static final ResourceLocation SPRITES_LEFT_LEG_LIGHT = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_left_leg_lighted.png");
+    public static final ResourceLocation SPRITES_RIGHT_LEG_LIGHT = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_right_leg_lighted.png");
 
     public final BodyComponents id;
     private final ResourceLocation resource;

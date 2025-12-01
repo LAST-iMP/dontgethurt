@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "pattern": [
+    "a a",
+    "a a",
+    " a "
+  ],
+  "result": {
+    "item": "dgh:tweezer"
+  },
+  "show_notification": true
+}

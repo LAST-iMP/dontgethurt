@@ -38,6 +38,7 @@ import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.api.enums.BodyCondition.ANALGESIA;
+import static com.lastimp.dgh.api.enums.BodyCondition.RESPIRATORY_ARREST;
 
 public class Torso extends AbstractVisibleBody {
     private static List<BodyCondition> TORSO_CONDITIONS;
@@ -54,7 +55,8 @@ public class Torso extends AbstractVisibleBody {
         if (TORSO_CONDITIONS == null) {
             TORSO_CONDITIONS = new ArrayList<>(super.getBodyConditions());
             TORSO_CONDITIONS.addAll(List.of(
-                    ANALGESIA
+                    ANALGESIA,
+                    RESPIRATORY_ARREST
             ));
         }
         return TORSO_CONDITIONS;
@@ -68,13 +70,6 @@ public class Torso extends AbstractVisibleBody {
     @Override
     public AbstractBody update(PlayerHealthCapability health, Player player) {
         super.update(health, player);
-        this.handleAnalgesia(health, player);
         return this;
-    }
-
-    private void handleAnalgesia(PlayerHealthCapability health, Player player) {
-        if (!ANALGESIA.abnormal(this.getConditionValue(ANALGESIA))) return;
-
-        this.healing(ANALGESIA, -ANALGESIA.healingSpeed * DELTA);
     }
 }

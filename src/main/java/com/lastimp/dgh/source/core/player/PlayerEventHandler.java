@@ -7,10 +7,15 @@ import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.event.entity.living.LivingBreatheEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
+import static com.lastimp.dgh.api.enums.BodyCondition.RESPIRATORY_ARREST;
 
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID)
 public class PlayerEventHandler {
@@ -37,7 +42,19 @@ public class PlayerEventHandler {
         var itemStack = slot.getItem();
         if (itemStack.isEmpty()) return false;
         if (itemStack.is(ModItems.HEALTH_CARE_BAG.get())) return true;
+        if (itemStack.is(ModItems.SURGERY_TOOL_BAG.get())) return true;
         if (itemStack.is(ModItems.HEALTH_SCANNER.get())) return true;
         return false;
+    }
+
+    @SubscribeEvent
+    public static void onBreath(LivingBreatheEvent event) {
+        if (event.getEntity().level().isClientSide()) return;
+        if (!(event.getEntity() instanceof Player player)) return;
+
+        var health = PlayerHealthCapability.get(player);
+        if (health.getComponent(TORSO).abnormal(RESPIRATORY_ARREST)) {
+            event.setCanBreathe(false);
+        }
     }
 }

@@ -28,6 +28,7 @@ SOFTWARE.
 package com.lastimp.dgh.data;
 
 import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -36,6 +37,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -48,7 +50,45 @@ public class ModTagsProvider extends TagsProvider<Item> {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider provider) {
-        this.tag(ModTags.SHEARS).add(SHEARS);
+    protected void addTags(HolderLookup.@NotNull Provider provider) {
+        this.tag(ModTags.MEDICINE)
+                .add(ModItems.BANDAGE.getKey())
+                .add(ModItems.BLOOD_PACK.getKey())
+                .add(ModItems.BLOOD_PACK_EMPTY.getKey())
+                .add(ModItems.GYPSUM.getKey())
+                .add(ModItems.MORPHINE.getKey())
+                .add(ModItems.SUTURE.getKey());
+
+        this.tag(ModTags.MEDICAL_TOOLS)
+                .add(SHEARS)
+                .add(ModItems.HEALTH_SCANNER.getKey())
+                .add(ModItems.BLOOD_SCANNER.getKey())
+                .add(ModItems.WOOD_WRENCH.getKey())
+                .add(ModItems.HEALTH_CARE_BAG.getKey())
+                .add(ModItems.SURGERY_TOOL_BAG.getKey())
+                .add(ModItems.SCALPEL.getKey())
+                .add(ModItems.HEMOSTAT.getKey())
+                .add(ModItems.RETRACTOR.getKey())
+                .add(ModItems.SURGICAL_DRILL.getKey())
+                .add(ModItems.TWEEZER.getKey())
+                .add(ModItems.BONE_IMPLANTS.getKey());
+
+        this.tag(ModTags.MEDICAL_TOOLS_BASIC)
+                .add(SHEARS)
+                .add(ModItems.HEALTH_SCANNER.getKey())
+                .add(ModItems.BLOOD_SCANNER.getKey())
+                .add(ModItems.WOOD_WRENCH.getKey());
+
+        this.tag(ModTags.MEDICAL_TOOLS_SURGERY)
+                .add(ModItems.SCALPEL.getKey())
+                .add(ModItems.HEMOSTAT.getKey())
+                .add(ModItems.RETRACTOR.getKey())
+                .add(ModItems.SURGICAL_DRILL.getKey())
+                .add(ModItems.TWEEZER.getKey())
+                .add(ModItems.BONE_IMPLANTS.getKey());
+
+        this.tag(ModTags.MEDICAL_TOOLS_SHEARS)
+                .add(SHEARS)
+                .add(ModItems.SCALPEL.getKey());
     }
 }

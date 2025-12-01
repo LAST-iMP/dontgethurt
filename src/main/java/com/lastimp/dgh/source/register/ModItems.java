@@ -28,17 +28,11 @@ SOFTWARE.
 package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.block.OperatingBedBlock;
-import com.lastimp.dgh.source.item.*;
-import com.lastimp.dgh.source.item.BloodScanner;
-import com.lastimp.dgh.source.item.HealthScanner;
+import com.lastimp.dgh.source.item.tool.*;
+import com.lastimp.dgh.source.item.medicine.*;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -97,7 +91,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<BloodScanner> BLOOD_SCANNER = registerItem(
+    public static final RegistryObject<Item> BLOOD_SCANNER = registerItem(
             "blood_scanner",
             () -> new BloodScanner(
                     new Item.Properties()
@@ -105,7 +99,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<Bandages> BANDAGE = registerItem(
+    public static final RegistryObject<Item> BANDAGE = registerItem(
             "bandage",
             () -> new Bandages(
                     new Item.Properties()
@@ -113,7 +107,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<Morphine> MORPHINE = registerItem(
+    public static final RegistryObject<Item> MORPHINE = registerItem(
             "morphine",
             () -> new Morphine(
                     new Item.Properties()
@@ -121,7 +115,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<Gypsum> GYPSUM = registerItem(
+    public static final RegistryObject<Item> GYPSUM = registerItem(
             "gypsum",
             () -> new Gypsum(
                     new Item.Properties()
@@ -129,7 +123,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<Sutures> SUTURE = registerItem(
+    public static final RegistryObject<Item> SUTURE = registerItem(
             "suture",
             () -> new Sutures(
                     new Item.Properties()
@@ -137,7 +131,7 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<HealthCareBag> HEALTH_CARE_BAG = registerItem(
+    public static final RegistryObject<Item> HEALTH_CARE_BAG = registerItem(
             "health_care_bag",
             () -> new HealthCareBag(
                     new Item.Properties()
@@ -145,12 +139,69 @@ public class ModItems {
             )
     );
 
-    public static final RegistryObject<WoodWrench> WOOD_WRENCH = registerItem(
+    public static final RegistryObject<Item> SURGERY_TOOL_BAG = registerItem(
+            "surgery_tool_bag",
+            SurgeryToolBag::new,
+            new Item.Properties()
+                    .stacksTo(1)
+    );
+
+    public static final RegistryObject<Item> WOOD_WRENCH = registerItem(
             "wood_wrench",
             () -> new WoodWrench(
                     new Item.Properties()
                             .stacksTo(1)
+                            .durability(60)
             )
+    );
+
+    public static final RegistryObject<Item> SCALPEL = registerItem(
+            "scalpel",
+            Scalpel::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(300)
+    );
+
+    public static final RegistryObject<Item> HEMOSTAT = registerItem(
+            "hemostat",
+            Hemostat::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(300)
+
+    );
+
+    public static final RegistryObject<Item> RETRACTOR = registerItem(
+            "retractor",
+            Retractor::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(300)
+    );
+
+    public static final RegistryObject<Item> SURGICAL_DRILL = registerItem(
+            "surgical_drill",
+            SurgicalDrill::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(300)
+    );
+
+    public static final RegistryObject<Item> TWEEZER = registerItem(
+            "tweezer",
+            Tweezer::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(300)
+    );
+
+    public static final RegistryObject<Item> BONE_IMPLANTS = registerItem(
+            "bone_implants",
+            BoneImplants::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(8)
     );
 
     public static void register(IEventBus eventBus) {
@@ -160,6 +211,12 @@ public class ModItems {
 
     private static <T extends Item> RegistryObject<T> registerItem(final String name, final Supplier<T> sup) {
         RegistryObject<T> item = ITEMS.register(name, sup);
+        ITEMS_SET.add(item);
+        return item;
+    }
+
+    private static <T extends Item> RegistryObject<T> registerItem(final String name, Function<Item.Properties, ? extends T> func, Item.Properties properties) {
+        RegistryObject<T> item = ITEMS.register(name, () -> func.apply(properties));
         ITEMS_SET.add(item);
         return item;
     }

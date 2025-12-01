@@ -37,13 +37,13 @@ public class KeepLivingEffect extends MobEffect {
                 UUID.fromString(ID_MOVE),
                 "living_movement_effect",
                 amount,
-                AttributeModifier.Operation.MULTIPLY_BASE
+                AttributeModifier.Operation.MULTIPLY_TOTAL
         );
         AttributeModifier attack_modifier = new AttributeModifier(
                 UUID.fromString(ID_ATTACK),
                 "living_attack_effect",
                 amount,
-                AttributeModifier.Operation.MULTIPLY_BASE
+                AttributeModifier.Operation.MULTIPLY_TOTAL
         );
 
         if (move != null) {

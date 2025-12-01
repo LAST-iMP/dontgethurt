@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import static com.lastimp.dgh.DontGetHurt.DELTA;
+import static com.lastimp.dgh.DontGetHurt.EPS;
+
 public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     private final HashMap<BodyCondition, ConditionState> state = new HashMap<>();
@@ -74,16 +77,30 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     }
 
     public AbstractBody updatePost(PlayerHealthCapability health, Player player) {
+        this.selfHealing();
         this.updateDisplayValue(health);
         return this;
     }
 
     public abstract float updateVitalityLost(PlayerHealthCapability health, Player player);
 
-    public void updateDisplayValue(PlayerHealthCapability health) {
+    private void updateDisplayValue(PlayerHealthCapability health) {
         for (BodyCondition condition : this.getBodyConditions()) {
             ConditionState state = this.getCondition(condition);
             state.tick();
+        }
+    }
+
+    protected List<BodyCondition> getNoHealingConditions() {
+        return List.of();
+    }
+
+    private void selfHealing() {
+        for (BodyCondition condition : this.getBodyConditions()) {
+            if (!this.abnormal(condition)) continue;
+            if (this.getNoHealingConditions().contains(condition)) continue;
+            if (this.getConditionValue(condition) < condition.healingTS + EPS)
+                this.healing(condition, - condition.healingSpeed * DELTA);
         }
     }
 

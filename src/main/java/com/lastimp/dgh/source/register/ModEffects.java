@@ -4,6 +4,7 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.buffs.SymptomsEffect;
 import com.lastimp.dgh.source.buffs.buff.CureEffect;
 import com.lastimp.dgh.source.buffs.buff.KeepLivingEffect;
+import com.lastimp.dgh.source.buffs.debuff.IntensePainEffect;
 import com.lastimp.dgh.source.buffs.debuff.StaggerEffect;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
@@ -19,7 +20,7 @@ public class ModEffects {
     );
 
     public static final RegistryObject<MobEffect> INTENSE_PAIN_EFFECT = MOB_EFFECTS.register(
-            "intense_pain_effect", () -> new SymptomsEffect(0xFFFFBE4F)
+            "intense_pain_effect", () -> new IntensePainEffect(0xFFFFBE4F)
     );
 
     public static final RegistryObject<MobEffect> SWEATING_EFFECT = MOB_EFFECTS.register(
@@ -28,6 +29,18 @@ public class ModEffects {
 
     public static final RegistryObject<MobEffect> CRAVING_EFFECT = MOB_EFFECTS.register(
             "craving_effect", () -> new SymptomsEffect(0xFFFFBE4F)
+    );
+
+    public static final RegistryObject<MobEffect> PALE_SKIN = MOB_EFFECTS.register(
+            "pale_skin", () -> new SymptomsEffect(0xFFFFBE4F)
+    );
+
+    public static final RegistryObject<MobEffect> HARD_BREATH = MOB_EFFECTS.register(
+            "hard_breath", () -> new SymptomsEffect(0xFFFFBE4F)
+    );
+
+    public static final RegistryObject<MobEffect> INCREASED_HEARTRATE = MOB_EFFECTS.register(
+            "increased_heartrate", () -> new SymptomsEffect(0xFFFFBE4F)
     );
 
     public static final RegistryObject<MobEffect> KEEP_LIVING_EFFECT = MOB_EFFECTS.register(

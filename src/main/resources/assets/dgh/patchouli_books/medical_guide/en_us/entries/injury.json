@@ -8,12 +8,12 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "本章将对各种伤口进行介绍"
+      "text": "本章将对各种伤口进行介绍。"
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(br2)$(li)致命伤$(li2)烧伤$(li2)开放伤$(li2)内伤$(li)苦痛$(li2)脱臼$(li2)骨折"
+      "text": "$(br2)$(li)致命伤$(li2)烧伤$(li2)开放伤$(li2)内伤$(li2)脑损伤$(li)苦痛$(li2)脱臼$(li2)骨折$(li2)出血$(li2)呼吸停止$(li2)手术休克$(li2)戒断"
     },
     {
       "type": "image",
@@ -55,7 +55,21 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)对生命的直接损害$(li2)微量失血$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)进食$(br)$(li)注意事项$(li2)轻微内伤通常不用理会"
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)对生命的直接损害$(li2)微量失血$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)进食、手术中镊子清理$(br)$(li)注意事项$(li2)轻微内伤通常不用理会"
+    },
+    {
+      "type": "image",
+      "title": "脑损伤",
+      "border": true,
+      "images": [
+        "dgh:textures/book/brain_damage.png"
+      ],
+      "text": "脑损伤由失血过多引起的缺氧、呼吸暂停、休克等引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)头部$(br)$(li)影响$(li2)对生命的直接损害$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)治疗病因$(br)"
     },
     {
       "type": "image",
@@ -83,7 +97,49 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)四肢$(br)$(li)影响$(li2)肢体剧痛$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)绷带完全包扎后石膏固定$(br)$(li)注意事项$(li2)影响肢体功能。"
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)肢体剧痛$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)绷带完全包扎后石膏固定、骨合成手术$(br)"
+    },
+    {
+      "type": "image",
+      "title": "出血",
+      "border": true,
+      "images": [
+        "dgh:textures/book/bleeding.png"
+      ],
+      "text": "出血由伤口、未止血的手术切口引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)失血$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)治疗病因$(br)"
+    },
+    {
+      "type": "image",
+      "title": "呼吸停止",
+      "border": true,
+      "images": [
+        "dgh:textures/book/respiratory_arrest.png"
+      ],
+      "text": "通常由严重休克反应引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)胸腔$(br)$(li)影响$(li2)低血氧$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)治疗病因$(br)"
+    },
+    {
+      "type": "image",
+      "title": "手术休克",
+      "border": true,
+      "images": [
+        "dgh:textures/book/fracture.png"
+      ],
+      "text": "手术休克由未经麻醉的手术行为引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)头$(br)$(li)影响$(li2)休克、大脑受损$(br)$(li)急救措施$(li2)使用吗啡麻醉$(br)$(li)治疗措施$(li2)停止手术$(br)"
     },
     {
       "type": "image",

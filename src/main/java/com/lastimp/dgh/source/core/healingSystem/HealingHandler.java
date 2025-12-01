@@ -9,9 +9,10 @@ import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.client.gui.HealthScreen;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.source.item.Bandages;
+import com.lastimp.dgh.source.core.Utils;
+import com.lastimp.dgh.source.item.medicine.Bandages;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
-import com.lastimp.dgh.source.item.Gypsum;
+import com.lastimp.dgh.source.item.medicine.Gypsum;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +20,8 @@ import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
+
+import static com.lastimp.dgh.api.tags.ModTags.MEDICAL_TOOLS_SHEARS;
 
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class HealingHandler {
@@ -48,26 +51,29 @@ public class HealingHandler {
 
         var itemStack = slot.getItem();
         if (itemStack.isEmpty()) return false;
-        if (itemStack.is(ModTags.SHEARS)) return true;
-        if (!(itemStack.getItem() instanceof AbstractHealingItem)) return false;
+        if (itemStack.is(ModTags.MEDICINE)) return true;
+        if (itemStack.is(ModTags.MEDICAL_TOOLS)) return true;
 
-        return true;
+        return false;
     }
 
     public static void useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, ServerPlayer target, BodyComponents component) {
         if (target == null) return;
-        if (itemStack.is(ModTags.SHEARS)) {
-            Bandages.cut(target, component);
-            Gypsum.cut(target, component);
-            return;
+        boolean success = false;
+        if (itemStack.is(MEDICAL_TOOLS_SHEARS)) {
+            success |= Bandages.cut(target, component);
+            success |= Gypsum.cut(target, component);
         }
-        boolean consume = false;
         if (itemStack.getItem() instanceof AbstractDirectHealItems item) {
-            consume = item.heal(source, target);
+            success = item.heal(source, target);
         } else if (itemStack.getItem() instanceof AbstractPartlyHealItem item) {
-            consume = item.heal(source, target, component);
+            success = item.heal(source, target, component);
         }
-        if (consume) {
+        if (success && itemStack.isDamageableItem()) {
+            itemStack.hurtAndBreak(1, source, (player) -> {});
+            if (itemStack.getDamageValue() >= itemStack.getMaxDamage())
+                itemStack.shrink(1);
+        } else if (success) {
             itemStack.shrink(1);
         }
     }

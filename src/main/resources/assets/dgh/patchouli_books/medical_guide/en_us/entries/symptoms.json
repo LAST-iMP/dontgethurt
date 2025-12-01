@@ -13,7 +13,7 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(br2)$(li)剧痛$(li)出汗$(li)渴望$(li)缓行$(li)挖掘疲劳"
+      "text": "$(br2)$(li)剧痛$(li)出汗$(li)渴望$(li)缓行$(li)皮肤苍白$(li)呼吸困难$(li)恶心$(li)挖掘疲劳$(li)失明$(li)虚弱"
     },
     {
       "type": "image",
@@ -26,15 +26,6 @@
     },
     {
       "type": "image",
-      "title": "渴望",
-      "border": true,
-      "images": [
-        "dgh:textures/book/craving_effect.png"
-      ],
-      "text": "渴望提示轻度戒断反应。"
-    },
-    {
-      "type": "image",
       "title": "出汗",
       "border": true,
       "images": [
@@ -43,9 +34,13 @@
       "text": "出汗提示中度戒断反应。"
     },
     {
-      "type": "text",
-      "title": "恶心",
-      "text": "在本mod中，恶心提示可能有严重戒断反应。"
+      "type": "image",
+      "title": "渴望",
+      "border": true,
+      "images": [
+        "dgh:textures/book/craving_effect.png"
+      ],
+      "text": "渴望提示轻度戒断反应。"
     },
     {
       "type": "image",
@@ -57,9 +52,37 @@
       "text": "缓行提示有腿部脱臼、骨折或未拆下的绷带或石膏。"
     },
     {
+      "type": "image",
+      "title": "皮肤苍白",
+      "border": true,
+      "images": [
+        "dgh:textures/book/pale_skin.png"
+      ],
+      "text": "皮肤苍白提示有严重失血。"
+    },
+    {
+      "type": "image",
+      "title": "呼吸困难",
+      "border": true,
+      "images": [
+        "dgh:textures/book/hard_breath.png"
+      ],
+      "text": "呼吸困难提示有低血氧或呼吸停止。"
+    },
+    {
       "type": "text",
-      "title": "挖掘疲劳",
-      "text": "在本mod中，挖掘疲劳提示可能有手臂因脱臼或骨折造成的失能。"
+      "title": "恶心",
+      "text": "在本mod中，恶心提示可能有严重戒断反应。"
+    },
+    {
+      "type": "text",
+      "title": "失明",
+      "text": "在本mod中，失明提示可能有严重的低血氧。"
+    },
+    {
+      "type": "text",
+      "title": "虚弱",
+      "text": "在本mod中，虚弱提示可能有严重的失血。"
     }
   ]
 }
