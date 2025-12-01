@@ -28,11 +28,9 @@ SOFTWARE.
 package com.lastimp.dgh.source.core.healingSystem;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.Register.ModEffects;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.GameRules;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

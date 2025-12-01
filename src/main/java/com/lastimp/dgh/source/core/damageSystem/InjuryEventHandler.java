@@ -5,6 +5,7 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.Utils;
+import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -15,6 +16,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 
+import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID)
@@ -77,8 +79,8 @@ public class InjuryEventHandler {
 
     public static void handleDrowning(float damageAmount, Player player, LivingDamageEvent.Pre event) {
         PlayerHealthCapability.getAndSet(player, h -> {
-            AbstractBody torso = h.getComponent(BodyComponents.TORSO);
-            InternalInjuryHandler.handle(h, torso, damageAmount / player.getMaxHealth());
+            PlayerBlood blood = (PlayerBlood) h.getComponent(BLOOD);
+            blood.injury(OXYGEN, damageAmount / 20);
             return h;
         });
         event.setNewDamage(0f);

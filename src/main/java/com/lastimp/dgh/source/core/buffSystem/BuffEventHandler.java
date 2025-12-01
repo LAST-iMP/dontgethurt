@@ -1,17 +1,21 @@
 package com.lastimp.dgh.source.core.buffSystem;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.Register.ModEffects;
+import com.lastimp.dgh.source.register.ModEffects;
+import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
-import static com.lastimp.dgh.api.enums.BodyCondition.WITHDRAW;
+import static com.lastimp.dgh.api.enums.BodyComponents.*;
+import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
+import static com.lastimp.dgh.api.enums.BodyCondition.*;
+import static com.lastimp.dgh.api.enums.BodyCondition.BLOOD_LOSS;
 
 
 @EventBusSubscriber(modid = DontGetHurt.MODID)
@@ -98,8 +102,28 @@ public class BuffEventHandler {
 
     private static void updateSymptomsEffects(PlayerHealthCapability health, ServerPlayer player) {
         if (!player.hasEffect(ModEffects.INTENSE_PAIN_EFFECT) && health.intensePain()) {
-            var newEffect = new MobEffectInstance(ModEffects.INTENSE_PAIN_EFFECT, 100);
-            player.addEffect(newEffect);
+            if (Mth.randomBetween(Utils.randomSource, 0.0f, 1.0f) < 0.007f) {
+                var newEffect = new MobEffectInstance(ModEffects.INTENSE_PAIN_EFFECT, 60);
+                player.addEffect(newEffect);
+            }
+        }
+        if (!player.hasEffect(ModEffects.PALE_SKIN) && health.getComponent(BLOOD).getConditionValue(BLOOD_LOSS) > 0.4f) {
+            player.addEffect(new MobEffectInstance(ModEffects.PALE_SKIN, 100));
+        }
+        if (!player.hasEffect(ModEffects.HARD_BREATH)) {
+            if (health.getComponent(BLOOD).getConditionValue(OXYGEN) > 0.2f || health.getComponent(TORSO).abnormal(RESPIRATORY_ARREST))
+                player.addEffect(new MobEffectInstance(ModEffects.HARD_BREATH, 100));
+        }
+        if (!player.hasEffect(MobEffects.BLINDNESS)) {
+            if (health.getComponent(BLOOD).getConditionValue(OXYGEN) > 0.5f)
+                player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 100));
+        }
+        if (!player.hasEffect(MobEffects.WEAKNESS)) {
+            var value = health.getComponent(BLOOD).getConditionValue(BLOOD_LOSS);
+            if (value > 0.6f)
+                player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 100,
+                        (int) ((value - 0.6f) / 0.2f)
+                ));
         }
     }
 }

@@ -45,19 +45,13 @@ public class Config {
             .defineInRange("BASE_MED_AVAILABLE_TIME",100,1, Integer.MAX_VALUE);
 
     public static final ModConfigSpec.IntValue VOLUME_SELF_HEALING_TIME = BUILDER
-            .defineInRange("VOLUME_SELF_HEALING_TIME",100,1, Integer.MAX_VALUE);
+            .defineInRange("VOLUME_SELF_HEALING_TIME",200,1, Integer.MAX_VALUE);
 
     public static final ModConfigSpec.DoubleValue RESISTANCE_CONVERT_RATIO = BUILDER
             .defineInRange("RESISTANCE_CONVERT_RATIO", 0.01, 0, 1.0);
 
     public static final ModConfigSpec.DoubleValue RESISTANCE_MAX = BUILDER
             .defineInRange("RESISTANCE_MAX", 0.4, 0, 1.0);
-
-    // 检验item名称是否合法
-    private static boolean validateItemName(final Object obj)
-    {
-        return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(ResourceLocation.withDefaultNamespace(itemName));
-    }
 
     // 构建配置
     public static final ModConfigSpec SPEC = BUILDER.pop().build();

@@ -2,9 +2,9 @@
 package com.lastimp.dgh.source.core.bodyPart;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -47,15 +47,6 @@ public class WholeBody extends AbstractBody {
     }
 
     @Override
-    public int slowDownLevel(PlayerHealthCapability health) {
-        int slowDown = 0;
-        for (var body : this.components.values()) {
-            slowDown += body.slowDownLevel(health);
-        }
-        return Mth.clamp(slowDown, 0, 10);
-    }
-
-    @Override
     public AbstractBody update(PlayerHealthCapability health, Player player) {
         for (BodyComponents components : this.components.keySet()) {
             this.updateComponent(components, health, player);
@@ -74,6 +65,15 @@ public class WholeBody extends AbstractBody {
             lost += this.getComponent(components).updateVitalityLost(health, player);
         }
         return lost;
+    }
+
+    @Override
+    public int slowDownLevel(PlayerHealthCapability health) {
+        int slowDown = 0;
+        for (var body : this.components.values()) {
+            slowDown += body.slowDownLevel(health);
+        }
+        return Mth.clamp(slowDown, 0, 19);
     }
 
     @Override

@@ -1,0 +1,16 @@
+{
+  "values": [
+    "minecraft:shears",
+    "dgh:health_scanner",
+    "dgh:blood_scanner",
+    "dgh:wood_wrench",
+    "dgh:health_care_bag",
+    "dgh:surgery_tool_bag",
+    "dgh:scalpel",
+    "dgh:hemostat",
+    "dgh:retractor",
+    "dgh:surgical_drill",
+    "dgh:tweezer",
+    "dgh:bone_implants"
+  ]
+}

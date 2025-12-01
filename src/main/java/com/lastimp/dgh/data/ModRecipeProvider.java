@@ -1,11 +1,12 @@
+
 package com.lastimp.dgh.data;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.Register.ModItems;
+import com.lastimp.dgh.neoforge.Common;
+import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import vazkii.patchouli.api.PatchouliAPI;
@@ -31,19 +32,19 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('a', Items.IRON_NUGGET)
                 .define('b', Items.LEATHER)
                 .unlockedBy("has_leather", has(Items.LEATHER))
-                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "blood_pack_empty"));
+                .save(recipeOutput, Common.ResourceLocation(DontGetHurt.MODID, "blood_pack_empty"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.BLOOD_PACK_EMPTY)
                 .requires(ModItems.BLOOD_PACK.get(), 1)
                 .unlockedBy("has_blood_pack", has(ModItems.BLOOD_PACK))
-                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "blood_pack_empty_unfill"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SUTURE.get(), 8)
+                .save(recipeOutput, Common.ResourceLocation(DontGetHurt.MODID, "blood_pack_empty_unfill"));
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SUTURE.get(), 4)
                 .pattern("c a")
                 .pattern("ca ")
                 .pattern("bcc")
                 .define('a', Items.IRON_NUGGET)
                 .define('b', Items.IRON_INGOT)
                 .define('c', Items.STRING)
-                .unlockedBy("has_iron", has(Items.STRING))
+                .unlockedBy("has_string", has(Items.STRING))
                 .save(recipeOutput);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.BLOOD_SCANNER.get(), 1)
                 .pattern(" a ")
@@ -76,7 +77,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(Items.GLASS_BOTTLE, 2)
                 .requires(Items.FERMENTED_SPIDER_EYE, 1)
                 .unlockedBy("has_glass_bottle", has(Items.GLASS_BOTTLE))
-                .save(recipeOutput);
+                .save(recipeOutput, Common.ResourceLocation(DontGetHurt.MODID, "morphine"));
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.HEALTH_CARE_BAG.get(), 1)
                 .pattern("bab")
                 .pattern("cde")
@@ -96,12 +97,72 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('a', ItemTags.PLANKS)
                 .unlockedBy("has_plank", has(ItemTags.PLANKS))
                 .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.BONE_IMPLANTS.get(), 1)
+                .pattern("bbb")
+                .pattern("bab")
+                .pattern("bbb")
+                .define('a', Items.BONE_BLOCK)
+                .define('b', Items.BONE_MEAL)
+                .unlockedBy("has_bone", has(Items.BONE))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SCALPEL.get(), 1)
+                .pattern(" a ")
+                .pattern(" b ")
+                .pattern(" b ")
+                .define('a', Items.IRON_NUGGET)
+                .define('b', Items.IRON_INGOT)
+                .unlockedBy("has_iron", has(Items.IRON_INGOT))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.HEMOSTAT.get(), 1)
+                .pattern("a a")
+                .pattern(" b ")
+                .pattern(" b ")
+                .define('a', Items.IRON_NUGGET)
+                .define('b', Items.IRON_INGOT)
+                .unlockedBy("has_iron", has(Items.IRON_INGOT))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.RETRACTOR.get(), 1)
+                .pattern("a a")
+                .pattern("bab")
+                .pattern("b b")
+                .define('a', Items.IRON_NUGGET)
+                .define('b', Items.IRON_INGOT)
+                .unlockedBy("has_iron", has(Items.IRON_INGOT))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SURGICAL_DRILL.get(), 1)
+                .pattern(" c ")
+                .pattern("abc")
+                .pattern("  c")
+                .define('a', Items.IRON_NUGGET)
+                .define('b', Items.IRON_BLOCK)
+                .define('c', Items.IRON_INGOT)
+                .unlockedBy("has_iron", has(Items.IRON_INGOT))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.TWEEZER.get(), 1)
+                .pattern("a a")
+                .pattern("a a")
+                .pattern(" a ")
+                .define('a', Items.IRON_NUGGET)
+                .unlockedBy("has_iron", has(Items.IRON_INGOT))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SURGERY_TOOL_BAG.get(), 1)
+                .pattern("bab")
+                .pattern("cde")
+                .pattern("bfb")
+                .define('a', ItemTags.WOOL)
+                .define('b', Items.LEATHER)
+                .define('c', ModItems.SCALPEL)
+                .define('d', ModItems.HEMOSTAT)
+                .define('e', ModItems.RETRACTOR)
+                .define('f', Items.CHEST)
+                .unlockedBy("has_chest", has(Items.CHEST))
+                .save(recipeOutput);
 
-        var book = PatchouliAPI.get().getBookStack(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "medical_guide"));
+        var book = PatchouliAPI.get().getBookStack(Common.ResourceLocation(DontGetHurt.MODID, "medical_guide"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, book)
                 .requires(Items.BOOK, 1)
                 .requires(ModItems.BANDAGE, 1)
                 .unlockedBy("has_book", has(Items.BOOK))
-                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "medical_guide"));
+                .save(recipeOutput, Common.ResourceLocation(DontGetHurt.MODID, "medical_guide"));
     }
 }

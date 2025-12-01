@@ -1,7 +1,7 @@
 package com.lastimp.dgh.source.client.gui.MenuProvider;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.client.gui.HealthCareBagMenu;
+import com.lastimp.dgh.source.client.gui.BagMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,6 +30,6 @@ public class HealthCareBagMenuProvider implements MenuProvider {
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return new HealthCareBagMenu(i, inventory, bagStack);
+        return new BagMenu.HealthCareBag(i, inventory, bagStack);
     }
 }

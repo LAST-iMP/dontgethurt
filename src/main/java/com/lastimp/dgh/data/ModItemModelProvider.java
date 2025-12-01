@@ -1,7 +1,7 @@
 
 package com.lastimp.dgh.data;
 
-import com.lastimp.dgh.source.Register.ModItems;
+import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;

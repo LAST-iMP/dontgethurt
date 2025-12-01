@@ -20,19 +20,19 @@ public class KeepLivingEffect extends MobEffect {
                 Attributes.MOVEMENT_SPEED,
                 ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "living_movement"),
                 0.015f,
-                AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
         this.addAttributeModifier(
                 Attributes.ATTACK_SPEED,
                 ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "living_attack"),
                 0.015f,
-                AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
         this.addAttributeModifier(
                 Attributes.BLOCK_BREAK_SPEED,
                 ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "living_break"),
                 0.015f,
-                AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
     }
 }

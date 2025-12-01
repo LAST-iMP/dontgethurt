@@ -2,6 +2,7 @@ package com.lastimp.dgh.api.enums;
 
 import com.lastimp.dgh.Config;
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.neoforge.Common;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -9,38 +10,47 @@ import static com.lastimp.dgh.DontGetHurt.EPS;
 
 public enum BodyCondition {
     //肢体
-    BURN            ("烧伤",1.0f / Config.base_self_healing_time, 0.2f, BodyCondition.pathRoot+"burn"),
-    INTERNAL_INJURY ("内伤", 1.0f / Config.base_self_healing_time, 1.0f, BodyCondition.pathRoot+"internal_injury"),
+    BURN            ("烧伤",  1.0f / Config.base_self_healing_time, 0.2f, BodyCondition.pathRoot+"burn"),
+    INTERNAL_INJURY ("内伤",  1.0f / Config.base_self_healing_time, 0.5f, BodyCondition.pathRoot+"internal_injury"),
     OPEN_WOUND      ("开放伤", 1.0f / Config.base_self_healing_time, 0.5f, BodyCondition.pathRoot+"open_wound"),
-    BLEED           ("出血", 0.0f, 0.0f, BodyCondition.pathRoot+"bleeding"),
-    INFECTION       ("感染", 0.0f, 0.0f),
+    BLEED           ("出血",  0.0f, 0.0f, BodyCondition.pathRoot+"bleeding"),
+    INFECTION       ("感染",  0.0f, 0.0f),
     FOREIGN_OBJECT  ("体内异物", 0.0f, 0.0f),
+    FRACTURE        ("骨折",  1.0f / Config.base_self_healing_time * 3, 0.0f, BodyCondition.pathRoot+"fracture"),
+    INTENSE_PAIN    ("剧痛",  0.2f, 1.0f, 0xFFFFFF00, BodyCondition.pathRoot+"intense_pain"),
 
-    BANDAGED        ("绷带包扎", 1.0f / Config.base_med_available_time / 2, 0.75f, 0xFF00FF00, BodyCondition.pathRoot+"bandage"),
-    BANDAGED_DIRTY  ("脏绷带", 0.0f, 1.0f, BodyCondition.pathRoot+"bandage_dirty"),
+    BANDAGED        ("绷带包扎", 1.0f / Config.base_med_available_time, 0.0f, 0xFF00FF00, BodyCondition.pathRoot+"bandage"),
+    BANDAGED_DIRTY  ("脏绷带", 0.0f, 0.0f, BodyCondition.pathRoot+"bandage_dirty"),
     OINMENTED       ("药膏涂抹", 0.0f, 0.0f),
 
     BURN_RES        ("烧伤抗性", 0, 0, 0xFFF4FFA7,BodyCondition.pathRoot+"burn_resist"),
     INTERNAL_RES    ("内伤抗性", 0, 0, 0xFFF4FFA7, BodyCondition.pathRoot+"internal_injury_resist"),
     OPEN_WOUND_RES  ("外伤抗性", 0, 0, 0xFFF4FFA7, BodyCondition.pathRoot+"open_wound_resist"),
+    //手术
+    SURGERY_INCISION("手术切口", 0, 0, 0xFF89E9FF, BodyCondition.pathRoot+"scalpel"),
+    CLAMPED_BLEEDING("夹闭止血", 0, 0, 0xFF89E9FF, BodyCondition.pathRoot+"hemostat"),
+    RETRACTED_SKIN  ("皮肤牵开", 0, 0, 0xFF89E9FF, BodyCondition.pathRoot+"retractor"),
+    DRILLED_BONES   ("骨骼钻孔", 0, 0, 0xFF89E9FF, BodyCondition.pathRoot+"surgical_drill"),
     //四肢
-    DISLOCATION     ("脱臼", 0.0f, 1.0f, 0xFFFFFF00, BodyCondition.pathRoot+"dislocation"),
-    FRACTURE        ("骨折", 1.0f / Config.base_self_healing_time * 3, 0.0f, BodyCondition.pathRoot+"fracture"),
-    INTENSE_PAIN    ("剧痛", 0.2f, 1.0f, 0xFFFFFF00, BodyCondition.pathRoot+"intense_pain"),
-    PLASTER_CAST    ("石膏固定", 0.0f, 1.0f, 0xFF00FF00, BodyCondition.pathRoot+"plaster_cast"),
+    DISLOCATION     ("脱臼",  0.0f, 0.0f, 0xFFFFFF00, BodyCondition.pathRoot+"dislocation"),
+    PLASTER_CAST    ("石膏固定", 0.0f, 0.0f, 0xFF00FF00, BodyCondition.pathRoot+"plaster_cast"),
     //躯干
-    ANALGESIA       ("镇痛", 1.0f/ Config.base_med_available_time, 1.0f, 0xFF00FF00, BodyCondition.pathRoot+"analgesia"),
+    ANALGESIA       ("镇痛",  1.0f/ Config.base_med_available_time, 1.0f, 0xFF00FF00, BodyCondition.pathRoot+"analgesia"),
+    RESPIRATORY_ARREST("呼吸停止", 0.5f, 1.0f, BodyCondition.pathRoot+"respiratory_arrest"),
     //头脑
-    WITHDRAW        ("戒断", 1.0f/ Config.base_med_available_time, 1.0f, BodyCondition.pathRoot+"withdraw"),
+    WITHDRAW        ("戒断",  1.0f/ Config.base_med_available_time, 1.0f, BodyCondition.pathRoot+"withdraw"),
+    TRAUMATIC_SHOCK ("手术休克", 0.015f, 1.0f, BodyCondition.pathRoot+"traumatic_shock"),
+    BRAIN_DAMAGE    ("脑损伤", 0.001f, 1.0f, BodyCondition.pathRoot+"brain_damage"),
     //血液
     SEPSIS          ("败血症", 0.0f, 0.0f),
     HEMOTRANSFUSION ("输血性休克", 0.0f, 0.0f),
-    BLOOD_LOSS      ("失血", 1.0f / Config.volume_self_healing_time, 0.0f),
-    BLOOD_PRESSURE  ("血压", 0.0f, 0.0f),
+    BLOOD_LOSS      ("失血",  1.0f / Config.volume_self_healing_time, 0.0f),
+    BLOOD_PRESSURE  ("血压",  0.0f, 0.0f),
     PH_LEVEL        ("酸碱性", 0.0f, 0.0f),
     IMMUNITY        ("免疫力", 0.0f, 0.0f),
     OPIATE_OVERDOSE ("阿片中毒", 1.0f / Config.base_self_healing_time, 1.0f),
-    OPIATE_ADDICTED ("阿片成瘾", 1.0f / Config.base_self_healing_time / 5, 1.0f)
+    OPIATE_ADDICTED ("阿片成瘾", 1.0f / Config.base_self_healing_time / 5, 1.0f),
+    OXYGEN          ("低血氧", 0.05f, 0.0f)
     ;
 
     public static final String pathRoot = "container/condition_icons/";
@@ -79,7 +89,7 @@ public enum BodyCondition {
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.color = color;
-        this.texture = path == null ? null : ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, path);
+        this.texture = path == null ? null : Common.ResourceLocation(DontGetHurt.MODID, path);
     }
 
     public boolean abnormal(float value) {
@@ -89,11 +99,13 @@ public enum BodyCondition {
     public boolean isInjury() {
         return this == BURN || this == INTERNAL_INJURY || this == OPEN_WOUND || this == BLEED ||
                 this == INFECTION || this == FOREIGN_OBJECT || this == BANDAGED_DIRTY || this == FRACTURE ||
-                this == WITHDRAW;
+                this == WITHDRAW || this == RESPIRATORY_ARREST || this == TRAUMATIC_SHOCK || this == BRAIN_DAMAGE
+                ;
     }
 
     public boolean isPain() {
-        return this == DISLOCATION || this == INTENSE_PAIN;
+        return this == DISLOCATION || this == INTENSE_PAIN || this == SURGERY_INCISION || this == CLAMPED_BLEEDING ||
+                this == RETRACTED_SKIN || this == DRILLED_BONES;
     }
 
     public boolean isComfort() {
