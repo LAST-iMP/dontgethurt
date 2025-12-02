@@ -1,5 +1,5 @@
 {
-  "name": "医疗药品",
+  "name": "Medical Supplies",
   "icon": "dgh:blood_pack",
   "category": "dgh:tools_and_medic",
   "read_by_default": false,
@@ -8,19 +8,19 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "所有医疗药品都可以在打开医疗面板并选择部位后使用。血包这种不需要指定部位的，可以直接右键使用。"
+      "text": "All medical items can be used by opening the medical panel and selecting a body part. Items that do not require a specific part, such as blood packs, can be used directly with right-click."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(br)$(li)部位指定$(li2)绷带$(li2)缝合线$(li2)石膏$(br)$(li)直接使用$(li2)(空)血包$(li2)吗啡"
+      "text": "$(br)$(li)Requires Body Part Selection$(li2)Bandage$(li2)Suture$(li2)Plaster$(br)$(li)Direct Use$(li2)(Empty) Blood Pack$(li2)Morphine"
     },
     {
       "type": "spotlight",
-      "title": "血包",
+      "title": "Blood Pack",
       "item": "dgh:blood_pack",
       "scale": 1.2,
-      "text": "对自己或别人使用空血包来储存血液，紧急的时候可以直接补充血容量。$(br)$(li)效果$(li2)降低失血(血包)$(li2)增加失血(空血包)$(br)$(li)主治$(li2)失血",
+      "text": "Use an empty blood pack on yourself or others to store blood. In emergencies, you can replenish blood volume instantly.$(br)$(li)Effects$(li2)Reduces blood loss (blood pack)$(li2)Increases blood loss (empty blood pack)$(br)$(li)Treats$(li2)Blood loss",
       "link_recipe": true
     },
     {
@@ -30,10 +30,10 @@
     },
     {
       "type": "spotlight",
-      "title": "吗啡",
+      "title": "Morphine",
       "item": "dgh:morphine",
       "scale": 1.2,
-      "text": "对自己或别人使用吗啡进行镇痛。$(br)$(li)效果$(li2)增加镇痛$(li)负面效果$(li2)增加阿片成瘾$(li2)增加阿片中毒$(br)$(li)主治$(li2)肢体失能、剧痛",
+      "text": "Use morphine on yourself or others to relieve pain.$(br)$(li)Effects$(li2)Increases analgesia$(li)Side Effects$(li2)Increases opioid addiction$(li2)Increases opioid toxicity$(br)$(li)Treats$(li2)Limb dysfunction, intense pain",
       "link_recipe": true
     },
     {
@@ -42,10 +42,10 @@
     },
     {
       "type": "spotlight",
-      "title": "绷带",
+      "title": "Bandage",
       "item": "dgh:bandage",
       "scale": 1.2,
-      "text": "使用绷带包扎伤口，阻止出血，稳定脱臼。$(br)$(li)效果$(li2)阻止出血(内伤无效)$(li)负面效果$(li2)变脏后增加内伤$(li2)降低移动速度$(li)主治$(li2)烧伤$(li)副治$(li2)开放伤、脱臼、骨折",
+      "text": "Use bandages to wrap wounds, stop bleeding, and stabilize dislocations.$(br)$(li)Effects$(li2)Stops bleeding (ineffective for internal injuries)$(li)Side Effects$(li2)Dirty bandages increase internal injuries$(li2)Reduces movement speed$(li)Primary Use$(li2)Burns$(li)Secondary Use$(li2)Open wounds, dislocations, fractures",
       "link_recipe": true
     },
     {
@@ -54,10 +54,10 @@
     },
     {
       "type": "spotlight",
-      "title": "缝合线",
+      "title": "Suture",
       "item": "dgh:suture",
       "scale": 1.2,
-      "text": "把撕裂的皮肤重新缝起来。$(br)$(li)效果$(li2)缝合开放伤$(br)$(li)主治$(li2)开放伤",
+      "text": "Used to stitch torn skin back together.$(br)$(li)Effects$(li2)Stitches open wounds$(br)$(li)Treats$(li2)Open wounds",
       "link_recipe": true
     },
     {
@@ -66,10 +66,10 @@
     },
     {
       "type": "spotlight",
-      "title": "石膏",
+      "title": "Plaster Cast",
       "item": "dgh:gypsum",
       "scale": 1.2,
-      "text": "绷带缠绕后使用石膏固定断开的骨头。$(br)$(li)效果$(li2)治疗骨折$(li)负面效果$(li2)降低移动速度$(li2)消除骨折负面效果$(br)$(li)主治$(li2)骨折",
+      "text": "Apply plaster after bandaging to fix broken bones in place.$(br)$(li)Effects$(li2)Treats fractures$(li)Side Effects$(li2)Reduces movement speed$(li2)Removes fracture penalties$(br)$(li)Treats$(li2)Fractures",
       "link_recipe": true
     },
     {

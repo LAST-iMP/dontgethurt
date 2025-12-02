@@ -1,5 +1,5 @@
 {
-  "name": "基本概念-生命",
+  "name": "Basic Concepts - Life",
   "icon": "minecraft:golden_apple",
   "category": "dgh:health",
   "read_by_default": false,
@@ -8,7 +8,7 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "你或许已经注意到，你变得更肉了一些，真是一个好消息！$(br)但是，你受到的伤害都会转变成各种$(l:dgh:injury)伤口$()。不进行妥善处理，可能反而造成更多的伤害。$(br)按下o(默认)可以打开健康面板，肉眼观察你自己的健康状态。$(br)如果你有$(l:dgh:tools)健康扫描仪$()和$(l:dgh:tools)血液扫描仪$()，你可以得到更多信息甚至查看别人的状态。"
+      "text": "You may have noticed that you've become a bit tougher—great news!$(br)However, any damage you receive will be converted into various types of $(l:dgh:injury)wounds$(). If not properly treated, these wounds may lead to even more harm.$(br)Press O (default) to open the Health Panel and visually inspect your own condition.$(br)If you have a $(l:dgh:tools)Health Scanner$() and a $(l:dgh:tools)Blood Scanner$(), you can obtain more detailed information or even check other players’ status."
     },
     {
       "type": "image",
@@ -19,12 +19,12 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "会对你的生命造成直接损害的因素主要包括：$(l:dgh:injury)伤口$()，脑损伤和中毒。其中，伤口由玩家受到的各种直接伤害导致，脑损伤来自伤口和身体状态的后遗症，而中毒来源于使用的药物。$(br2)使用肉眼观察无法看到全部的健康信息，只能通过症状进行部分判断，你需要$(l:dgh:tools)健康扫描仪$()和$(l:dgh:tools)血液扫描仪$()进行进一步诊断。"
+      "text": "The main factors that deal direct damage to your life include: $(l:dgh:injury)wounds$(), brain damage, and poisoning. Wounds come from all direct damage sources, brain damage results from complications of injuries and body conditions, while poisoning comes from medications.$(br2)You cannot see all health information with the naked eye—symptoms only provide partial hints. You will need a $(l:dgh:tools)Health Scanner$() and $(l:dgh:tools)Blood Scanner$() for proper diagnosis."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "当你存活了一段时间后，你的身体久经锻炼。因此，你的移动速度、挖掘速度、攻击速度都会上升。$(br2)同样的，每当你治愈自己的伤势之后，你的身体也会变的更加坚韧。$(br2)若是死里逃生，将会获得一段时间的强力buff。"
+      "text": "After surviving for a long time, your body becomes seasoned and well-trained. As a result, your movement speed, mining speed, and attack speed will all increase.$(br2)Likewise, whenever you successfully heal your injuries, your body becomes more resilient.$(br2)If you narrowly escape death, you will receive a temporary powerful buff."
     }
   ]
 }

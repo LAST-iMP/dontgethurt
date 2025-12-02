@@ -1,5 +1,5 @@
 {
-  "name": "血液状态",
+  "name": "Blood Status",
   "icon": "minecraft:bowl",
   "category": "dgh:health",
   "read_by_default": false,
@@ -8,35 +8,35 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "本章将对血液进行介绍"
+      "text": "This chapter provides an introduction to the blood system."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(br)血液作为人体组成部分之一，对健康有重大影响。$(br)包括$(li)血容量$(li)阿片中毒$(li)阿片成瘾"
+      "text": "$(br)As one of the essential components of the human body, blood has a major impact on health.$(br)It includes:$(li)Blood Volume$(li)Opiate Overdose$(li)Opiate Addiction"
     },
     {
       "type": "text",
-      "title": "血容量",
+      "title": "Blood Volume",
       "scale": 1.2,
-      "text": "$(br)血容量在血液扫描仪中以\"失血\"进行显示。缺失的血容量会导致低血氧，并引起一系列症状反应。可以在健康时使用空血包储存血液，在紧急的时候使用血包快速降低失血。"
+      "text": "$(br)Blood volume is shown as \"Blood Loss\" in the Blood Scanner. Missing blood volume leads to hypoxia and triggers a chain of symptoms. You can store blood in an Empty Blood Pack while healthy, and use a Blood Pack in emergencies to quickly reduce blood loss."
     },
     {
       "type": "text",
-      "title": "低血氧",
+      "title": "Hypoxia",
       "scale": 1.2,
-      "text": "$(br)低血氧由较低的血容量或窒息引起，会导致快速的脑损伤。"
+      "text": "$(br)Hypoxia is caused by low blood volume or suffocation and can rapidly lead to brain damage."
     },
     {
       "type": "text",
-      "title": "阿片中毒",
+      "title": "Opiate Overdose",
       "scale": 1.2,
-      "text": "$(br)阿片中毒由频繁使用阿片类药物造成。轻度阿片中毒通常无需理会，但严重中毒会造成严重损伤。"
+      "text": "$(br)Opiate overdose occurs from frequent use of opioid drugs. Mild overdose can often be ignored, but severe overdose causes serious damage."
     },
     {
-    "type": "text",
-    "title": "阿片成瘾",
-    "text": "$(br)阿片成瘾由频繁使用阿片类药物造成。阿片成瘾会在没有阿片药物生效时产生戒断反应。"
-  }
+      "type": "text",
+      "title": "Opiate Addiction",
+      "text": "$(br)Opiate addiction results from frequent use of opioid drugs. Addiction causes withdrawal effects whenever no opioid drug is active."
+    }
   ]
 }

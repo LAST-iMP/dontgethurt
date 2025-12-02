@@ -1,5 +1,5 @@
 {
-  "name": "症状",
+  "name": "Symptoms",
   "icon": "minecraft:rotten_flesh",
   "category": "dgh:health",
   "read_by_default": false,
@@ -8,81 +8,81 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "本章将对各种症状进行介绍。症状通常是无害的，它会对你的身体状况进行一些指示"
+      "text": "This chapter introduces various symptoms. Symptoms are usually harmless and serve as indicators of your physical condition."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(br2)$(li)剧痛$(li)出汗$(li)渴望$(li)缓行$(li)皮肤苍白$(li)呼吸困难$(li)恶心$(li)挖掘疲劳$(li)失明$(li)虚弱"
+      "text": "$(br2)$(li)Intense Pain$(li)Sweating$(li)Craving$(li)Staggering$(li)Pale Skin$(li)Difficulty Breathing$(li)Nausea$(li)Mining Fatigue$(li)Blindness$(li)Weakness"
     },
     {
       "type": "image",
-      "title": "剧痛",
+      "title": "Intense Pain",
       "border": true,
       "images": [
         "dgh:textures/book/intense_pain.png"
       ],
-      "text": "剧痛提示可能有脱臼或骨折。"
+      "text": "Intense pain may indicate dislocation or fracture."
     },
     {
       "type": "image",
-      "title": "出汗",
+      "title": "Sweating",
       "border": true,
       "images": [
         "dgh:textures/book/sweating_effect.png"
       ],
-      "text": "出汗提示中度戒断反应。"
+      "text": "Sweating may indicate moderate withdrawal symptoms."
     },
     {
       "type": "image",
-      "title": "渴望",
+      "title": "Craving",
       "border": true,
       "images": [
         "dgh:textures/book/craving_effect.png"
       ],
-      "text": "渴望提示轻度戒断反应。"
+      "text": "Craving may indicate mild withdrawal symptoms."
     },
     {
       "type": "image",
-      "title": "缓行",
+      "title": "Staggering",
       "border": true,
       "images": [
         "dgh:textures/book/stagger_effect.png"
       ],
-      "text": "缓行提示有腿部脱臼、骨折或未拆下的绷带或石膏。"
+      "text": "Staggering may indicate leg dislocation, fracture, or unremoved bandages or casts."
     },
     {
       "type": "image",
-      "title": "皮肤苍白",
+      "title": "Pale Skin",
       "border": true,
       "images": [
         "dgh:textures/book/pale_skin.png"
       ],
-      "text": "皮肤苍白提示有严重失血。"
+      "text": "Pale skin may indicate severe blood loss."
     },
     {
       "type": "image",
-      "title": "呼吸困难",
+      "title": "Difficulty Breathing",
       "border": true,
       "images": [
         "dgh:textures/book/hard_breath.png"
       ],
-      "text": "呼吸困难提示有低血氧或呼吸停止。"
+      "text": "Difficulty breathing may indicate hypoxia or respiratory arrest."
     },
     {
       "type": "text",
-      "title": "恶心",
-      "text": "在本mod中，恶心提示可能有严重戒断反应。"
+      "title": "Nausea",
+      "text": "In this mod, nausea may indicate severe withdrawal symptoms."
     },
     {
       "type": "text",
-      "title": "失明",
-      "text": "在本mod中，失明提示可能有严重的低血氧。"
+      "title": "Blindness",
+      "text": "In this mod, blindness may indicate severe hypoxia."
     },
     {
       "type": "text",
-      "title": "虚弱",
-      "text": "在本mod中，虚弱提示可能有严重的失血。"
+      "title": "Weakness",
+      "text": "In this mod, weakness may indicate severe blood loss."
     }
   ]
 }

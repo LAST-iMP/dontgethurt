@@ -1,5 +1,5 @@
 {
-  "name": "伤口",
+  "name": "Wounds",
   "icon": "minecraft:bone",
   "category": "dgh:health",
   "read_by_default": false,
@@ -8,152 +8,152 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "本章将对各种伤口进行介绍。"
+      "text": "This chapter introduces the various types of wounds."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(br2)$(li)致命伤$(li2)烧伤$(li2)开放伤$(li2)内伤$(li2)脑损伤$(li)苦痛$(li2)脱臼$(li2)骨折$(li2)出血$(li2)呼吸停止$(li2)手术休克$(li2)戒断"
+      "text": "$(br2)$(li)Fatal Wounds$(li2)Burns$(li2)Open Wounds$(li2)Internal Injuries$(li2)Brain Damage$(li)Pain$(li2)Dislocation$(li2)Fracture$(li2)Bleeding$(li2)Respiratory Arrest$(li2)Surgical Shock$(li2)Withdrawal"
     },
     {
       "type": "image",
-      "title": "烧伤",
+      "title": "Burns",
       "border": true,
       "images": [
         "dgh:textures/book/burn.png"
       ],
-      "text": "烧伤由各种火焰伤害引起。"
+      "text": "Burns are caused by various fire-related damage sources."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)对生命的直接损害$(li2)中等失血$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)绷带包扎$(br)$(li)注意事项$(li2)使绷带更快变脏"
+      "text": "$(li)Affected Area$(li2)Whole body$(br)$(li)Effects$(li2)Direct damage to life$(li2)Moderate blood loss$(br)$(li)First Aid$(li2)Bandaging$(br)$(li)Treatment$(li2)Bandaging$(br)$(li)Notes$(li2)Bandages become dirty more quickly"
     },
     {
       "type": "image",
-      "title": "开放伤口",
+      "title": "Open Wounds",
       "border": true,
       "images": [
         "dgh:textures/book/open_wound.png"
       ],
-      "text": "开放性伤口由各种生物攻击引起。"
+      "text": "Open wounds are caused by various creature attacks."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)对生命的直接损害$(li2)快速失血$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)缝合$(br)$(li)注意事项$(li2)需要紧急止血"
+      "text": "$(li)Affected Area$(li2)Whole body$(br)$(li)Effects$(li2)Direct damage to life$(li2)Rapid blood loss$(br)$(li)First Aid$(li2)Bandaging$(br)$(li)Treatment$(li2)Suturing$(br)$(li)Notes$(li2)Requires immediate bleeding control"
     },
     {
       "type": "image",
-      "title": "内伤",
+      "title": "Internal Injuries",
       "border": true,
       "images": [
         "dgh:textures/book/internal_injury.png"
       ],
-      "text": "内伤由环境伤害或治疗问题引起。"
+      "text": "Internal injuries are caused by environmental damage or treatment issues."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)对生命的直接损害$(li2)微量失血$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)进食、手术中镊子清理$(br)$(li)注意事项$(li2)轻微内伤通常不用理会"
+      "text": "$(li)Affected Area$(li2)Whole body$(br)$(li)Effects$(li2)Direct damage to life$(li2)Minor blood loss$(br)$(li)First Aid$(li2)None$(br)$(li)Treatment$(li2)Eating, tweezers during surgery to clean debris$(br)$(li)Notes$(li2)Minor internal injuries often require no attention"
     },
     {
       "type": "image",
-      "title": "脑损伤",
+      "title": "Brain Damage",
       "border": true,
       "images": [
         "dgh:textures/book/brain_damage.png"
       ],
-      "text": "脑损伤由失血过多引起的缺氧、呼吸暂停、休克等引起。"
+      "text": "Brain damage is caused by hypoxia due to major blood loss, respiratory arrest, shock, etc."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)头部$(br)$(li)影响$(li2)对生命的直接损害$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)治疗病因$(br)"
+      "text": "$(li)Affected Area$(li2)Head$(br)$(li)Effects$(li2)Direct damage to life$(br)$(li)First Aid$(li2)None$(br)$(li)Treatment$(li2)Treat the underlying cause$(br)"
     },
     {
       "type": "image",
-      "title": "脱臼",
+      "title": "Dislocation",
       "border": true,
       "images": [
         "dgh:textures/book/dislocation.png"
       ],
-      "text": "脱臼由内伤引起。"
+      "text": "Dislocations are caused by internal injuries."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)四肢$(br)$(li)影响$(li2)肢体剧痛$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)扳手纠正$(br)$(li)注意事项$(li2)影响肢体功能。"
+      "text": "$(li)Affected Area$(li2)Limbs$(br)$(li)Effects$(li2)Severe limb pain$(br)$(li)First Aid$(li2)Bandaging$(br)$(li)Treatment$(li2)Correct with a wrench$(br)$(li)Notes$(li2)Impairs limb function"
     },
     {
       "type": "image",
-      "title": "骨折",
+      "title": "Fracture",
       "border": true,
       "images": [
         "dgh:textures/book/fracture.png"
       ],
-      "text": "骨折由内伤引起。"
+      "text": "Fractures are caused by internal injuries."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)肢体剧痛$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)绷带完全包扎后石膏固定、骨合成手术$(br)"
+      "text": "$(li)Affected Area$(li2)Whole body$(br)$(li)Effects$(li2)Severe limb pain$(br)$(li)First Aid$(li2)Bandaging$(br)$(li)Treatment$(li2)Full bandaging followed by gypsum casting, or bone fusion surgery$(br)"
     },
     {
       "type": "image",
-      "title": "出血",
+      "title": "Bleeding",
       "border": true,
       "images": [
         "dgh:textures/book/bleeding.png"
       ],
-      "text": "出血由伤口、未止血的手术切口引起。"
+      "text": "Bleeding is caused by wounds or unsealed surgical incisions."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)失血$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)治疗病因$(br)"
+      "text": "$(li)Affected Area$(li2)Whole body$(br)$(li)Effects$(li2)Blood loss$(br)$(li)First Aid$(li2)Bandaging$(br)$(li)Treatment$(li2)Treat the underlying cause$(br)"
     },
     {
       "type": "image",
-      "title": "呼吸停止",
+      "title": "Respiratory Arrest",
       "border": true,
       "images": [
         "dgh:textures/book/respiratory_arrest.png"
       ],
-      "text": "通常由严重休克反应引起。"
+      "text": "Usually caused by severe shock reactions."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)胸腔$(br)$(li)影响$(li2)低血氧$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)治疗病因$(br)"
+      "text": "$(li)Affected Area$(li2)Chest$(br)$(li)Effects$(li2)Low oxygen levels$(br)$(li)First Aid$(li2)None$(br)$(li)Treatment$(li2)Treat the underlying cause$(br)"
     },
     {
       "type": "image",
-      "title": "手术休克",
+      "title": "Surgical Shock",
       "border": true,
       "images": [
         "dgh:textures/book/fracture.png"
       ],
-      "text": "手术休克由未经麻醉的手术行为引起。"
+      "text": "Surgical shock is caused by performing surgery without anesthesia."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)头$(br)$(li)影响$(li2)休克、大脑受损$(br)$(li)急救措施$(li2)使用吗啡麻醉$(br)$(li)治疗措施$(li2)停止手术$(br)"
+      "text": "$(li)Affected Area$(li2)Head$(br)$(li)Effects$(li2)Shock, brain damage$(br)$(li)First Aid$(li2)Use morphine for anesthesia$(br)$(li)Treatment$(li2)Stop the surgery$(br)"
     },
     {
       "type": "image",
-      "title": "戒断",
+      "title": "Withdrawal",
       "border": true,
       "images": [
         "dgh:textures/book/withdraw.png"
       ],
-      "text": "由阿片成瘾引起。"
+      "text": "Caused by opioid addiction."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)头部$(br)$(li)影响$(li2)戒断反应$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)疗剂(未实装)"
+      "text": "$(li)Affected Area$(li2)Head$(br)$(li)Effects$(li2)Withdrawal symptoms$(br)$(li)First Aid$(li2)None$(br)$(li)Treatment$(li2)Anti-withdrawal medication (not implemented)"
     }
   ]
 }

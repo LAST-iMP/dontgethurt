@@ -1,5 +1,5 @@
 {
-  "name": "手术流程",
+  "name": "Surgical Procedures",
   "icon": "dgh:scalpel",
   "category": "dgh:surgery",
   "read_by_default": false,
@@ -8,32 +8,32 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "本章将介绍如何进行手术"
+      "text": "This chapter introduces how to perform surgery."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "不论是哪一种手术，在手术前，你必须使用吗啡进行镇痛。否则会造成严重的手术休克反应，对大脑产生严重伤害。"
+      "text": "Before performing any type of surgery, you must administer morphine for analgesia. Otherwise, the patient will suffer severe surgical shock, causing significant brain damage."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "内伤手术。"
+      "text": "Internal injury surgery."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "手术流程：$(li)部位切开$(li)夹闭止血$(li)皮肤牵开$(li)镊子清理$(li)针线缝合。"
+      "text": "Procedure:$(li)Make an incision$(li)Clamp bleeding vessels$(li)Retract the skin$(li)Clean the wound with tweezers$(li)Suture the incision."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "骨合成手术。"
+      "text": "Bone synthesis surgery."
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "手术流程：$(li)部位切开$(li)夹闭止血$(li)皮肤牵开$(li)骨头植入$(li)针线缝合。"
+      "text": "Procedure:$(li)Make an incision$(li)Clamp bleeding vessels$(li)Retract the skin$(li)Implant bone material$(li)Suture the incision."
     }
   ]
 }

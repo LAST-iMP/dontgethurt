@@ -1,5 +1,5 @@
 {
-  "name": "实用工具",
+  "name": "Utility Tools",
   "icon": "dgh:health_scanner",
   "category": "dgh:tools_and_medic",
   "read_by_default": false,
@@ -7,10 +7,10 @@
   "pages": [
     {
       "type": "spotlight",
-      "title": "健康扫描仪",
+      "title": "Health Scanner",
       "item": "dgh:health_scanner",
       "scale": 1.2,
-      "text": "健康扫描仪！它能够通过右键打开自己或者其他人的健康界面。相比于肉眼观察，它能够显示更多信息，而且允许你治疗他人！",
+      "text": "Health Scanner! It allows you to open your own or others' health interface by right-clicking. Compared to naked-eye observation, it shows more information and lets you heal others!",
       "link_recipe": true
     },
     {
@@ -19,10 +19,10 @@
     },
     {
       "type": "spotlight",
-      "title": "血液扫描仪",
+      "title": "Blood Scanner",
       "item": "dgh:blood_scanner",
       "scale": 1.2,
-      "text": "血液扫描仪！它能够通过右键来扫描自己或者其他人的血液信息。",
+      "text": "Blood Scanner! It allows you to scan your own or others' blood information by right-clicking.",
       "link_recipe": true
     },
     {
@@ -31,10 +31,10 @@
     },
     {
       "type": "spotlight",
-      "title": "木扳手",
+      "title": "Wooden Wrench",
       "item": "dgh:wood_wrench",
       "scale": 1.2,
-      "text": "给脱臼的四肢狠狠来一下。",
+      "text": "Give a good jerk to dislocated limbs.",
       "link_recipe": true
     },
     {
@@ -43,10 +43,10 @@
     },
     {
       "type": "spotlight",
-      "title": "医疗包",
+      "title": "Medical Kit",
       "item": "dgh:health_care_bag",
       "scale": 1.2,
-      "text": "装满你的救命玩意儿。",
+      "text": "Filled with your lifesaving stuff.",
       "link_recipe": true
     },
     {
@@ -55,10 +55,10 @@
     },
     {
       "type": "spotlight",
-      "title": "手术刀",
+      "title": "Scalpel",
       "item": "dgh:scalpel",
       "scale": 1.2,
-      "text": "切开皮肤。",
+      "text": "Cut open the skin.",
       "link_recipe": true
     },
     {
@@ -67,10 +67,10 @@
     },
     {
       "type": "spotlight",
-      "title": "止血钳",
+      "title": "Hemostat",
       "item": "dgh:hemostat",
       "scale": 1.2,
-      "text": "阻断出血。",
+      "text": "Stop bleeding.",
       "link_recipe": true
     },
     {
@@ -79,10 +79,10 @@
     },
     {
       "type": "spotlight",
-      "title": "牵开器",
+      "title": "Retractor",
       "item": "dgh:retractor",
       "scale": 1.2,
-      "text": "拉开皮肤。",
+      "text": "Pull back the skin.",
       "link_recipe": true
     },
     {
@@ -91,10 +91,10 @@
     },
     {
       "type": "spotlight",
-      "title": "手术钻",
+      "title": "Surgical Drill",
       "item": "dgh:surgical_drill",
       "scale": 1.2,
-      "text": "钻开骨头。",
+      "text": "Drill through bones.",
       "link_recipe": true
     },
     {
@@ -103,10 +103,10 @@
     },
     {
       "type": "spotlight",
-      "title": "骨骼植入物",
+      "title": "Bone Implants",
       "item": "dgh:bone_implants",
       "scale": 1.2,
-      "text": "彻底治好你的骨头。",
+      "text": "Completely heal your bones.",
       "link_recipe": true
     },
     {
