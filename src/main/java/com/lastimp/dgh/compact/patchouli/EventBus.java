@@ -5,6 +5,7 @@ import com.lastimp.dgh.neoforge.Common;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import vazkii.patchouli.api.PatchouliAPI;
@@ -15,6 +16,8 @@ public class EventBus {
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity().level().isClientSide) return;
+        if (!ModList.get().isLoaded("Patchouli")) return;
+
         var player = event.getEntity();
 
         var data = player.getPersistentData();

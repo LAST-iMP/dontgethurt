@@ -40,6 +40,7 @@ public class HealingHandler {
 
     private static boolean screenHealingCheck() {
         Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null) return false;
         if (!mc.level.isClientSide()) return false;
         if (mc.player == null) return false;
         if (healthScreen == null) return false;

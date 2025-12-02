@@ -34,6 +34,7 @@ public class PlayerEventHandler {
 
     private static boolean menuItemUseCheck(Slot slot) {
         Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null) return false;
         if (!mc.level.isClientSide()) return false;
         if (mc.player == null) return false;
 
