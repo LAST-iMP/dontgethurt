@@ -32,15 +32,15 @@ public class ModEffects {
     );
 
     public static final RegistryObject<MobEffect> PALE_SKIN = MOB_EFFECTS.register(
-            "pale_skin", () -> new SymptomsEffect(0xFFFFBE4F)
+            "pale_skin_effect", () -> new SymptomsEffect(0xFFFFBE4F)
     );
 
     public static final RegistryObject<MobEffect> HARD_BREATH = MOB_EFFECTS.register(
-            "hard_breath", () -> new SymptomsEffect(0xFFFFBE4F)
+            "hard_breath_effect", () -> new SymptomsEffect(0xFFFFBE4F)
     );
 
     public static final RegistryObject<MobEffect> INCREASED_HEARTRATE = MOB_EFFECTS.register(
-            "increased_heartrate", () -> new SymptomsEffect(0xFFFFBE4F)
+            "increased_heartrate_effect", () -> new SymptomsEffect(0xFFFFBE4F)
     );
 
     public static final RegistryObject<MobEffect> KEEP_LIVING_EFFECT = MOB_EFFECTS.register(
