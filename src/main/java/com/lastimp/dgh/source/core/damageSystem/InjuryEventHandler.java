@@ -28,7 +28,7 @@ public class InjuryEventHandler {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
-        float damageAmount = event.getOriginalDamage();
+        float damageAmount = event.getNewDamage();
         float absorption = player.getAbsorptionAmount();
         DamageSource source = event.getSource();
 
