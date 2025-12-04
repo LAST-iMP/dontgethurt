@@ -1,29 +1,3 @@
-/*
-* MIT License
-
-Copyright (c) 2023 NeoForged project
-
-This license applies to the template files as supplied by github.com/NeoForged/MDK
-
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
 
 package com.lastimp.dgh.source.core.healingSystem;
 
@@ -55,27 +29,24 @@ public class HealingEventHandler {
         ServerPlayer player = (ServerPlayer) event.getEntity();
         PlayerHealthCapability.getAndSet(player, health -> {
             health = health.update(player);
+            updatePlayerHealth(health, player);
             return health;
         });
     }
 
-    @SubscribeEvent
-    public static void onHealingUpdate(PlayerTickEvent.Post event) {
-        if (event.getEntity().level().isClientSide) return;
-        ServerPlayer player = (ServerPlayer) event.getEntity();
-        PlayerHealthCapability health = PlayerHealthCapability.get(player);
-
-        updatePlayerHealth(health, player);
-    }
-
     private static void updatePlayerHealth(PlayerHealthCapability health, ServerPlayer player) {
         float maxHealth = player.getMaxHealth() * health.playerVitality();
-
-        if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative())
-            maxHealth = player.getMaxHealth();
-        if ((int)maxHealth != (int)player.getHealth() && player.getHealth() > 0)
-            player.setHealth(maxHealth);
-        if (maxHealth <= 0)
+        if (player.isDeadOrDying()) {
             player.setHealth(0);
+        } else if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative()) {
+            player.setHealth(player.getMaxHealth());
+        } else if (maxHealth > 0) {
+            if ((int)maxHealth != (int)player.getHealth())
+                player.setHealth(maxHealth);
+        } else if (maxHealth > -player.getMaxHealth() && player.getServer().getPlayerList().getPlayers().size() > 1) {
+            player.setHealth(0.01f);
+        } else {
+            player.setHealth(0);
+        }
     }
 }

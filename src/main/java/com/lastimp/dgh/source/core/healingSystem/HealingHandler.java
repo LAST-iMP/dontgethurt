@@ -6,8 +6,7 @@ import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
-import com.lastimp.dgh.source.client.gui.HealthScreen;
-import com.lastimp.dgh.source.core.Utils;
+import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.source.item.medicine.Bandages;
 import com.lastimp.dgh.source.item.medicine.Gypsum;
 import net.minecraft.client.Minecraft;
@@ -58,6 +57,8 @@ public class HealingHandler {
 
     public static void useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, ServerPlayer target, BodyComponents component) {
         if (target == null) return;
+        if (source.getCooldowns().isOnCooldown(itemStack.getItem())) return;
+
         boolean success = false;
         if (itemStack.is(MEDICAL_TOOLS_SHEARS)) {
             success |= Bandages.cut(target, component);
@@ -68,6 +69,10 @@ public class HealingHandler {
         } else if (itemStack.getItem() instanceof AbstractPartlyHealItem item) {
             success = item.heal(source, target, component);
         }
+
+        if (success)
+            source.getCooldowns().addCooldown(itemStack.getItem(), 10);
+
         if (success && itemStack.isDamageableItem()) {
             itemStack.hurtAndBreak(1, source.serverLevel(), source, (i) -> {});
             if (itemStack.getDamageValue() >= itemStack.getMaxDamage())

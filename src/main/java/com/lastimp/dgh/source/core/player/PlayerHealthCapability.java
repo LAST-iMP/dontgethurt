@@ -133,4 +133,8 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     public int armBreak() {
         return armBreak;
     }
+
+    public static boolean isDying(Player player) {
+        return player.getHealth() < 0.05 && !player.isDeadOrDying();
+    }
 }

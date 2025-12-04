@@ -3,7 +3,7 @@ package com.lastimp.dgh.network;
 
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
-import com.lastimp.dgh.source.client.gui.HealthScreen;
+import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.source.item.tool.BloodScanner;
 import net.minecraft.network.chat.Component;

@@ -1,5 +1,5 @@
 
-package com.lastimp.dgh.source.client.gui;
+package com.lastimp.dgh.source.client.gui.screen;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
@@ -8,6 +8,10 @@ import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
+import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
+import com.lastimp.dgh.source.client.gui.component.HealthComponentWidget;
+import com.lastimp.dgh.source.client.gui.component.HealthConditionWidget;
+import com.lastimp.dgh.source.client.gui.menu.HealthMenu;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.source.item.tool.HealthScanner;
@@ -24,7 +28,7 @@ import java.util.HashMap;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.OperationType.HEALTH_SCANN;
-import static com.lastimp.dgh.source.client.gui.HealthComponentWidget.*;
+import static com.lastimp.dgh.source.client.gui.component.HealthComponentWidget.*;
 
 public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private static final ResourceLocation HUD_BACKGROUND = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
@@ -177,9 +181,13 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     @Override
     protected void containerTick() {
-        PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
-                this.menu.targetPlayer, null, HEALTH_SCANN, Minecraft.getInstance().player.registryAccess()
-        ));
+        if (Minecraft.getInstance().level.getPlayerByUUID(this.menu.targetPlayer).isDeadOrDying())
+            GuiOpenWrapper.MINECRAFT.get().setScreen(null);
+        else {
+            PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
+                    this.menu.targetPlayer, null, HEALTH_SCANN, Minecraft.getInstance().player.registryAccess()
+            ));
+        }
     }
 
     public void setHealthData(PlayerHealthCapability healthData) {

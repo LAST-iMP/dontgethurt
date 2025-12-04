@@ -23,7 +23,7 @@ public class Tweezer extends AbstractPartlyHealItem {
 
             body.injury(OPEN_WOUND, 0.05f);
             if (body.abnormal(RETRACTED_SKIN)) {
-                body.healing(INTERNAL_INJURY, Mth.randomBetween(Utils.randomSource, 0.03f, 0.1f));
+                body.healing(INTERNAL_INJURY, -Mth.randomBetween(Utils.randomSource, 0.03f, 0.1f));
             } else {
                 body.setConditionValue(INTENSE_PAIN, INTENSE_PAIN.maxValue);
             }

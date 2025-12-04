@@ -3,7 +3,7 @@ package com.lastimp.dgh.source.item.tool;
 
 import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
-import com.lastimp.dgh.source.client.gui.MenuProvider.HealthMenuProvider;
+import com.lastimp.dgh.source.client.gui.menuProvider.HealthMenuProvider;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
