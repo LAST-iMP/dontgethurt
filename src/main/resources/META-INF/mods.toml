@@ -71,3 +71,7 @@ description='''${mod_description}'''
 # stop your mod loading on the server for example.
 #[features.${mod_id}]
 #openGLVersion="[3.2,)"
+
+# 核心：添加Mixin配置声明
+[[mixins]]
+config="${mod_id}.mixins.json"

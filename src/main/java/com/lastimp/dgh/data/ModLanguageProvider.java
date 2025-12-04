@@ -2,6 +2,7 @@
 package com.lastimp.dgh.data;
 
 import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.data.PackOutput;
@@ -21,8 +22,10 @@ public class ModLanguageProvider extends LanguageProvider {
         }
 
         this.add("gui.dgh.health_gui.title", "健康状态");
-        this.add("key.dgh.health_menu", "健康面板");
-        this.add("key.category.dgh", "DGH");
+        this.add(KeyBinding.KEY_CATEGORY_DGH, "DGH");
+        this.add(KeyBinding.KEY_HEALTH_MENU, "健康面板");
+        this.add(KeyBinding.KEY_GIVE_UP, "放弃生命");
+        this.add(KeyBinding.KEY_CALL_FOR_HELP, "呼叫救援");
         this.add("dgh.book.medical_guide", "医疗指南");
         this.add("dgh.landing_text", "未经过审批，需要谨慎使用。");
         this.add(ModItems.HEALTH_SCANNER.get(), "健康扫描仪");

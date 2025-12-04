@@ -1,7 +1,7 @@
-package com.lastimp.dgh.source.client.gui.MenuProvider;
+package com.lastimp.dgh.source.client.gui.menuProvider;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.client.gui.BagMenu;
+import com.lastimp.dgh.source.client.gui.menu.BagMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -12,27 +12,27 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-public class SurgeryToolBagMenuProvider implements MenuProvider {
+public class HealthCareBagMenuProvider implements MenuProvider {
     private final ItemStack bagStack;
 
-    public SurgeryToolBagMenuProvider(ItemStack bagStack) {
+    public HealthCareBagMenuProvider(ItemStack bagStack) {
         this.bagStack = bagStack;
     }
 
     public static void open(Player player, ItemStack itemStack) {
         NetworkHooks.openScreen((ServerPlayer) player,
-                new SurgeryToolBagMenuProvider(itemStack),
+                new HealthCareBagMenuProvider(itemStack),
                 buf -> buf.writeItem(itemStack)
         );
     }
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("gui." + DontGetHurt.MODID + ".surgery_tool_bag");
+        return Component.translatable("gui." + DontGetHurt.MODID + ".health_care_bag");
     }
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return new BagMenu.SurgeryToolBag(i, inventory, bagStack);
+        return new BagMenu.HealthCareBag(i, inventory, bagStack);
     }
 }

@@ -10,9 +10,9 @@ import static com.lastimp.dgh.DontGetHurt.EPS;
 
 public enum BodyCondition {
     //肢体
-    BURN            ("烧伤",  1.0f / Config.base_self_healing_time, 0.2f, BodyCondition.pathRoot+"burn.png"),
-    INTERNAL_INJURY ("内伤",  1.0f / Config.base_self_healing_time, 0.5f, BodyCondition.pathRoot+"internal_injury.png"),
-    OPEN_WOUND      ("开放伤", 1.0f / Config.base_self_healing_time, 0.5f, BodyCondition.pathRoot+"open_wound.png"),
+    BURN            ("烧伤",  1.0f / Config.base_self_healing_time, 0.2f, 0.0f, 0.0f, 2.0f, BodyCondition.pathRoot+"burn.png"),
+    INTERNAL_INJURY ("内伤",  1.0f / Config.base_self_healing_time, 0.5f, 0.0f, 0.0f, 2.0f, BodyCondition.pathRoot+"internal_injury.png"),
+    OPEN_WOUND      ("开放伤", 1.0f / Config.base_self_healing_time, 0.5f, 0.0f, 0.0f, 2.0f, BodyCondition.pathRoot+"open_wound.png"),
     BLEED           ("出血",  0.0f, 0.0f, BodyCondition.pathRoot+"bleeding.png"),
     INFECTION       ("感染",  0.0f, 0.0f),
     FOREIGN_OBJECT  ("体内异物", 0.0f, 0.0f),
@@ -40,7 +40,7 @@ public enum BodyCondition {
     //头脑
     WITHDRAW        ("戒断",  1.0f/ Config.base_med_available_time, 1.0f, BodyCondition.pathRoot+"withdraw.png"),
     TRAUMATIC_SHOCK ("手术休克", 0.015f, 1.0f, BodyCondition.pathRoot+"traumatic_shock.png"),
-    BRAIN_DAMAGE    ("脑损伤", 0.001f, 1.0f, BodyCondition.pathRoot+"brain_damage.png"),
+    BRAIN_DAMAGE    ("脑损伤", 0.001f, 1.0f, 0.0f, 0.0f, 2.0f, BodyCondition.pathRoot+"brain_damage.png"),
     //血液
     SEPSIS          ("败血症", 0.0f, 0.0f),
     HEMOTRANSFUSION ("输血性休克", 0.0f, 0.0f),

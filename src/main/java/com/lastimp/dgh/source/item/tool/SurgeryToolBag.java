@@ -1,8 +1,7 @@
 package com.lastimp.dgh.source.item.tool;
 
 import com.lastimp.dgh.api.tags.ModTags;
-import com.lastimp.dgh.source.client.gui.MenuProvider.HealthCareBagMenuProvider;
-import com.lastimp.dgh.source.client.gui.MenuProvider.SurgeryToolBagMenuProvider;
+import com.lastimp.dgh.source.client.gui.menuProvider.SurgeryToolBagMenuProvider;
 import com.lastimp.dgh.source.item.bases.BackpackInventory;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

@@ -2,7 +2,7 @@
 package com.lastimp.dgh.network;
 
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
-import com.lastimp.dgh.source.client.gui.HealthScreen;
+import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;

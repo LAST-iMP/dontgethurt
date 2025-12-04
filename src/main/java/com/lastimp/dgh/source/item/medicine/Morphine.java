@@ -20,7 +20,7 @@ public class Morphine extends AbstractDirectHealItems {
 
     @Override
     public boolean heal(@NotNull ServerPlayer source, @NotNull ServerPlayer target) {
-        return PlayerHealthCapability.getAndSet(source, h -> {
+        return PlayerHealthCapability.getAndSet(target, h -> {
             Torso torso = (Torso) h.getComponent(TORSO);
             Head head = (Head) h.getComponent(HEAD);
             PlayerBlood blood = (PlayerBlood) h.getComponent(BLOOD);

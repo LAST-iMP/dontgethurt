@@ -1,7 +1,9 @@
-package com.lastimp.dgh.source.client.gui;
+package com.lastimp.dgh.source.client.gui.screen;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
+import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
+import com.lastimp.dgh.source.client.gui.menu.BagMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;

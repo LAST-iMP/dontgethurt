@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.lastimp.dgh.mixin",
+  "refmap": "mixins.dgh.refmap.json",
+  "mixins": [
+    "PlayerRendererMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

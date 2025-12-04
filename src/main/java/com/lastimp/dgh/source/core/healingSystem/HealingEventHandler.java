@@ -27,22 +27,26 @@ public class HealingEventHandler {
         if (event.side.isClient()) return;
 
         ServerPlayer player = (ServerPlayer) event.player;
-        PlayerHealthCapability health = PlayerHealthCapability.getAndSet(player, h -> {
-            h = h.update(player);
-            return h;
+        PlayerHealthCapability.getAndSet(player, health -> {
+            health = health.update(player);
+            updatePlayerHealth(health, player);
+            return health;
         });
-
-        updatePlayerHealth(health, player);
     }
 
     private static void updatePlayerHealth(PlayerHealthCapability health, ServerPlayer player) {
         float maxHealth = player.getMaxHealth() * health.playerVitality();
-
-        if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative())
-            maxHealth = player.getMaxHealth();
-        if ((int)maxHealth != (int)player.getHealth() && player.getHealth() > 0)
-            player.setHealth(maxHealth);
-        if (maxHealth <= 0)
+        if (player.isDeadOrDying()) {
             player.setHealth(0);
+        } else if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative()) {
+            player.setHealth(player.getMaxHealth());
+        } else if (maxHealth > 0) {
+            if ((int)maxHealth != (int)player.getHealth())
+                player.setHealth(maxHealth);
+        } else if (maxHealth > -player.getMaxHealth() && player.getServer().getPlayerList().getPlayers().size() > 1) {
+            player.setHealth(0.01f);
+        } else {
+            player.setHealth(0);
+        }
     }
 }

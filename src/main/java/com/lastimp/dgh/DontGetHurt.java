@@ -2,12 +2,12 @@
 package com.lastimp.dgh;
 
 import com.lastimp.dgh.network.message.Network;
-import com.lastimp.dgh.source.client.gui.BagScreen;
+import com.lastimp.dgh.source.client.gui.screen.BagScreen;
 import com.lastimp.dgh.source.register.ModCreativeModTabs;
 import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModItems;
 import com.lastimp.dgh.source.register.ModMenus;
-import com.lastimp.dgh.source.client.gui.HealthScreen;
+import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
