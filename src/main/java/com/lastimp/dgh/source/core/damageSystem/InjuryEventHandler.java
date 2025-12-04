@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh.source.core.damageSystem;
 
+import com.lastimp.dgh.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
@@ -39,6 +40,8 @@ public class InjuryEventHandler {
             player.setAbsorptionAmount(0);
         }
 
+        damageAmount /= player.getMaxHealth() * Config.body_life_factor;
+
         if (source.is(DamageTypeTags.IS_FALL)) {
             handleFalling(damageAmount, player, event);
         } else if (source.is(DamageTypeTags.IS_FIRE)) {
@@ -61,7 +64,7 @@ public class InjuryEventHandler {
             AbstractBody[] legs = h.legs();
             float[] weight = Utils.getRandom(1, 1);
             for (int i = 0; i < legs.length; i++) {
-                InternalInjuryHandler.handleBluntTrauma(h, legs[i], damageAmount * weight[i] / player.getMaxHealth(), player.getMaxHealth());
+                InternalInjuryHandler.handleBluntTrauma(h, legs[i], damageAmount * weight[i], player.getMaxHealth());
             }
             return h;
         });
@@ -72,7 +75,7 @@ public class InjuryEventHandler {
         PlayerHealthCapability.getAndSet(player, h -> {
             BodyComponents randomComponent = BodyComponents.random();
 
-            BurnHandler.handle(h, h.getComponent(randomComponent), damageAmount / player.getMaxHealth());
+            BurnHandler.handle(h, h.getComponent(randomComponent), damageAmount);
             return h;
         });
         event.setAmount(0f);
@@ -92,8 +95,8 @@ public class InjuryEventHandler {
             AbstractBody[] body = h.visibleParts();
             float[] weight = Utils.getRandom(1.5f,3,2,2,1.5f,1.5f);
             for (int i = 0; i < body.length; i++) {
-                OpenWoundHandler.handleExplosion(h, body[i], 0.5f * damageAmount * weight[i] / player.getMaxHealth(), player.getMaxHealth());
-                InternalInjuryHandler.handleExplosion(h, body[i], 0.5f * damageAmount * weight[i] / player.getMaxHealth(), player.getMaxHealth());
+                OpenWoundHandler.handleExplosion(h, body[i], 0.5f * damageAmount * weight[i], player.getMaxHealth());
+                InternalInjuryHandler.handleExplosion(h, body[i], 0.5f * damageAmount * weight[i], player.getMaxHealth());
             }
             return h;
         });
@@ -104,7 +107,7 @@ public class InjuryEventHandler {
         PlayerHealthCapability.getAndSet(player, h -> {
             AbstractBody[] body = h.visibleParts();
             int index = Utils.getRandomIndex(1,2,2,2,0.5f,0.5f);
-            OpenWoundHandler.handleEntityAttack(h, body[index], damageAmount / player.getMaxHealth(), player.getMaxHealth());
+            OpenWoundHandler.handleEntityAttack(h, body[index], damageAmount, player.getMaxHealth());
             return h;
         });
         event.setAmount(0f);
@@ -119,7 +122,7 @@ public class InjuryEventHandler {
         PlayerHealthCapability.getAndSet(player, h -> {
             AbstractBody[] body = h.visibleParts();
             int index = Utils.getRandomIndex(1,2,2,2,0.5f,0.5f);
-            InternalInjuryHandler.handleBluntTrauma(h, body[index], damageAmount / player.getMaxHealth(), player.getMaxHealth());
+            InternalInjuryHandler.handleBluntTrauma(h, body[index], damageAmount, player.getMaxHealth());
             return h;
         });
         event.setAmount(0f);

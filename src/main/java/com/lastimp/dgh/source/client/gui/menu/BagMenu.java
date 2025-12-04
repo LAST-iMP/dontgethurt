@@ -1,4 +1,4 @@
-package com.lastimp.dgh.source.client.gui;
+package com.lastimp.dgh.source.client.gui.menu;
 
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.source.register.ModMenus;

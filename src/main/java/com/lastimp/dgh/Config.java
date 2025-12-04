@@ -12,7 +12,10 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder()
             .comment("General settings")
-            .push("general_1.1.0");
+            .push("general_1.1.3");
+
+    public static final ModConfigSpec.DoubleValue BODY_LIFE_FACTOR = BUILDER
+            .defineInRange("BODY_LIFE_FACTOR", 1.0f, 0, 1000);
 
     public static final ModConfigSpec.DoubleValue DIRTY_BANDAGE_RATIO = BUILDER
             .defineInRange("DIRTY_BANDAGE_RATIO",0.05,0,1);
@@ -56,6 +59,7 @@ public class Config {
     // 构建配置
     public static final ModConfigSpec SPEC = BUILDER.pop().build();
 
+    public static float body_life_factor;
     public static float dirty_bandage_ratio;
     public static float bandage_acc;
     public static float burn_bleed_ratio;
@@ -74,6 +78,7 @@ public class Config {
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
+        body_life_factor = (float) BODY_LIFE_FACTOR.getAsDouble();
         dirty_bandage_ratio = (float) DIRTY_BANDAGE_RATIO.getAsDouble();
         bandage_acc = (float) BANDAGE_ACC.getAsDouble();
         burn_bleed_ratio = (float) BURN_BLEED_RATIO.getAsDouble();

@@ -2,8 +2,8 @@
 package com.lastimp.dgh;
 
 import com.lastimp.dgh.source.register.*;
-import com.lastimp.dgh.source.client.gui.BagScreen;
-import com.lastimp.dgh.source.client.gui.HealthScreen;
+import com.lastimp.dgh.source.client.gui.screen.BagScreen;
+import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import org.slf4j.Logger;

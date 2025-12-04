@@ -4,9 +4,9 @@ package com.lastimp.dgh.network;
 import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.source.register.ModItems;
-import com.lastimp.dgh.source.client.gui.MenuProvider.HealthCareBagMenuProvider;
-import com.lastimp.dgh.source.client.gui.MenuProvider.HealthMenuProvider;
-import com.lastimp.dgh.source.client.gui.MenuProvider.SurgeryToolBagMenuProvider;
+import com.lastimp.dgh.source.client.gui.menuProvider.HealthCareBagMenuProvider;
+import com.lastimp.dgh.source.client.gui.menuProvider.HealthMenuProvider;
+import com.lastimp.dgh.source.client.gui.menuProvider.SurgeryToolBagMenuProvider;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
@@ -44,16 +44,32 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
                     KeyPressedType key = KeyPressedType.valueOf(data.key());
                     ServerPlayer player = (ServerPlayer) context.player();
-                    if (key == KeyPressedType.KEY_HEALTH_MENU) {
-                        HealthMenuProvider.open(player, player.getUUID(), false);
-                    } else if (key == KeyPressedType.KEY_SLOT_USE) {
-                        var slot = player.getInventory().getItem(data.index());
-                        if (slot.is(ModItems.HEALTH_SCANNER))
-                            HealthMenuProvider.open(player, player.getUUID(), true);
-                        if (slot.is(ModItems.HEALTH_CARE_BAG))
-                            HealthCareBagMenuProvider.open(player, slot);
-                        if (slot.is(ModItems.SURGERY_TOOL_BAG))
-                            SurgeryToolBagMenuProvider.open(player, slot);
+                    switch (key) {
+                        case KEY_HEALTH_MENU:
+                            HealthMenuProvider.open(player, player.getUUID(), false);
+                            break;
+                        case KEY_SLOT_USE:
+                            var slot = player.getInventory().getItem(data.index());
+                            if (slot.is(ModItems.HEALTH_SCANNER))
+                                HealthMenuProvider.open(player, player.getUUID(), true);
+                            if (slot.is(ModItems.HEALTH_CARE_BAG))
+                                HealthCareBagMenuProvider.open(player, slot);
+                            if (slot.is(ModItems.SURGERY_TOOL_BAG))
+                                SurgeryToolBagMenuProvider.open(player, slot);
+                            break;
+                        case GIVE_UP:
+                            player.kill();
+                            break;
+                        case CALL_FOR_HELP:
+                            player.getServer().getPlayerList().getPlayers().forEach(p -> {
+                                p.sendSystemMessage(Component.literal(
+                                        player.getScoreboardName() + "在("
+                                                + String.format("%.1f", player.position().x) + ", "
+                                                + String.format("%.1f", player.position().y) + ", "
+                                                + String.format("%.1f", player.position().z) + ")需要救助"
+                                ));
+                            });
+                            break;
                     }
                 })
                 .exceptionally(e -> {

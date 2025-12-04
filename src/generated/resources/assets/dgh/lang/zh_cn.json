@@ -37,10 +37,10 @@
   "dgh.landing_text": "未经过审批，需要谨慎使用。",
   "effect.dgh.craving_effect": "渴望",
   "effect.dgh.cure_effect": "重振旗鼓",
-  "effect.dgh.hard_breath": "呼吸困难",
+  "effect.dgh.hard_breath_effect": "呼吸困难",
   "effect.dgh.intense_pain_effect": "剧痛",
   "effect.dgh.keep_living_effect": "长生久视",
-  "effect.dgh.pale_skin": "皮肤苍白",
+  "effect.dgh.pale_skin_effect": "皮肤苍白",
   "effect.dgh.stagger_effect": "缓行",
   "effect.dgh.sweating_effect": "出汗",
   "gui.dgh.health_gui.title": "健康状态",
@@ -63,5 +63,7 @@
   "item.dgh.wood_wrench": "木扳手",
   "itemGroup.dgh": "dgh",
   "key.category.dgh": "DGH",
+  "key.dgh.call_for_help": "呼叫救援",
+  "key.dgh.give_up": "放弃生命",
   "key.dgh.health_menu": "健康面板"
 }
