@@ -13,6 +13,7 @@ import java.util.UUID;
 
 public class ClientPayloadHandler {
     private static HealthScreen healthScreen = null;
+    private static PlayerHealthCapability health;
 
     public static void handleReadAllConditionData(final MyReadAllConditionData data, final IPayloadContext context) {
         context.enqueueWork(() -> {
@@ -23,6 +24,8 @@ public class ClientPayloadHandler {
                     } else if (operation == OperationType.BLOOD_SCANN) {
                         UUID uuid = new UUID(data.id_most(), data.id_least());
                         BloodScanner.scanHealth(context.player(), health, context.player().level().getPlayerByUUID(uuid).getScoreboardName());
+                    } else if (operation == OperationType.SYN) {
+                        ClientPayloadHandler.setHealth(health);
                     }
                 })
                 .exceptionally(e -> {
@@ -37,5 +40,13 @@ public class ClientPayloadHandler {
 
     public static void setHealthScreen(HealthScreen healthScreen) {
         ClientPayloadHandler.healthScreen = healthScreen;
+    }
+
+    public static PlayerHealthCapability health() {
+        return health;
+    }
+
+    public static void setHealth(PlayerHealthCapability health) {
+        ClientPayloadHandler.health = health;
     }
 }

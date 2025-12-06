@@ -2,7 +2,10 @@
   "required": true,
   "package": "com.lastimp.dgh.mixin",
   "compatibilityLevel": "JAVA_21",
+  "refmap": "dgh.refmap.json",
   "mixins": [
+  ],
+  "client": [
     "PlayerRendererMixin"
   ],
   "injectors": {
