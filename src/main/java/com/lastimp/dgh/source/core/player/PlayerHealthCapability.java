@@ -96,6 +96,8 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     public CompoundTag serializeNBT() {
         CompoundTag tag = this.body.serializeNBT();
         tag.putFloat("playerVitality", this.playerVitality);
+        tag.putInt("slowDown", this.slowDown);
+        tag.putInt("armBreak", this.armBreak);
         tag.putLong("livingTick", this.livingTick);
         tag.putFloat("almostDead", this.almostDead);
         return tag;
@@ -106,6 +108,8 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
         if (nbt == null) return;
         this.body.deserializeNBT(nbt);
         this.playerVitality = nbt.getFloat("playerVitality");
+        this.slowDown = nbt.getInt("slowDown");
+        this.armBreak = nbt.getInt("armBreak");
         this.livingTick = nbt.getLong("livingTick");
         this.almostDead = nbt.getFloat("almostDead");
 

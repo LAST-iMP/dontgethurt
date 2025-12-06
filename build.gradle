@@ -125,6 +125,22 @@ repositories {
     maven {
         url 'https://maven.blamejared.com'
     }
+    maven {
+        url 'https://maven.aliyun.com/repository/public'
+    }
+    maven {
+        name = "Curse Maven"
+        url = "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+}
+
+mixin {
+    add sourceSets.main, 'dgh.refmap.json'
+    config 'dgh.mixins.json'
+    config 'dgh.TaZC.mixins.json'
 }
 
 dependencies {
@@ -143,6 +159,15 @@ dependencies {
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-84.1-FORGE:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-84.1-FORGE")
 
+    compileOnly fg.deobf("curse.maven:timeless-and-classics-zero-1028108:7278003-sources-7278003")
+    runtimeOnly fg.deobf("curse.maven:timeless-and-classics-zero-1028108:7278003-sources-7278003")
+
+    // MixinExtras
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")) {
+        jarJar.ranged(it, "[0.5.0,)")
+    }
+
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
@@ -155,10 +180,10 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 }
 
-mixin {
-    add sourceSets.main, 'dgh.refmap.json'
-    config 'dgh.mixins.json'
+tasks.withType(JavaCompile).configureEach {
+    options.annotationProcessorPath = configurations.annotationProcessor
 }
+
 
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
