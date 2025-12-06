@@ -1,7 +1,9 @@
 package com.lastimp.dgh.source.core.healingSystem;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.GameRules;
@@ -9,6 +11,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+
+import static com.lastimp.dgh.api.enums.OperationType.HEALTH_SCANN;
+import static com.lastimp.dgh.api.enums.OperationType.SYN;
 
 
 @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.GAME)
@@ -26,11 +32,14 @@ public class HealingEventHandler {
         if (event.getEntity().level().isClientSide) return;
 
         ServerPlayer player = (ServerPlayer) event.getEntity();
-        PlayerHealthCapability.getAndSet(player, health -> {
-            health = health.update(player);
-            updatePlayerHealth(health, player);
-            return health;
+        var health = PlayerHealthCapability.getAndSet(player, h -> {
+            h = h.update(player);
+            updatePlayerHealth(h, player);
+            return h;
         });
+        PacketDistributor.sendToPlayer(player, MyReadAllConditionData.getInstance(
+                player.getUUID(), health, SYN, player.registryAccess()
+        ));
     }
 
     private static void updatePlayerHealth(PlayerHealthCapability health, ServerPlayer player) {
