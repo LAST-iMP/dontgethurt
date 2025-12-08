@@ -2,23 +2,33 @@
 package com.lastimp.dgh.source.core.healingSystem;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.source.item.medicine.Bandages;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.source.item.medicine.Gypsum;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
+import oshi.util.tuples.Pair;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.BRAIN_DAMAGE;
+import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
 import static com.lastimp.dgh.api.tags.ModTags.MEDICAL_TOOLS_SHEARS;
 
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -85,5 +95,40 @@ public class HealingHandler {
 
     public static void setHealthScreen(HealthScreen healthScreen) {
         HealingHandler.healthScreen = healthScreen;
+    }
+
+    public static void handleValindaHealing(ServerPlayer player, float amount) {
+        List<Pair<AbstractVisibleBody, ResourceLocation>> states = new ArrayList<>();
+        PlayerHealthCapability.getAndSet(player, h -> {
+            float injury = 0;
+            for (var component : BodyComponents.VISIBLE_BODIES) {
+                AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
+                injury += injuryCheck(body, BURN, states) * 3;
+                injury += injuryCheck(body, OPEN_WOUND, states) * 3;
+                injury += injuryCheck(body, INTERNAL_INJURY, states) * 2;
+                if (component == HEAD)
+                    injury += injuryCheck(body, BRAIN_DAMAGE, states) * 5;
+            }
+            if (injury < 0.001) return h;
+
+            float healingDelta = amount / injury;
+            for (var bodyAndCondition : states) {
+                var body = bodyAndCondition.getA();
+                var condition = bodyAndCondition.getB();
+                body.healing(condition, -healingDelta * body.getConditionValue(condition));
+                body.healingHidden(condition, -healingDelta * body.getConditionHidden(condition));
+            }
+            return h;
+        });
+    }
+
+    private static float injuryCheck(AbstractVisibleBody body, ResourceLocation key, List<Pair<AbstractVisibleBody, ResourceLocation>> states) {
+        float result = 0;
+        if (body.abnormalWithHidden(key)) {
+            states.add(new Pair<>(body, key));
+            result += body.getConditionHidden(key);
+            result += body.getConditionValue(key);
+        }
+        return result;
     }
 }

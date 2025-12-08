@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh.source.item.medicine;
 
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
@@ -10,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import static com.lastimp.dgh.api.enums.BodyCondition.BLOOD_LOSS;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_LOSS;
 
 public class BloodPacksEmpty extends AbstractDirectHealItems {
     public BloodPacksEmpty(Properties properties) {
@@ -22,7 +23,7 @@ public class BloodPacksEmpty extends AbstractDirectHealItems {
         return PlayerHealthCapability.getAndSet(target, health -> {
             PlayerBlood blood = (PlayerBlood) health.getComponent(BodyComponents.BLOOD);
             float currCondition = blood.getConditionValue(BLOOD_LOSS);
-            if (currCondition > BLOOD_LOSS.maxValue - 0.3f) return false;
+            if (currCondition > BodyCondition.get(BLOOD_LOSS).maxValue() - 0.3f) return false;
 
             blood.injury(BLOOD_LOSS, 0.25f);
             if (!source.getStringUUID().equals(target.getStringUUID()))

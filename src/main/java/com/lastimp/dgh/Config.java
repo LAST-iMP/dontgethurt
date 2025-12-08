@@ -10,7 +10,7 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 public class Config {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder()
             .comment("General settings")
-            .push("general_1.1.3");
+            .push("general_1.1.5");
 
     public static final ForgeConfigSpec.DoubleValue BODY_LIFE_FACTOR = BUILDER
             .defineInRange("BODY_LIFE_FACTOR", 1.0f, 0, 1000);
@@ -54,6 +54,18 @@ public class Config {
     public static final ForgeConfigSpec.DoubleValue RESISTANCE_MAX = BUILDER
             .defineInRange("RESISTANCE_MAX", 0.4, 0, 1.0);
 
+    public static final ForgeConfigSpec.DoubleValue BASE_DISLOCATION_THRESHOLD = BUILDER
+            .defineInRange("BASE_DISLOCATION_THRESHOLD", 0.1, 0, 1.0);
+
+    public static final ForgeConfigSpec.DoubleValue BASE_FRACTURE_THRESHOLD = BUILDER
+            .defineInRange("BASE_FRACTURE_THRESHOLD", 0.25, 0, 0.7);
+
+    public static final ForgeConfigSpec.DoubleValue BASE_DISLOCATION_MAX_PROB = BUILDER
+            .defineInRange("BASE_DISLOCATION_MAX_PROB", 0.8, 0, 1.0);
+
+    public static final ForgeConfigSpec.DoubleValue BASE_FRACTURE_MAX_PROB = BUILDER
+            .defineInRange("BASE_FRACTURE_MAX_PROB", 0.5, 0, 1.0);
+
     // 构建配置
     public static final ForgeConfigSpec SPEC = BUILDER.pop().build();
 
@@ -74,6 +86,11 @@ public class Config {
     public static float resistance_convert_ratio;
     public static float resistance_max;
 
+    public static float baseDislocationThreshold;
+    public static float baseFractureThreshold;
+    public static float baseDislocationMaxProb;
+    public static float baseFractureMaxProb;
+
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         body_life_factor = (float) (double)BODY_LIFE_FACTOR.get();
@@ -91,6 +108,11 @@ public class Config {
         volume_self_healing_time = VOLUME_SELF_HEALING_TIME.get();
         resistance_convert_ratio = (float) (double) RESISTANCE_CONVERT_RATIO.get();
         resistance_max = (float) (double) RESISTANCE_MAX.get();
+
+        baseDislocationThreshold = (float) (double) BASE_DISLOCATION_THRESHOLD.get();
+        baseFractureThreshold = (float) (double) BASE_FRACTURE_THRESHOLD.get();
+        baseDislocationMaxProb = (float) (double) BASE_DISLOCATION_MAX_PROB.get();
+        baseFractureMaxProb = (float) (double) BASE_FRACTURE_MAX_PROB.get();
     }
 
 }

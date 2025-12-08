@@ -1,8 +1,6 @@
 package com.lastimp.dgh.source.core.buffSystem;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.api.bodyPart.AbstractArm;
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.source.register.ModEffects;
@@ -16,8 +14,8 @@ import net.minecraftforge.fml.common.Mod;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
-import static com.lastimp.dgh.api.enums.BodyCondition.BLOOD_LOSS;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_LOSS;
 
 
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -61,8 +59,9 @@ public class BuffEventHandler {
     }
 
     private static void updateWithdrawEffects(PlayerHealthCapability health, ServerPlayer player) {
-        var state = health.getComponent(HEAD).getCondition(WITHDRAW);
-        if (!WITHDRAW.abnormal(state.getValue())) return;
+        var head = health.getComponent(HEAD);
+        var state = head.getCondition(WITHDRAW);
+        if (!head.abnormal(WITHDRAW)) return;
         if (state.getValue() > 0.2f && !player.hasEffect(ModEffects.CRAVING_EFFECT.get())) {
             player.addEffect(new MobEffectInstance(ModEffects.CRAVING_EFFECT.get(), 100));
         }
@@ -70,7 +69,7 @@ public class BuffEventHandler {
             player.addEffect(new MobEffectInstance(ModEffects.SWEATING_EFFECT.get(), 100));
         }
         if (state.getValue() > 0.4f && !player.hasEffect(MobEffects.CONFUSION)) {
-            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100));
+            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200));
         }
     }
 

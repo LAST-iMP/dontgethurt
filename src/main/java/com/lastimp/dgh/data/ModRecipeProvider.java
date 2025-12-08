@@ -157,6 +157,11 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('f', Items.CHEST)
                 .unlockedBy("has_chest", has(Items.CHEST))
                 .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.OPERATING_BED_BLOCK_ITEM.get(), 1)
+                .requires(ItemTags.BEDS)
+                .requires(ModItems.MORPHINE.get(), 1)
+                .unlockedBy("has_bad", has(ItemTags.BEDS))
+                .save(recipeOutput);
 
         var book = PatchouliAPI.get().getBookStack(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "medical_guide"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, book.getItem())

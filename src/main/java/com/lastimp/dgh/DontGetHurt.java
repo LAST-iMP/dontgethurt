@@ -3,10 +3,7 @@ package com.lastimp.dgh;
 
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.client.gui.screen.BagScreen;
-import com.lastimp.dgh.source.register.ModCreativeModTabs;
-import com.lastimp.dgh.source.register.ModEffects;
-import com.lastimp.dgh.source.register.ModItems;
-import com.lastimp.dgh.source.register.ModMenus;
+import com.lastimp.dgh.source.register.*;
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,6 +32,7 @@ public class DontGetHurt
         IEventBus modEventBus = context.getModEventBus();
         modEventBus.addListener(this::commonSetup);
 
+        ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
         ModCreativeModTabs.register(modEventBus);
         ModMenus.register(modEventBus);

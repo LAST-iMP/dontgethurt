@@ -55,6 +55,18 @@
     },
     {
       "type": "spotlight",
+      "title": "医疗床",
+      "item": "dgh:operating_bed",
+      "scale": 1.2,
+      "text": "在手术床旁无需麻醉。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:operating_bed"
+    },
+    {
+      "type": "spotlight",
       "title": "手术刀",
       "item": "dgh:scalpel",
       "scale": 1.2,

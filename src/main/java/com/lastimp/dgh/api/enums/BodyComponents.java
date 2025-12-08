@@ -4,6 +4,8 @@ package com.lastimp.dgh.api.enums;
 
 import net.minecraft.network.chat.Component;
 
+import java.util.List;
+
 public enum BodyComponents {
     LEFT_ARM,
     RIGHT_ARM,
@@ -16,9 +18,17 @@ public enum BodyComponents {
 
     WHOLE_BODY;
 
-    private static final BodyComponents[] VISIBLE_BODIES = new BodyComponents[]{
-        LEFT_ARM, RIGHT_ARM, LEFT_LEG, RIGHT_LEG, HEAD, TORSO
-    };
+    public static final List<BodyComponents> VISIBLE_BODIES = List.of(
+            HEAD, TORSO, LEFT_ARM, RIGHT_ARM, LEFT_LEG, RIGHT_LEG
+    );
+
+    public static final List<BodyComponents> EXTREMITIES = List.of(
+            LEFT_ARM, RIGHT_ARM, LEFT_LEG, RIGHT_LEG
+    );
+
+    public static final List<BodyComponents> LEGS = List.of(
+            LEFT_LEG, RIGHT_LEG
+    );
 
     @Override
     public String toString() {
@@ -30,9 +40,5 @@ public enum BodyComponents {
     }
     public static BodyComponents random() {
         return values()[(int) (Math.random() * 6)];
-    }
-
-    public static BodyComponents[] getVisibleBodies() {
-        return VISIBLE_BODIES;
     }
 }

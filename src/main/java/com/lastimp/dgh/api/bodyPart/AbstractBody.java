@@ -1,10 +1,9 @@
 package com.lastimp.dgh.api.bodyPart;
 
-import com.lastimp.dgh.Config;
-import com.lastimp.dgh.api.enums.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -20,54 +19,66 @@ import static com.lastimp.dgh.DontGetHurt.EPS;
 
 public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
-    private final HashMap<BodyCondition, ConditionState> state = new HashMap<>();
+    private final HashMap<ResourceLocation, ConditionState> state = new HashMap<>();
 
     public AbstractBody() {
-        for (BodyCondition condition : this.getBodyConditions()) {
-            state.put(condition, new ConditionState(condition.defaultValue));
+        for (var condition : this.getBodyConditions()) {
+            state.put(condition, new ConditionState(BodyCondition.get(condition).defaultValue()));
         }
     }
 
-    public abstract List<BodyCondition> getBodyConditions();
+    public abstract List<ResourceLocation> getBodyConditions();
 
     public abstract float getVitalityWeight();
 
-    public abstract int slowDownLevel(PlayerHealthCapability health);
-
-    public float getConditionValue(BodyCondition key) {
-        return this.getCondition(key).getValue();
-    }
-
-    public ConditionState getCondition(BodyCondition key) {
+    public ConditionState getCondition(ResourceLocation key) {
         return state.get(key);
     }
 
-    public void setConditionValue(BodyCondition key, float value) {
-        ConditionState state = this.state.get(key);
-        state.setValue(Mth.clamp(value, key.minValue, key.maxValue));
+    public float getConditionValue(ResourceLocation key) {
+        return this.getCondition(key).getValue();
     }
 
-    public void addConditionValue(BodyCondition key, float value) {
+    public void setConditionValue(ResourceLocation key, float value) {
+        ConditionState state = this.state.get(key);
+        BodyCondition condition = BodyCondition.get(key);
+        state.setValue(Mth.clamp(value, condition.minValue(), condition.maxValue()));
+    }
+
+    public void addConditionValue(ResourceLocation key, float value) {
         float newValue = this.getConditionValue(key) + value;
         this.setConditionValue(key, newValue);
     }
 
-    public void injury(BodyCondition key, float value) {
+    public float getConditionHidden(ResourceLocation key) {
+        return this.getCondition(key).getHiddenValue();
+    }
+
+    public void setConditionHidden(ResourceLocation key, float value) {
+        ConditionState state = this.state.get(key);
+        BodyCondition condition = BodyCondition.get(key);
+        state.setHiddenValue(Mth.clamp(value, condition.minValue(), condition.maxValue()));
+    }
+
+    public void addConditionHidden(ResourceLocation key, float value) {
+        float newValue = this.getConditionHidden(key) + value;
+        this.setConditionHidden(key, newValue);
+    }
+
+    public void injury(ResourceLocation key, float value) {
         this.addConditionValue(key, value);
     }
 
-    public void injuryHidden(BodyCondition key, float value) {
-        ConditionState state = this.state.get(key);
-        state.setHiddenValue(Mth.clamp(state.getHiddenValue() + value, key.minValue, key.maxValue));
+    public void injuryHidden(ResourceLocation key, float value) {
+        this.addConditionHidden(key, value);
     }
 
-    public void healing(BodyCondition key, float value) {
+    public void healing(ResourceLocation key, float value) {
         this.addConditionValue(key, value);
     }
 
-    public void healingHidden(BodyCondition key, float value) {
-        ConditionState state = this.state.get(key);
-        state.setHiddenValue(Mth.clamp(state.getHiddenValue() + value, key.minValue, key.maxValue));
+    public void healingHidden(ResourceLocation key, float value) {
+        this.addConditionHidden(key, value);
     }
 
     public abstract AbstractBody update(PlayerHealthCapability health, Player player);
@@ -84,40 +95,45 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     public abstract float updateVitalityLost(PlayerHealthCapability health, Player player);
 
+    public abstract int slowDownLevel(PlayerHealthCapability health);
+
     private void updateDisplayValue(PlayerHealthCapability health) {
-        for (BodyCondition condition : this.getBodyConditions()) {
+        for (var condition : this.getBodyConditions()) {
             ConditionState state = this.getCondition(condition);
             state.tick();
         }
     }
 
-    protected List<BodyCondition> getNoHealingConditions() {
+    protected List<ResourceLocation> getNoHealingConditions() {
         return List.of();
     }
 
     private void selfHealing() {
-        for (BodyCondition condition : this.getBodyConditions()) {
-            if (!this.abnormal(condition)) continue;
-            if (this.getNoHealingConditions().contains(condition)) continue;
-            if (this.getConditionValue(condition) < condition.healingTS + EPS)
-                this.healing(condition, - condition.healingSpeed * DELTA);
+        for (var key : this.getBodyConditions()) {
+            if (!this.abnormal(key)) continue;
+            if (this.getNoHealingConditions().contains(key)) continue;
+            var condition = BodyCondition.get(key);
+            if (this.getConditionValue(key) < condition.healingTS() + EPS)
+                this.healing(key, - condition.healingSpeed() * DELTA);
         }
     }
 
-    public boolean abnormalWithHidden(BodyCondition condition) {
-        ConditionState state = this.getCondition(condition);
+    public boolean abnormalWithHidden(ResourceLocation key) {
+        var state = this.getCondition(key);
+        var condition = BodyCondition.get(key);
         return condition.abnormal(state.getValue()) || condition.abnormal(state.getHiddenValue());
     }
 
-    public boolean abnormal(BodyCondition condition) {
-        return condition.abnormal(this.getConditionValue(condition));
+    public boolean abnormal(ResourceLocation key) {
+        var condition = BodyCondition.get(key);
+        return condition.abnormal(this.getConditionValue(key));
     }
 
     @Override
     public @UnknownNullability CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        for (Map.Entry<BodyCondition, ConditionState> e : state.entrySet()) {
-            tag.put(e.getKey().name(), e.getValue().serializeNBT());
+        for (Map.Entry<ResourceLocation, ConditionState> e : state.entrySet()) {
+            tag.put(e.getKey().toString(), e.getValue().serializeNBT());
         }
         return tag;
     }
@@ -125,11 +141,11 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         if (nbt == null) return;
-        for (BodyCondition condition : this.getBodyConditions()) {
-            if (nbt.contains(condition.name())) {
-                state.get(condition).deserializeNBT(nbt.getCompound(condition.name()));
+        for (var key : this.getBodyConditions()) {
+            if (nbt.contains(key.toString())) {
+                state.get(key).deserializeNBT(nbt.getCompound(key.toString()));
             } else {
-                state.put(condition, new ConditionState(condition.defaultValue));
+                state.put(key, new ConditionState(BodyCondition.get(key).defaultValue()));
             }
         }
     }

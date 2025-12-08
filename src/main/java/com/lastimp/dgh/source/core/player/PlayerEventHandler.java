@@ -15,7 +15,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
-import static com.lastimp.dgh.api.enums.BodyCondition.RESPIRATORY_ARREST;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.RESPIRATORY_ARREST;
 
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID)
 public class PlayerEventHandler {

@@ -4,9 +4,9 @@ package com.lastimp.dgh.source.core.bodyPart;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.api.enums.BodyCondition;
-import net.minecraft.core.HolderLookup;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
@@ -17,7 +17,7 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public class WholeBody extends AbstractBody {
     private final HashMap<BodyComponents, AbstractBody> components = new HashMap<>();
-    private static List<BodyCondition> WHOLE_BODY_CONDITIONS;
+    private static List<ResourceLocation> WHOLE_BODY_CONDITIONS;
 
     public WholeBody() {
         components.put(LEFT_ARM, new LeftArm());
@@ -34,7 +34,7 @@ public class WholeBody extends AbstractBody {
     }
 
     @Override
-    public List<BodyCondition> getBodyConditions() {
+    public List<ResourceLocation> getBodyConditions() {
         if (WHOLE_BODY_CONDITIONS == null) {
             WHOLE_BODY_CONDITIONS = List.of();
         }

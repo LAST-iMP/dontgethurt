@@ -1,7 +1,7 @@
 
 package com.lastimp.dgh.data;
 
-import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModItems;
@@ -17,9 +17,48 @@ public class ModLanguageProvider extends LanguageProvider {
     protected void addTranslations() {
         this.add("itemGroup.dgh", "dgh");
 
-        for (BodyCondition condition : BodyCondition.values()) {
-            this.add(condition.name(), condition.translation);
-        }
+
+        this.add(BodyCondition.BURN.toString(), "烧伤");
+        this.add(BodyCondition.INTERNAL_INJURY.toString(), "内伤");
+        this.add(BodyCondition.OPEN_WOUND.toString(), "开放伤");
+        this.add(BodyCondition.BLEED.toString(), "出血");
+        this.add(BodyCondition.INFECTION.toString(), "感染");
+        this.add(BodyCondition.FOREIGN_OBJECT.toString(), "体内异物");
+        this.add(BodyCondition.FRACTURE.toString(), "骨折");
+        this.add(BodyCondition.INTENSE_PAIN.toString(), "剧痛");
+
+        this.add(BodyCondition.BANDAGED.toString(), "绷带包扎");
+        this.add(BodyCondition.BANDAGED_DIRTY.toString(), "脏绷带");
+        this.add(BodyCondition.OINTMENT.toString(), "药膏涂抹");
+
+        this.add(BodyCondition.BURN_RES.toString(), "烧伤抗性");
+        this.add(BodyCondition.INTERNAL_RES.toString(), "内伤抗性");
+        this.add(BodyCondition.OPEN_WOUND_RES.toString(), "外伤抗性");
+
+        this.add(BodyCondition.SURGERY_INCISION.toString(), "手术切口");
+        this.add(BodyCondition.CLAMPED_BLEEDING.toString(), "夹闭止血");
+        this.add(BodyCondition.RETRACTED_SKIN.toString(), "皮肤牵开");
+        this.add(BodyCondition.DRILLED_BONES.toString(), "骨骼钻孔");
+
+        this.add(BodyCondition.DISLOCATION.toString(), "脱臼");
+        this.add(BodyCondition.PLASTER_CAST.toString(), "石膏固定");
+
+        this.add(BodyCondition.ANALGESIA.toString(), "镇痛");
+        this.add(BodyCondition.RESPIRATORY_ARREST.toString(), "呼吸停止");
+
+        this.add(BodyCondition.WITHDRAW.toString(), "戒断");
+        this.add(BodyCondition.TRAUMATIC_SHOCK.toString(), "手术休克");
+        this.add(BodyCondition.BRAIN_DAMAGE.toString(), "脑损伤");
+
+        this.add(BodyCondition.SEPSIS.toString(), "败血症");
+        this.add(BodyCondition.HEMOTRANSFUSION.toString(), "输血性休克");
+        this.add(BodyCondition.BLOOD_LOSS.toString(), "失血");
+        this.add(BodyCondition.BLOOD_PRESSURE.toString(), "血压");
+        this.add(BodyCondition.PH_LEVEL.toString(), "酸碱性");
+        this.add(BodyCondition.IMMUNITY.toString(), "免疫力");
+        this.add(BodyCondition.OPIATE_OVERDOSE.toString(), "阿片中毒");
+        this.add(BodyCondition.OPIATE_ADDICTED.toString(), "阿片成瘾");
+        this.add(BodyCondition.OXYGEN.toString(), "低血氧");
 
         this.add("gui.dgh.health_gui.title", "健康状态");
         this.add(KeyBinding.KEY_CATEGORY_DGH, "DGH");
@@ -36,7 +75,7 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.MORPHINE.get(), "吗啡");
         this.add(ModItems.GYPSUM.get(), "石膏");
         this.add(ModItems.SUTURE.get(), "缝合线");
-//        this.add(ModItems.OPERATING_BED_BLOCK_ITEM.get(), "手术床");
+        this.add(ModItems.OPERATING_BED_BLOCK_ITEM.get(), "手术床");
 
         this.add(ModItems.HEALTH_CARE_BAG.get(), "医疗包");
         this.add(ModItems.SURGERY_TOOL_BAG.get(), "手术工具包");

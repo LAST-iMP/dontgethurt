@@ -9,8 +9,8 @@ import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
 
 public class Morphine extends AbstractDirectHealItems {
 

@@ -11,7 +11,7 @@ import com.lastimp.dgh.source.client.gui.menu.HealthMenu;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.source.item.tool.HealthScanner;
 import com.lastimp.dgh.network.ClientPayloadHandler;
@@ -37,7 +37,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private static final int PANEL_HEIGHT = 214;  // 面板高度
 
     private final HashMap<BodyComponents, HealthComponentWidget> componentWidgets = new HashMap<>();
-    private final HashMap<BodyCondition, HealthConditionWidget> conditionWidgets = new HashMap<>();
+    private final HashMap<ResourceLocation, HealthConditionWidget> conditionWidgets = new HashMap<>();
     private BodyComponents selectedComponent = null;
     private static PlayerHealthCapability healthData = null;
 
@@ -63,8 +63,8 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         this.addHealthWidget(49, 79, 18, 45, RIGHT_LEG, SPRITES_RIGHT_LEG, SPRITES_RIGHT_LEG_LIGHT);
 
         conditionWidgets.clear();
-        for (BodyCondition condition : HealthScanner.healthScannerConditions()) {
-            addConditionWidget(condition);
+        for (var key : HealthScanner.healthScannerConditions()) {
+            addConditionWidget(BodyCondition.get(key));
         }
     }
 
@@ -83,9 +83,9 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     private void addConditionWidget(BodyCondition condition) {
         HealthConditionWidget w = new HealthConditionWidget(
-                70, 16, condition.getComponent(), condition.texture, condition.color
+                70, 16, condition.getComponent(), condition.texture, condition.color()
         );
-        conditionWidgets.put(condition, w);
+        conditionWidgets.put(Common.ResourceBySeperator(condition.name(), ':'), w);
         this.addRenderableWidget(w);
     }
 
@@ -104,18 +104,19 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         if (healthData == null) return;
         if (this.componentWidgets.isEmpty()) return;
 
-        for (BodyComponents component : BodyComponents.getVisibleBodies()) {
+        for (BodyComponents component : BodyComponents.VISIBLE_BODIES) {
             AbstractBody body = healthData.getComponent(component);
             float injury = 0.0f;
             float pain = 0.0f;
             float comfort = 0.0f;
-            for (BodyCondition condition : body.getBodyConditions()) {
-                if (!this.visibilityCheck(body, condition)) continue;
-                float value = body.getCondition(condition).getDisplayValue();
+            for (var key : body.getBodyConditions()) {
+                var condition = BodyCondition.get(key);
+                if (!this.visibilityCheck(body, key)) continue;
+                float value = body.getCondition(key).getDisplayValue();
                 if (!condition.abnormal(value)) continue;
-                if (condition.isInjury()) injury += Mth.abs(value - condition.defaultValue);
-                else if (condition.isPain()) pain += Mth.abs(value - condition.defaultValue);
-                else if (condition.isComfort()) comfort += Mth.abs(value - condition.defaultValue);
+                if (condition.isInjury()) injury += Mth.abs(value - condition.defaultValue());
+                else if (condition.isPain()) pain += Mth.abs(value - condition.defaultValue());
+                else if (condition.isComfort()) comfort += Mth.abs(value - condition.defaultValue());
             }
             float condition = (injury >= 0.01) ? injury : (pain > 0.01)? pain : (comfort > 0.01)? comfort : 0.0f;
             this.componentWidgets.get(component).setConditionValue(Mth.clamp(condition, 0.0f, 1.0f) * 0.7f);
@@ -135,7 +136,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
         int widgetCount = 0;
         AbstractBody bodyPart = healthData.getComponent(this.selectedComponent);
-        for (BodyCondition condition : bodyPart.getBodyConditions()) {
+        for (var condition : bodyPart.getBodyConditions()) {
             HealthConditionWidget widget = this.conditionWidgets.get(condition);
             if (!this.visibilityCheck(bodyPart, condition)) continue;
             if (widgetCount > 12) break;
@@ -153,10 +154,10 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         }
     }
 
-    private boolean visibilityCheck(AbstractBody body, BodyCondition condition) {
-        if (!HealthScanner.healthScannerConditions().contains(condition)) return false;
-        if (!this.menu.isDevice && !HealthScanner.eyesightConditions().contains(condition)) return false;
-        if (!condition.abnormal(body.getCondition(condition).getDisplayValue())) return false;
+    private boolean visibilityCheck(AbstractBody body, ResourceLocation key) {
+        if (!HealthScanner.healthScannerConditions().contains(key)) return false;
+        if (!this.menu.isDevice && !HealthScanner.eyesightConditions().contains(key)) return false;
+        if (!BodyCondition.get(key).abnormal(body.getCondition(key).getDisplayValue())) return false;
         return true;
     }
 
