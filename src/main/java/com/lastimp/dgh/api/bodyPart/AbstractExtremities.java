@@ -1,19 +1,19 @@
 package com.lastimp.dgh.api.bodyPart;
 
-import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public abstract class AbstractExtremities extends AbstractVisibleBody {
-    private static List<BodyCondition> EXTREMITY_CONDITIONS;
+    private static List<ResourceLocation> EXTREMITY_CONDITIONS;
 
     public AbstractExtremities() {
         super();
@@ -29,7 +29,7 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
     }
 
     @Override
-    public List<BodyCondition> getBodyConditions() {
+    public List<ResourceLocation> getBodyConditions() {
         if (EXTREMITY_CONDITIONS == null) {
             EXTREMITY_CONDITIONS = new ArrayList<>(super.getBodyConditions());
             EXTREMITY_CONDITIONS.addAll(List.of(
@@ -37,6 +37,19 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
             ));
         }
         return EXTREMITY_CONDITIONS;
+    }
+
+    public boolean available(PlayerHealthCapability health) {
+        boolean available = this.isBandaged() || this.isBadBandaged() || !this.abnormal(DISLOCATION);
+        available &= this.abnormal(PLASTER_CAST) || !this.abnormalWithHidden(FRACTURE);
+        available |= health.getComponent(TORSO).abnormal(ANALGESIA);
+        return available;
+    }
+
+    public static boolean available(PlayerHealthCapability health, BodyComponents components) {
+        if (!BodyComponents.EXTREMITIES.contains(components)) return true;
+        AbstractExtremities body = (AbstractExtremities) health.getComponent(components);
+        return body.available(health);
     }
 
 
@@ -52,7 +65,7 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
 
         Torso torso = (Torso) health.getComponent(TORSO);
         if (!torso.abnormal(ANALGESIA) && !this.isBandaged() && !this.isBadBandaged()) {
-            this.setConditionValue(INTENSE_PAIN, INTENSE_PAIN.maxValue);
+            this.setConditionValue(INTENSE_PAIN, BodyCondition.get(INTENSE_PAIN).maxValue());
         }
     }
 }

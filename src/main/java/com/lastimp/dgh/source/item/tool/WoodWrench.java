@@ -1,6 +1,7 @@
 package com.lastimp.dgh.source.item.tool;
 
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.Utils;
@@ -8,9 +9,7 @@ import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class WoodWrench extends AbstractPartlyHealItem {
     public WoodWrench(Properties properties) {
@@ -25,7 +24,7 @@ public class WoodWrench extends AbstractPartlyHealItem {
             body.injury(INTERNAL_INJURY, 0.05f);
             if (Utils.randomCheck(0.2f, 0.0f, 1.0f, 0.0f, 1f))
                 return true;
-            body.healing(DISLOCATION, -DISLOCATION.maxValue);
+            body.healing(DISLOCATION, -BodyCondition.get(DISLOCATION).maxValue());
             return true;
         });
     }

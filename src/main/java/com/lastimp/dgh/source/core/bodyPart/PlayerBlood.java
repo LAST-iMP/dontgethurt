@@ -3,9 +3,10 @@ package com.lastimp.dgh.source.core.bodyPart;
 
 import com.lastimp.dgh.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.ConditionState;
+import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
-import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
@@ -15,10 +16,10 @@ import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.DontGetHurt.EPS;
 import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class PlayerBlood extends AbstractBody {
-    private static List<BodyCondition> BLOOD_CONDITIONS;
+    private static List<ResourceLocation> BLOOD_CONDITIONS;
 
     public PlayerBlood() {
         super();
@@ -29,9 +30,9 @@ public class PlayerBlood extends AbstractBody {
     }
 
     @Override
-    public List<BodyCondition> getBodyConditions() {
+    public List<ResourceLocation> getBodyConditions() {
         if (BLOOD_CONDITIONS == null) {
-            BLOOD_CONDITIONS = List.of(new BodyCondition[]{
+            BLOOD_CONDITIONS = List.of(
                     SEPSIS,
                     HEMOTRANSFUSION,
                     BLOOD_LOSS,
@@ -42,7 +43,7 @@ public class PlayerBlood extends AbstractBody {
                     OPIATE_OVERDOSE,
                     OPIATE_ADDICTED,
                     OXYGEN
-            });
+            );
         }
         return BLOOD_CONDITIONS;
     }
@@ -55,7 +56,6 @@ public class PlayerBlood extends AbstractBody {
     @Override
     public AbstractBody update(PlayerHealthCapability health, Player player) {
         this.handleBloodVolume(health);
-        this.handleOpiateOverdose();
         this.handleOpiateAddicted(health);
         this.handleOxygen(health, player);
         return this;
@@ -83,13 +83,15 @@ public class PlayerBlood extends AbstractBody {
         }
 
         if (this.isBleeding(health)) return;
-        if (value > BLOOD_LOSS.defaultValue + EPS)
-            this.healing(BLOOD_LOSS, - BLOOD_LOSS.healingSpeed * DELTA);
+        var bloodLoss = BodyCondition.get(BLOOD_LOSS);
+        if (value > bloodLoss.defaultValue() + EPS)
+            this.healing(BLOOD_LOSS, -bloodLoss.healingSpeed() * DELTA);
     }
 
     private boolean isBleeding(PlayerHealthCapability health) {
-        for (AbstractBody body : health.visibleParts()) {
-            if (BLEED.abnormal(body.getConditionValue(BLEED)))
+        for (var component : BodyComponents.VISIBLE_BODIES) {
+            var body = health.getComponent(component);
+            if (body.abnormal(BLEED))
                 return true;
         }
         return false;
@@ -100,20 +102,15 @@ public class PlayerBlood extends AbstractBody {
 
         if (this.getConditionValue(OXYGEN) > 0.1f)
             health.getComponent(HEAD).injury(BRAIN_DAMAGE, this.getConditionValue(OXYGEN) * 0.01f * DELTA);
-        if (!health.getComponent(TORSO).abnormal(RESPIRATORY_ARREST) && player.getAirSupply() >= 1)
-            this.healing(OXYGEN, -OXYGEN.healingSpeed * DELTA);
-    }
-
-    private void handleOpiateOverdose() {
-        if (!this.abnormal(OPIATE_OVERDOSE)) return;
-
-        this.healing(OPIATE_OVERDOSE, -OPIATE_OVERDOSE.healingSpeed * DELTA);
+        if (!health.getComponent(TORSO).abnormal(RESPIRATORY_ARREST) && player.getAirSupply() >= 2) {
+            var oxygen = BodyCondition.get(OXYGEN);
+            this.healing(OXYGEN, -oxygen.healingSpeed() * DELTA);
+            player.setAirSupply(player.getAirSupply() - 1);
+        }
     }
 
     private void handleOpiateAddicted(PlayerHealthCapability health) {
         if (!this.abnormal(OPIATE_ADDICTED)) return;
-
-        this.healing(OPIATE_ADDICTED, -OPIATE_ADDICTED.healingSpeed * DELTA);
 
         Head head = (Head) health.getComponent(HEAD);
         if (head.getConditionValue(WITHDRAW) < this.getConditionValue(OPIATE_ADDICTED) && !health.getComponent(TORSO).abnormal(ANALGESIA))

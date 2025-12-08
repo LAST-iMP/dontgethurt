@@ -13,7 +13,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 
 @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.GAME)
@@ -57,8 +57,9 @@ public class BuffEventHandler {
     }
 
     private static void updateWithdrawEffects(PlayerHealthCapability health, ServerPlayer player) {
-        var state = health.getComponent(HEAD).getCondition(WITHDRAW);
-        if (!WITHDRAW.abnormal(state.getValue())) return;
+        var head = health.getComponent(HEAD);
+        var state = head.getCondition(WITHDRAW);
+        if (!head.abnormal(WITHDRAW)) return;
         if (state.getValue() > 0.2f && !player.hasEffect(ModEffects.CRAVING_EFFECT)) {
             player.addEffect(new MobEffectInstance(ModEffects.CRAVING_EFFECT, 100));
         }
@@ -66,7 +67,7 @@ public class BuffEventHandler {
             player.addEffect(new MobEffectInstance(ModEffects.SWEATING_EFFECT, 100));
         }
         if (state.getValue() > 0.4f && !player.hasEffect(MobEffects.CONFUSION)) {
-            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100));
+            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200));
         }
     }
 

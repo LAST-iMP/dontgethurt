@@ -2,10 +2,10 @@ package com.lastimp.dgh.api.command;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -15,6 +15,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -84,8 +85,8 @@ public class Command {
         CommandSourceStack source = context.getSource();
         source.sendSuccess(() -> {
                     var message = Component.empty();
-                    for (var condition : BodyCondition.values())
-                        message.append(condition.name().toLowerCase() + ", ");
+                    for (var condition : BodyCondition.conditions.keySet())
+                        message.append(condition + ", ");
                     return message;
                 },true
         );
@@ -99,7 +100,7 @@ public class Command {
         source.sendSuccess(() -> {
                     var message = Component.empty();
                     for (var condition : new PlayerHealthCapability().getComponent(components).getBodyConditions())
-                        message.append(condition.name().toLowerCase() + ", ");
+                        message.append(condition + ", ");
                     return message;
                 },true
         );
@@ -109,12 +110,12 @@ public class Command {
     public static int addComponentCondition(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = EntityArgument.getPlayer(context, "player");
         BodyComponents components = BodyComponents.valueOf(StringArgumentType.getString(context, "Component").toUpperCase());
-        BodyCondition condition = BodyCondition.valueOf(StringArgumentType.getString(context, "Condition").toUpperCase());
+        var condition = Common.ResourceBySeperator(StringArgumentType.getString(context, "Condition"), ':');
         float value = FloatArgumentType.getFloat(context, "value");
 
         CommandSourceStack source = context.getSource();
         source.sendSuccess(
-                () -> Component.literal("已将玩家" + player.getScoreboardName() + "的" + components + condition + "增加" + value),
+                () -> Component.literal("已将玩家" + player.getScoreboardName() + "的" + components + BodyCondition.get(condition) + "增加" + value),
                 true
         );
 
@@ -127,16 +128,16 @@ public class Command {
     public static int resetComponentCondition(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = EntityArgument.getPlayer(context, "player");
         BodyComponents components = BodyComponents.valueOf(StringArgumentType.getString(context, "Component").toUpperCase());
-        BodyCondition condition = BodyCondition.valueOf(StringArgumentType.getString(context, "Condition").toUpperCase());
+        var condition = Common.ResourceBySeperator(StringArgumentType.getString(context, "Condition"), ':');
 
         CommandSourceStack source = context.getSource();
         source.sendSuccess(
-                () -> Component.literal("已将玩家" + player.getScoreboardName() + "的" + components + condition + "重置"),
+                () -> Component.literal("已将玩家" + player.getScoreboardName() + "的" + components + BodyCondition.get(condition) + "重置"),
                 true
         );
 
         return PlayerHealthCapability.getAndSet(player, h -> {
-            h.getComponent(components).setConditionValue(condition, condition.defaultValue);
+            h.getComponent(components).setConditionValue(condition, BodyCondition.get(condition).defaultValue());
             return 1;
         });
     }
@@ -154,7 +155,7 @@ public class Command {
         return PlayerHealthCapability.getAndSet(player, h -> {
             var body = h.getComponent(components);
             for (var condition : body.getBodyConditions()) {
-                body.setConditionValue(condition, condition.defaultValue);
+                body.setConditionValue(condition, BodyCondition.get(condition).defaultValue());
             }
             return 1;
         });

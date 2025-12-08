@@ -5,7 +5,7 @@ import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class BurnHandler {
     public static void handle(PlayerHealthCapability health, AbstractBody body, float damageAmount) {

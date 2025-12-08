@@ -6,23 +6,22 @@ import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
-import com.lastimp.dgh.api.enums.BodyCondition;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
-import static com.lastimp.dgh.DontGetHurt.EPS;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public abstract class AbstractVisibleBody extends AbstractBody {
-    private static List<BodyCondition> ANY_BODY_CONDITIONS;
+    private static List<ResourceLocation> ANY_BODY_CONDITIONS;
     private float nextTickBleed;
 
     @Override
-    public List<BodyCondition> getBodyConditions() {
+    public List<ResourceLocation> getBodyConditions() {
         if (ANY_BODY_CONDITIONS == null) {
             ANY_BODY_CONDITIONS = List.of(
                     SURGERY_INCISION,
@@ -38,7 +37,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
                     FOREIGN_OBJECT,
                     BANDAGED,
                     BANDAGED_DIRTY,
-                    OINMENTED,
+                    OINTMENT,
 
                     FRACTURE,
                     INTENSE_PAIN,
@@ -54,12 +53,12 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     @Override
     public AbstractBody update(PlayerHealthCapability health, Player player) {
-        handleBandaged(health);
-        handleBurning(health);
-        handleInternalInjury(health, player);
-        handleOpenWound(health);
+        handleBandaged();
+        handleBurning();
+        handleInternalInjury(player);
+        handleOpenWound();
         handleFracture(health, player);
-        handleSurgery(health, player);
+        handleSurgery(health);
         handleBleeding(health);
         return this;
     }
@@ -82,8 +81,20 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     @Override
-    public void healing(BodyCondition key, float value) {
-        float heal = Mth.clamp(Math.min(-value, this.getConditionValue(key)), 0.0f, 1.0f) * Config.resistance_convert_ratio;
+    public void healing(ResourceLocation key, float value) {
+        float heal = Mth.clamp(Math.min(-value, this.getConditionValue(key)), 0.0f, 2.0f) * Config.resistance_convert_ratio;
+        handleResist(key, heal);
+        super.healing(key, value);
+    }
+
+    @Override
+    public void healingHidden(ResourceLocation key, float value) {
+        float heal = Mth.clamp(Math.min(-value, this.getConditionHidden(key)), 0.0f, 2.0f) * Config.resistance_convert_ratio;
+        handleResist(key, heal);
+        super.healingHidden(key, value);
+    }
+
+    private void handleResist(ResourceLocation key, float heal) {
         if (key == BURN) {
             this.addConditionValue(BURN_RES, heal);
         } else if (key == OPEN_WOUND) {
@@ -91,7 +102,6 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         } else if (key == INTERNAL_INJURY) {
             this.addConditionValue(INTERNAL_RES, heal);
         }
-        super.healing(key, value);
     }
 
     public int slowDownLevel(PlayerHealthCapability health) {
@@ -100,14 +110,16 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         return slowDown;
     }
 
-    private void handleBandaged(PlayerHealthCapability health) {
+    private void handleBandaged() {
         if (isBandaged()) {
-            this.healing(BANDAGED, - BANDAGED.healingSpeed * DELTA);
+            var bandage = BodyCondition.get(BANDAGED);
+            this.healing(BANDAGED, - bandage.healingSpeed() * DELTA);
             if (this.abnormalWithHidden(BURN)) {
-                this.addConditionValue(BANDAGED, - BANDAGED.healingSpeed * DELTA);
+                this.addConditionValue(BANDAGED, - bandage.healingSpeed() * DELTA);
             }
             if (!isBandaged()) {
-                this.getCondition(BANDAGED_DIRTY).setValue(BANDAGED_DIRTY.maxValue);
+                var bandageDirty = BodyCondition.get(BANDAGED_DIRTY);
+                this.getCondition(BANDAGED_DIRTY).setValue(bandageDirty.maxValue());
             }
         }
 
@@ -118,7 +130,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
     }
 
-    private void handleBurning(PlayerHealthCapability health) {
+    private void handleBurning() {
         if (!this.abnormalWithHidden(BURN)) return;
         this.handleBandageAcc(BURN, Config.bandage_acc);
         this.handleCover(BURN);
@@ -127,15 +139,15 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.nextTickBleed += this.getCondition(BURN).getValue() * Config.burn_bleed_ratio;
     }
 
-    private void handleInternalInjury(PlayerHealthCapability health, Player player) {
+    private void handleInternalInjury(Player player) {
         if (!this.abnormalWithHidden(INTERNAL_INJURY)) return;
 
         this.nextTickBleed += this.getCondition(INTERNAL_INJURY).getValue() * Config.internal_bleed_ratio;
 
         float saturation = player.getFoodData().getSaturationLevel();
-        float delta = INTERNAL_INJURY.healingSpeed * DELTA;
+        float delta = BodyCondition.get(INTERNAL_INJURY).healingSpeed() * DELTA;
         if (saturation > 0) {
-            if (INTERNAL_INJURY.abnormal(this.getCondition(INTERNAL_INJURY).getHiddenValue()))
+            if (this.abnormalWithHidden(INTERNAL_INJURY))
                 this.healingHidden(INTERNAL_INJURY, -delta);
             else
                 this.healing(INTERNAL_INJURY, -delta * Config.internal_food_healing);
@@ -143,7 +155,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
     }
 
-    private void handleOpenWound(PlayerHealthCapability health) {
+    private void handleOpenWound() {
         if (!this.abnormalWithHidden(OPEN_WOUND)) return;
         this.handleBandageAcc(OPEN_WOUND, Config.bandage_acc);
         this.handleCover(OPEN_WOUND);
@@ -152,17 +164,17 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.nextTickBleed += this.getCondition(OPEN_WOUND).getValue() * Config.open_wound_bleed_ratio;
     }
 
-    private void handleBandageAcc(BodyCondition condition, float acc) {
+    private void handleBandageAcc(ResourceLocation condition, float acc) {
         if (isBandaged()) {
-            this.healingHidden(condition, - condition.healingSpeed * DELTA * (isBadBandaged() ? 1.0f : acc));
+            this.healingHidden(condition, - BodyCondition.get(condition).healingSpeed() * DELTA * (isBadBandaged() ? 1.0f : acc));
         }
     }
 
-    protected void handleCover(BodyCondition condition) {
+    protected void handleCover(ResourceLocation condition) {
         ConditionState state = this.getCondition(condition);
         if (!isBandaged() && !isBadBandaged()) {
             this.setConditionValue(condition, state.getValue() + state.getHiddenValue());
-            state.setHiddenValue(condition.defaultValue);
+            state.setHiddenValue(BodyCondition.get(condition).defaultValue());
         }
     }
 
@@ -172,36 +184,35 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
         Torso torso = (Torso) health.getComponent(TORSO);
         if (!torso.abnormal(ANALGESIA) && !this.isBandaged() && !this.isBadBandaged()) {
-            this.setConditionValue(INTENSE_PAIN, INTENSE_PAIN.maxValue);
+            this.setConditionValue(INTENSE_PAIN, BodyCondition.get(INTENSE_PAIN).maxValue());
         }
 
         if (this.abnormal(PLASTER_CAST))
-            this.healingHidden(FRACTURE, -FRACTURE.healingSpeed * DELTA);
+            this.healingHidden(FRACTURE, -BodyCondition.get(FRACTURE).healingSpeed() * DELTA);
     }
 
-    private void handleSurgery(PlayerHealthCapability health, Player player) {
-        Torso torso = (Torso) health.getComponent(TORSO);
+    private void handleSurgery(PlayerHealthCapability health) {
         Head head = (Head) health.getComponent(HEAD);
         if (this.abnormal(SURGERY_INCISION)) {
             if (!this.abnormal(CLAMPED_BLEEDING))
                 this.nextTickBleed += 0.23f;
-            if (!torso.abnormal(ANALGESIA))
+            if (!health.safeSurgery())
                 head.injury(TRAUMATIC_SHOCK, 0.02f * DELTA);
         }
         if (this.abnormal(RETRACTED_SKIN))
-            if (!torso.abnormal(ANALGESIA))
+            if (!health.safeSurgery())
                 head.injury(TRAUMATIC_SHOCK, 0.02f * DELTA);
         if (this.abnormal(DRILLED_BONES))
-            if (!torso.abnormal(ANALGESIA))
+            if (!health.safeSurgery())
                 head.injury(TRAUMATIC_SHOCK, 0.015f * DELTA);
     }
 
     public boolean isBandaged() {
-        return BANDAGED.abnormal(this.getConditionValue(BANDAGED));
+        return this.abnormal(BANDAGED);
     }
 
     public boolean isBadBandaged() {
-        return BANDAGED_DIRTY.abnormal(this.getConditionValue(BANDAGED_DIRTY));
+        return this.abnormal(BANDAGED_DIRTY);
     }
 
     private void handleBleeding(PlayerHealthCapability health) {

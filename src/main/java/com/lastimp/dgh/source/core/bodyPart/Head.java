@@ -3,8 +3,9 @@ package com.lastimp.dgh.source.core.bodyPart;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
@@ -13,10 +14,10 @@ import java.util.List;
 import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class Head extends AbstractVisibleBody {
-    private static List<BodyCondition> HEAD_CONDITIONS;
+    private static List<ResourceLocation> HEAD_CONDITIONS;
     public Head() {
         super();
     }
@@ -31,7 +32,7 @@ public class Head extends AbstractVisibleBody {
     }
 
     @Override
-    public List<BodyCondition> getBodyConditions() {
+    public List<ResourceLocation> getBodyConditions() {
         if (HEAD_CONDITIONS == null) {
             HEAD_CONDITIONS = new ArrayList<>(super.getBodyConditions());
             HEAD_CONDITIONS.addAll(List.of(
@@ -74,7 +75,7 @@ public class Head extends AbstractVisibleBody {
         if (!this.abnormal(WITHDRAW)) return;
 
         if (this.getConditionValue(WITHDRAW) > health.getComponent(BLOOD).getConditionValue(OPIATE_ADDICTED))
-            this.healing(WITHDRAW, -WITHDRAW.healingSpeed * DELTA);
+            this.healing(WITHDRAW, -BodyCondition.get(WITHDRAW).healingSpeed() * DELTA);
     }
 
     private void handleTraumaticShock(PlayerHealthCapability health) {
@@ -82,7 +83,7 @@ public class Head extends AbstractVisibleBody {
 
         var value = this.getConditionValue(TRAUMATIC_SHOCK);
         if (value > 0.3f)
-            health.getComponent(TORSO).injury(RESPIRATORY_ARREST, RESPIRATORY_ARREST.maxValue);
+            health.getComponent(TORSO).injury(RESPIRATORY_ARREST, BodyCondition.get(RESPIRATORY_ARREST).maxValue());
         if (value > 0.1f)
             this.injury(BRAIN_DAMAGE, value * 0.01f * DELTA);
     }

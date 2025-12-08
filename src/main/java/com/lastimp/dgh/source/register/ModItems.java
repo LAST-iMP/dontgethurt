@@ -16,25 +16,19 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.lastimp.dgh.DontGetHurt.MODID;
+import static com.lastimp.dgh.source.register.ModBlocks.*;
 
 public class ModItems {
-    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
 
     public static final HashSet<DeferredItem<?>> ITEMS_SET = new HashSet<>();
 
-//    public static final DeferredBlock<Block> OPERATING_BED_BLOCK = BLOCKS.registerBlock(
-//            "operating_bed",
-//            OperatingBedBlock::new,
-//            BlockBehaviour.Properties.ofFullCopy(Blocks.RED_BED)
-//    );
-
-//    public static final DeferredItem<BlockItem> OPERATING_BED_BLOCK_ITEM = registerSimpleBlockItem(
-//            "operating_bed",
-//            OPERATING_BED_BLOCK,
-//            new Item.Properties()
-//                    .stacksTo(1)
-//    );
+    public static final DeferredItem<BlockItem> OPERATING_BED_BLOCK_ITEM = registerSimpleBlockItem(
+            "operating_bed",
+            OPERATING_BED_BLOCK,
+            new Item.Properties()
+                    .stacksTo(1)
+    );
 
     public static final DeferredItem<Item> HEALTH_SCANNER = registerItem(
             "health_scanner",
@@ -178,7 +172,6 @@ public class ModItems {
     }
 
     public static void register(IEventBus eventBus) {
-        BLOCKS.register(eventBus);
         ITEMS.register(eventBus);
     }
 }

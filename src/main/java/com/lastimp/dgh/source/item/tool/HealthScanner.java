@@ -3,7 +3,8 @@ package com.lastimp.dgh.source.item.tool;
 
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.source.client.gui.menuProvider.HealthMenuProvider;
-import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -15,17 +16,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class HealthScanner extends AbstractHealingItem {
-    private static List<BodyCondition> HEALTH_SCANNER_CONDITIONS;
-    private static List<BodyCondition> EYESIGHT_CONDITIONS;
+    private static List<ResourceLocation> HEALTH_SCANNER_CONDITIONS;
+    private static List<ResourceLocation> EYESIGHT_CONDITIONS;
 
     public HealthScanner(Properties properties) {
         super(properties);
     }
 
-    public static List<BodyCondition> healthScannerConditions() {
+    public static List<ResourceLocation> healthScannerConditions() {
         if (HEALTH_SCANNER_CONDITIONS == null) {
             HEALTH_SCANNER_CONDITIONS = List.of(
                     SURGERY_INCISION,
@@ -42,7 +43,7 @@ public class HealthScanner extends AbstractHealingItem {
 
                     BANDAGED,
                     BANDAGED_DIRTY,
-                    OINMENTED,
+                    OINTMENT,
 
                     DISLOCATION,
                     FRACTURE,
@@ -64,7 +65,7 @@ public class HealthScanner extends AbstractHealingItem {
         return HEALTH_SCANNER_CONDITIONS;
     }
 
-    public static List<BodyCondition> eyesightConditions() {
+    public static List<ResourceLocation> eyesightConditions() {
         if (EYESIGHT_CONDITIONS == null) {
             EYESIGHT_CONDITIONS = List.of(
                     SURGERY_INCISION,
@@ -79,7 +80,7 @@ public class HealthScanner extends AbstractHealingItem {
 
                     BANDAGED,
                     BANDAGED_DIRTY,
-                    OINMENTED,
+                    OINTMENT,
 
                     DISLOCATION,
                     INTENSE_PAIN,

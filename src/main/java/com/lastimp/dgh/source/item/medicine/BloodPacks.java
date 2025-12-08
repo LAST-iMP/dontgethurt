@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class BloodPacks extends AbstractDirectHealItems {
 
@@ -21,8 +21,7 @@ public class BloodPacks extends AbstractDirectHealItems {
     public boolean heal(@NotNull ServerPlayer source, @NotNull ServerPlayer target) {
         return PlayerHealthCapability.getAndSet(target, health -> {
             PlayerBlood blood = (PlayerBlood) health.getComponent(BodyComponents.BLOOD);
-            float currCondition = blood.getConditionValue(BLOOD_LOSS);
-            if (!BLOOD_LOSS.abnormal(currCondition)) return false;
+            if (!blood.abnormal(BLOOD_LOSS)) return false;
 
             blood.healing(BLOOD_LOSS, -0.25f);
 

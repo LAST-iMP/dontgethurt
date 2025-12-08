@@ -4,44 +4,47 @@ import com.lastimp.dgh.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class OpenWoundHandler {
-    public static void handle(PlayerHealthCapability health, AbstractBody body, float damageAmount) {
+    public static void handle(AbstractBody body, float damageAmount) {
         if (body instanceof AbstractVisibleBody visibleBody)
             damageAmount *= (1.0f - visibleBody.getConditionValue(OPEN_WOUND_RES) * Config.resistance_max);
         body.injury(OPEN_WOUND, damageAmount);
     }
 
-    public static void handleEntityAttack(PlayerHealthCapability health, AbstractBody body, float damageAmount, float maxHealth) {
-        handle(health, body, damageAmount);
+    public static void handleEntityAttack(AbstractBody body, float damageAmount) {
+        handle(body, damageAmount);
         if (!(body instanceof AbstractVisibleBody visibleBody)) return;
 
-        float threshold = 0.1f;
+        float threshold = Config.baseFractureThreshold;
         threshold += visibleBody instanceof Torso ? 0.1f : 0;
         threshold += visibleBody instanceof Head ? 0.2f : 0;
+        float factor = (1.0f - threshold) / Config.baseFractureMaxProb;
+
         damageAmount += body.getCondition(OPEN_WOUND).getValue();
-        if (Utils.randomCheck(damageAmount, threshold, 0.6f, 0.0f, 1.0f)) {
-            visibleBody.setConditionValue(FRACTURE, FRACTURE.maxValue);
+        if (Utils.randomCheck(damageAmount, threshold, factor, 0.0f, Config.baseFractureMaxProb)) {
+            visibleBody.setConditionValue(FRACTURE, BodyCondition.get(FRACTURE).maxValue());
             if (visibleBody.abnormal(PLASTER_CAST))
-                visibleBody.setConditionValue(PLASTER_CAST, PLASTER_CAST.defaultValue);
+                visibleBody.setConditionValue(PLASTER_CAST, BodyCondition.get(PLASTER_CAST).defaultValue());
         }
     }
 
-    public static void handleExplosion(PlayerHealthCapability health, AbstractBody body, float damageAmount, float maxHealth) {
-        handle(health, body, damageAmount);
+    public static void handleExplosion(AbstractBody body, float damageAmount) {
+        handle(body, damageAmount);
         if (!(body instanceof AbstractExtremities visibleBody)) return;
 
+        float factor = 1.0f - Config.baseFractureThreshold;
         damageAmount += body.getCondition(OPEN_WOUND).getValue();
-        if (Utils.randomCheck(damageAmount, 0.1f, 0.6f, 0.0f, 1.0f)) {
-            visibleBody.setConditionValue(FRACTURE, FRACTURE.maxValue);
+        if (Utils.randomCheck(damageAmount, Config.baseFractureThreshold, factor, 0.0f, 1.0f)) {
+            visibleBody.setConditionValue(FRACTURE, BodyCondition.get(FRACTURE).maxValue());
             if (visibleBody.abnormal(PLASTER_CAST))
-                visibleBody.setConditionValue(PLASTER_CAST, PLASTER_CAST.defaultValue);
+                visibleBody.setConditionValue(PLASTER_CAST, BodyCondition.get(PLASTER_CAST).defaultValue());
         }
     }
 }

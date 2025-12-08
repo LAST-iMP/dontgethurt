@@ -1,8 +1,8 @@
 
 package com.lastimp.dgh.source.core.player;
 
-import com.lastimp.dgh.api.bodyPart.AbstractArm;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
+import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.source.register.ModCapabilities;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.*;
@@ -14,7 +14,7 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 import java.util.function.Function;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     private final WholeBody body = new WholeBody();
@@ -23,6 +23,7 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     private int armBreak = 0;
     private long livingTick = 0;
     private float almostDead = 1.0f;
+    private int nearBedTick = 0;
 
     public static PlayerHealthCapability get(Player player) {
         return player.getData(ModCapabilities.PLAYER_HEALTH);
@@ -51,45 +52,14 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
 
     private void updateLabels(Player player) {
         if (this.livingTick + 1 > 0) this.livingTick++;
-        this.armBreak = (((AbstractArm)this.getComponent(LEFT_ARM)).available(this) ? 0 : 1) + (((AbstractArm)this.getComponent(RIGHT_ARM)).available(this) ? 0 : 1);
+        this.armBreak = (AbstractExtremities.available(this, LEFT_ARM) ? 0 : 1) + (AbstractExtremities.available(this, RIGHT_ARM) ? 0 : 1);
         this.slowDown = this.body.slowDownLevel(this);
         this.playerVitality = 1.0f - this.body.updateVitalityLost(this, player);
 
         float bloodVitalityLost = this.getComponent(BLOOD).updateVitalityLost(this, player);
         if (this.playerVitality + bloodVitalityLost < this.almostDead)
             this.almostDead = this.playerVitality + bloodVitalityLost;
-    }
-
-    public AbstractBody[] legs() {
-        return new AbstractBody[] {
-                this.body.getComponent(LEFT_LEG),
-                this.body.getComponent(RIGHT_LEG)
-        };
-    }
-
-    public AbstractBody[] arms() {
-        return new AbstractBody[] {
-                this.body.getComponent(LEFT_ARM),
-                this.body.getComponent(RIGHT_ARM)
-        };
-    }
-
-    public AbstractBody[] visibleParts() {
-        return new AbstractBody[] {
-                this.body.getComponent(HEAD),
-                this.body.getComponent(TORSO),
-                this.body.getComponent(LEFT_ARM),
-                this.body.getComponent(RIGHT_ARM),
-                this.body.getComponent(LEFT_LEG),
-                this.body.getComponent(RIGHT_LEG),
-        };
-    }
-
-    public boolean intensePain() {
-        return  this.getComponent(LEFT_ARM).abnormal(INTENSE_PAIN) ||
-                this.getComponent(RIGHT_ARM).abnormal(INTENSE_PAIN) ||
-                this.getComponent(LEFT_LEG).abnormal(INTENSE_PAIN) ||
-                this.getComponent(RIGHT_LEG).abnormal(INTENSE_PAIN);
+        this.nearBedTick--;
     }
 
     @Override
@@ -100,6 +70,7 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
         tag.putInt("armBreak", this.armBreak);
         tag.putLong("livingTick", this.livingTick);
         tag.putFloat("almostDead", this.almostDead);
+        tag.putInt("nearBedTick", this.nearBedTick);
         return tag;
     }
 
@@ -112,6 +83,22 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
         this.armBreak = nbt.getInt("armBreak");
         this.livingTick = nbt.getLong("livingTick");
         this.almostDead = nbt.getFloat("almostDead");
+        this.nearBedTick = nbt.getInt("nearBedTick");
+    }
+
+    public boolean intensePain() {
+        return  this.getComponent(LEFT_ARM).abnormal(INTENSE_PAIN) ||
+                this.getComponent(RIGHT_ARM).abnormal(INTENSE_PAIN) ||
+                this.getComponent(LEFT_LEG).abnormal(INTENSE_PAIN) ||
+                this.getComponent(RIGHT_LEG).abnormal(INTENSE_PAIN);
+    }
+
+    public static boolean isDying(Player player) {
+        return player.getHealth() < 0.05 && !player.isDeadOrDying();
+    }
+
+    public boolean safeSurgery() {
+        return this.nearBedTick > 0 || ((Torso)this.getComponent(TORSO)).safeSurgery();
     }
 
     public float playerVitality() {
@@ -138,7 +125,11 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
         return armBreak;
     }
 
-    public static boolean isDying(Player player) {
-        return player.getHealth() < 0.05 && !player.isDeadOrDying();
+    public int nearBedTick() {
+        return nearBedTick;
+    }
+
+    public void setNearBedTick(int nearBedTick) {
+        this.nearBedTick = nearBedTick;
     }
 }
