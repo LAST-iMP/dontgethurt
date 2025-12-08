@@ -2,14 +2,15 @@ package com.lastimp.dgh.source.item.medicine;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
-import com.lastimp.dgh.source.register.ModItems;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
-import static com.lastimp.dgh.api.enums.BodyCondition.PLASTER_CAST;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.PLASTER_CAST;
 
 public class Gypsum extends AbstractPartlyHealItem {
     public Gypsum(Properties properties) {
@@ -23,7 +24,7 @@ public class Gypsum extends AbstractPartlyHealItem {
             if (body.abnormal(PLASTER_CAST)) return false;
             if (!body.isBandaged()) return false;
 
-            body.healing(PLASTER_CAST, PLASTER_CAST.maxValue);
+            body.healing(PLASTER_CAST, BodyCondition.get(PLASTER_CAST).maxValue());
             return true;
         });
     }
@@ -41,8 +42,8 @@ public class Gypsum extends AbstractPartlyHealItem {
 
         return PlayerHealthCapability.getAndSet(target, health -> {
             AbstractBody body = health.getComponent(component);
-            if (PLASTER_CAST.abnormal(body.getConditionValue(PLASTER_CAST))) {
-                body.setConditionValue(PLASTER_CAST, PLASTER_CAST.defaultValue);
+            if (body.abnormal(PLASTER_CAST)) {
+                body.setConditionValue(PLASTER_CAST, BodyCondition.get(PLASTER_CAST).defaultValue());
             } else {
                 return false;
             }

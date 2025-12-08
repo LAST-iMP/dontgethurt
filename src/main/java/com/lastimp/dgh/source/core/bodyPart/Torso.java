@@ -3,18 +3,19 @@ package com.lastimp.dgh.source.core.bodyPart;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lastimp.dgh.api.enums.BodyCondition.ANALGESIA;
-import static com.lastimp.dgh.api.enums.BodyCondition.RESPIRATORY_ARREST;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.ANALGESIA;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.RESPIRATORY_ARREST;
 
 public class Torso extends AbstractVisibleBody {
-    private static List<BodyCondition> TORSO_CONDITIONS;
+    private static List<ResourceLocation> TORSO_CONDITIONS;
     public Torso() {
         super();
     }
@@ -24,7 +25,7 @@ public class Torso extends AbstractVisibleBody {
     }
 
     @Override
-    public List<BodyCondition> getBodyConditions() {
+    public List<ResourceLocation> getBodyConditions() {
         if (TORSO_CONDITIONS == null) {
             TORSO_CONDITIONS = new ArrayList<>(super.getBodyConditions());
             TORSO_CONDITIONS.addAll(List.of(
@@ -46,4 +47,7 @@ public class Torso extends AbstractVisibleBody {
         return this;
     }
 
+    public boolean safeSurgery() {
+        return this.abnormal(ANALGESIA);
+    }
 }

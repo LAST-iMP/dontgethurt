@@ -33,6 +33,7 @@ public class DontGetHurt
     public DontGetHurt(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
 
+        ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
         ModCreativeModTabs.register(modEventBus);
         ModMenus.register(modEventBus);

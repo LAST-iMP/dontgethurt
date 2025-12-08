@@ -2,7 +2,7 @@
 package com.lastimp.dgh.source.item.tool;
 
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.api.enums.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
@@ -10,6 +10,7 @@ import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -22,16 +23,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.enums.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class BloodScanner extends AbstractHealingItem {
-    private static List<BodyCondition> BLOOD_SCANNER_CONDITIONS;
+    private static List<ResourceLocation> BLOOD_SCANNER_CONDITIONS;
 
     public BloodScanner(Properties properties) {
         super(properties);
     }
 
-    public static List<BodyCondition> bloodScannerConditions() {
+    public static List<ResourceLocation> bloodScannerConditions() {
         if (BLOOD_SCANNER_CONDITIONS == null) {
             BLOOD_SCANNER_CONDITIONS = List.of(
                     SEPSIS,
@@ -76,14 +77,14 @@ public class BloodScanner extends AbstractHealingItem {
     public static void scanHealth(Player player, PlayerHealthCapability health, String name) {
         PlayerBlood blood = (PlayerBlood) health.getComponent(BodyComponents.BLOOD);
         boolean hasAbnormal = false;
-        for (BodyCondition condition : BloodScanner.bloodScannerConditions()) {
+        for (var condition : BloodScanner.bloodScannerConditions()) {
             float value = blood.getConditionValue(condition);
-            if (condition.abnormal(value)) {
+            if (blood.abnormal(condition)) {
                 if (!hasAbnormal)
                     player.sendSystemMessage(Component.literal(name + "的血液状态为："));
                 hasAbnormal = true;
                 player.sendSystemMessage(
-                        Component.literal(condition + ": " + String.format("%.2f", value))
+                        Component.literal(Component.translatable(condition.toString()).getString() + ": " + String.format("%.2f", value))
                 );
             }
         }

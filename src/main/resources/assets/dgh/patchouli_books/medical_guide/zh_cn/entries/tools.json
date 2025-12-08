@@ -1,0 +1,129 @@
+{
+  "name": "实用工具",
+  "icon": "dgh:health_scanner",
+  "category": "dgh:tools_and_medic",
+  "read_by_default": false,
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "spotlight",
+      "title": "健康扫描仪",
+      "item": "dgh:health_scanner",
+      "scale": 1.2,
+      "text": "健康扫描仪！它能够通过右键打开自己或者其他人的健康界面。相比于肉眼观察，它能够显示更多信息，而且允许你治疗他人！",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:health_scanner"
+    },
+    {
+      "type": "spotlight",
+      "title": "血液扫描仪",
+      "item": "dgh:blood_scanner",
+      "scale": 1.2,
+      "text": "血液扫描仪！它能够通过右键来扫描自己或者其他人的血液信息。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:blood_scanner"
+    },
+    {
+      "type": "spotlight",
+      "title": "木扳手",
+      "item": "dgh:wood_wrench",
+      "scale": 1.2,
+      "text": "给脱臼的四肢狠狠来一下。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:wood_wrench"
+    },
+    {
+      "type": "spotlight",
+      "title": "医疗包",
+      "item": "dgh:health_care_bag",
+      "scale": 1.2,
+      "text": "装满你的救命玩意儿。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:health_care_bag"
+    },
+    {
+      "type": "spotlight",
+      "title": "医疗床",
+      "item": "dgh:operating_bed",
+      "scale": 1.2,
+      "text": "在手术床旁无需麻醉。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:operating_bed"
+    },
+    {
+      "type": "spotlight",
+      "title": "手术刀",
+      "item": "dgh:scalpel",
+      "scale": 1.2,
+      "text": "切开皮肤。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:scalpel"
+    },
+    {
+      "type": "spotlight",
+      "title": "止血钳",
+      "item": "dgh:hemostat",
+      "scale": 1.2,
+      "text": "阻断出血。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:hemostat"
+    },
+    {
+      "type": "spotlight",
+      "title": "牵开器",
+      "item": "dgh:retractor",
+      "scale": 1.2,
+      "text": "拉开皮肤。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:retractor"
+    },
+    {
+      "type": "spotlight",
+      "title": "手术钻",
+      "item": "dgh:surgical_drill",
+      "scale": 1.2,
+      "text": "钻开骨头。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:surgical_drill"
+    },
+    {
+      "type": "spotlight",
+      "title": "骨骼植入物",
+      "item": "dgh:bone_implants",
+      "scale": 1.2,
+      "text": "彻底治好你的骨头。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_implants"
+    }
+  ]
+}

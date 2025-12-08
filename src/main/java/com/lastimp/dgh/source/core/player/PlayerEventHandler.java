@@ -15,7 +15,7 @@ import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
-import static com.lastimp.dgh.api.enums.BodyCondition.RESPIRATORY_ARREST;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.RESPIRATORY_ARREST;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID)
 public class PlayerEventHandler {

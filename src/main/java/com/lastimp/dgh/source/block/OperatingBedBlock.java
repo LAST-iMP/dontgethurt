@@ -1,93 +1,75 @@
-/*
-* MIT License
-
-Copyright (c) 2023 NeoForged project
-
-This license applies to the template files as supplied by github.com/NeoForged/MDK
-
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-
 package com.lastimp.dgh.source.block;
-
+import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.register.ModBlocks;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 
 public class OperatingBedBlock extends BedBlock {
+    protected static final VoxelShape BASE = Block.box(0.0F, 5.0F, 0.0F, 16.0F, 9.0F, 16.0F);
+
     public OperatingBedBlock(Properties properties) {
         super(DyeColor.RED, properties);
         this.registerDefaultState(this.defaultBlockState());
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.isClientSide) {
-            return InteractionResult.CONSUME;
-        } else {
-            if (state.getValue(PART) != BedPart.HEAD) {
-                pos = pos.relative(state.getValue(FACING));
-                state = level.getBlockState(pos);
-                if (!state.is(this)) {
-                    return InteractionResult.CONSUME;
-                }
-            }
-
-            if (state.getValue(OCCUPIED)) {
-                if (!this.kickVillagerOutOfBed(level, pos)) {
-                    player.displayClientMessage(Component.translatable("block.minecraft.bed.occupied"), true);
-                }
-
-                return InteractionResult.SUCCESS;
-            } else {
-                player.startSleepInBed(pos).ifLeft((problem) -> {
-                    if (problem.getMessage() != null) {
-                        player.displayClientMessage(problem.getMessage(), true);
-                    }
-
-                });
-                return InteractionResult.SUCCESS;
-            }
-        }
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
+        level.scheduleTick(pos, this, 20);
     }
 
-    private boolean kickVillagerOutOfBed(Level level, BlockPos blockPos) {
-        List<Villager> list = level.getEntitiesOfClass(Villager.class, new AABB(blockPos), LivingEntity::isSleeping);
-        if (list.isEmpty()) {
-            return false;
-        } else {
-            list.get(0).stopSleeping();
-            return true;
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        var players = level.players();
+        for (var player : players) {
+            if (!(EntitySelector.NO_SPECTATORS.test(player) && EntitySelector.LIVING_ENTITY_STILL_ALIVE.test(player))) continue;
+            if (player.distanceToSqr(pos.getCenter()) > 4.0f) continue;
+            PlayerHealthCapability.getAndSet(player, h -> {
+                h.setNearBedTick(40);
+                return h;
+            });
         }
+        level.scheduleTick(pos, this, 20);
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return BASE;
+    }
+
+    @Override
+    public @NotNull BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+        return new Entity(pos, state);
+    }
+
+    @Override
+    protected List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
+        if (state.getValue(BedBlock.PART) == BedPart.HEAD) return Collections.emptyList();
+        return super.getDrops(state, params);
+    }
+
+    public static class Entity extends BlockEntity {
+        public Entity(BlockPos pos, BlockState blockState) {
+            super(ModBlocks.OPERATING_BED_ENTITY.get(), pos, blockState);
+        }
+
     }
 }
 
