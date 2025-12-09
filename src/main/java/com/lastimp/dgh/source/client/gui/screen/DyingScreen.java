@@ -38,7 +38,7 @@ public class DyingScreen extends Screen {
         int panelX = (guiGraphics.guiWidth() - PANEL_WIDTH) / 2;
         int panelY = (guiGraphics.guiHeight() - PANEL_HEIGHT) / 2;
         guiGraphics.drawCenteredString(GuiOpenWrapper.MINECRAFT.get().font,
-                "按下任意键求救, 按住ESC键(默认)5秒放弃治疗",
+                "单击任意键求救, 按住ESC键(默认)5秒放弃治疗",
                 guiGraphics.guiWidth() / 2, guiGraphics.guiHeight() / 2, 0xFF000000
         );
         guiGraphics.fill(panelX, panelY, panelX + PANEL_WIDTH, panelY + PANEL_HEIGHT, 0x00ffffff);
@@ -54,11 +54,20 @@ public class DyingScreen extends Screen {
             if (giveUpTick >= 100) {
                 PacketDistributor.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.GIVE_UP, 0));
             }
-        } else {
-            giveUpTick = 0;
-            PacketDistributor.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.CALL_FOR_HELP, 0));
         }
         return true;
+    }
+
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return false;
+
+        if (KeyBinding.GIVE_UP.getKey().getValue() != keyCode) {
+            PacketDistributor.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.CALL_FOR_HELP, 0));
+        }
+        giveUpTick = 0;
+        return super.keyReleased(keyCode, scanCode, modifiers);
     }
 
     @Override

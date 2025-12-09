@@ -4,6 +4,7 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.neoforge.Common;
+import com.lastimp.dgh.source.client.gui.menuProvider.HealthMenuProvider;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
@@ -15,7 +16,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -66,7 +66,21 @@ public class Command {
                                         )
                                 )
                         )
+                        .then(Commands.literal("health_menu")
+                                .requires(source -> source.hasPermission(2))
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(Command::openFullMenu)
+                                )
+                        )
         );
+    }
+
+    public static int openFullMenu(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer source = context.getSource().getPlayer();
+        ServerPlayer target = EntityArgument.getPlayer(context, "player");
+        if (source != null)
+            HealthMenuProvider.open(source, target.getUUID(), true);
+        return 1;
     }
 
     public static int listAllComponent(CommandContext<CommandSourceStack> context) {
