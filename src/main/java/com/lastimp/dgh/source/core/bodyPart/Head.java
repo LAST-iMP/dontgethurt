@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh.source.core.bodyPart;
 
+import com.lastimp.dgh.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
@@ -9,15 +10,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class Head extends AbstractVisibleBody {
+    private static final Collection<ResourceLocation> uniqueConditions = new ArrayList<>();
     private static List<ResourceLocation> HEAD_CONDITIONS;
+
     public Head() {
         super();
     }
@@ -26,20 +30,25 @@ public class Head extends AbstractVisibleBody {
         this();
     }
 
+    public static void addCondition(Collection<ResourceLocation> key) {
+        uniqueConditions.addAll(key);
+    }
+
     @Override
     public float getVitalityWeight() {
         return 1f;
     }
 
     @Override
+    public String getShortID() {
+        return "head";
+    }
+
+    @Override
     public List<ResourceLocation> getBodyConditions() {
         if (HEAD_CONDITIONS == null) {
             HEAD_CONDITIONS = new ArrayList<>(super.getBodyConditions());
-            HEAD_CONDITIONS.addAll(List.of(
-                    WITHDRAW,
-                    TRAUMATIC_SHOCK,
-                    BRAIN_DAMAGE
-            ));
+            HEAD_CONDITIONS.addAll(uniqueConditions);
         }
         return HEAD_CONDITIONS;
     }
@@ -69,6 +78,11 @@ public class Head extends AbstractVisibleBody {
         var loss = super.updateVitalityLost(health, player);
         loss += this.getVitalityWeight() * this.getConditionValue(BRAIN_DAMAGE);
         return loss;
+    }
+
+    @Override
+    public float fractThreshold () {
+        return Config.baseFractureThreshold + 0.2f;
     }
 
     private void handleWithdraw(PlayerHealthCapability health) {

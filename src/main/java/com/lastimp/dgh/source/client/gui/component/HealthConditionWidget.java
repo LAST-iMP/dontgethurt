@@ -13,7 +13,7 @@ import net.minecraft.util.Mth;
 public class HealthConditionWidget extends AbstractWidget {
     private final ResourceLocation texture;
     private final int iconSize = 12;
-    private final int fgColor;
+    private int fgColor;
     private float severity = 0f;
 
     public HealthConditionWidget(int width, int height, Component message, ResourceLocation texture, int fgColor) {
@@ -56,5 +56,9 @@ public class HealthConditionWidget extends AbstractWidget {
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
 
+    }
+
+    public void setPortionColor(int color) {
+        this.fgColor = color;
     }
 }

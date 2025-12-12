@@ -2,7 +2,6 @@
 package com.lastimp.dgh.source.item.tool;
 
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
@@ -10,7 +9,6 @@ import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -21,32 +19,11 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.bloodConditions;
 
 public class BloodScanner extends AbstractHealingItem {
-    private static List<ResourceLocation> BLOOD_SCANNER_CONDITIONS;
-
     public BloodScanner(Properties properties) {
         super(properties);
-    }
-
-    public static List<ResourceLocation> bloodScannerConditions() {
-        if (BLOOD_SCANNER_CONDITIONS == null) {
-            BLOOD_SCANNER_CONDITIONS = List.of(
-                    SEPSIS,
-                    HEMOTRANSFUSION,
-                    BLOOD_LOSS,
-                    BLOOD_PRESSURE,
-                    PH_LEVEL,
-                    IMMUNITY,
-
-                    OPIATE_OVERDOSE,
-                    OXYGEN
-            );
-        }
-        return BLOOD_SCANNER_CONDITIONS;
     }
 
     @Override
@@ -77,7 +54,7 @@ public class BloodScanner extends AbstractHealingItem {
     public static void scanHealth(Player player, PlayerHealthCapability health, String name) {
         PlayerBlood blood = (PlayerBlood) health.getComponent(BodyComponents.BLOOD);
         boolean hasAbnormal = false;
-        for (var condition : BloodScanner.bloodScannerConditions()) {
+        for (var condition : bloodConditions) {
             float value = blood.getConditionValue(condition);
             if (blood.abnormal(condition)) {
                 if (!hasAbnormal)

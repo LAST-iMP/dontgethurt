@@ -4,9 +4,12 @@ package com.lastimp.dgh.network;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.enums.OperationType;
+import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
+import com.lastimp.dgh.source.client.gui.menu.HealthMenu;
+import com.lastimp.dgh.source.core.player.PlayerDyingHandler;
 import com.lastimp.dgh.source.register.ModItems;
 import com.lastimp.dgh.source.client.gui.menuProvider.HealthCareBagMenuProvider;
 import com.lastimp.dgh.source.client.gui.menuProvider.HealthMenuProvider;
@@ -58,7 +61,7 @@ public class ServerPayloadHandler {
                                 SurgeryToolBagMenuProvider.open(player, slot);
                             break;
                         case GIVE_UP:
-                            player.kill();
+                            PlayerDyingHandler.setDead(player);
                             break;
                         case CALL_FOR_HELP:
                             player.getServer().getPlayerList().getPlayers().forEach(p -> {
@@ -82,13 +85,17 @@ public class ServerPayloadHandler {
     public static void handleHealingItemUsageData(final MyHealingItemUseData data, final IPayloadContext context) {
         context.enqueueWork(() -> {
                     ServerPlayer sourcePlayer = (ServerPlayer) context.player();
-                    UUID targetID = new UUID(data.id_most(), data.id_least());
-                    ServerPlayer target = (ServerPlayer) sourcePlayer.level().getPlayerByUUID(targetID);
-                    ItemStack stack = sourcePlayer.getInventory().getItem(data.slotNum());
-                    BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
-
-                    HealingHandler.useItemOn(stack, sourcePlayer, target, component);
-        })
+                    if (!(sourcePlayer.containerMenu instanceof HealthMenu healthMenu)) return;
+                    ItemStack stack = healthMenu.getStackBySlotNum(data.slotNum());
+                    if (stack.is(ModTags.MEDICAL_TOOLS_BAGS)) {
+                        healthMenu.openBag(stack);
+                    } else {
+                        UUID targetID = new UUID(data.id_most(), data.id_least());
+                        ServerPlayer target = (ServerPlayer) sourcePlayer.level().getPlayerByUUID(targetID);
+                        BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
+                        HealingHandler.useItemOn(stack, sourcePlayer, target, component);
+                    }
+                })
                 .exceptionally(e -> {
                     context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
                     return null;

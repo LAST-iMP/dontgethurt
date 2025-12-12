@@ -3,7 +3,6 @@ package com.lastimp.dgh.source.core.bodyPart;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -45,6 +44,11 @@ public class WholeBody extends AbstractBody {
     @Override
     public float getVitalityWeight() {
         return 1;
+    }
+
+    @Override
+    public String getShortID() {
+        return "whole_body";
     }
 
     @Override

@@ -21,6 +21,7 @@ public class Hemostat extends AbstractPartlyHealItem {
         return PlayerHealthCapability.getAndSet(target, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             if (!body.abnormal(SURGERY_INCISION)) return false;
+            if (body.abnormal(CLAMPED_BLEEDING)) return false;
 
             body.setConditionValue(CLAMPED_BLEEDING, BodyCondition.get(CLAMPED_BLEEDING).maxValue());
             return true;

@@ -7,6 +7,8 @@ import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
+import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
+import com.lastimp.dgh.source.client.gui.component.DynamicSlotItemHandler;
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.source.item.medicine.Bandages;
@@ -40,15 +42,23 @@ public class HealingHandler {
         if (!screenHealingCheck()) return;
 
         assert healthScreen.getSlotUnderMouse() != null;
-        int index = healthScreen.getSlotUnderMouse().getSlotIndex();
+        var slot = healthScreen.getSlotUnderMouse();
+        int index = slot.getSlotIndex();
+        if (slot instanceof DynamicSlotItemHandler)
+            index += 36;
         PacketDistributor.sendToServer(MyHealingItemUseData.getInstance(
                 healthScreen.getMenu().targetPlayer, index, healthScreen.getSelectedComponent()
         ));
+
+        ItemStack stack = GuiOpenWrapper.MINECRAFT.get().player.getInventory().getItem(index);
+        if (stack.is(ModTags.MEDICAL_TOOLS_BAGS) && event.getScreen() instanceof HealthScreen healthScreen) {
+            healthScreen.getMenu().openBag(stack);
+        }
         event.setCanceled(true);
     }
 
     private static boolean screenHealingCheck() {
-        Minecraft mc = Minecraft.getInstance();
+        Minecraft mc = GuiOpenWrapper.MINECRAFT.get();
         if (mc.level == null) return false;
         if (!mc.level.isClientSide()) return false;
         if (mc.player == null) return false;
@@ -61,6 +71,7 @@ public class HealingHandler {
         if (itemStack.isEmpty()) return false;
         if (itemStack.is(ModTags.MEDICINE)) return true;
         if (itemStack.is(ModTags.MEDICAL_TOOLS)) return true;
+        if (itemStack.is(ModTags.MEDICAL_TOOLS_BAGS)) return true;
 
         return false;
     }

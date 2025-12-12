@@ -2,51 +2,54 @@
 package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.Config;
+import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
-import static com.lastimp.dgh.api.enums.BodyComponents.*;
+import static com.lastimp.dgh.DontGetHurt.EPS;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public abstract class AbstractVisibleBody extends AbstractBody {
+    private static final Collection<ResourceLocation> uniqueConditions = new ArrayList<>();
     private static List<ResourceLocation> ANY_BODY_CONDITIONS;
     private float nextTickBleed;
+
+    private AttributeInstance armor;
+    private AttributeInstance armor_toughness;
+    private AttributeInstance knock_back_resist;
+
+    private ResourceLocation uuid_bone_stone;
+    private ResourceLocation uuid_bone_copper;
+    private ResourceLocation uuid_bone_iron;
+    private ResourceLocation uuid_bone_gold;
+    private ResourceLocation uuid_bone_dimond;
+    private ResourceLocation uuid_bone_netherite;
+
+    public static void addCondition(Collection<ResourceLocation> key) {
+        uniqueConditions.addAll(key);
+    }
 
     @Override
     public List<ResourceLocation> getBodyConditions() {
         if (ANY_BODY_CONDITIONS == null) {
-            ANY_BODY_CONDITIONS = List.of(
-                    SURGERY_INCISION,
-                    CLAMPED_BLEEDING,
-                    RETRACTED_SKIN,
-                    DRILLED_BONES,
-
-                    BURN,
-                    INTERNAL_INJURY,
-                    OPEN_WOUND,
-                    BLEED,
-                    INFECTION,
-                    FOREIGN_OBJECT,
-                    BANDAGED,
-                    BANDAGED_DIRTY,
-                    OINTMENT,
-
-                    FRACTURE,
-                    INTENSE_PAIN,
-                    PLASTER_CAST,
-
-                    BURN_RES,
-                    INTERNAL_RES,
-                    OPEN_WOUND_RES
-            );
+            ANY_BODY_CONDITIONS = new ArrayList<>(uniqueConditions);
         }
         return ANY_BODY_CONDITIONS;
     }
@@ -60,6 +63,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         handleFracture(health, player);
         handleSurgery(health);
         handleBleeding(health);
+        updateBoneEffect(player);
         return this;
     }
 
@@ -187,7 +191,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
             this.setConditionValue(INTENSE_PAIN, BodyCondition.get(INTENSE_PAIN).maxValue());
         }
 
-        if (this.abnormal(PLASTER_CAST))
+        if (this.abnormal(PLASTER_CAST) && this.boneCrafted() == null)
             this.healingHidden(FRACTURE, -BodyCondition.get(FRACTURE).healingSpeed() * DELTA);
     }
 
@@ -205,6 +209,147 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         if (this.abnormal(DRILLED_BONES))
             if (!health.safeSurgery())
                 head.injury(TRAUMATIC_SHOCK, 0.015f * DELTA);
+        if (this.abnormal(SAWED_BONES))
+            if (!health.safeSurgery())
+                head.injury(TRAUMATIC_SHOCK, 0.015f * DELTA);
+    }
+
+    private void handleBleeding(PlayerHealthCapability health) {
+        this.getCondition(BLEED).setValue(this.nextTickBleed);
+
+        PlayerBlood blood = (PlayerBlood) health.getComponent(BLOOD);
+        blood.addConditionValue(BLOOD_LOSS, this.nextTickBleed * DELTA * Config.bleed_volume_ratio * this.getVitalityWeight());
+    }
+
+    protected void updateBoneEffect(Player player) {
+        if (armor == null) armor = player.getAttribute(Attributes.ARMOR);
+        if (armor_toughness == null) armor_toughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
+        if (knock_back_resist == null) knock_back_resist = player.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
+
+        updateStoneBoneEffect();
+        updateCopperBoneEffect();
+        updateIronBoneEffect();
+        updateGoldBoneEffect();
+        updateDimondBoneEffect();
+        updateNetheriteBoneEffect();
+    }
+
+    private void updateStoneBoneEffect() {
+        if (uuid_bone_stone == null)
+            uuid_bone_stone = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_STONE);
+
+        if (this.getConditionHidden(BONE_STONE) > BodyCondition.get(BONE_STONE).maxValue() - EPS) {
+            if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_stone) == null)
+                knock_back_resist.addPermanentModifier(new AttributeModifier(
+                        uuid_bone_stone,
+                        0.15,
+                        AttributeModifier.Operation.ADD_VALUE
+                ));
+            if (armor != null && armor.getModifier(uuid_bone_stone) == null)
+                armor.addPermanentModifier(new AttributeModifier(
+                        uuid_bone_stone,
+                        0.5,
+                        AttributeModifier.Operation.ADD_VALUE
+                ));
+        } else {
+            if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_stone) != null)
+                knock_back_resist.removeModifier(uuid_bone_stone);
+            if (armor != null && armor.getModifier(uuid_bone_stone) != null)
+                armor.removeModifier(uuid_bone_stone);
+        }
+    }
+
+    private void updateCopperBoneEffect() {
+        if (uuid_bone_copper == null)
+            uuid_bone_copper = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_COPPER);
+
+        if (this.getConditionHidden(BONE_COPPER) > BodyCondition.get(BONE_COPPER).maxValue() - EPS) {
+            if (armor != null && armor.getModifier(uuid_bone_copper) == null)
+                armor.addPermanentModifier(new AttributeModifier(
+                        uuid_bone_copper,
+                        0.5,
+                        AttributeModifier.Operation.ADD_VALUE
+                ));
+            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_copper) == null)
+                armor_toughness.addPermanentModifier(new AttributeModifier(
+                        uuid_bone_copper,
+                        0.5,
+                        AttributeModifier.Operation.ADD_VALUE
+                ));
+        } else {
+            if (armor != null && armor.getModifier(uuid_bone_copper) != null)
+                armor.removeModifier(uuid_bone_copper);
+            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_copper) != null)
+                armor_toughness.removeModifier(uuid_bone_copper);
+        }
+    }
+
+    private void updateIronBoneEffect() {
+        if (uuid_bone_iron == null)
+            uuid_bone_iron = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_IRON);
+
+        if (this.getConditionHidden(BONE_IRON) > BodyCondition.get(BONE_IRON).maxValue() - EPS) {
+            if (armor != null && armor.getModifier(uuid_bone_iron) == null)
+                armor.addPermanentModifier(new AttributeModifier(
+                        uuid_bone_iron,
+                        1,
+                        AttributeModifier.Operation.ADD_VALUE
+                ));
+        } else {
+            if (armor != null && armor.getModifier(uuid_bone_iron) != null)
+                armor.removeModifier(uuid_bone_iron);
+        }
+    }
+
+    private void updateGoldBoneEffect() {
+        if (uuid_bone_gold == null)
+            uuid_bone_gold = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_GOLD);
+
+        if (this.getConditionHidden(BONE_GOLD) > BodyCondition.get(BONE_GOLD).maxValue() - EPS) {
+            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_gold) == null)
+                armor_toughness.addPermanentModifier(new AttributeModifier(
+                        uuid_bone_gold,
+                        2,
+                        AttributeModifier.Operation.ADD_VALUE
+                ));
+        } else {
+            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_gold) != null)
+                armor_toughness.removeModifier(uuid_bone_gold);
+        }
+    }
+
+    private void updateDimondBoneEffect() {
+        if (uuid_bone_dimond == null)
+            uuid_bone_dimond = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_DIMOND);
+
+        if (this.getConditionHidden(BONE_DIMOND) > BodyCondition.get(BONE_DIMOND).maxValue() - EPS) {
+            if (armor != null && armor.getModifier(uuid_bone_dimond) == null)
+                armor.addPermanentModifier(new AttributeModifier(
+                        uuid_bone_dimond,
+                        2,
+                        AttributeModifier.Operation.ADD_VALUE
+                ));
+        } else {
+            if (armor != null && armor.getModifier(uuid_bone_dimond) != null)
+                armor.removeModifier(uuid_bone_dimond);
+        }
+    }
+
+    private void updateNetheriteBoneEffect() {
+        if (uuid_bone_netherite == null)
+            uuid_bone_netherite = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
+
+        if (this.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS) {
+            if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_netherite) == null)
+                knock_back_resist.addPermanentModifier(new AttributeModifier(
+                        uuid_bone_netherite,
+                        0.25,
+                        AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                ));
+        } else {
+            if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_netherite) != null)
+                knock_back_resist.removeModifier(uuid_bone_netherite);
+        }
     }
 
     public boolean isBandaged() {
@@ -215,10 +360,34 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         return this.abnormal(BANDAGED_DIRTY);
     }
 
-    private void handleBleeding(PlayerHealthCapability health) {
-        this.getCondition(BLEED).setValue(this.nextTickBleed);
+    public float fractThreshold () {
+        float value = Config.baseFractureThreshold;
+        var bone = this.boneCrafted();
+        if (bone == BONE_COPPER) {
+            value += 0.1f;
+        } else if (bone == BONE_GOLD) {
+            value += 0.2f;
+        } else if (bone == BONE_IRON) {
+            value += 0.05f;
+        } else if (bone == BONE_NETHERITE) {
+            value += 0.1f;
+        }
+        return value;
+    }
 
-        PlayerBlood blood = (PlayerBlood) health.getComponent(BLOOD);
-        blood.addConditionValue(BLOOD_LOSS, this.nextTickBleed * DELTA * Config.bleed_volume_ratio);
+    public int fractCheckTimes () {
+        var bone = this.boneCrafted();
+        if (bone == BONE_WOOD) return -1;
+        if (bone == BONE_DIMOND) return 1;
+        if (bone == BONE_NETHERITE) return 1;
+        return 0;
+    }
+
+    public ResourceLocation boneCrafted() {
+        for (var key : BodyCondition.bones.keySet()) {
+            if (this.abnormalWithHidden(key))
+                return key;
+        }
+        return null;
     }
 }

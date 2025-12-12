@@ -23,13 +23,11 @@ public class OpenWoundHandler {
         handle(body, damageAmount);
         if (!(body instanceof AbstractVisibleBody visibleBody)) return;
 
-        float threshold = Config.baseFractureThreshold;
-        threshold += visibleBody instanceof Torso ? 0.1f : 0;
-        threshold += visibleBody instanceof Head ? 0.2f : 0;
+        float threshold = visibleBody.fractThreshold();
         float factor = (1.0f - threshold) / Config.baseFractureMaxProb;
 
         damageAmount += body.getCondition(OPEN_WOUND).getValue();
-        if (Utils.randomCheck(damageAmount, threshold, factor, 0.0f, Config.baseFractureMaxProb)) {
+        if (Utils.randomCheck(damageAmount, threshold, factor, 0.0f, Config.baseFractureMaxProb, visibleBody.fractCheckTimes())) {
             visibleBody.setConditionValue(FRACTURE, BodyCondition.get(FRACTURE).maxValue());
             if (visibleBody.abnormal(PLASTER_CAST))
                 visibleBody.setConditionValue(PLASTER_CAST, BodyCondition.get(PLASTER_CAST).defaultValue());

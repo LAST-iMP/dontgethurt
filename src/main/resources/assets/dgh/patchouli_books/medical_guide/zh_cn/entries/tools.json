@@ -118,12 +118,108 @@
       "title": "骨骼植入物",
       "item": "dgh:bone_implants",
       "scale": 1.2,
-      "text": "彻底治好你的骨头。",
+      "text": "彻底治好你的骨折。",
       "link_recipe": true
     },
     {
       "type": "crafting",
       "recipe": "dgh:bone_implants"
+    },
+    {
+      "type": "spotlight",
+      "title": "骨骼置换物",
+      "item": "dgh:bone_natural",
+      "scale": 1.2,
+      "text": "更新你的骨头！注意，四肢需要2根，胸部需要8根。置换不彻底等于彻底不置换！",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_wood"
+    },
+    {
+      "type": "spotlight",
+      "title": "木骨",
+      "item": "dgh:bone_wood",
+      "scale": 1.2,
+      "text": "每个手+10%挖掘速度，每个腿+10%移动速度，胸口+20%飞行速度。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_wood"
+    },
+    {
+      "type": "spotlight",
+      "title": "石骨",
+      "item": "dgh:bone_stone",
+      "scale": 1.2,
+      "text": "每个部位+15%击退抗性，+0.5护甲。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_stone"
+    },
+    {
+      "type": "spotlight",
+      "title": "铜骨",
+      "item": "dgh:bone_copper",
+      "scale": 1.2,
+      "text": "每个部位+0.5护甲，+1韧性，骨折阈值+0.1。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_copper"
+    },
+    {
+      "type": "spotlight",
+      "title": "铁骨",
+      "item": "dgh:bone_iron",
+      "scale": 1.2,
+      "text": "每个部位+1护甲，骨折阈值+0.05。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_iron"
+    },
+    {
+      "type": "spotlight",
+      "title": "金骨",
+      "item": "dgh:bone_gold",
+      "scale": 1.2,
+      "text": "每个部位+2韧性，骨折阈值+0.2。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_gold"
+    },
+    {
+      "type": "spotlight",
+      "title": "钻石骨",
+      "item": "dgh:bone_dimond",
+      "scale": 1.2,
+      "text": "每个部位+2护甲，骨折优势判定+1。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_dimond"
+    },
+    {
+      "type": "spotlight",
+      "title": "下界合金骨",
+      "item": "dgh:bone_dimond",
+      "scale": 1.2,
+      "text": "每个部位+2护甲，+1韧性，骨折阈值+0.1，骨折优势判定+1。每个手+10%攻击速度，每个腿+1跳跃提升(最多2，不叠加)，胸口+25%击退抗性。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_dimond"
     }
   ]
 }

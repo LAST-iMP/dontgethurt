@@ -5,12 +5,18 @@ import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.SURGERY_INCISION;
 
 public class Scalpel extends AbstractPartlyHealItem {
+    private static final Set<ResourceLocation> discover = new HashSet<>();
+
     public Scalpel(Properties properties) {
         super(properties);
     }
@@ -19,10 +25,20 @@ public class Scalpel extends AbstractPartlyHealItem {
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull ServerPlayer target, BodyComponents component) {
         return PlayerHealthCapability.getAndSet(target, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
+            if (body.abnormal(SURGERY_INCISION)) return false;
 
             body.setConditionValue(SURGERY_INCISION, BodyCondition.get(SURGERY_INCISION).maxValue());
+
+            for (var key : discover) {
+                body.setConditionValue(key, body.getConditionHidden(key) + body.getConditionValue(key));
+                body.setConditionHidden(key, BodyCondition.get(key).defaultValue());
+            }
             return true;
         });
+    }
+
+    public static void addDiscoverOnHeal(@NotNull ResourceLocation key) {
+        discover.add(key);
     }
 
 }

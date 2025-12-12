@@ -10,9 +10,9 @@
     }
   },
   "pattern": [
-    "bbb",
+    " b ",
     "bab",
-    "bbb"
+    " b "
   ],
   "result": {
     "count": 1,

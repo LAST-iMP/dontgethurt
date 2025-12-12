@@ -32,6 +32,8 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     public abstract float getVitalityWeight();
 
+    public abstract String getShortID();
+
     public ConditionState getCondition(ResourceLocation key) {
         return state.get(key);
     }
@@ -123,6 +125,12 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         var state = this.getCondition(key);
         var condition = BodyCondition.get(key);
         return condition.abnormal(state.getValue()) || condition.abnormal(state.getHiddenValue());
+    }
+
+    public boolean abnormalOnlyHidden(ResourceLocation key) {
+        var state = this.getCondition(key);
+        var condition = BodyCondition.get(key);
+        return condition.abnormal(state.getHiddenValue());
     }
 
     public boolean abnormal(ResourceLocation key) {

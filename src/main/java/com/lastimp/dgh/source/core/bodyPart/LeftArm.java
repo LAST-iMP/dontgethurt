@@ -3,13 +3,18 @@ package com.lastimp.dgh.source.core.bodyPart;
 
 import com.lastimp.dgh.api.bodyPart.AbstractArm;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.world.entity.player.Player;
 
 public class LeftArm extends AbstractArm {
+
     public LeftArm() {
         super();
+    }
+
+    @Override
+    public String getShortID() {
+        return "left_arm";
     }
 
     public LeftArm(Void unused) {

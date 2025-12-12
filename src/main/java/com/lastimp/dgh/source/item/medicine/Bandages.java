@@ -23,6 +23,7 @@ public class Bandages extends AbstractPartlyHealItem {
         return PlayerHealthCapability.getAndSet(target, health -> {
             AbstractBody body = health.getComponent(component);
             float currCondition = body.getConditionValue(BANDAGED);
+            if (body.abnormal(SURGERY_INCISION)) return false;
             if (currCondition > 0.75f) return false;
 
             body.healing(BANDAGED, 0.5f);

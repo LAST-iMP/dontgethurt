@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh;
 
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.register.*;
 import com.lastimp.dgh.source.client.gui.screen.BagScreen;
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
@@ -42,6 +43,7 @@ public class DontGetHurt
 
         NeoForge.EVENT_BUS.register(this);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        BodyCondition.init();
     }
 
 
