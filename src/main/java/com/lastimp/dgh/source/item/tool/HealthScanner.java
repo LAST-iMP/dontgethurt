@@ -14,6 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
@@ -28,73 +30,24 @@ public class HealthScanner extends AbstractHealingItem {
 
     public static List<ResourceLocation> healthScannerConditions() {
         if (HEALTH_SCANNER_CONDITIONS == null) {
-            HEALTH_SCANNER_CONDITIONS = List.of(
-                    SURGERY_INCISION,
-                    CLAMPED_BLEEDING,
-                    RETRACTED_SKIN,
-                    DRILLED_BONES,
-
-                    BURN,
-                    INTERNAL_INJURY,
-                    OPEN_WOUND,
-                    BLEED,
-                    INFECTION,
-                    FOREIGN_OBJECT,
-
-                    BANDAGED,
-                    BANDAGED_DIRTY,
-                    OINTMENT,
-
-                    DISLOCATION,
-                    FRACTURE,
-                    INTENSE_PAIN,
-                    PLASTER_CAST,
-
-                    ANALGESIA,
-                    RESPIRATORY_ARREST,
-
-                    WITHDRAW,
-                    TRAUMATIC_SHOCK,
-                    BRAIN_DAMAGE,
-
-                    BURN_RES,
-                    INTERNAL_RES,
-                    OPEN_WOUND_RES
-            );
+            HEALTH_SCANNER_CONDITIONS = new LinkedList<>();
+            HEALTH_SCANNER_CONDITIONS.addAll(injuryConditions);
+            HEALTH_SCANNER_CONDITIONS.addAll(surgeryConditions);
+            HEALTH_SCANNER_CONDITIONS.addAll(painConditions);
+            HEALTH_SCANNER_CONDITIONS.addAll(comfortConditions);
+            HEALTH_SCANNER_CONDITIONS.addAll(resistConditions);
         }
         return HEALTH_SCANNER_CONDITIONS;
     }
 
     public static List<ResourceLocation> eyesightConditions() {
+        healthScannerConditions();
         if (EYESIGHT_CONDITIONS == null) {
-            EYESIGHT_CONDITIONS = List.of(
-                    SURGERY_INCISION,
-                    CLAMPED_BLEEDING,
-                    RETRACTED_SKIN,
-                    DRILLED_BONES,
-
-                    BURN,
-                    OPEN_WOUND,
-                    BLEED,
-                    INFECTION,
-
-                    BANDAGED,
-                    BANDAGED_DIRTY,
-                    OINTMENT,
-
-                    DISLOCATION,
-                    INTENSE_PAIN,
-                    PLASTER_CAST,
-
-                    ANALGESIA,
-                    RESPIRATORY_ARREST,
-
-                    TRAUMATIC_SHOCK,
-
-                    BURN_RES,
-                    INTERNAL_RES,
-                    OPEN_WOUND_RES
-            );
+            EYESIGHT_CONDITIONS = new LinkedList<>();
+            for (var condition : HEALTH_SCANNER_CONDITIONS) {
+                if (eyeVisible.contains(condition))
+                    EYESIGHT_CONDITIONS.add(condition);
+            }
         }
         return EYESIGHT_CONDITIONS;
     }

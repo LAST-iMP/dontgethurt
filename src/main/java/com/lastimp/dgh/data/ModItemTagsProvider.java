@@ -9,16 +9,17 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModTagsProvider extends TagsProvider<Item> {
+public class ModItemTagsProvider extends TagsProvider<Item> {
     public static final ResourceKey<Item> SHEARS = ResourceKey.create(Registries.ITEM, Common.ResourceLocation("minecraft", "shears"));
 
-    protected ModTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
+    protected ModItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, Registries.ITEM, lookupProvider, modId, existingFileHelper);
     }
 
@@ -44,7 +45,23 @@ public class ModTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.RETRACTOR.getKey())
                 .add(ModItems.SURGICAL_DRILL.getKey())
                 .add(ModItems.TWEEZER.getKey())
-                .add(ModItems.BONE_IMPLANTS.getKey());
+                .add(ModItems.BONE_IMPLANTS.getKey())
+                .add(ModItems.BONE_IMPLANTS_WOOD.getKey())
+                .add(ModItems.BONE_IMPLANTS_STONE.getKey())
+                .add(ModItems.BONE_IMPLANTS_COPPER.getKey())
+                .add(ModItems.BONE_IMPLANTS_IRON.getKey())
+                .add(ModItems.BONE_IMPLANTS_GOLD.getKey())
+                .add(ModItems.BONE_IMPLANTS_DIMOND.getKey())
+                .add(ModItems.BONE_IMPLANTS_NETHERITE.getKey())
+                .add(ModItems.SURGERY_SAW.getKey())
+                .add(ModItems.BONE_NATURAL.getKey())
+                .add(ModItems.BONE_WOOD.getKey())
+                .add(ModItems.BONE_STONE.getKey())
+                .add(ModItems.BONE_COPPER.getKey())
+                .add(ModItems.BONE_IRON.getKey())
+                .add(ModItems.BONE_GOLD.getKey())
+                .add(ModItems.BONE_DIMOND.getKey())
+                .add(ModItems.BONE_NETHERITE.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_BASIC)
                 .add(SHEARS)
@@ -58,10 +75,33 @@ public class ModTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.RETRACTOR.getKey())
                 .add(ModItems.SURGICAL_DRILL.getKey())
                 .add(ModItems.TWEEZER.getKey())
-                .add(ModItems.BONE_IMPLANTS.getKey());
+                .add(ModItems.BONE_IMPLANTS.getKey())
+                .add(ModItems.BONE_IMPLANTS_WOOD.getKey())
+                .add(ModItems.BONE_IMPLANTS_STONE.getKey())
+                .add(ModItems.BONE_IMPLANTS_COPPER.getKey())
+                .add(ModItems.BONE_IMPLANTS_IRON.getKey())
+                .add(ModItems.BONE_IMPLANTS_GOLD.getKey())
+                .add(ModItems.BONE_IMPLANTS_DIMOND.getKey())
+                .add(ModItems.BONE_IMPLANTS_NETHERITE.getKey())
+                .add(ModItems.SURGERY_SAW.getKey())
+                .add(ModItems.BONE_NATURAL.getKey())
+                .add(ModItems.BONE_WOOD.getKey())
+                .add(ModItems.BONE_STONE.getKey())
+                .add(ModItems.BONE_COPPER.getKey())
+                .add(ModItems.BONE_IRON.getKey())
+                .add(ModItems.BONE_GOLD.getKey())
+                .add(ModItems.BONE_DIMOND.getKey())
+                .add(ModItems.BONE_NETHERITE.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_SHEARS)
                 .add(SHEARS)
                 .add(ModItems.SCALPEL.getKey());
+
+        this.tag(ModTags.MEDICAL_TOOLS_BAGS)
+                .add(ModItems.HEALTH_CARE_BAG.getKey())
+                .add(ModItems.SURGERY_TOOL_BAG.getKey());
+
+        this.tag(ItemTags.BEDS)
+                .add(ModItems.OPERATING_BED_BLOCK_ITEM.getKey());
     }
 }

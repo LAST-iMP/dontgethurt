@@ -20,6 +20,7 @@ public class Retractor extends AbstractPartlyHealItem {
         return PlayerHealthCapability.getAndSet(target, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             if (!body.abnormal(CLAMPED_BLEEDING)) return false;
+            if (body.abnormal(RETRACTED_SKIN)) return false;
 
             body.setConditionValue(RETRACTED_SKIN, BodyCondition.get(RETRACTED_SKIN).maxValue());
             return true;

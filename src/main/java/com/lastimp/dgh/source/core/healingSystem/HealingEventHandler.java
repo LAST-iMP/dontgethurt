@@ -5,6 +5,7 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.ConditionState;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
+import com.lastimp.dgh.source.core.player.PlayerDyingHandler;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.network.chat.Component;
@@ -66,7 +67,7 @@ public class HealingEventHandler {
     private static void updatePlayerHealth(PlayerHealthCapability health, ServerPlayer player) {
         float maxHealth = player.getMaxHealth() * health.playerVitality();
         if (player.isDeadOrDying()) {
-            player.setHealth(0);
+            PlayerDyingHandler.setDead(player);
         } else if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative()) {
             player.setHealth(player.getMaxHealth());
         } else if (maxHealth > 0) {
@@ -75,7 +76,7 @@ public class HealingEventHandler {
         } else if (maxHealth > -player.getMaxHealth() && player.getServer().getPlayerList().getPlayers().size() > 1) {
             player.setHealth(0.01f);
         } else {
-            player.setHealth(0);
+            PlayerDyingHandler.setDead(player);
         }
     }
 
@@ -110,7 +111,7 @@ public class HealingEventHandler {
             player.gameEvent(GameEvent.ITEM_INTERACT_FINISH);
         }
 
-        HealingHandler.handleValindaHealing(player, player.getMaxHealth() * 3);
+        HealingHandler.handleValindaHealing(player, player.getMaxHealth());
         player.setHealth(1);
         player.removeEffectsCuredBy(net.neoforged.neoforge.common.EffectCures.PROTECTED_BY_TOTEM);
         player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));

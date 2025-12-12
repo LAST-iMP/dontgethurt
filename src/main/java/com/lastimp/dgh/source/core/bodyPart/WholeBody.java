@@ -48,6 +48,11 @@ public class WholeBody extends AbstractBody {
     }
 
     @Override
+    public String getShortID() {
+        return "00D994B4-EC51-4AE5-80D6";
+    }
+
+    @Override
     public AbstractBody update(PlayerHealthCapability health, Player player) {
         for (BodyComponents components : this.components.keySet()) {
             this.updateComponent(components, health, player);

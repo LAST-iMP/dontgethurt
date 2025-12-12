@@ -4,6 +4,7 @@ package com.lastimp.dgh.source.core.damageSystem;
 import com.lastimp.dgh.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.api.tags.ModDamageType;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
@@ -32,6 +34,7 @@ public class InjuryEventHandler {
         float absorption = player.getAbsorptionAmount();
         DamageSource source = event.getSource();
 
+        if (source.is(ModDamageType.FINAL_HEALTH_DAMAGE)) return;
         if (absorption >= damageAmount) return;
         else if (absorption > 0) {
             damageAmount = damageAmount - absorption;
@@ -39,6 +42,7 @@ public class InjuryEventHandler {
         }
 
         damageAmount /= player.getMaxHealth() * Config.body_life_factor;
+        damageAmount /= PlayerHealthCapability.isDying(player)? 10f : 1f;
 
         if (source.is(DamageTypeTags.IS_FALL)) {
             handleFalling(damageAmount, player, event);

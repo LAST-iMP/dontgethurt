@@ -4,7 +4,6 @@ import com.lastimp.dgh.DontGetHurt;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -42,7 +41,17 @@ public class ModDataGeneratorHandler {
 
         event.getGenerator().addProvider(
                 event.includeClient(),
-                (DataProvider.Factory<ModTagsProvider>) output -> new ModTagsProvider(output, lp, DontGetHurt.MODID, efh)
+                (DataProvider.Factory<ModItemTagsProvider>) output -> new ModItemTagsProvider(output, lp, DontGetHurt.MODID, efh)
+        );
+
+        event.getGenerator().addProvider(
+                event.includeClient(),
+                (DataProvider.Factory<ModBlockTagsProvider>) output -> new ModBlockTagsProvider(output, lp, DontGetHurt.MODID, efh)
+        );
+
+        event.getGenerator().addProvider(
+                event.includeClient(),
+                (DataProvider.Factory<ModDamageTypeTagsProvider>) output -> new ModDamageTypeTagsProvider(output, lp, DontGetHurt.MODID, efh)
         );
 
         event.getGenerator().addProvider(

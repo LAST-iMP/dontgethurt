@@ -8,6 +8,8 @@ import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
+import static com.lastimp.dgh.api.tags.ModDamageType.*;
+
 public class ModLanguageProvider extends LanguageProvider {
     public ModLanguageProvider(PackOutput output, String modid, String locale) {
         super(output, modid, locale);
@@ -39,6 +41,7 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(BodyCondition.CLAMPED_BLEEDING.toString(), "夹闭止血");
         this.add(BodyCondition.RETRACTED_SKIN.toString(), "皮肤牵开");
         this.add(BodyCondition.DRILLED_BONES.toString(), "骨骼钻孔");
+        this.add(BodyCondition.SAWED_BONES.toString(), "骨锯开");
 
         this.add(BodyCondition.DISLOCATION.toString(), "脱臼");
         this.add(BodyCondition.PLASTER_CAST.toString(), "石膏固定");
@@ -59,6 +62,13 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(BodyCondition.OPIATE_OVERDOSE.toString(), "阿片中毒");
         this.add(BodyCondition.OPIATE_ADDICTED.toString(), "阿片成瘾");
         this.add(BodyCondition.OXYGEN.toString(), "低血氧");
+        this.add(BodyCondition.BONE_WOOD.toString(), "木骨植入");
+        this.add(BodyCondition.BONE_STONE.toString(), "石骨植入");
+        this.add(BodyCondition.BONE_COPPER.toString(), "铜骨植入");
+        this.add(BodyCondition.BONE_IRON.toString(), "铁骨植入");
+        this.add(BodyCondition.BONE_GOLD.toString(), "金骨植入");
+        this.add(BodyCondition.BONE_DIMOND.toString(), "钻骨植入");
+        this.add(BodyCondition.BONE_NETHERITE.toString(), "下界骨植入");
 
 
         this.add("gui.dgh.health_gui.title", "健康状态");
@@ -86,6 +96,22 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.SURGICAL_DRILL.get(), "手术钻");
         this.add(ModItems.TWEEZER.get(), "镊子");
         this.add(ModItems.BONE_IMPLANTS.get(), "骨骼植入物");
+        this.add(ModItems.BONE_IMPLANTS_WOOD.get(), "木骨植入物");
+        this.add(ModItems.BONE_IMPLANTS_STONE.get(), "石骨植入物");
+        this.add(ModItems.BONE_IMPLANTS_COPPER.get(), "铜骨植入物");
+        this.add(ModItems.BONE_IMPLANTS_IRON.get(), "铁骨植入物");
+        this.add(ModItems.BONE_IMPLANTS_GOLD.get(), "金骨植入物");
+        this.add(ModItems.BONE_IMPLANTS_DIMOND.get(), "钻骨植入物");
+        this.add(ModItems.BONE_IMPLANTS_NETHERITE.get(), " ");
+        this.add(ModItems.SURGERY_SAW.get(), "手术锯");
+        this.add(ModItems.BONE_NATURAL.get(), "自然骨");
+        this.add(ModItems.BONE_WOOD.get(), "木骨");
+        this.add(ModItems.BONE_STONE.get(), "石骨");
+        this.add(ModItems.BONE_COPPER.get(), "铜骨");
+        this.add(ModItems.BONE_IRON.get(), "铁骨");
+        this.add(ModItems.BONE_GOLD.get(), "金骨");
+        this.add(ModItems.BONE_DIMOND.get(), "钻骨");
+        this.add(ModItems.BONE_NETHERITE.get(), "下界合金骨");
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");
         this.add(ModEffects.INTENSE_PAIN_EFFECT.get(), "剧痛");
@@ -96,5 +122,13 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModEffects.PALE_SKIN.get(), "皮肤苍白");
         this.add(ModEffects.HARD_BREATH.get(), "呼吸困难");
 //        this.add(ModEffects.INCREASED_HEARTRATE.get(), "心跳加快");
+
+        this.add("death.attack."+OPEN_WOUND_DAMAGE.location(), "%1$s 的身体被撕碎了");
+        this.add("death.attack."+INTERNAL_INJURY_DAMAGE.location(), "%1$s 体内一塌糊涂");
+        this.add("death.attack."+BURN_DAMAGE.location(), "%1$s 变成了黑碳");
+        this.add("death.attack."+BRAIN_DAMAGE.location(), "%1$s 变成了植物人");
+        this.add("death.attack."+BLEED_DAMAGE.location(), "%1$s 失血过多");
+        this.add("death.attack."+SURGERY_DAMAGE.location(), "%1$s 死于手术事故");
+        this.add("death.attack."+CANT_BREATH_DAMAGE.location(), "%1$s 无法呼吸");
     }
 }

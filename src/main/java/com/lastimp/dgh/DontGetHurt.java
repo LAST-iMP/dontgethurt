@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh;
 
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.register.*;
 import com.lastimp.dgh.source.client.gui.screen.BagScreen;
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
@@ -26,12 +27,14 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 public class DontGetHurt
 {
     public static final String MODID = "dgh";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     public static final float DELTA = 0.05f;
     public static final float EPS = 0.0001f;
 
     public DontGetHurt(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
+        NeoForge.EVENT_BUS.register(this);
+        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
@@ -40,8 +43,7 @@ public class DontGetHurt
         ModCapabilities.register(modEventBus);
         ModEffects.register(modEventBus);
 
-        NeoForge.EVENT_BUS.register(this);
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        BodyCondition.init();
     }
 
 

@@ -2,6 +2,7 @@
 package com.lastimp.dgh.source.client.gui.screen;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.client.gui.component.HealthComponentWidget;
@@ -22,10 +23,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.HashMap;
 
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.OperationType.HEALTH_SCANN;
 import static com.lastimp.dgh.source.client.gui.component.HealthComponentWidget.*;
@@ -33,8 +36,8 @@ import static com.lastimp.dgh.source.client.gui.component.HealthComponentWidget.
 public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private static final ResourceLocation HUD_BACKGROUND = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
 
-    private static final int PANEL_WIDTH = 238;   // 面板宽度
-    private static final int PANEL_HEIGHT = 214;  // 面板高度
+    private static final int PANEL_WIDTH = 256;   // 面板宽度
+    private static final int PANEL_HEIGHT = 215;  // 面板高度
 
     private final HashMap<BodyComponents, HealthComponentWidget> componentWidgets = new HashMap<>();
     private final HashMap<ResourceLocation, HealthConditionWidget> conditionWidgets = new HashMap<>();
@@ -140,6 +143,11 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
             HealthConditionWidget widget = this.conditionWidgets.get(condition);
             if (!this.visibilityCheck(bodyPart, condition)) continue;
             if (widgetCount > 12) break;
+            if (condition == FRACTURE && (bodyPart instanceof AbstractVisibleBody visibleBody)) {
+                var bone = visibleBody.boneCrafted();
+                int color = bone == null ? BodyCondition.get(FRACTURE).color() : BodyCondition.get(bone).color();
+                widget.setPortionColor(color);
+            }
 
             widget.setPosition(
                     this.leftPos + 85 + (widgetCount % 2) * 72,

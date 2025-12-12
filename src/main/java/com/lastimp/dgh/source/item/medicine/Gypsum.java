@@ -23,6 +23,7 @@ public class Gypsum extends AbstractPartlyHealItem {
             AbstractExtremities body = (AbstractExtremities) health.getComponent(component);
             if (body.abnormal(PLASTER_CAST)) return false;
             if (!body.isBandaged()) return false;
+            if (body.boneCrafted() != null) return false;
 
             body.healing(PLASTER_CAST, BodyCondition.get(PLASTER_CAST).maxValue());
             return true;

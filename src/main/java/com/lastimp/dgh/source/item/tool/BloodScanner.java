@@ -26,27 +26,8 @@ import java.util.List;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class BloodScanner extends AbstractHealingItem {
-    private static List<ResourceLocation> BLOOD_SCANNER_CONDITIONS;
-
     public BloodScanner(Properties properties) {
         super(properties);
-    }
-
-    public static List<ResourceLocation> bloodScannerConditions() {
-        if (BLOOD_SCANNER_CONDITIONS == null) {
-            BLOOD_SCANNER_CONDITIONS = List.of(
-                    SEPSIS,
-                    HEMOTRANSFUSION,
-                    BLOOD_LOSS,
-                    BLOOD_PRESSURE,
-                    PH_LEVEL,
-                    IMMUNITY,
-
-                    OPIATE_OVERDOSE,
-                    OXYGEN
-            );
-        }
-        return BLOOD_SCANNER_CONDITIONS;
     }
 
     @Override
@@ -77,7 +58,7 @@ public class BloodScanner extends AbstractHealingItem {
     public static void scanHealth(Player player, PlayerHealthCapability health, String name) {
         PlayerBlood blood = (PlayerBlood) health.getComponent(BodyComponents.BLOOD);
         boolean hasAbnormal = false;
-        for (var condition : BloodScanner.bloodScannerConditions()) {
+        for (var condition : bloodConditions) {
             float value = blood.getConditionValue(condition);
             if (blood.abnormal(condition)) {
                 if (!hasAbnormal)

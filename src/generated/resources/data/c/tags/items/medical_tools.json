@@ -11,6 +11,22 @@
     "dgh:retractor",
     "dgh:surgical_drill",
     "dgh:tweezer",
-    "dgh:bone_implants"
+    "dgh:bone_implants",
+    "dgh:bone_implants_wood",
+    "dgh:bone_implants_stone",
+    "dgh:bone_implants_copper",
+    "dgh:bone_implants_iron",
+    "dgh:bone_implants_gold",
+    "dgh:bone_implants_dimond",
+    "dgh:bone_implants_netherite",
+    "dgh:surgery_saw",
+    "dgh:bone_natural",
+    "dgh:bone_wood",
+    "dgh:bone_stone",
+    "dgh:bone_copper",
+    "dgh:bone_iron",
+    "dgh:bone_gold",
+    "dgh:bone_dimond",
+    "dgh:bone_netherite"
   ]
 }

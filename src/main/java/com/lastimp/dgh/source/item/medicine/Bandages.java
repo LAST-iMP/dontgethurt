@@ -6,6 +6,7 @@ import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -23,11 +24,11 @@ public class Bandages extends AbstractPartlyHealItem {
         return PlayerHealthCapability.getAndSet(target, health -> {
             AbstractBody body = health.getComponent(component);
             float currCondition = body.getConditionValue(BANDAGED);
+            if (body.abnormal(SURGERY_INCISION)) return false;
             if (currCondition > 0.75f) return false;
 
             body.healing(BANDAGED, 0.5f);
             body.setConditionValue(BANDAGED_DIRTY, BodyCondition.get(BANDAGED_DIRTY).defaultValue());
-
             this.coverCondition(body, BURN);
             this.coverCondition(body, OPEN_WOUND);
             this.coverCondition(body, FRACTURE);

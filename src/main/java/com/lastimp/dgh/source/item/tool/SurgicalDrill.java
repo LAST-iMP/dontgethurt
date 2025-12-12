@@ -20,6 +20,7 @@ public class SurgicalDrill extends AbstractPartlyHealItem {
         return PlayerHealthCapability.getAndSet(target, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             if (!body.abnormal(RETRACTED_SKIN)) return false;
+            if (body.abnormal(DRILLED_BONES)) return false;
 
             body.setConditionValue(DRILLED_BONES, BodyCondition.get(DRILLED_BONES).maxValue());
             return true;
