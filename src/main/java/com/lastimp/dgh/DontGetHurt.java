@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh;
 
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.client.gui.screen.BagScreen;
 import com.lastimp.dgh.source.register.*;
@@ -40,6 +41,7 @@ public class DontGetHurt
 
         MinecraftForge.EVENT_BUS.register(this);
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        BodyCondition.init();
     }
 
 

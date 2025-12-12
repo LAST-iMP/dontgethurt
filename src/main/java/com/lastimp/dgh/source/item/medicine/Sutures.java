@@ -41,7 +41,7 @@ public class Sutures extends AbstractPartlyHealItem {
 
             if (success) {
                 for (var key : cover) {
-                    body.setConditionHidden(key, body.getConditionValue(key));
+                    body.setConditionHidden(key, body.getConditionValue(key) + body.getConditionHidden(key));
                     body.setConditionValue(key, BodyCondition.get(key).defaultValue());
                 }
             }
