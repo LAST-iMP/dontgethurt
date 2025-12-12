@@ -21,6 +21,7 @@ public abstract class InternalInjuryHandler {
     public static void handleBluntTrauma(AbstractBody body, float damageAmount) {
         handle(body, damageAmount);
         if (!(body instanceof AbstractVisibleBody visibleBody)) return;
+        if (body.abnormal(SAWED_BONES)) return;
 
         float threshold = visibleBody.fractThreshold();
         float factor = (1.0f - threshold) / Config.baseFractureMaxProb;
@@ -43,6 +44,7 @@ public abstract class InternalInjuryHandler {
     public static void handleExplosion(AbstractBody body, float damageAmount) {
         handle(body, damageAmount);
         if (!(body instanceof AbstractVisibleBody visibleBody)) return;
+        if (body.abnormal(SAWED_BONES)) return;
 
         float factor = 1.0f - Config.baseFractureThreshold;
         damageAmount += body.getCondition(INTERNAL_INJURY).getValue();

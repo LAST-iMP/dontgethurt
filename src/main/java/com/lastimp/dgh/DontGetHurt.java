@@ -42,8 +42,6 @@ public class DontGetHurt
         ModMenus.register(modEventBus);
         ModCapabilities.register(modEventBus);
         ModEffects.register(modEventBus);
-
-        BodyCondition.init();
     }
 
 
