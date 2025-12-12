@@ -29,7 +29,22 @@ public class DontGetHurt
     public static final float DELTA = 0.05f;
     public static final float EPS = 0.0001f;
 
+    public DontGetHurt() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus.addListener(this::commonSetup);
+
+        ModBlocks.register(modEventBus);
+        ModItems.register(modEventBus);
+        ModCreativeModTabs.register(modEventBus);
+        ModMenus.register(modEventBus);
+        ModEffects.register(modEventBus);
+
+        MinecraftForge.EVENT_BUS.register(this);
+        FMLJavaModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+    }
+
     public DontGetHurt(FMLJavaModLoadingContext context) {
+        FMLJavaModLoadingContext.get().getModEventBus();
         IEventBus modEventBus = context.getModEventBus();
         modEventBus.addListener(this::commonSetup);
 
