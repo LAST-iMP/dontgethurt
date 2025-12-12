@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh;
 
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -113,6 +114,7 @@ public class Config {
         baseFractureThreshold = (float) (double) BASE_FRACTURE_THRESHOLD.get();
         baseDislocationMaxProb = (float) (double) BASE_DISLOCATION_MAX_PROB.get();
         baseFractureMaxProb = (float) (double) BASE_FRACTURE_MAX_PROB.get();
+        BodyCondition.init();
     }
 
 }

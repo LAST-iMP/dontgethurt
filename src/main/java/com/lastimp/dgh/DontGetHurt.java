@@ -41,7 +41,6 @@ public class DontGetHurt
 
         MinecraftForge.EVENT_BUS.register(this);
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-        BodyCondition.init();
     }
 
 
