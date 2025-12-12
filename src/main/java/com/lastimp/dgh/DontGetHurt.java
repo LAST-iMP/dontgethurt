@@ -44,7 +44,6 @@ public class DontGetHurt
     }
 
     public DontGetHurt(FMLJavaModLoadingContext context) {
-        FMLJavaModLoadingContext.get().getModEventBus();
         IEventBus modEventBus = context.getModEventBus();
         modEventBus.addListener(this::commonSetup);
 
