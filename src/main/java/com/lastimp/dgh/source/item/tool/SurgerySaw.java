@@ -67,14 +67,15 @@ public class SurgerySaw extends AbstractPartlyHealItem {
     }
 
     public static void sawExcept(ServerPlayer source, AbstractBody body, ResourceLocation exception, int maxAmount) {
+        int boneReturn = (int) (maxAmount * (1.0 - Math.min(1.0, body.getConditionValue(FRACTURE))));
         for (var key : BodyCondition.bones.keySet()) {
             if (body.abnormal(key) && key != exception) {
-                drop(BodyCondition.bones.get(key).get(), source, (int)(maxAmount * body.getConditionValue(key)));
+                drop(BodyCondition.bones.get(key).get(), source, (int)(boneReturn * body.getConditionValue(key)));
                 body.setConditionValue(key, BodyCondition.get(key).defaultValue());
             }
         }
         if (exception != null) {
-            drop(ModItems.BONE_NATURAL.get(), source, (int)(maxAmount * (1.0f - body.getConditionValue(SAWED_BONES))));
+            drop(ModItems.BONE_NATURAL.get(), source, (int)(boneReturn * (1.0f - body.getConditionValue(SAWED_BONES))));
             body.setConditionValue(SAWED_BONES, BodyCondition.get(SAWED_BONES).maxValue());
         }
     }

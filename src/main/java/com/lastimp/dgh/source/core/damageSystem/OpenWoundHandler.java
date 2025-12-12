@@ -22,6 +22,7 @@ public class OpenWoundHandler {
     public static void handleEntityAttack(AbstractBody body, float damageAmount) {
         handle(body, damageAmount);
         if (!(body instanceof AbstractVisibleBody visibleBody)) return;
+        if (body.abnormal(SAWED_BONES)) return;
 
         float threshold = visibleBody.fractThreshold();
         float factor = (1.0f - threshold) / Config.baseFractureMaxProb;
@@ -37,6 +38,7 @@ public class OpenWoundHandler {
     public static void handleExplosion(AbstractBody body, float damageAmount) {
         handle(body, damageAmount);
         if (!(body instanceof AbstractExtremities visibleBody)) return;
+        if (body.abnormal(SAWED_BONES)) return;
 
         float factor = 1.0f - Config.baseFractureThreshold;
         damageAmount += body.getCondition(OPEN_WOUND).getValue();

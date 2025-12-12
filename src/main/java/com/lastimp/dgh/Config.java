@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh;
 
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -115,6 +116,7 @@ public class Config {
         baseFractureThreshold = (float) BASE_FRACTURE_THRESHOLD.getAsDouble();
         baseDislocationMaxProb = (float) BASE_DISLOCATION_MAX_PROB.getAsDouble();
         baseFractureMaxProb = (float) BASE_FRACTURE_MAX_PROB.getAsDouble();
+        BodyCondition.init();
     }
 
 }

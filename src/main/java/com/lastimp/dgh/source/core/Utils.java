@@ -15,7 +15,7 @@ public abstract class Utils {
         for (int i = 1; i < weight.length; i++) {
             if (weight[i] > max_value) {
                 max = i;
-                max_value = max;
+                max_value = weight[i];
             }
         }
         return max;

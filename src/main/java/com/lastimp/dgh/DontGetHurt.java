@@ -43,7 +43,6 @@ public class DontGetHurt
 
         NeoForge.EVENT_BUS.register(this);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-        BodyCondition.init();
     }
 
 
