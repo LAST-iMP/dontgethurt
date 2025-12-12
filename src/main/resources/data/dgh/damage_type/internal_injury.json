@@ -1,0 +1,7 @@
+{
+  "message_id": "dgh:internal_injury",
+  "scaling": "never",
+  "exhaustion": 0.0,
+  "effects": "hurt",
+  "death_message_type": "default"
+}

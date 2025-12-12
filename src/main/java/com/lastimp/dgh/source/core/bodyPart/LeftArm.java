@@ -7,8 +7,15 @@ import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.world.entity.player.Player;
 
 public class LeftArm extends AbstractArm {
+    public static final String ID = "48E34DED-3A12-4D68-8A68";
+
     public LeftArm() {
         super();
+    }
+
+    @Override
+    public String getShortID() {
+        return ID;
     }
 
     public LeftArm(Void unused) {

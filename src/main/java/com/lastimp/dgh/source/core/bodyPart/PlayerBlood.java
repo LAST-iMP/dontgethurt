@@ -10,6 +10,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
@@ -19,6 +22,7 @@ import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class PlayerBlood extends AbstractBody {
+    private static final Collection<ResourceLocation> uniqueConditions = new ArrayList<>();
     private static List<ResourceLocation> BLOOD_CONDITIONS;
 
     public PlayerBlood() {
@@ -29,21 +33,14 @@ public class PlayerBlood extends AbstractBody {
         this();
     }
 
+    public static void addCondition(Collection<ResourceLocation> key) {
+        uniqueConditions.addAll(key);
+    }
+
     @Override
     public List<ResourceLocation> getBodyConditions() {
         if (BLOOD_CONDITIONS == null) {
-            BLOOD_CONDITIONS = List.of(
-                    SEPSIS,
-                    HEMOTRANSFUSION,
-                    BLOOD_LOSS,
-                    BLOOD_PRESSURE,
-                    PH_LEVEL,
-                    IMMUNITY,
-
-                    OPIATE_OVERDOSE,
-                    OPIATE_ADDICTED,
-                    OXYGEN
-            );
+            BLOOD_CONDITIONS = new ArrayList<>(uniqueConditions);
         }
         return BLOOD_CONDITIONS;
     }
@@ -51,6 +48,11 @@ public class PlayerBlood extends AbstractBody {
     @Override
     public float getVitalityWeight() {
         return 1;
+    }
+
+    @Override
+    public String getShortID() {
+        return "C264AB58-CC16-425E-B12D";
     }
 
     @Override
@@ -64,8 +66,6 @@ public class PlayerBlood extends AbstractBody {
     @Override
     public float updateVitalityLost(PlayerHealthCapability health, Player player) {
         float lost = 0;
-        if (this.abnormal(BLOOD_LOSS))
-            lost += this.getConditionValue(BLOOD_LOSS) * this.getVitalityWeight();
         if (this.abnormal(OPIATE_OVERDOSE))
             lost += Mth.clamp(this.getConditionValue(OPIATE_OVERDOSE) - 0.5f, 0.0f, 0.5f);
         return lost;

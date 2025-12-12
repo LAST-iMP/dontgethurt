@@ -12,6 +12,11 @@ public class LeftLeg extends AbstractLeg {
         super();
     }
 
+    @Override
+    public String getShortID() {
+        return "66C09B3B-3483-491F-BB25";
+    }
+
     public LeftLeg(Void unused) {
         this();
     }

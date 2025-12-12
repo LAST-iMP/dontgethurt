@@ -1,6 +1,7 @@
 package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.item.OperatingBedItem;
 import com.lastimp.dgh.source.item.tool.*;
 import com.lastimp.dgh.source.item.medicine.*;
@@ -25,7 +26,7 @@ public class ModItems {
 
     public static final HashSet<RegistryObject<?>> ITEMS_SET = new HashSet<>();
 
-    public static final RegistryObject<BlockItem> OPERATING_BED_BLOCK_ITEM = registerItem(
+    public static final RegistryObject<Item> OPERATING_BED_BLOCK_ITEM = registerItem(
             "operating_bed",
             () -> new OperatingBedItem(
                     OPERATING_BED_BLOCK.get(),
@@ -169,6 +170,126 @@ public class ModItems {
             new Item.Properties()
                     .stacksTo(1)
                     .durability(8)
+    );
+
+    public static final RegistryObject<Item> BONE_IMPLANTS_WOOD = registerItem(
+            "bone_implants_wood",
+            (properties) -> new BoneImplants(properties, BodyCondition.BONE_WOOD),
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(8)
+    );
+
+    public static final RegistryObject<Item> BONE_IMPLANTS_STONE = registerItem(
+            "bone_implants_stone",
+            (properties) -> new BoneImplants(properties, BodyCondition.BONE_STONE),
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(8)
+    );
+
+    public static final RegistryObject<Item> BONE_IMPLANTS_COPPER = registerItem(
+            "bone_implants_copper",
+            (properties) -> new BoneImplants(properties, BodyCondition.BONE_COPPER),
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(8)
+    );
+
+    public static final RegistryObject<Item> BONE_IMPLANTS_IRON = registerItem(
+            "bone_implants_iron",
+            (properties) -> new BoneImplants(properties, BodyCondition.BONE_IRON),
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(8)
+    );
+
+    public static final RegistryObject<Item> BONE_IMPLANTS_GOLD = registerItem(
+            "bone_implants_gold",
+            (properties) -> new BoneImplants(properties, BodyCondition.BONE_GOLD),
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(8)
+    );
+
+    public static final RegistryObject<Item> BONE_IMPLANTS_DIMOND = registerItem(
+            "bone_implants_dimond",
+            (properties) -> new BoneImplants(properties, BodyCondition.BONE_DIMOND),
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(8)
+    );
+
+    public static final RegistryObject<Item> BONE_IMPLANTS_NETHERITE = registerItem(
+            "bone_implants_netherite",
+            (properties) -> new BoneImplants(properties, BodyCondition.BONE_NETHERITE),
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(8)
+    );
+
+    public static final RegistryObject<Item> SURGERY_SAW = registerItem(
+            "surgery_saw",
+            SurgerySaw::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(300)
+    );
+
+    public static final RegistryObject<Item> BONE_NATURAL = registerItem(
+            "bone_natural",
+            (properties) -> new SurgeryBones(properties, null),
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> BONE_WOOD = registerItem(
+            "bone_wood",
+            (properties) -> new SurgeryBones(properties, BodyCondition.BONE_WOOD),
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> BONE_STONE = registerItem(
+            "bone_stone",
+            (properties) -> new SurgeryBones(properties, BodyCondition.BONE_STONE),
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> BONE_COPPER = registerItem(
+            "bone_copper",
+            (properties) -> new SurgeryBones(properties, BodyCondition.BONE_COPPER),
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> BONE_IRON = registerItem(
+            "bone_iron",
+            (properties) -> new SurgeryBones(properties, BodyCondition.BONE_IRON),
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> BONE_GOLD = registerItem(
+            "bone_gold",
+            (properties) -> new SurgeryBones(properties, BodyCondition.BONE_GOLD),
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> BONE_DIMOND = registerItem(
+            "bone_dimond",
+            (properties) -> new SurgeryBones(properties, BodyCondition.BONE_DIMOND),
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> BONE_NETHERITE = registerItem(
+            "bone_netherite",
+            (properties) -> new SurgeryBones(properties, BodyCondition.BONE_NETHERITE),
+            new Item.Properties()
+                    .stacksTo(16)
     );
 
     public static void register(IEventBus eventBus) {

@@ -69,7 +69,7 @@ public class KeepLivingEffect extends MobEffect {
     }
 
     @SubscribeEvent
-    public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
+    public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         Player player = event.getEntity();
         if (player.hasEffect(ModEffects.KEEP_LIVING_EFFECT.get())) {
             int amplifier = player.getEffect(ModEffects.KEEP_LIVING_EFFECT.get()).getAmplifier();

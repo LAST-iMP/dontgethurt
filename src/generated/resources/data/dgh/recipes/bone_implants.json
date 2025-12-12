@@ -10,9 +10,9 @@
     }
   },
   "pattern": [
-    "bbb",
+    " b ",
     "bab",
-    "bbb"
+    " b "
   ],
   "result": {
     "item": "dgh:bone_implants"

@@ -1,6 +1,8 @@
 package com.lastimp.dgh.source.client.gui.menu;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.source.client.gui.component.DynamicSlotItemHandler;
+import com.lastimp.dgh.source.register.ModItems;
 import com.lastimp.dgh.source.register.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -8,10 +10,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class HealthMenu extends AbstractContainerMenu {
+    protected IItemHandler handler;
+    private final List<DynamicSlotItemHandler> bagSlots = new ArrayList<>();
     public final UUID targetPlayer;
     public final boolean isDevice;
 
@@ -26,6 +33,27 @@ public class HealthMenu extends AbstractContainerMenu {
         this.isDevice = isDevice;
         layoutPlayerInventorySlots(inv);
         DontGetHurt.LOGGER.info("Server Side Menu");
+    }
+
+    public void openBag(ItemStack stack) {
+        this.handler = BagMenu.getBackPackHandler(stack);
+        this.setBagHandler(this.handler);
+    }
+
+    public void closeBag() {
+        handler = null;
+        this.setBagHandler(null);
+    }
+
+    private void setBagHandler(IItemHandler handler) {
+        for (var slot : bagSlots) {
+            slot.setHandler(handler);
+        }
+    }
+
+    public ItemStack getStackBySlotNum(int slotNum) {
+        if (slotNum >= 36 && this.handler == null) return ItemStack.EMPTY;
+        return this.getSlot(slotNum).getItem();
     }
 
     @Override
@@ -61,15 +89,22 @@ public class HealthMenu extends AbstractContainerMenu {
 
     // 添加玩家背包的slot和热键的栏的slot
     private void layoutPlayerInventorySlots(Inventory playerInventory) {
+        // Hotbar
+        for (int i = 0; i < 9; ++i) {
+            this.addSlot(new Slot(playerInventory, i, 41 + i * 18, 188));
+        }
         // Player inventory
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
                 this.addSlot(new Slot(playerInventory, col + row * 9 + 9, 41 + col * 18, 130 + row * 18));
             }
         }
-        // Hotbar
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 41 + i * 18, 188));
+        // 动态背包内部
+        for (int row = 0; row < 9; row++) {
+            int index = row;
+            var newSlot = new DynamicSlotItemHandler(null, index, 234, 22 + row * 18);
+            this.addSlot(newSlot);
+            this.bagSlots.add(newSlot);
         }
     }
 }

@@ -2,7 +2,9 @@ package com.lastimp.dgh.network.message;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.ServerPayloadHandler;
+import com.lastimp.dgh.source.client.gui.menu.HealthMenu;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -41,12 +43,16 @@ public class MyHealingItemUseData {
 
     public static void handlerServer(final MyHealingItemUseData data, Supplier<NetworkEvent.Context> ctx) {
         ServerPlayer sourcePlayer = ctx.get().getSender();
-        UUID targetID = new UUID(data.id_most(), data.id_least());
-        ServerPlayer target = (ServerPlayer) sourcePlayer.level().getPlayerByUUID(targetID);
-        ItemStack stack = sourcePlayer.getInventory().getItem(data.slotNum());
-        BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
-
-        HealingHandler.useItemOn(stack, sourcePlayer, target, component);
+        if (!(sourcePlayer.containerMenu instanceof HealthMenu healthMenu)) return;
+        ItemStack stack = healthMenu.getStackBySlotNum(data.slotNum());
+        if (stack.is(ModTags.MEDICAL_TOOLS_BAGS)) {
+            healthMenu.openBag(stack);
+        } else {
+            UUID targetID = new UUID(data.id_most(), data.id_least());
+            ServerPlayer target = (ServerPlayer) sourcePlayer.level().getPlayerByUUID(targetID);
+            BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
+            HealingHandler.useItemOn(stack, sourcePlayer, target, component);
+        }
     }
 
     public static MyHealingItemUseData getInstance(UUID targetId, int slotNum, BodyComponents components) {

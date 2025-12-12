@@ -5,6 +5,7 @@ import com.lastimp.dgh.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.network.message.Network;
+import com.lastimp.dgh.source.core.player.PlayerDyingHandler;
 import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
@@ -59,7 +60,7 @@ public class HealingEventHandler {
     private static void updatePlayerHealth(PlayerHealthCapability health, ServerPlayer player) {
         float maxHealth = player.getMaxHealth() * health.playerVitality();
         if (player.isDeadOrDying()) {
-            player.setHealth(0);
+            PlayerDyingHandler.setDead(player);
         } else if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative()) {
             player.setHealth(player.getMaxHealth());
         } else if (maxHealth > 0) {
@@ -68,7 +69,7 @@ public class HealingEventHandler {
         } else if (maxHealth > -player.getMaxHealth() && player.getServer().getPlayerList().getPlayers().size() > 1) {
             player.setHealth(0.01f);
         } else {
-            player.setHealth(0);
+            PlayerDyingHandler.setDead(player);
         }
     }
 
@@ -101,7 +102,7 @@ public class HealingEventHandler {
         CriteriaTriggers.USED_TOTEM.trigger(player, itemstack);
         player.gameEvent(GameEvent.ITEM_INTERACT_FINISH);
 
-        HealingHandler.handleValindaHealing(player, player.getMaxHealth() * 3);
+        HealingHandler.handleValindaHealing(player, player.getMaxHealth());
         player.setHealth(1);
         player.removeAllEffects();
         player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));

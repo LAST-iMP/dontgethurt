@@ -5,6 +5,7 @@ import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.source.core.player.PlayerHealthProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;

@@ -2,6 +2,7 @@ package com.lastimp.dgh.source.core.player;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.KeyPressedType;
+import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.register.ModItems;
@@ -42,8 +43,7 @@ public class PlayerEventHandler {
 
         var itemStack = slot.getItem();
         if (itemStack.isEmpty()) return false;
-        if (itemStack.is(ModItems.HEALTH_CARE_BAG.get())) return true;
-        if (itemStack.is(ModItems.SURGERY_TOOL_BAG.get())) return true;
+        if (itemStack.is(ModTags.MEDICAL_TOOLS_BAGS)) return true;
         if (itemStack.is(ModItems.HEALTH_SCANNER.get())) return true;
         return false;
     }

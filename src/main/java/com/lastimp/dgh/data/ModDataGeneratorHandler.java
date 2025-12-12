@@ -68,7 +68,17 @@ public class ModDataGeneratorHandler {
 
         event.getGenerator().addProvider(
                 event.includeClient(),
-                (DataProvider.Factory<ModTagsProvider>) output -> new ModTagsProvider(output, lp, DontGetHurt.MODID, efh)
+                (DataProvider.Factory<ModItemTagsProvider>) output -> new ModItemTagsProvider(output, lp, DontGetHurt.MODID, efh)
+        );
+
+        event.getGenerator().addProvider(
+                event.includeClient(),
+                (DataProvider.Factory<ModBlockTagsProvider>) output -> new ModBlockTagsProvider(output, lp, DontGetHurt.MODID, efh)
+        );
+
+        event.getGenerator().addProvider(
+                event.includeClient(),
+                (DataProvider.Factory<ModDamageTypeTagsProvider>) output -> new ModDamageTypeTagsProvider(output, lp, DontGetHurt.MODID, efh)
         );
 
         event.getGenerator().addProvider(

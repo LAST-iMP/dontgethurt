@@ -1,30 +1,3 @@
-/*
-* MIT License
-
-Copyright (c) 2023 NeoForged project
-
-This license applies to the template files as supplied by github.com/NeoForged/MDK
-
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-
 package com.lastimp.dgh.source.client.gui.component;
 
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
@@ -39,7 +12,7 @@ import net.minecraft.util.Mth;
 public class HealthConditionWidget extends AbstractWidget {
     private final ResourceLocation texture;
     private final int iconSize = 12;
-    private final int fgColor;
+    private int fgColor;
     private float severity = 0f;
 
     public HealthConditionWidget(int width, int height, Component message, ResourceLocation texture, int fgColor) {
@@ -92,15 +65,14 @@ public class HealthConditionWidget extends AbstractWidget {
                 this.getX() + 3 + (this.width + iconSize) / 2,
                 this.getY() + (this.height - mc.font.lineHeight) / 2,
                 stringColor);
-
-        // show tooltip when hovered
-//        if (this.isMouseOver(mouseX, mouseY)) {
-//            this.renderTooltip(poseStack, Component.literal(String.format("严重度: %.0f%%", severity * 100f)), mouseX, mouseY);
-//        }
     }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
 
+    }
+
+    public void setPortionColor(int color) {
+        this.fgColor = color;
     }
 }

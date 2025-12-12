@@ -22,13 +22,11 @@ public abstract class InternalInjuryHandler {
         handle(body, damageAmount);
         if (!(body instanceof AbstractVisibleBody visibleBody)) return;
 
-        float threshold = Config.baseFractureThreshold;
-        threshold += visibleBody instanceof Torso ? 0.1f : 0;
-        threshold += visibleBody instanceof Head ? 0.2f : 0;
+        float threshold = visibleBody.fractThreshold();
         float factor = (1.0f - threshold) / Config.baseFractureMaxProb;
 
         damageAmount += body.getCondition(INTERNAL_INJURY).getValue();
-        if (Utils.randomCheck(damageAmount, threshold, factor, 0.0f, Config.baseFractureMaxProb)) {
+        if (Utils.randomCheck(damageAmount, threshold, factor, 0.0f, Config.baseFractureMaxProb, visibleBody.fractCheckTimes())) {
             visibleBody.setConditionValue(FRACTURE, BodyCondition.get(FRACTURE).maxValue());
             if (visibleBody.abnormal(PLASTER_CAST))
                 visibleBody.setConditionValue(PLASTER_CAST, BodyCondition.get(PLASTER_CAST).defaultValue());
@@ -36,7 +34,7 @@ public abstract class InternalInjuryHandler {
 
         factor = (1.0f - Config.baseDislocationThreshold) / Config.baseDislocationMaxProb;
         if (!(visibleBody instanceof AbstractExtremities extremities)) return;
-        if (Utils.randomCheck(damageAmount, Config.baseDislocationThreshold, factor, 0.0f, Config.baseDislocationMaxProb)) {
+        if (Utils.randomCheck(damageAmount, Config.baseDislocationThreshold, factor, 0.0f, Config.baseDislocationMaxProb, visibleBody.fractCheckTimes())) {
             if (!extremities.abnormal(FRACTURE) && !extremities.isBadBandaged() && !extremities.isBadBandaged())
                 extremities.setConditionValue(DISLOCATION, BodyCondition.get(DISLOCATION).maxValue());
         }

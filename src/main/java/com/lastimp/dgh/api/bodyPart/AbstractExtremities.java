@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
@@ -15,14 +16,11 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.ANALGESIA;
 
 public abstract class AbstractExtremities extends AbstractVisibleBody {
+    private static final Collection<ResourceLocation> uniqueConditions = new ArrayList<>();
     private static List<ResourceLocation> EXTREMITY_CONDITIONS;
 
-    public AbstractExtremities() {
-        super();
-    }
-
-    public AbstractExtremities(Void unused) {
-        this();
+    public static void addCondition(Collection<ResourceLocation> key) {
+        uniqueConditions.addAll(key);
     }
 
     @Override
@@ -34,9 +32,7 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
     public List<ResourceLocation> getBodyConditions() {
         if (EXTREMITY_CONDITIONS == null) {
             EXTREMITY_CONDITIONS = new ArrayList<>(super.getBodyConditions());
-            EXTREMITY_CONDITIONS.addAll(List.of(
-                    DISLOCATION
-            ));
+            EXTREMITY_CONDITIONS.addAll(uniqueConditions);
         }
         return EXTREMITY_CONDITIONS;
     }
@@ -45,6 +41,7 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
         boolean available = this.isBandaged() || this.isBadBandaged() || !this.abnormal(DISLOCATION);
         available &= this.abnormal(PLASTER_CAST) || !this.abnormalWithHidden(FRACTURE);
         available |= health.getComponent(TORSO).abnormal(ANALGESIA);
+        available &= !this.abnormalWithHidden(SAWED_BONES);
         return available;
     }
 
