@@ -18,6 +18,9 @@ public class Config {
     public static final ModConfigSpec.DoubleValue BODY_LIFE_FACTOR = BUILDER
             .defineInRange("BODY_LIFE_FACTOR", 1.0f, 0, 1000);
 
+    public static final ModConfigSpec.DoubleValue HEALING_FACTOR = BUILDER
+            .defineInRange("BODY_LIFE_FACTOR", 0.5f, 0, 1000);
+
     public static final ModConfigSpec.DoubleValue DIRTY_BANDAGE_RATIO = BUILDER
             .defineInRange("DIRTY_BANDAGE_RATIO",0.05,0,1);
 
@@ -73,6 +76,7 @@ public class Config {
     public static final ModConfigSpec SPEC = BUILDER.pop().build();
 
     public static float body_life_factor;
+    public static float healing_factor;
     public static float dirty_bandage_ratio;
     public static float bandage_acc;
     public static float burn_bleed_ratio;
@@ -97,6 +101,7 @@ public class Config {
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         body_life_factor = (float) BODY_LIFE_FACTOR.getAsDouble();
+        healing_factor = (float) HEALING_FACTOR.getAsDouble();
         dirty_bandage_ratio = (float) DIRTY_BANDAGE_RATIO.getAsDouble();
         bandage_acc = (float) BANDAGE_ACC.getAsDouble();
         burn_bleed_ratio = (float) BURN_BLEED_RATIO.getAsDouble();

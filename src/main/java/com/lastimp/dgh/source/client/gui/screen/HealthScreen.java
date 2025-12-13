@@ -205,15 +205,23 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     protected void renderHeartBeat(GuiGraphics guiGraphics) {
         int panelX = (guiGraphics.guiWidth() - PANEL_WIDTH) / 2 + HEART_BEAT_X;
         int panelY = (guiGraphics.guiHeight() - PANEL_HEIGHT) / 2 + HEART_BEAT_Y;
-        RenderSystem.enableBlend();
         int max_width = (int) (HEART_BEAT_WIDTH * 0.75);
+
         long tick = GuiOpenWrapper.MINECRAFT.get().level.getGameTime();
+        ResourceLocation heartBeat = HUD_HEART_BEAT;
+        if (healthData != null) {
+            if (healthData.playerVitality() < 0.1) heartBeat = HUD_HEART_BEAT_STOP;
+            else if (healthData.playerVitality() < 0.4) heartBeat = HUD_HEART_BEAT_ACC2;
+            else if (healthData.playerVitality() < 0.75) heartBeat = HUD_HEART_BEAT_ACC;
+        }
+//        GuiOpenWrapper.MINECRAFT.get().player.playSound();
+
+        RenderSystem.enableBlend();
         for (int i = 0; i < max_width; i++) {
             int location = Math.toIntExact((i + tick) % HEART_BEAT_WIDTH);
             guiGraphics.setColor(0.0F, (float) i / max_width, 0.0F, 1.0F);
-            guiGraphics.blit(HUD_HEART_BEAT, panelX + location, panelY, 0, location, 0, 1, HEART_BEAT_HEIGHT, HEART_BEAT_WIDTH, HEART_BEAT_HEIGHT);
+            guiGraphics.blit(heartBeat, panelX + location, panelY, 0, location, 0, 1, HEART_BEAT_HEIGHT, HEART_BEAT_WIDTH, HEART_BEAT_HEIGHT);
         }
-
         guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.disableBlend();
     }
