@@ -3,7 +3,7 @@ package com.lastimp.dgh.source.core.buffSystem;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.core.Utils;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -24,7 +24,7 @@ public class BuffEventHandler {
     public static void onBuffUpdate(PlayerTickEvent.Post event) {
         if (event.getEntity().level().isClientSide) return;
         ServerPlayer player = (ServerPlayer) event.getEntity();
-        PlayerHealthCapability health = PlayerHealthCapability.get(player);
+        HealthCapability health = HealthCapability.get(player);
 
         updateStaggerEffects(health, player);
         updateArmEffects(health, player);
@@ -34,7 +34,7 @@ public class BuffEventHandler {
         updateSymptomsEffects(health, player);
     }
 
-    private static void updateStaggerEffects(PlayerHealthCapability health, ServerPlayer player) {
+    private static void updateStaggerEffects(HealthCapability health, ServerPlayer player) {
         if (health.slowDown() > 0 && !player.hasEffect(ModEffects.STAGGER_EFFECT)) {
             var newEffect = new MobEffectInstance(
                     ModEffects.STAGGER_EFFECT,
@@ -44,7 +44,7 @@ public class BuffEventHandler {
         }
     }
 
-    private static void updateArmEffects(PlayerHealthCapability health, ServerPlayer player) {
+    private static void updateArmEffects(HealthCapability health, ServerPlayer player) {
         if (health.armBreak() == 0) return;
 
         var newEffect = new MobEffectInstance(
@@ -58,7 +58,7 @@ public class BuffEventHandler {
         }
     }
 
-    private static void updateWithdrawEffects(PlayerHealthCapability health, ServerPlayer player) {
+    private static void updateWithdrawEffects(HealthCapability health, ServerPlayer player) {
         var head = health.getComponent(HEAD);
         var state = head.getCondition(WITHDRAW);
         if (!head.abnormal(WITHDRAW)) return;
@@ -73,7 +73,7 @@ public class BuffEventHandler {
         }
     }
 
-    private static void updateLivingTimeEffects(PlayerHealthCapability health, ServerPlayer player) {
+    private static void updateLivingTimeEffects(HealthCapability health, ServerPlayer player) {
         if (player.hasEffect(ModEffects.KEEP_LIVING_EFFECT)) return;
         int amp = (int) Math.sqrt((double) health.livingTick() / 1000);
         amp = Math.min(amp, 40);
@@ -86,7 +86,7 @@ public class BuffEventHandler {
         player.addEffect(newEffect);
     }
 
-    private static void updateCureEffects(PlayerHealthCapability health, ServerPlayer player) {
+    private static void updateCureEffects(HealthCapability health, ServerPlayer player) {
         if (player.hasEffect(ModEffects.CURE_EFFECT)) return;
         if (health.playerVitality() < 0.999f) return;
         if (health.almostDead() < 0.2f) {
@@ -101,7 +101,7 @@ public class BuffEventHandler {
         health.resetAlmostDead();
     }
 
-    private static void updateSymptomsEffects(PlayerHealthCapability health, ServerPlayer player) {
+    private static void updateSymptomsEffects(HealthCapability health, ServerPlayer player) {
         if (!player.hasEffect(ModEffects.INTENSE_PAIN_EFFECT) && health.intensePain()) {
             if (Mth.randomBetween(Utils.randomSource, 0.0f, 1.0f) < 0.007f) {
                 var newEffect = new MobEffectInstance(ModEffects.INTENSE_PAIN_EFFECT, 60);

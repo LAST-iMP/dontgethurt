@@ -6,9 +6,6 @@ import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.Utils;
-import com.lastimp.dgh.source.core.bodyPart.Head;
-import com.lastimp.dgh.source.core.bodyPart.Torso;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 

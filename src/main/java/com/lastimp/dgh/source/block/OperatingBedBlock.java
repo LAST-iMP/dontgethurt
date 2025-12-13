@@ -1,5 +1,5 @@
 package com.lastimp.dgh.source.block;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -41,7 +41,7 @@ public class OperatingBedBlock extends BedBlock {
         for (var player : players) {
             if (!(EntitySelector.NO_SPECTATORS.test(player) && EntitySelector.LIVING_ENTITY_STILL_ALIVE.test(player))) continue;
             if (player.distanceToSqr(pos.getCenter()) > 4.0f) continue;
-            PlayerHealthCapability.getAndSet(player, h -> {
+            HealthCapability.getAndSet(player, h -> {
                 h.setNearBedTick(40);
                 return h;
             });

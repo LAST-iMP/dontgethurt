@@ -7,7 +7,7 @@ import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.neoforge.Common;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -18,7 +18,6 @@ import net.minecraft.world.entity.player.Player;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 import static com.lastimp.dgh.DontGetHurt.EPS;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
@@ -65,7 +64,7 @@ public class Torso extends AbstractVisibleBody {
     }
 
     @Override
-    public AbstractBody update(PlayerHealthCapability health, Player player) {
+    public AbstractBody update(HealthCapability health, Player player) {
         super.update(health, player);
         this.handleRespiratoryArrest();
         return this;

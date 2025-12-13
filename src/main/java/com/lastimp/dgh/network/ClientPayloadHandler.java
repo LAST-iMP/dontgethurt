@@ -4,7 +4,7 @@ package com.lastimp.dgh.network;
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.BloodScanner;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -13,11 +13,11 @@ import java.util.UUID;
 
 public class ClientPayloadHandler {
     private static HealthScreen healthScreen = null;
-    private static PlayerHealthCapability health;
+    private static HealthCapability health;
 
     public static void handleReadAllConditionData(final MyReadAllConditionData data, final IPayloadContext context) {
         context.enqueueWork(() -> {
-                    PlayerHealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag(), context.player().registryAccess());
+                    HealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag(), context.player().registryAccess());
                     OperationType operation = OperationType.valueOf(data.oper());
                     if (operation == OperationType.HEALTH_SCANN && healthScreen != null) {
                         healthScreen.setHealthData(health);
@@ -42,11 +42,11 @@ public class ClientPayloadHandler {
         ClientPayloadHandler.healthScreen = healthScreen;
     }
 
-    public static PlayerHealthCapability health() {
+    public static HealthCapability health() {
         return health;
     }
 
-    public static void setHealth(PlayerHealthCapability health) {
+    public static void setHealth(HealthCapability health) {
         ClientPayloadHandler.health = health;
     }
 }

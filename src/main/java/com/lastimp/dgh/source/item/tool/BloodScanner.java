@@ -6,7 +6,7 @@ import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -29,7 +29,7 @@ public class BloodScanner extends AbstractHealingItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         if (!level.isClientSide)
-            BloodScanner.scanHealth(player, PlayerHealthCapability.get(player), player.getScoreboardName());
+            BloodScanner.scanHealth(player, HealthCapability.get(player), player.getScoreboardName());
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide);
     }
 
@@ -51,7 +51,7 @@ public class BloodScanner extends AbstractHealingItem {
         }
     }
 
-    public static void scanHealth(Player player, PlayerHealthCapability health, String name) {
+    public static void scanHealth(Player player, HealthCapability health, String name) {
         PlayerBlood blood = (PlayerBlood) health.getComponent(BodyComponents.BLOOD);
         boolean hasAbnormal = false;
         for (var condition : bloodConditions) {

@@ -5,7 +5,7 @@ import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.Utils;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +19,7 @@ public class WoodWrench extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull ServerPlayer target, BodyComponents component) {
-        return PlayerHealthCapability.getAndSet(target, health -> {
+        return HealthCapability.getAndSet(target, health -> {
             AbstractExtremities body = (AbstractExtremities) health.getComponent(component);
 
             body.injury(INTERNAL_INJURY, 0.05f);

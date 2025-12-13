@@ -3,6 +3,7 @@ package com.lastimp.dgh.source.core.player;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.tags.ModDamageType;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,16 +33,16 @@ public class PlayerDyingHandler {
 
         if (event.getEntity().level().isClientSide) {
             if (player.getUUID().equals(GuiOpenWrapper.MINECRAFT.get().player.getUUID())){
-                if (PlayerHealthCapability.isDying(player) && !showingScreen()) {
+                if (HealthCapability.isDying(player) && !showingScreen()) {
                     GuiOpenWrapper.openDyingScreen();
                     setShowingScreen(true);
-                } else if (!PlayerHealthCapability.isDying(player) && showingScreen()){
+                } else if (!HealthCapability.isDying(player) && showingScreen()){
                     GuiOpenWrapper.closeDyingScreen();
                     setShowingScreen(false);
                 }
             }
         } else {
-            if (PlayerHealthCapability.isDying(player)) {
+            if (HealthCapability.isDying(player)) {
                 if (player.isSleeping()) player.stopSleeping();
                 if (player.isFallFlying()) player.stopFallFlying();
                 player.stopUsingItem();
@@ -64,7 +65,7 @@ public class PlayerDyingHandler {
     public static void onJump(LivingEvent.LivingJumpEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
-        PlayerHealthCapability health = PlayerHealthCapability.get(player);
+        HealthCapability health = HealthCapability.get(player);
         if (true || health.playerVitality() < 0) {
             player.setDeltaMovement(0, 0, 0); // 阻止起跳速度
         }
@@ -81,7 +82,7 @@ public class PlayerDyingHandler {
 
     public static Holder<DamageType> getKillerDamageType(Player player) {
         var damageType = player.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE);
-        var health = PlayerHealthCapability.get(player);
+        var health = HealthCapability.get(player);
 
         var head = health.getComponent(HEAD);
         if (head.getConditionValue(TRAUMATIC_SHOCK) > 0.4) {

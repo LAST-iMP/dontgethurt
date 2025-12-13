@@ -15,7 +15,7 @@ import com.lastimp.dgh.source.client.gui.menuProvider.HealthCareBagMenuProvider;
 import com.lastimp.dgh.source.client.gui.menuProvider.HealthMenuProvider;
 import com.lastimp.dgh.source.client.gui.menuProvider.SurgeryToolBagMenuProvider;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +30,7 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
                     UUID uuid = new UUID(data.id_most(), data.id_least());
                     ServerPlayer targetPlayer = (ServerPlayer) context.player().level().getPlayerByUUID(uuid);
-                    PlayerHealthCapability health = PlayerHealthCapability.get(targetPlayer);
+                    HealthCapability health = HealthCapability.get(targetPlayer);
 
                     PacketDistributor.sendToPlayer(
                             (ServerPlayer) context.player(),

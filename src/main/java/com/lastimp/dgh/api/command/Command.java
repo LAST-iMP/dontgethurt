@@ -5,7 +5,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.client.gui.menuProvider.HealthMenuProvider;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -113,7 +113,7 @@ public class Command {
         CommandSourceStack source = context.getSource();
         source.sendSuccess(() -> {
                     var message = Component.empty();
-                    for (var condition : new PlayerHealthCapability().getComponent(components).getBodyConditions())
+                    for (var condition : new HealthCapability().getComponent(components).getBodyConditions())
                         message.append(condition + ", ");
                     return message;
                 },true
@@ -133,7 +133,7 @@ public class Command {
                 true
         );
 
-        return PlayerHealthCapability.getAndSet(player, h -> {
+        return HealthCapability.getAndSet(player, h -> {
             h.getComponent(components).addConditionValue(condition, value);
             return 1;
         });
@@ -150,7 +150,7 @@ public class Command {
                 true
         );
 
-        return PlayerHealthCapability.getAndSet(player, h -> {
+        return HealthCapability.getAndSet(player, h -> {
             h.getComponent(components).setConditionValue(condition, BodyCondition.get(condition).defaultValue());
             return 1;
         });
@@ -166,7 +166,7 @@ public class Command {
                 true
         );
 
-        return PlayerHealthCapability.getAndSet(player, h -> {
+        return HealthCapability.getAndSet(player, h -> {
             var body = h.getComponent(components);
             for (var condition : body.getBodyConditions()) {
                 body.setConditionValue(condition, BodyCondition.get(condition).defaultValue());
@@ -181,7 +181,7 @@ public class Command {
         CommandSourceStack source = context.getSource();
         source.sendSuccess(() -> Component.literal("已将玩家" + player.getScoreboardName() + "重置"), true);
 
-        PlayerHealthCapability.set(player, new PlayerHealthCapability());
+        HealthCapability.set(player, new HealthCapability());
         return 1;
     }
 }

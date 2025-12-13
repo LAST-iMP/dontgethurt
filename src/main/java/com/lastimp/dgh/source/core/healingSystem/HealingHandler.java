@@ -10,7 +10,7 @@ import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.client.gui.component.DynamicSlotItemHandler;
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.medicine.Bandages;
 import com.lastimp.dgh.source.item.medicine.Gypsum;
 import net.minecraft.client.Minecraft;
@@ -109,7 +109,7 @@ public class HealingHandler {
 
     public static void handleValindaHealing(ServerPlayer player, float amount) {
         List<Pair<AbstractVisibleBody, ResourceLocation>> states = new ArrayList<>();
-        PlayerHealthCapability.getAndSet(player, h -> {
+        HealthCapability.getAndSet(player, h -> {
             float injury = 0;
             for (var component : BodyComponents.VISIBLE_BODIES) {
                 AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
