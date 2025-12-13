@@ -16,6 +16,9 @@ public class Config {
     public static final ForgeConfigSpec.DoubleValue BODY_LIFE_FACTOR = BUILDER
             .defineInRange("BODY_LIFE_FACTOR", 1.0f, 0, 1000);
 
+    public static final ForgeConfigSpec.DoubleValue HEALING_FACTOR = BUILDER
+            .defineInRange("BODY_LIFE_FACTOR", 0.5f, 0, 1000);
+
     public static final ForgeConfigSpec.DoubleValue DIRTY_BANDAGE_RATIO = BUILDER
             .defineInRange("DIRTY_BANDAGE_RATIO",0.05,0,1);
 
@@ -71,6 +74,7 @@ public class Config {
     public static final ForgeConfigSpec SPEC = BUILDER.pop().build();
 
     public static float body_life_factor;
+    public static float healing_factor;
     public static float dirty_bandage_ratio;
     public static float bandage_acc;
     public static float burn_bleed_ratio;
@@ -95,6 +99,7 @@ public class Config {
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         body_life_factor = (float) (double)BODY_LIFE_FACTOR.get();
+        healing_factor = (float) (double)HEALING_FACTOR.get();
         dirty_bandage_ratio = (float) (double) DIRTY_BANDAGE_RATIO.get();
         bandage_acc = (float) (double)BANDAGE_ACC.get();
         burn_bleed_ratio = (float) (double) BURN_BLEED_RATIO.get();
