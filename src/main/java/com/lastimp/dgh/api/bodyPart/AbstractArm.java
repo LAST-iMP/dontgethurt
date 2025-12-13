@@ -2,7 +2,7 @@ package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -29,7 +29,7 @@ public abstract class AbstractArm extends AbstractExtremities{
     }
 
     @Override
-    public AbstractBody update(PlayerHealthCapability health, Player player) {
+    public AbstractBody update(HealthCapability health, Player player) {
         super.update(health, player);
         return this;
     }
@@ -63,7 +63,7 @@ public abstract class AbstractArm extends AbstractExtremities{
     @SubscribeEvent
     public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         Player player = event.getEntity();
-        var health = PlayerHealthCapability.get(player);
+        var health = HealthCapability.get(player);
         var left_arm = health.getComponent(BodyComponents.LEFT_ARM);
         var right_arm = health.getComponent(BodyComponents.RIGHT_ARM);
         int speed_up = 0;

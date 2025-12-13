@@ -8,7 +8,7 @@ import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.register.ModCapabilities;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGuiEvent;
@@ -30,8 +30,8 @@ public class ForgeClientEventHandler {
     @SubscribeEvent
     public static void onPlayerCloned(PlayerEvent.Clone event) {
         if (!event.isWasDeath()) {
-            LazyOptional<PlayerHealthCapability> oldHealth = event.getOriginal().getCapability(ModCapabilities.PLAYER_HEALTH);
-            LazyOptional<PlayerHealthCapability> newHealth = event.getEntity().getCapability(ModCapabilities.PLAYER_HEALTH);
+            LazyOptional<HealthCapability> oldHealth = event.getOriginal().getCapability(ModCapabilities.PLAYER_HEALTH);
+            LazyOptional<HealthCapability> newHealth = event.getEntity().getCapability(ModCapabilities.PLAYER_HEALTH);
             if (oldHealth.isPresent() && newHealth.isPresent()) {
                 newHealth.ifPresent((newCap) ->
                         oldHealth.ifPresent((oldCap) ->
@@ -43,7 +43,7 @@ public class ForgeClientEventHandler {
     @SubscribeEvent
     public static void onGuiRender(RenderGuiEvent.Pre event) {
         if (GuiOpenWrapper.MINECRAFT.get().player == null) return;
-        if (PlayerHealthCapability.isDying(GuiOpenWrapper.MINECRAFT.get().player)) {
+        if (HealthCapability.isDying(GuiOpenWrapper.MINECRAFT.get().player)) {
             var graphics = event.getGuiGraphics();
             GuiOpenWrapper.MINECRAFT.get().gui.getChat().render(graphics, 0, graphics.guiHeight(), graphics.guiWidth());
             event.setCanceled(true);

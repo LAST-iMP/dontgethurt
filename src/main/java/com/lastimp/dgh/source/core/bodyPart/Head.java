@@ -5,7 +5,7 @@ import com.lastimp.dgh.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
@@ -55,7 +55,7 @@ public class Head extends AbstractVisibleBody {
     }
 
     @Override
-    public AbstractBody update(PlayerHealthCapability health, Player player) {
+    public AbstractBody update(HealthCapability health, Player player) {
         super.update(health, player);
         this.handleWithdraw(health);
         this.handleTraumaticShock(health);
@@ -63,7 +63,7 @@ public class Head extends AbstractVisibleBody {
     }
 
     @Override
-    public int slowDownLevel(PlayerHealthCapability health) {
+    public int slowDownLevel(HealthCapability health) {
         var slowLevel = super.slowDownLevel(health);
         if (this.getConditionValue(WITHDRAW) > 0.2f)
             slowLevel += 2;
@@ -75,7 +75,7 @@ public class Head extends AbstractVisibleBody {
     }
 
     @Override
-    public float updateVitalityLost(PlayerHealthCapability health, Player player) {
+    public float updateVitalityLost(HealthCapability health, Player player) {
         var loss = super.updateVitalityLost(health, player);
         loss += this.getVitalityWeight() * this.getConditionValue(BRAIN_DAMAGE);
         return loss;
@@ -86,14 +86,14 @@ public class Head extends AbstractVisibleBody {
         return Config.baseFractureThreshold + 0.2f;
     }
 
-    private void handleWithdraw(PlayerHealthCapability health) {
+    private void handleWithdraw(HealthCapability health) {
         if (!this.abnormal(WITHDRAW)) return;
 
         if (this.getConditionValue(WITHDRAW) > health.getComponent(BLOOD).getConditionValue(OPIATE_ADDICTED))
             this.healing(WITHDRAW, -BodyCondition.get(WITHDRAW).healingSpeed() * DELTA);
     }
 
-    private void handleTraumaticShock(PlayerHealthCapability health) {
+    private void handleTraumaticShock(HealthCapability health) {
         if (!this.abnormal(TRAUMATIC_SHOCK)) return;
 
         var value = this.getConditionValue(TRAUMATIC_SHOCK);

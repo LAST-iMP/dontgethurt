@@ -2,7 +2,7 @@ package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -31,7 +31,7 @@ public abstract class AbstractLeg extends AbstractExtremities{
     }
 
     @Override
-    public int slowDownLevel(PlayerHealthCapability health) {
+    public int slowDownLevel(HealthCapability health) {
         return super.slowDownLevel(health) + (this.available(health)? 0 : 8);
     }
 
@@ -84,7 +84,7 @@ public abstract class AbstractLeg extends AbstractExtremities{
     public static void onPlayerFall(LivingFallEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
 
-        var health = PlayerHealthCapability.get(player);
+        var health = HealthCapability.get(player);
         var left_leg = health.getComponent(BodyComponents.LEFT_LEG);
         var right_leg = health.getComponent(BodyComponents.RIGHT_LEG);
         int safe_distance = 0;

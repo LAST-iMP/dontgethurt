@@ -1,7 +1,6 @@
 
-package com.lastimp.dgh.source.core.player;
+package com.lastimp.dgh.source.core.capability;
 
-import com.lastimp.dgh.api.bodyPart.AbstractArm;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.source.register.ModCapabilities;
@@ -16,8 +15,8 @@ import java.util.function.Function;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.INTENSE_PAIN;
 
-public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
-    private static final PlayerHealthCapability EMPTY = new PlayerHealthCapability();
+public class HealthCapability implements INBTSerializable<CompoundTag> {
+    private static final HealthCapability EMPTY = new HealthCapability();
     private final WholeBody body = new WholeBody();
     private float playerVitality = 1.0f;
     private int slowDown = 0;
@@ -26,8 +25,8 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     private float almostDead = 1.0f;
     private int nearBedTick = 0;
 
-    public static PlayerHealthCapability get(Player player) {
-        return player.getCapability(ModCapabilities.PLAYER_HEALTH).orElse(new PlayerHealthCapability());
+    public static HealthCapability get(Player player) {
+        return player.getCapability(ModCapabilities.PLAYER_HEALTH).orElse(new HealthCapability());
     }
 
     public static void reset(Player player) {
@@ -35,8 +34,8 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
         health.deserializeNBT(EMPTY.serializeNBT());
     }
 
-    public static <T> T getAndSet(Player player, Function<PlayerHealthCapability, T> function) {
-        PlayerHealthCapability health = PlayerHealthCapability.get(player);
+    public static <T> T getAndSet(Player player, Function<HealthCapability, T> function) {
+        HealthCapability health = HealthCapability.get(player);
         return function.apply(health);
     }
 
@@ -44,7 +43,7 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
         return this.body.getComponent(component);
     }
 
-    public PlayerHealthCapability update(Player player) {
+    public HealthCapability update(Player player) {
         this.body.update(this, player);
         this.updateLabels(player);
         return this;

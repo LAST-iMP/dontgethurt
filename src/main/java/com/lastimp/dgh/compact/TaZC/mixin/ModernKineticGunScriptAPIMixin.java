@@ -1,6 +1,6 @@
 package com.lastimp.dgh.compact.TaZC.mixin;
 
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.tacz.guns.item.ModernKineticGunScriptAPI;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +18,7 @@ public class ModernKineticGunScriptAPIMixin {
     @Inject(method = "getReloadTime", at = @At("RETURN"), cancellable = true, remap = false)
     public void getReloadTime(CallbackInfoReturnable<Long> cir) {
         if (shooter instanceof Player player) {
-            var health = PlayerHealthCapability.get(player);
+            var health = HealthCapability.get(player);
             int armBreak = health.armBreak();
             long newResult = cir.getReturnValue();
             if (armBreak > 0) {
@@ -31,7 +31,7 @@ public class ModernKineticGunScriptAPIMixin {
     @Inject(method = "getBoltTime", at = @At("RETURN"), cancellable = true, remap = false)
     public void getBoltTime(CallbackInfoReturnable<Long> cir) {
         if (shooter instanceof Player player) {
-            var health = PlayerHealthCapability.get(player);
+            var health = HealthCapability.get(player);
             int armBreak = health.armBreak();
             long newResult = cir.getReturnValue();
             if (armBreak > 0) {

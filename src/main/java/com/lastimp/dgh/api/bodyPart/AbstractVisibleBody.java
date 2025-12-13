@@ -4,7 +4,7 @@ import com.lastimp.dgh.Config;
 import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -52,7 +52,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     @Override
-    public AbstractBody update(PlayerHealthCapability health, Player player) {
+    public AbstractBody update(HealthCapability health, Player player) {
         handleBandaged();
         handleBurning();
         handleInternalInjury(player);
@@ -65,14 +65,14 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     @Override
-    public AbstractBody updatePre(PlayerHealthCapability health, Player player) {
+    public AbstractBody updatePre(HealthCapability health, Player player) {
         super.updatePre(health, player);
         this.nextTickBleed = 0;
         return this;
     }
 
     @Override
-    public float updateVitalityLost(PlayerHealthCapability health, Player player) {
+    public float updateVitalityLost(HealthCapability health, Player player) {
         float lost = 0;
         var burn = this.getCondition(BURN);
         var open_wound = this.getCondition(OPEN_WOUND);
@@ -106,7 +106,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     @Override
-    public int slowDownLevel(PlayerHealthCapability health) {
+    public int slowDownLevel(HealthCapability health) {
         int slowDown = (this.isBandaged() || isBadBandaged()) ? 1 : 0;
         slowDown += this.abnormal(PLASTER_CAST)? 2 : 0;
         return slowDown;
@@ -180,7 +180,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
     }
 
-    private void handleFracture(PlayerHealthCapability health, Player player) {
+    private void handleFracture(HealthCapability health, Player player) {
         if (!this.abnormalWithHidden(FRACTURE)) return;
         this.handleCover(FRACTURE);
 
@@ -193,7 +193,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
             this.healingHidden(FRACTURE, -BodyCondition.get(FRACTURE).healingSpeed() * DELTA);
     }
 
-    private void handleSurgery(PlayerHealthCapability health) {
+    private void handleSurgery(HealthCapability health) {
         Head head = (Head) health.getComponent(HEAD);
         if (this.abnormal(SURGERY_INCISION)) {
             if (!this.abnormal(CLAMPED_BLEEDING))
@@ -212,7 +212,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
                 head.injury(TRAUMATIC_SHOCK, 0.015f * DELTA);
     }
 
-    private void handleBleeding(PlayerHealthCapability health) {
+    private void handleBleeding(HealthCapability health) {
         this.getCondition(BLEED).setValue(this.nextTickBleed);
 
         PlayerBlood blood = (PlayerBlood) health.getComponent(BLOOD);

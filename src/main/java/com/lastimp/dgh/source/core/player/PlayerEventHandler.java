@@ -5,6 +5,7 @@ import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.Network;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -53,7 +54,7 @@ public class PlayerEventHandler {
         if (event.getEntity().level().isClientSide()) return;
         if (!(event.getEntity() instanceof Player player)) return;
 
-        var health = PlayerHealthCapability.get(player);
+        var health = HealthCapability.get(player);
         if (health.getComponent(TORSO).abnormal(RESPIRATORY_ARREST)) {
             event.setCanBreathe(false);
         }

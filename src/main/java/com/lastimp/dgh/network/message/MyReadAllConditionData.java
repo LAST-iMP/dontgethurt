@@ -2,7 +2,7 @@
 package com.lastimp.dgh.network.message;
 
 import com.lastimp.dgh.network.ClientPayloadHandler;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.source.item.tool.BloodScanner;
 import net.minecraft.client.Minecraft;
@@ -28,7 +28,7 @@ public class MyReadAllConditionData {
         this.oper = buffer.readUtf();
     }
 
-    public MyReadAllConditionData(UUID uuid, PlayerHealthCapability health, OperationType operation) {
+    public MyReadAllConditionData(UUID uuid, HealthCapability health, OperationType operation) {
         this.id_most = uuid.getMostSignificantBits();
         this.id_least = uuid.getLeastSignificantBits();
         this.tag = health != null ? health.serializeNBT() : new CompoundTag();
@@ -43,7 +43,7 @@ public class MyReadAllConditionData {
     }
 
     public static void handlerClient(final MyReadAllConditionData data, Supplier<NetworkEvent.Context> ctx) {
-        PlayerHealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag());
+        HealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag());
         OperationType operation = OperationType.valueOf(data.oper());
         if (operation == OperationType.HEALTH_SCANN && ClientPayloadHandler.getHealthScreen() != null) {
             ClientPayloadHandler.getHealthScreen().setHealthData(health);
@@ -59,7 +59,7 @@ public class MyReadAllConditionData {
         var context = ctx.get();
         UUID uuid = new UUID(data.id_most(), data.id_least());
         ServerPlayer targetPlayer = (ServerPlayer) context.getSender().level().getPlayerByUUID(uuid);
-        PlayerHealthCapability health = PlayerHealthCapability.get(targetPlayer);
+        HealthCapability health = HealthCapability.get(targetPlayer);
 
         Network.CLIENT_INSTANCE.send(
                 PacketDistributor.PLAYER.with(context::getSender),
@@ -68,12 +68,12 @@ public class MyReadAllConditionData {
     }
 
 
-    public static MyReadAllConditionData getInstance(UUID uuid, PlayerHealthCapability health, OperationType operation) {
+    public static MyReadAllConditionData getInstance(UUID uuid, HealthCapability health, OperationType operation) {
         return new MyReadAllConditionData(uuid, health, operation);
     }
 
-    public static PlayerHealthCapability getHealthFromInstance(CompoundTag tag) {
-        PlayerHealthCapability health = new PlayerHealthCapability();
+    public static HealthCapability getHealthFromInstance(CompoundTag tag) {
+        HealthCapability health = new HealthCapability();
         health.deserializeNBT(tag);
         return health;
     }

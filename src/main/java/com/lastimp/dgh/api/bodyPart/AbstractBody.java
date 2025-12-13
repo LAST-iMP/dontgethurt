@@ -1,7 +1,6 @@
 package com.lastimp.dgh.api.bodyPart;
 
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
-import net.minecraft.core.HolderLookup;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -83,23 +82,23 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         this.addConditionHidden(key, value);
     }
 
-    public abstract AbstractBody update(PlayerHealthCapability health, Player player);
+    public abstract AbstractBody update(HealthCapability health, Player player);
 
-    public AbstractBody updatePre(PlayerHealthCapability health, Player player) {
+    public AbstractBody updatePre(HealthCapability health, Player player) {
         return this;
     }
 
-    public AbstractBody updatePost(PlayerHealthCapability health, Player player) {
+    public AbstractBody updatePost(HealthCapability health, Player player) {
         this.selfHealing();
         this.updateDisplayValue(health);
         return this;
     }
 
-    public abstract float updateVitalityLost(PlayerHealthCapability health, Player player);
+    public abstract float updateVitalityLost(HealthCapability health, Player player);
 
-    public abstract int slowDownLevel(PlayerHealthCapability health);
+    public abstract int slowDownLevel(HealthCapability health);
 
-    private void updateDisplayValue(PlayerHealthCapability health) {
+    private void updateDisplayValue(HealthCapability health) {
         for (var condition : this.getBodyConditions()) {
             ConditionState state = this.getCondition(condition);
             state.tick();

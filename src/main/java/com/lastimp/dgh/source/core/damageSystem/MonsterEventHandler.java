@@ -1,7 +1,7 @@
 package com.lastimp.dgh.source.core.damageSystem;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
@@ -14,7 +14,7 @@ public class MonsterEventHandler {
     public static void onTargetSet(LivingChangeTargetEvent event) {
         LivingEntity newTarget = event.getNewTarget();
         if (newTarget instanceof Player player) {
-            if (PlayerHealthCapability.isDying(player)) {
+            if (HealthCapability.isDying(player)) {
                 event.setNewTarget(null); // 清除仇恨
             }
         }

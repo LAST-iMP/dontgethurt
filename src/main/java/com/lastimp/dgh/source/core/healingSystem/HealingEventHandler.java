@@ -6,7 +6,7 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.core.player.PlayerDyingHandler;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -45,7 +45,7 @@ public class HealingEventHandler {
         if (event.side.isClient()) return;
 
         ServerPlayer player = (ServerPlayer) event.player;
-        var health = PlayerHealthCapability.getAndSet(player, h -> {
+        var health = HealthCapability.getAndSet(player, h -> {
             h = h.update(player);
             if (!checkTotemDeathProtection(h, player))
                 updatePlayerHealth(h, player);
@@ -57,7 +57,7 @@ public class HealingEventHandler {
         );
     }
 
-    private static void updatePlayerHealth(PlayerHealthCapability health, ServerPlayer player) {
+    private static void updatePlayerHealth(HealthCapability health, ServerPlayer player) {
         float maxHealth = player.getMaxHealth() * health.playerVitality();
         if (player.isDeadOrDying()) {
             PlayerDyingHandler.setDead(player);
@@ -83,7 +83,7 @@ public class HealingEventHandler {
         HealingHandler.handleValindaHealing(player, amount * Config.healing_factor);
     }
 
-    private static boolean checkTotemDeathProtection(PlayerHealthCapability health, ServerPlayer player) {
+    private static boolean checkTotemDeathProtection(HealthCapability health, ServerPlayer player) {
         if (health.playerVitality() > 0) return false;
 
         ItemStack itemstack = null;

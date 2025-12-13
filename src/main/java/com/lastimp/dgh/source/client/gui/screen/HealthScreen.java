@@ -13,7 +13,7 @@ import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.HealthScanner;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
@@ -50,7 +50,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private final HashMap<BodyComponents, HealthComponentWidget> componentWidgets = new HashMap<>();
     private final HashMap<ResourceLocation, HealthConditionWidget> conditionWidgets = new HashMap<>();
     private BodyComponents selectedComponent = null;
-    private static PlayerHealthCapability healthData = null;
+    private static HealthCapability healthData = null;
 
     public HealthScreen(HealthMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -227,11 +227,11 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         }
     }
 
-    public void setHealthData(PlayerHealthCapability healthData) {
+    public void setHealthData(HealthCapability healthData) {
         HealthScreen.healthData = healthData;
     }
 
-    public static PlayerHealthCapability getHealthData() {
+    public static HealthCapability getHealthData() {
         return healthData;
     }
 

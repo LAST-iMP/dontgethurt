@@ -4,7 +4,7 @@ package com.lastimp.dgh.source.core.bodyPart;
 import com.lastimp.dgh.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -12,7 +12,6 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
@@ -56,7 +55,7 @@ public class PlayerBlood extends AbstractBody {
     }
 
     @Override
-    public AbstractBody update(PlayerHealthCapability health, Player player) {
+    public AbstractBody update(HealthCapability health, Player player) {
         this.handleBloodVolume(health);
         this.handleOpiateAddicted(health);
         this.handleOxygen(health, player);
@@ -64,7 +63,7 @@ public class PlayerBlood extends AbstractBody {
     }
 
     @Override
-    public float updateVitalityLost(PlayerHealthCapability health, Player player) {
+    public float updateVitalityLost(HealthCapability health, Player player) {
         float lost = 0;
         if (this.abnormal(OPIATE_OVERDOSE))
             lost += Mth.clamp(this.getConditionValue(OPIATE_OVERDOSE) - 0.5f, 0.0f, 0.5f);
@@ -72,11 +71,11 @@ public class PlayerBlood extends AbstractBody {
     }
 
     @Override
-    public int slowDownLevel(PlayerHealthCapability health) {
+    public int slowDownLevel(HealthCapability health) {
         return this.getConditionValue(OPIATE_OVERDOSE) < 0.5f? 0 : 8;
     }
 
-    private void handleBloodVolume(PlayerHealthCapability health) {
+    private void handleBloodVolume(HealthCapability health) {
         if (!this.abnormalWithHidden(BLOOD_LOSS)) return;
         var value = this.getConditionValue(BLOOD_LOSS);
         if (value > 0.4f) {
@@ -90,7 +89,7 @@ public class PlayerBlood extends AbstractBody {
             this.healing(BLOOD_LOSS, -bloodLoss.healingSpeed() * DELTA);
     }
 
-    private boolean isBleeding(PlayerHealthCapability health) {
+    private boolean isBleeding(HealthCapability health) {
         for (var component : BodyComponents.VISIBLE_BODIES) {
             var body = health.getComponent(component);
             if (body.abnormal(BLEED))
@@ -99,7 +98,7 @@ public class PlayerBlood extends AbstractBody {
         return false;
     }
 
-    private void handleOxygen(PlayerHealthCapability health, Player player) {
+    private void handleOxygen(HealthCapability health, Player player) {
         if (!this.abnormal(OXYGEN)) return;
 
         if (this.getConditionValue(OXYGEN) > 0.1f)
@@ -111,7 +110,7 @@ public class PlayerBlood extends AbstractBody {
         }
     }
 
-    private void handleOpiateAddicted(PlayerHealthCapability health) {
+    private void handleOpiateAddicted(HealthCapability health) {
         if (!this.abnormal(OPIATE_ADDICTED)) return;
 
         Head head = (Head) health.getComponent(HEAD);

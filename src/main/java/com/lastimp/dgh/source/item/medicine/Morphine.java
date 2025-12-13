@@ -5,7 +5,7 @@ import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +20,7 @@ public class Morphine extends AbstractDirectHealItems {
 
     @Override
     public boolean heal(@NotNull ServerPlayer source, @NotNull ServerPlayer target) {
-        return PlayerHealthCapability.getAndSet(target, h -> {
+        return HealthCapability.getAndSet(target, h -> {
             Torso torso = (Torso) h.getComponent(TORSO);
             Head head = (Head) h.getComponent(HEAD);
             PlayerBlood blood = (PlayerBlood) h.getComponent(BLOOD);
