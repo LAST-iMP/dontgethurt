@@ -7,6 +7,7 @@ import com.lastimp.dgh.source.register.ModCapabilities;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.*;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -25,17 +26,17 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     private float almostDead = 1.0f;
     private int nearBedTick = 0;
 
-    public static HealthCapability get(Player player) {
-        return player.getCapability(ModCapabilities.HEALTH).orElse(new HealthCapability());
+    public static HealthCapability get(LivingEntity entity) {
+        return entity.getCapability(ModCapabilities.HEALTH).orElse(new HealthCapability());
     }
 
-    public static void reset(Player player) {
-        var health = get(player);
+    public static void reset(LivingEntity entity) {
+        var health = get(entity);
         health.deserializeNBT(EMPTY.serializeNBT());
     }
 
-    public static <T> T getAndSet(Player player, Function<HealthCapability, T> function) {
-        HealthCapability health = HealthCapability.get(player);
+    public static <T> T getAndSet(LivingEntity entity, Function<HealthCapability, T> function) {
+        HealthCapability health = HealthCapability.get(entity);
         return function.apply(health);
     }
 
@@ -43,19 +44,19 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         return this.body.getComponent(component);
     }
 
-    public HealthCapability update(Player player) {
-        this.body.update(this, player);
-        this.updateLabels(player);
+    public HealthCapability update(LivingEntity entity) {
+        this.body.update(this, entity);
+        this.updateLabels(entity);
         return this;
     }
 
-    private void updateLabels(Player player) {
+    private void updateLabels(LivingEntity entity) {
         if (this.livingTick + 1 > 0) this.livingTick++;
         this.armBreak = (AbstractExtremities.available(this, LEFT_ARM) ? 0 : 1) + (AbstractExtremities.available(this, RIGHT_ARM) ? 0 : 1);
         this.slowDown = this.body.slowDownLevel(this);
-        this.vitality = 1.0f - this.body.updateVitalityLost(this, player);
+        this.vitality = 1.0f - this.body.updateVitalityLost(this, entity);
 
-        float bloodVitalityLost = this.getComponent(BLOOD).updateVitalityLost(this, player);
+        float bloodVitalityLost = this.getComponent(BLOOD).updateVitalityLost(this, entity);
         if (this.vitality + bloodVitalityLost < this.almostDead)
             this.almostDead = this.vitality + bloodVitalityLost;
         this.nearBedTick--;
