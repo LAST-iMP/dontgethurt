@@ -4,6 +4,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
@@ -51,13 +52,13 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
 
 
     @Override
-    public AbstractBody update(HealthCapability health, Player player) {
-        super.update(health, player);
-        this.handleDislocation(health, player);
+    public AbstractBody update(HealthCapability health, LivingEntity entity) {
+        super.update(health, entity);
+        this.handleDislocation(health);
         return this;
     }
 
-    private void handleDislocation(HealthCapability health, Player player) {
+    private void handleDislocation(HealthCapability health) {
         if (!this.abnormal(DISLOCATION)) return;
 
         Torso torso = (Torso) health.getComponent(TORSO);

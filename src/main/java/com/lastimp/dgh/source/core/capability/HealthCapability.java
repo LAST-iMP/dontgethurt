@@ -18,7 +18,7 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.INTENSE_PAIN;
 
 public class HealthCapability implements INBTSerializable<CompoundTag> {
     private final WholeBody body = new WholeBody();
-    private float playerVitality = 1.0f;
+    private float vitality = 1.0f;
     private int slowDown = 0;
     private int armBreak = 0;
     private long livingTick = 0;
@@ -26,11 +26,11 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     private int nearBedTick = 0;
 
     public static HealthCapability get(Player player) {
-        return player.getData(ModCapabilities.PLAYER_HEALTH);
+        return player.getData(ModCapabilities.HEALTH);
     }
 
     public static void set(Player player, HealthCapability capability) {
-        player.setData(ModCapabilities.PLAYER_HEALTH, capability);
+        player.setData(ModCapabilities.HEALTH, capability);
     }
 
     public static <T> T getAndSet(Player player, Function<HealthCapability, T> function) {
@@ -54,18 +54,18 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         if (this.livingTick + 1 > 0) this.livingTick++;
         this.armBreak = (AbstractExtremities.available(this, LEFT_ARM) ? 0 : 1) + (AbstractExtremities.available(this, RIGHT_ARM) ? 0 : 1);
         this.slowDown = this.body.slowDownLevel(this);
-        this.playerVitality = 1.0f - this.body.updateVitalityLost(this, player);
+        this.vitality = 1.0f - this.body.updateVitalityLost(this, player);
 
         float bloodVitalityLost = this.getComponent(BLOOD).updateVitalityLost(this, player);
-        if (this.playerVitality + bloodVitalityLost < this.almostDead)
-            this.almostDead = this.playerVitality + bloodVitalityLost;
+        if (this.vitality + bloodVitalityLost < this.almostDead)
+            this.almostDead = this.vitality + bloodVitalityLost;
         this.nearBedTick--;
     }
 
     @Override
     public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = this.body.serializeNBT(provider);
-        tag.putFloat("playerVitality", this.playerVitality);
+        tag.putFloat("playerVitality", this.vitality);
         tag.putInt("slowDown", this.slowDown);
         tag.putInt("armBreak", this.armBreak);
         tag.putLong("livingTick", this.livingTick);
@@ -78,7 +78,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         if (nbt == null) return;
         this.body.deserializeNBT(provider, nbt);
-        this.playerVitality = nbt.getFloat("playerVitality");
+        this.vitality = nbt.getFloat("playerVitality");
         this.slowDown = nbt.getInt("slowDown");
         this.armBreak = nbt.getInt("armBreak");
         this.livingTick = nbt.getLong("livingTick");
@@ -101,8 +101,8 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         return this.nearBedTick > 0 || ((Torso)this.getComponent(TORSO)).safeSurgery();
     }
 
-    public float playerVitality() {
-        return playerVitality;
+    public float vitality() {
+        return vitality;
     }
 
     public int slowDown() {

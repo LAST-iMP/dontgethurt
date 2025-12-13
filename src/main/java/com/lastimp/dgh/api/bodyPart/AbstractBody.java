@@ -6,6 +6,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -84,19 +85,19 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         this.addConditionHidden(key, value);
     }
 
-    public abstract AbstractBody update(HealthCapability health, Player player);
+    public abstract AbstractBody update(HealthCapability health, LivingEntity entity);
 
-    public AbstractBody updatePre(HealthCapability health, Player player) {
+    public AbstractBody updatePre(HealthCapability health, LivingEntity entity) {
         return this;
     }
 
-    public AbstractBody updatePost(HealthCapability health, Player player) {
+    public AbstractBody updatePost(HealthCapability health, LivingEntity entity) {
         this.selfHealing();
         this.updateDisplayValue(health);
         return this;
     }
 
-    public abstract float updateVitalityLost(HealthCapability health, Player player);
+    public abstract float updateVitalityLost(HealthCapability health, LivingEntity entity);
 
     public abstract int slowDownLevel(HealthCapability health);
 

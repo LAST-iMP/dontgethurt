@@ -5,6 +5,7 @@ import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -31,11 +32,12 @@ public abstract class AbstractLeg extends AbstractExtremities{
         return super.slowDownLevel(health) + (this.available(health)? 0 : 8);
     }
 
-    protected void updateBoneEffect(Player player) {
-        super.updateBoneEffect(player);
-        if (move_speed == null) move_speed = player.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (jump_strength == null) jump_strength = player.getAttribute(Attributes.JUMP_STRENGTH);
-        if (safe_fall_distance == null) safe_fall_distance = player.getAttribute(Attributes.SAFE_FALL_DISTANCE);
+    @Override
+    protected void updateBoneEffect(LivingEntity entity) {
+        super.updateBoneEffect(entity);
+        if (move_speed == null) move_speed = entity.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (jump_strength == null) jump_strength = entity.getAttribute(Attributes.JUMP_STRENGTH);
+        if (safe_fall_distance == null) safe_fall_distance = entity.getAttribute(Attributes.SAFE_FALL_DISTANCE);
 
         updateWoodBoneEffect();
         updateNetheriteBoneEffect();

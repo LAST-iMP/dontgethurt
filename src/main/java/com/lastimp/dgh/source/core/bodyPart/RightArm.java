@@ -21,9 +21,4 @@ public class RightArm extends AbstractArm {
     public RightArm(Void unused) {
         this();
     }
-
-    @Override
-    public AbstractBody update(HealthCapability health, Player player) {
-        return super.update(health, player);
-    }
 }

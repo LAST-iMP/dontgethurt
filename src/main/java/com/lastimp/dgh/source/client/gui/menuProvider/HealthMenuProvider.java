@@ -12,11 +12,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class HealthMenuProvider implements MenuProvider {
-    public final UUID targetPlayer;
+    public final UUID target;
     public final boolean isDevice;
 
-    public HealthMenuProvider(UUID targetPlayer, boolean isDevice) {
-        this.targetPlayer = targetPlayer;
+    public HealthMenuProvider(UUID target, boolean isDevice) {
+        this.target = target;
         this.isDevice = isDevice;
     }
 
@@ -34,6 +34,6 @@ public class HealthMenuProvider implements MenuProvider {
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return new HealthMenu(i, inventory, targetPlayer, isDevice);
+        return new HealthMenu(i, inventory, target, isDevice);
     }
 }

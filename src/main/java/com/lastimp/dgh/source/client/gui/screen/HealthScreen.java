@@ -215,11 +215,11 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     @Override
     protected void containerTick() {
-        if (Minecraft.getInstance().level.getPlayerByUUID(this.menu.targetPlayer).isDeadOrDying())
+        if (Minecraft.getInstance().level.getPlayerByUUID(this.menu.targetEntity).isDeadOrDying())
             GuiOpenWrapper.MINECRAFT.get().setScreen(null);
         else {
             PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
-                    this.menu.targetPlayer, null, HEALTH_SCANN, Minecraft.getInstance().player.registryAccess()
+                    this.menu.targetEntity, null, HEALTH_SCANN, Minecraft.getInstance().player.registryAccess()
             ));
         }
     }

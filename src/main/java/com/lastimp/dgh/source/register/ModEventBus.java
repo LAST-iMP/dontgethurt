@@ -21,7 +21,7 @@ public class ModEventBus {
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerEntity(
-                ModCapabilities.PLAYER_HEALTH_HANDLER,
+                ModCapabilities.HEALTH_HANDLER,
                 EntityType.PLAYER,
                 new HealthProvider()
         );
