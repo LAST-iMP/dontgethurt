@@ -62,7 +62,7 @@ public class PlayerDyingHandler {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         HealthCapability health = HealthCapability.get(player);
-        if (true || health.playerVitality() < 0) {
+        if (true || health.vitality() < 0) {
             player.setDeltaMovement(0, 0, 0); // 阻止起跳速度
         }
     }

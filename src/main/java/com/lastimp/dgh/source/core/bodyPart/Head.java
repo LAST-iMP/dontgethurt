@@ -7,6 +7,7 @@ import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
@@ -54,8 +55,8 @@ public class Head extends AbstractVisibleBody {
     }
 
     @Override
-    public AbstractBody update(HealthCapability health, Player player) {
-        super.update(health, player);
+    public AbstractBody update(HealthCapability health, LivingEntity entity) {
+        super.update(health, entity);
         this.handleWithdraw(health);
         this.handleTraumaticShock(health);
         return this;
@@ -74,8 +75,8 @@ public class Head extends AbstractVisibleBody {
     }
 
     @Override
-    public float updateVitalityLost(HealthCapability health, Player player) {
-        var loss = super.updateVitalityLost(health, player);
+    public float updateVitalityLost(HealthCapability health, LivingEntity entity) {
+        var loss = super.updateVitalityLost(health, entity);
         loss += this.getVitalityWeight() * this.getConditionValue(BRAIN_DAMAGE);
         return loss;
     }

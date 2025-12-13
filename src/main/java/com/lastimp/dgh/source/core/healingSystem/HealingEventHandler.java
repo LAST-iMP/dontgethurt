@@ -55,7 +55,7 @@ public class HealingEventHandler {
     }
 
     private static void updatePlayerHealth(HealthCapability health, ServerPlayer player) {
-        float maxHealth = player.getMaxHealth() * health.playerVitality();
+        float maxHealth = player.getMaxHealth() * health.vitality();
         if (player.isDeadOrDying()) {
             PlayerDyingHandler.setDead(player);
         } else if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative()) {
@@ -71,7 +71,7 @@ public class HealingEventHandler {
     }
 
     @SubscribeEvent
-    public static void onPlayerHealing(LivingHealEvent event) {
+    public static void onHealing(LivingHealEvent event) {
         if (event.getEntity().level().isClientSide()) return;
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (event.getAmount() < 0.01) return;
@@ -81,7 +81,7 @@ public class HealingEventHandler {
     }
 
     private static boolean checkTotemDeathProtection(HealthCapability health, ServerPlayer player) {
-        if (health.playerVitality() > 0) return false;
+        if (health.vitality() > 0) return false;
 
         ItemStack itemstack = null;
         for (InteractionHand interactionhand : InteractionHand.values()) {

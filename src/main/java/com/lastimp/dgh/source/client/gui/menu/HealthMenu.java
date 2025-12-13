@@ -19,16 +19,16 @@ import java.util.UUID;
 public class HealthMenu extends AbstractContainerMenu {
     protected BackpackInventory handler;
     private final List<DynamicSlotItemHandler> bagSlots = new ArrayList<>();
-    public final UUID targetPlayer;
+    public final UUID targetEntity;
     public final boolean isDevice;
 
     public HealthMenu(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
         this(pContainerId, inv, buf.readUUID(), buf.readBoolean());
     }
 
-    public HealthMenu(int pContainerId, Inventory inv, UUID targetPlayer, boolean isDevice) {
+    public HealthMenu(int pContainerId, Inventory inv, UUID targetEntity, boolean isDevice) {
         super(ModMenus.HEALTH_MENU.get(), pContainerId);
-        this.targetPlayer = targetPlayer;
+        this.targetEntity = targetEntity;
         this.isDevice = isDevice;
         layoutPlayerInventorySlots(inv);
     }

@@ -19,9 +19,4 @@ public class RightLeg extends AbstractLeg {
     public RightLeg(Void unused) {
         this();
     }
-
-    @Override
-    public AbstractBody update(HealthCapability health, Player player) {
-        return super.update(health, player);
-    }
 }

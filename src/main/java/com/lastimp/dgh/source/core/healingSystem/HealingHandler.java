@@ -47,7 +47,7 @@ public class HealingHandler {
         if (slot instanceof DynamicSlotItemHandler)
             index += 36;
         PacketDistributor.sendToServer(MyHealingItemUseData.getInstance(
-                healthScreen.getMenu().targetPlayer, index, healthScreen.getSelectedComponent()
+                healthScreen.getMenu().targetEntity, index, healthScreen.getSelectedComponent()
         ));
 
         ItemStack stack = GuiOpenWrapper.MINECRAFT.get().player.getInventory().getItem(index);

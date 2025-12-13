@@ -8,6 +8,7 @@ import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -61,16 +62,17 @@ public class Torso extends AbstractVisibleBody {
     }
 
     @Override
-    public AbstractBody update(HealthCapability health, Player player) {
-        super.update(health, player);
+    public AbstractBody update(HealthCapability health, LivingEntity entity) {
+        super.update(health, entity);
         this.handleRespiratoryArrest();
         return this;
     }
 
-    protected void updateBoneEffect(Player player) {
-        super.updateBoneEffect(player);
-        if (fly_speed == null) fly_speed = player.getAttribute(Attributes.FLYING_SPEED);
-        if (knock_back_resist == null) knock_back_resist = player.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
+    @Override
+    protected void updateBoneEffect(LivingEntity entity) {
+        super.updateBoneEffect(entity);
+        if (fly_speed == null) fly_speed = entity.getAttribute(Attributes.FLYING_SPEED);
+        if (knock_back_resist == null) knock_back_resist = entity.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
 
         updateWoodBoneEffect();
         updateNetheriteBoneEffect();

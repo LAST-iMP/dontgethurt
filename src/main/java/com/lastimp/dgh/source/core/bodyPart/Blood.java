@@ -8,6 +8,7 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
@@ -20,15 +21,15 @@ import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
-public class PlayerBlood extends AbstractBody {
+public class Blood extends AbstractBody {
     private static final Collection<ResourceLocation> uniqueConditions = new ArrayList<>();
     private static List<ResourceLocation> BLOOD_CONDITIONS;
 
-    public PlayerBlood() {
+    public Blood() {
         super();
     }
 
-    public PlayerBlood(Void v) {
+    public Blood(Void v) {
         this();
     }
 
@@ -55,15 +56,15 @@ public class PlayerBlood extends AbstractBody {
     }
 
     @Override
-    public AbstractBody update(HealthCapability health, Player player) {
+    public AbstractBody update(HealthCapability health, LivingEntity entity) {
         this.handleBloodVolume(health);
         this.handleOpiateAddicted(health);
-        this.handleOxygen(health, player);
+        this.handleOxygen(health, entity);
         return this;
     }
 
     @Override
-    public float updateVitalityLost(HealthCapability health, Player player) {
+    public float updateVitalityLost(HealthCapability health, LivingEntity entity) {
         float lost = 0;
         if (this.abnormal(OPIATE_OVERDOSE))
             lost += Mth.clamp(this.getConditionValue(OPIATE_OVERDOSE) - 0.5f, 0.0f, 0.5f);
@@ -98,15 +99,15 @@ public class PlayerBlood extends AbstractBody {
         return false;
     }
 
-    private void handleOxygen(HealthCapability health, Player player) {
+    private void handleOxygen(HealthCapability health, LivingEntity entity) {
         if (!this.abnormal(OXYGEN)) return;
 
         if (this.getConditionValue(OXYGEN) > 0.1f)
             health.getComponent(HEAD).injury(BRAIN_DAMAGE, this.getConditionValue(OXYGEN) * 0.01f * DELTA);
-        if (!health.getComponent(TORSO).abnormal(RESPIRATORY_ARREST) && player.getAirSupply() >= 2) {
+        if (!health.getComponent(TORSO).abnormal(RESPIRATORY_ARREST) && entity.getAirSupply() >= 2) {
             var oxygen = BodyCondition.get(OXYGEN);
             this.healing(OXYGEN, -oxygen.healingSpeed() * DELTA);
-            player.setAirSupply(player.getAirSupply() - 1);
+            entity.setAirSupply(entity.getAirSupply() - 1);
         }
     }
 

@@ -5,7 +5,7 @@ import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.source.register.ModItems;
-import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
+import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +21,7 @@ public class BloodPacksEmpty extends AbstractDirectHealItems {
     @Override
     public boolean heal(@NotNull ServerPlayer source, @NotNull ServerPlayer target) {
         return HealthCapability.getAndSet(target, health -> {
-            PlayerBlood blood = (PlayerBlood) health.getComponent(BodyComponents.BLOOD);
+            Blood blood = (Blood) health.getComponent(BodyComponents.BLOOD);
             float currCondition = blood.getConditionValue(BLOOD_LOSS);
             if (currCondition > BodyCondition.get(BLOOD_LOSS).maxValue() - 0.3f) return false;
 

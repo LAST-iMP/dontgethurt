@@ -205,9 +205,9 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         long tick = GuiOpenWrapper.MINECRAFT.get().level.getGameTime();
         ResourceLocation heartBeat = HUD_HEART_BEAT;
         if (healthData != null) {
-            if (healthData.playerVitality() < 0.1) heartBeat = HUD_HEART_BEAT_STOP;
-            else if (healthData.playerVitality() < 0.4) heartBeat = HUD_HEART_BEAT_ACC2;
-            else if (healthData.playerVitality() < 0.75) heartBeat = HUD_HEART_BEAT_ACC;
+            if (healthData.vitality() < 0.1) heartBeat = HUD_HEART_BEAT_STOP;
+            else if (healthData.vitality() < 0.4) heartBeat = HUD_HEART_BEAT_ACC2;
+            else if (healthData.vitality() < 0.75) heartBeat = HUD_HEART_BEAT_ACC;
         }
 //        GuiOpenWrapper.MINECRAFT.get().player.playSound();
 
@@ -223,11 +223,11 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     @Override
     protected void containerTick() {
-        if (Minecraft.getInstance().level.getPlayerByUUID(this.menu.targetPlayer).isDeadOrDying())
+        if (Minecraft.getInstance().level.getPlayerByUUID(this.menu.targetEntity).isDeadOrDying())
             GuiOpenWrapper.MINECRAFT.get().setScreen(null);
         else {
             PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
-                    this.menu.targetPlayer, null, HEALTH_SCANN, Minecraft.getInstance().player.registryAccess()
+                    this.menu.targetEntity, null, HEALTH_SCANN, Minecraft.getInstance().player.registryAccess()
             ));
         }
     }
