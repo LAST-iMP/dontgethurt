@@ -8,6 +8,7 @@ import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -23,8 +24,8 @@ public class Sutures extends AbstractPartlyHealItem {
     }
 
     @Override
-    protected boolean healOn(@NotNull ServerPlayer source, @NotNull ServerPlayer target, BodyComponents component) {
-        return HealthCapability.getAndSet(target, health -> {
+    protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
+        return HealthCapability.getAndSet(entity, health -> {
             AbstractBody body = health.getComponent(component);
 
             boolean success = false;

@@ -13,6 +13,8 @@ import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -29,18 +31,22 @@ public class SurgerySaw extends AbstractPartlyHealItem {
     }
 
     @Override
-    protected boolean healOn(@NotNull ServerPlayer source, @NotNull ServerPlayer target, BodyComponents component) {
-        return HealthCapability.getAndSet(target, (h) -> {
+    protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
+        return HealthCapability.getAndSet(entity, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             if (!body.abnormal(RETRACTED_SKIN)) return false;
             if (body.abnormal(SAWED_BONES)) return false;
             if (component == BodyComponents.HEAD) {
+                if (!(entity instanceof Player player)) {
+                    entity.kill();
+                    return true;
+                }
                 ItemStack head = new ItemStack(Items.PLAYER_HEAD);
-                head.set(DataComponents.PROFILE, new ResolvableProfile(target.getGameProfile()));
+                head.set(DataComponents.PROFILE, new ResolvableProfile(player.getGameProfile()));
                 if (!source.addItem(head)) {
                     source.drop(head, true, true);
                 }
-                PlayerDyingHandler.setDead(target);
+                PlayerDyingHandler.setDead(player);
             } else {
                 body.setConditionValue(SAWED_BONES, BodyCondition.get(SAWED_BONES).maxValue());
                 body.setConditionValue(DRILLED_BONES, BodyCondition.get(DRILLED_BONES).defaultValue());
