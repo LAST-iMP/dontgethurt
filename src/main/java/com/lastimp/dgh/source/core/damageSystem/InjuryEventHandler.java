@@ -7,7 +7,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModDamageType;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -16,7 +16,6 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
@@ -42,7 +41,7 @@ public class InjuryEventHandler {
         }
 
         damageAmount /= player.getMaxHealth() * Config.body_life_factor;
-        damageAmount /= PlayerHealthCapability.isDying(player)? 10f : 1f;
+        damageAmount /= HealthCapability.isDying(player)? 10f : 1f;
 
         if (source.is(DamageTypeTags.IS_FALL)) {
             handleFalling(damageAmount, player, event);
@@ -62,7 +61,7 @@ public class InjuryEventHandler {
     }
 
     public static void handleFalling(float damageAmount, Player player, LivingDamageEvent event) {
-        PlayerHealthCapability.getAndSet(player, h -> {
+        HealthCapability.getAndSet(player, h -> {
             float[] weight = Utils.getRandom(1, 1);
             for (int i = 0; i < LEGS.size(); i++) {
                 var leg = h.getComponent(LEGS.get(i));
@@ -74,7 +73,7 @@ public class InjuryEventHandler {
     }
 
     public static void handleBurning(float damageAmount, Player player, LivingDamageEvent event) {
-        PlayerHealthCapability.getAndSet(player, h -> {
+        HealthCapability.getAndSet(player, h -> {
             BodyComponents randomComponent = BodyComponents.random();
 
             BurnHandler.handle(h, h.getComponent(randomComponent), damageAmount);
@@ -84,7 +83,7 @@ public class InjuryEventHandler {
     }
 
     public static void handleDrowning(float damageAmount, Player player, LivingDamageEvent event) {
-        PlayerHealthCapability.getAndSet(player, h -> {
+        HealthCapability.getAndSet(player, h -> {
             PlayerBlood blood = (PlayerBlood) h.getComponent(BLOOD);
             blood.injury(OXYGEN, damageAmount / 20);
             return h;
@@ -93,7 +92,7 @@ public class InjuryEventHandler {
     }
 
     public static void handleExplosion(float damageAmount, Player player, LivingDamageEvent event) {
-        PlayerHealthCapability.getAndSet(player, h -> {
+        HealthCapability.getAndSet(player, h -> {
             float[] weight = Utils.getRandom(1.5f,3,2,2,1.5f,1.5f);
             for (int i = 0; i < VISIBLE_BODIES.size(); i++) {
                 var body = h.getComponent(VISIBLE_BODIES.get(i));
@@ -106,7 +105,7 @@ public class InjuryEventHandler {
     }
 
     public static void handleEntityAttack(float damageAmount, Player player, LivingDamageEvent event) {
-        PlayerHealthCapability.getAndSet(player, h -> {
+        HealthCapability.getAndSet(player, h -> {
             var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(1,2,2,2,0.5f,0.5f)));
             OpenWoundHandler.handleEntityAttack(body, damageAmount);
             return h;
@@ -120,7 +119,7 @@ public class InjuryEventHandler {
     }
 
     public static void handleDefaultDamage(float damageAmount, Player player, LivingDamageEvent event) {
-        PlayerHealthCapability.getAndSet(player, h -> {
+        HealthCapability.getAndSet(player, h -> {
             var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(1,2,2,2,0.5f,0.5f)));
             InternalInjuryHandler.handleBluntTrauma(body, damageAmount);
             return h;

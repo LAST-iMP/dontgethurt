@@ -1,6 +1,6 @@
 package com.lastimp.dgh.api.bodyPart;
 
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -25,7 +25,7 @@ public abstract class AbstractArm extends AbstractExtremities{
     }
 
     @Override
-    public AbstractBody update(PlayerHealthCapability health, Player player) {
+    public AbstractBody update(HealthCapability health, Player player) {
         super.update(health, player);
         return this;
     }

@@ -8,18 +8,15 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.player.PlayerDyingHandler;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.PlayerHeadItem;
 import net.minecraft.world.item.component.ResolvableProfile;
-import net.minecraft.world.level.storage.loot.functions.FillPlayerHead;
 import org.jetbrains.annotations.NotNull;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
@@ -33,7 +30,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull ServerPlayer target, BodyComponents component) {
-        return PlayerHealthCapability.getAndSet(target, (h) -> {
+        return HealthCapability.getAndSet(target, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             if (!body.abnormal(RETRACTED_SKIN)) return false;
             if (body.abnormal(SAWED_BONES)) return false;
@@ -53,7 +50,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
         });
     }
 
-    protected void saw(@NotNull PlayerHealthCapability health, ServerPlayer player, BodyComponents component) {
+    protected void saw(@NotNull HealthCapability health, ServerPlayer player, BodyComponents component) {
         int boneNumMax = (component == BodyComponents.TORSO) ? 8 : 2;
         AbstractVisibleBody body = (AbstractVisibleBody) health.getComponent(component);
 

@@ -1,6 +1,6 @@
 package com.lastimp.dgh.api.bodyPart;
 
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -26,7 +26,7 @@ public abstract class AbstractLeg extends AbstractExtremities{
     }
 
     @Override
-    public int slowDownLevel(PlayerHealthCapability health) {
+    public int slowDownLevel(HealthCapability health) {
         return super.slowDownLevel(health) + (this.available(health)? 0 : 8);
     }
 

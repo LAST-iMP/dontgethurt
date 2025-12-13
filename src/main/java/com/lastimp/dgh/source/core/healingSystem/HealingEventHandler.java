@@ -2,24 +2,17 @@ package com.lastimp.dgh.source.core.healingSystem;
 
 import com.lastimp.dgh.Config;
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.api.bodyPart.ConditionState;
-import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.core.player.PlayerDyingHandler;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
@@ -31,9 +24,6 @@ import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.lastimp.dgh.api.enums.OperationType.SYN;
 
@@ -53,7 +43,7 @@ public class HealingEventHandler {
         if (event.getEntity().level().isClientSide) return;
 
         ServerPlayer player = (ServerPlayer) event.getEntity();
-        var health = PlayerHealthCapability.getAndSet(player, h -> {
+        var health = HealthCapability.getAndSet(player, h -> {
             h = h.update(player);
             if (!checkTotemDeathProtection(h, player))
                 updatePlayerHealth(h, player);
@@ -64,7 +54,7 @@ public class HealingEventHandler {
         ));
     }
 
-    private static void updatePlayerHealth(PlayerHealthCapability health, ServerPlayer player) {
+    private static void updatePlayerHealth(HealthCapability health, ServerPlayer player) {
         float maxHealth = player.getMaxHealth() * health.playerVitality();
         if (player.isDeadOrDying()) {
             PlayerDyingHandler.setDead(player);
@@ -90,7 +80,7 @@ public class HealingEventHandler {
         HealingHandler.handleValindaHealing(player, amount * Config.healing_factor);
     }
 
-    private static boolean checkTotemDeathProtection(PlayerHealthCapability health, ServerPlayer player) {
+    private static boolean checkTotemDeathProtection(HealthCapability health, ServerPlayer player) {
         if (health.playerVitality() > 0) return false;
 
         ItemStack itemstack = null;

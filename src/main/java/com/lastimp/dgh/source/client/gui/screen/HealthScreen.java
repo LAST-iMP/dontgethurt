@@ -12,24 +12,19 @@ import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.HealthScanner;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.joml.Matrix4f;
 
 import java.util.HashMap;
 
@@ -55,7 +50,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private final HashMap<BodyComponents, HealthComponentWidget> componentWidgets = new HashMap<>();
     private final HashMap<ResourceLocation, HealthConditionWidget> conditionWidgets = new HashMap<>();
     private BodyComponents selectedComponent = null;
-    private static PlayerHealthCapability healthData = null;
+    private static HealthCapability healthData = null;
 
     public HealthScreen(HealthMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -237,11 +232,11 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         }
     }
 
-    public void setHealthData(PlayerHealthCapability healthData) {
+    public void setHealthData(HealthCapability healthData) {
         HealthScreen.healthData = healthData;
     }
 
-    public static PlayerHealthCapability getHealthData() {
+    public static HealthCapability getHealthData() {
         return healthData;
     }
 

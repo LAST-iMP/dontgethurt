@@ -1,5 +1,5 @@
 
-package com.lastimp.dgh.source.core.player;
+package com.lastimp.dgh.source.core.capability;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
@@ -16,7 +16,7 @@ import java.util.function.Function;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
-public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
+public class HealthCapability implements INBTSerializable<CompoundTag> {
     private final WholeBody body = new WholeBody();
     private float playerVitality = 1.0f;
     private int slowDown = 0;
@@ -25,18 +25,18 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
     private float almostDead = 1.0f;
     private int nearBedTick = 0;
 
-    public static PlayerHealthCapability get(Player player) {
+    public static HealthCapability get(Player player) {
         return player.getData(ModCapabilities.PLAYER_HEALTH);
     }
 
-    public static void set(Player player, PlayerHealthCapability capability) {
+    public static void set(Player player, HealthCapability capability) {
         player.setData(ModCapabilities.PLAYER_HEALTH, capability);
     }
 
-    public static <T> T getAndSet(Player player, Function<PlayerHealthCapability, T> function) {
-        PlayerHealthCapability health = PlayerHealthCapability.get(player);
+    public static <T> T getAndSet(Player player, Function<HealthCapability, T> function) {
+        HealthCapability health = HealthCapability.get(player);
         T result = function.apply(health);
-        PlayerHealthCapability.set(player, health);
+        HealthCapability.set(player, health);
         return result;
     }
 
@@ -44,7 +44,7 @@ public class PlayerHealthCapability implements INBTSerializable<CompoundTag> {
         return this.body.getComponent(component);
     }
 
-    public PlayerHealthCapability update(Player player) {
+    public HealthCapability update(Player player) {
         this.body.update(this, player);
         this.updateLabels(player);
         return this;

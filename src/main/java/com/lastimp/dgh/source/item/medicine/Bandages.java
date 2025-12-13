@@ -3,10 +3,9 @@ package com.lastimp.dgh.source.item.medicine;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +20,7 @@ public class Bandages extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull ServerPlayer target, BodyComponents component) {
-        return PlayerHealthCapability.getAndSet(target, health -> {
+        return HealthCapability.getAndSet(target, health -> {
             AbstractBody body = health.getComponent(component);
             float currCondition = body.getConditionValue(BANDAGED);
             if (body.abnormal(SURGERY_INCISION)) return false;
@@ -42,7 +41,7 @@ public class Bandages extends AbstractPartlyHealItem {
     }
 
     public static boolean cut(ServerPlayer target, BodyComponents component) {
-        return PlayerHealthCapability.getAndSet(target, health -> {
+        return HealthCapability.getAndSet(target, health -> {
             AbstractBody body = health.getComponent(component);
             if (body.abnormal(BANDAGED)) {
                 body.setConditionValue(BANDAGED, BodyCondition.get(BANDAGED).defaultValue());

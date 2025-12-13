@@ -2,7 +2,7 @@ package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
@@ -35,7 +35,7 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
         return EXTREMITY_CONDITIONS;
     }
 
-    public boolean available(PlayerHealthCapability health) {
+    public boolean available(HealthCapability health) {
         boolean available = this.isBandaged() || this.isBadBandaged() || !this.abnormal(DISLOCATION);
         available &= this.abnormal(PLASTER_CAST) || !this.abnormalWithHidden(FRACTURE);
         available |= health.getComponent(TORSO).abnormal(ANALGESIA);
@@ -43,7 +43,7 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
         return available;
     }
 
-    public static boolean available(PlayerHealthCapability health, BodyComponents components) {
+    public static boolean available(HealthCapability health, BodyComponents components) {
         if (!BodyComponents.EXTREMITIES.contains(components)) return true;
         AbstractExtremities body = (AbstractExtremities) health.getComponent(components);
         return body.available(health);
@@ -51,13 +51,13 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
 
 
     @Override
-    public AbstractBody update(PlayerHealthCapability health, Player player) {
+    public AbstractBody update(HealthCapability health, Player player) {
         super.update(health, player);
         this.handleDislocation(health, player);
         return this;
     }
 
-    private void handleDislocation(PlayerHealthCapability health, Player player) {
+    private void handleDislocation(HealthCapability health, Player player) {
         if (!this.abnormal(DISLOCATION)) return;
 
         Torso torso = (Torso) health.getComponent(TORSO);

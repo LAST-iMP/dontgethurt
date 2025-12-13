@@ -1,7 +1,7 @@
 package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.core.player.PlayerHealthProvider;
+import com.lastimp.dgh.source.core.capability.HealthProvider;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
@@ -23,7 +23,7 @@ public class ModEventBus {
         event.registerEntity(
                 ModCapabilities.PLAYER_HEALTH_HANDLER,
                 EntityType.PLAYER,
-                new PlayerHealthProvider()
+                new HealthProvider()
         );
     }
 

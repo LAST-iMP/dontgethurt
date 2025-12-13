@@ -4,17 +4,15 @@ package com.lastimp.dgh.network;
 import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.api.tags.ModTags;
-import com.lastimp.dgh.source.client.gui.menu.BagMenu;
 import com.lastimp.dgh.source.client.gui.menu.HealthMenu;
 import com.lastimp.dgh.source.core.player.PlayerDyingHandler;
-import com.lastimp.dgh.source.item.bases.BackpackInventory;
 import com.lastimp.dgh.source.register.ModItems;
 import com.lastimp.dgh.source.client.gui.menuProvider.HealthCareBagMenuProvider;
 import com.lastimp.dgh.source.client.gui.menuProvider.HealthMenuProvider;
 import com.lastimp.dgh.source.client.gui.menuProvider.SurgeryToolBagMenuProvider;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
@@ -32,7 +30,7 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
                     UUID uuid = new UUID(data.id_most(), data.id_least());
                     ServerPlayer targetPlayer = (ServerPlayer) context.player().level().getPlayerByUUID(uuid);
-                    PlayerHealthCapability health = PlayerHealthCapability.get(targetPlayer);
+                    HealthCapability health = HealthCapability.get(targetPlayer);
 
                     PacketDistributor.sendToPlayer(
                             (ServerPlayer) context.player(),
