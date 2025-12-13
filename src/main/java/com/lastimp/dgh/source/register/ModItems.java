@@ -292,6 +292,13 @@ public class ModItems {
                     .stacksTo(16)
     );
 
+    public static final RegistryObject<Item> NALOXONE = registerItem(
+            "naloxone",
+            Naloxone::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }
