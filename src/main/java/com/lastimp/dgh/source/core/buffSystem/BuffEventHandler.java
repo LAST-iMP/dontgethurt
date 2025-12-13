@@ -88,7 +88,7 @@ public class BuffEventHandler {
 
     private static void updateCureEffects(HealthCapability health, ServerPlayer player) {
         if (player.hasEffect(ModEffects.CURE_EFFECT.get())) return;
-        if (health.playerVitality() < 0.999f) return;
+        if (health.vitality() < 0.999f) return;
         if (health.almostDead() < 0.2f) {
             player.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT.get(), 2400, 2));
         } else if (health.almostDead() < 0.5f) {

@@ -4,6 +4,7 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -29,15 +30,16 @@ public abstract class AbstractArm extends AbstractExtremities{
     }
 
     @Override
-    public AbstractBody update(HealthCapability health, Player player) {
-        super.update(health, player);
+    public AbstractBody update(HealthCapability health, LivingEntity entity) {
+        super.update(health, entity);
         return this;
     }
 
-    protected void updateBoneEffect(Player player) {
-        super.updateBoneEffect(player);
-        if (attack_speed == null) attack_speed = player.getAttribute(Attributes.ATTACK_SPEED);
-        player.getAttribute(Attributes.ARMOR);
+    @Override
+    protected void updateBoneEffect(LivingEntity entity) {
+        super.updateBoneEffect(entity);
+        if (attack_speed == null) attack_speed = entity.getAttribute(Attributes.ATTACK_SPEED);
+        entity.getAttribute(Attributes.ARMOR);
 
         updateNetheriteBoneEffect();
     }

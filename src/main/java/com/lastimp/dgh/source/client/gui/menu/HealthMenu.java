@@ -2,7 +2,6 @@ package com.lastimp.dgh.source.client.gui.menu;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.client.gui.component.DynamicSlotItemHandler;
-import com.lastimp.dgh.source.register.ModItems;
 import com.lastimp.dgh.source.register.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -19,7 +18,7 @@ import java.util.UUID;
 public class HealthMenu extends AbstractContainerMenu {
     protected IItemHandler handler;
     private final List<DynamicSlotItemHandler> bagSlots = new ArrayList<>();
-    public final UUID targetPlayer;
+    public final UUID targetEntity;
     public final boolean isDevice;
 
     public HealthMenu(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
@@ -27,9 +26,9 @@ public class HealthMenu extends AbstractContainerMenu {
         DontGetHurt.LOGGER.info("Client Side Menu");
     }
 
-    public HealthMenu(int pContainerId, Inventory inv, UUID targetPlayer, boolean isDevice) {
+    public HealthMenu(int pContainerId, Inventory inv, UUID targetEntity, boolean isDevice) {
         super(ModMenus.HEALTH_MENU.get(), pContainerId);
-        this.targetPlayer = targetPlayer;
+        this.targetEntity = targetEntity;
         this.isDevice = isDevice;
         layoutPlayerInventorySlots(inv);
         DontGetHurt.LOGGER.info("Server Side Menu");

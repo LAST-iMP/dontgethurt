@@ -4,9 +4,8 @@ import com.lastimp.dgh.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.bodyPart.Head;
-import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
+import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
-import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import com.lastimp.dgh.source.item.medicine.Sutures;
 import com.lastimp.dgh.source.item.tool.Scalpel;
 import com.lastimp.dgh.source.register.ModItems;
@@ -18,7 +17,6 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static com.lastimp.dgh.DontGetHurt.EPS;
 
@@ -434,7 +432,7 @@ public class BodyCondition {
                 BRAIN_DAMAGE
         ));
 
-        PlayerBlood.addCondition(List.of(
+        Blood.addCondition(List.of(
                 SEPSIS,
                 HEMOTRANSFUSION,
                 BLOOD_LOSS,

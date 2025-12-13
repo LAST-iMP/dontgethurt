@@ -3,7 +3,7 @@ package com.lastimp.dgh.source.item.medicine;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.source.core.bodyPart.Head;
-import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
+import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,7 +23,7 @@ public class Naloxone extends AbstractDirectHealItems {
         return HealthCapability.getAndSet(target, h -> {
             Torso torso = (Torso) h.getComponent(TORSO);
             Head head = (Head) h.getComponent(HEAD);
-            PlayerBlood blood = (PlayerBlood) h.getComponent(BLOOD);
+            Blood blood = (Blood) h.getComponent(BLOOD);
 
             torso.healing(ANALGESIA, -0.6f);
             head.healing(WITHDRAW, -0.6f);

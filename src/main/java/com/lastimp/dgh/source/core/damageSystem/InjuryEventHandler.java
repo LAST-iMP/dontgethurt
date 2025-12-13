@@ -6,7 +6,7 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModDamageType;
 import com.lastimp.dgh.source.core.Utils;
-import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
+import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -25,7 +25,7 @@ import static com.lastimp.dgh.api.enums.BodyComponents.VISIBLE_BODIES;
 public class InjuryEventHandler {
 
     @SubscribeEvent
-    public static void onPlayerInjury(LivingDamageEvent event) {
+    public static void onInjury(LivingDamageEvent event) {
         if (event.getEntity().level().isClientSide) return;
         if (!(event.getEntity() instanceof Player)) return;
 
@@ -85,7 +85,7 @@ public class InjuryEventHandler {
 
     public static void handleDrowning(float damageAmount, Player player, LivingDamageEvent event) {
         HealthCapability.getAndSet(player, h -> {
-            PlayerBlood blood = (PlayerBlood) h.getComponent(BLOOD);
+            Blood blood = (Blood) h.getComponent(BLOOD);
             blood.injury(OXYGEN, damageAmount / 20);
             return h;
         });

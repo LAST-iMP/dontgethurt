@@ -30,8 +30,8 @@ public class ForgeClientEventHandler {
     @SubscribeEvent
     public static void onPlayerCloned(PlayerEvent.Clone event) {
         if (!event.isWasDeath()) {
-            LazyOptional<HealthCapability> oldHealth = event.getOriginal().getCapability(ModCapabilities.PLAYER_HEALTH);
-            LazyOptional<HealthCapability> newHealth = event.getEntity().getCapability(ModCapabilities.PLAYER_HEALTH);
+            LazyOptional<HealthCapability> oldHealth = event.getOriginal().getCapability(ModCapabilities.HEALTH);
+            LazyOptional<HealthCapability> newHealth = event.getEntity().getCapability(ModCapabilities.HEALTH);
             if (oldHealth.isPresent() && newHealth.isPresent()) {
                 newHealth.ifPresent((newCap) ->
                         oldHealth.ifPresent((oldCap) ->

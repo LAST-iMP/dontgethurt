@@ -7,6 +7,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class WholeBody extends AbstractBody {
         components.put(RIGHT_LEG, new RightLeg());
         components.put(HEAD, new Head());
         components.put(TORSO, new Torso());
-        components.put(BLOOD, new PlayerBlood());
+        components.put(BLOOD, new Blood());
     }
 
     public AbstractBody getComponent(BodyComponents component) {
@@ -60,22 +61,22 @@ public class WholeBody extends AbstractBody {
     }
 
     @Override
-    public AbstractBody update(HealthCapability health, Player player) {
+    public AbstractBody update(HealthCapability health, LivingEntity entity) {
         for (BodyComponents components : this.components.keySet()) {
-            this.updateComponent(components, health, player);
+            this.updateComponent(components, health, entity);
         }
         return this;
     }
 
-    private void updateComponent(BodyComponents component, HealthCapability health, Player player) {
-        components.get(component).updatePre(health, player).update(health, player).updatePost(health, player);
+    private void updateComponent(BodyComponents component, HealthCapability health, LivingEntity entity) {
+        components.get(component).updatePre(health, entity).update(health, entity).updatePost(health, entity);
     }
 
     @Override
-    public float updateVitalityLost(HealthCapability health, Player player) {
+    public float updateVitalityLost(HealthCapability health, LivingEntity entity) {
         float lost = 0;
         for (BodyComponents components : this.components.keySet()) {
-            lost += this.getComponent(components).updateVitalityLost(health, player);
+            lost += this.getComponent(components).updateVitalityLost(health, entity);
         }
         return lost;
     }
@@ -100,7 +101,7 @@ public class WholeBody extends AbstractBody {
         components.put(RIGHT_LEG, AbstractBody.buildFromNBT(nbt.getCompound(RIGHT_LEG.name()), RightLeg::new));
         components.put(HEAD, AbstractBody.buildFromNBT(nbt.getCompound(HEAD.name()), Head::new));
         components.put(TORSO, AbstractBody.buildFromNBT(nbt.getCompound(TORSO.name()), Torso::new));
-        components.put(BLOOD, AbstractBody.buildFromNBT(nbt.getCompound(BLOOD.name()), PlayerBlood::new));
+        components.put(BLOOD, AbstractBody.buildFromNBT(nbt.getCompound(BLOOD.name()), Blood::new));
         super.deserializeNBT(nbt.getCompound(WHOLE_BODY.name()));
     }
 }

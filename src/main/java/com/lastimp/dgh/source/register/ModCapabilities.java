@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModCapabilities {
-    public static final Capability<HealthCapability> PLAYER_HEALTH = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<HealthCapability> HEALTH = CapabilityManager.get(new CapabilityToken<>(){});
 
     public static void register(RegisterCapabilitiesEvent event) {
         event.register(HealthCapability.class);

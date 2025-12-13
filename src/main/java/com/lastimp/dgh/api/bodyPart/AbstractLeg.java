@@ -4,6 +4,7 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -35,10 +36,11 @@ public abstract class AbstractLeg extends AbstractExtremities{
         return super.slowDownLevel(health) + (this.available(health)? 0 : 8);
     }
 
-    protected void updateBoneEffect(Player player) {
-        super.updateBoneEffect(player);
-        if (move_speed == null) move_speed = player.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (jump_strength == null) jump_strength = player.getAttribute(Attributes.JUMP_STRENGTH);
+    @Override
+    protected void updateBoneEffect(LivingEntity entity) {
+        super.updateBoneEffect(entity);
+        if (move_speed == null) move_speed = entity.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (jump_strength == null) jump_strength = entity.getAttribute(Attributes.JUMP_STRENGTH);
 
         updateWoodBoneEffect();
         updateNetheriteBoneEffect();
@@ -81,7 +83,7 @@ public abstract class AbstractLeg extends AbstractExtremities{
     }
 
     @SubscribeEvent
-    public static void onPlayerFall(LivingFallEvent event) {
+    public static void onFall(LivingFallEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
 
         var health = HealthCapability.get(player);

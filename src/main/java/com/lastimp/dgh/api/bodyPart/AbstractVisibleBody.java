@@ -2,12 +2,13 @@ package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.Config;
 import com.lastimp.dgh.source.core.bodyPart.Head;
-import com.lastimp.dgh.source.core.bodyPart.PlayerBlood;
+import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -52,27 +53,27 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     @Override
-    public AbstractBody update(HealthCapability health, Player player) {
+    public AbstractBody update(HealthCapability health, LivingEntity entity) {
         handleBandaged();
         handleBurning();
-        handleInternalInjury(player);
+        handleInternalInjury();
         handleOpenWound();
-        handleFracture(health, player);
+        handleFracture(health);
         handleSurgery(health);
         handleBleeding(health);
-        updateBoneEffect(player);
+        updateBoneEffect(entity);
         return this;
     }
 
     @Override
-    public AbstractBody updatePre(HealthCapability health, Player player) {
-        super.updatePre(health, player);
+    public AbstractBody updatePre(HealthCapability health, LivingEntity entity) {
+        super.updatePre(health, entity);
         this.nextTickBleed = 0;
         return this;
     }
 
     @Override
-    public float updateVitalityLost(HealthCapability health, Player player) {
+    public float updateVitalityLost(HealthCapability health, LivingEntity entity) {
         float lost = 0;
         var burn = this.getCondition(BURN);
         var open_wound = this.getCondition(OPEN_WOUND);
@@ -141,20 +142,10 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.nextTickBleed += this.getCondition(BURN).getValue() * Config.burn_bleed_ratio;
     }
 
-    private void handleInternalInjury(Player player) {
+    private void handleInternalInjury() {
         if (!this.abnormalWithHidden(INTERNAL_INJURY)) return;
 
         this.nextTickBleed += this.getCondition(INTERNAL_INJURY).getValue() * Config.internal_bleed_ratio;
-
-        float saturation = player.getFoodData().getSaturationLevel();
-        float delta = BodyCondition.get(INTERNAL_INJURY).healingSpeed() * DELTA;
-        if (saturation > 0) {
-            if (this.abnormalWithHidden(INTERNAL_INJURY))
-                this.healingHidden(INTERNAL_INJURY, -delta);
-            else
-                this.healing(INTERNAL_INJURY, -delta * Config.internal_food_healing);
-            player.causeFoodExhaustion(delta * Config.internal_food_healing * 2);
-        }
     }
 
     private void handleOpenWound() {
@@ -180,7 +171,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
     }
 
-    private void handleFracture(HealthCapability health, Player player) {
+    private void handleFracture(HealthCapability health) {
         if (!this.abnormalWithHidden(FRACTURE)) return;
         this.handleCover(FRACTURE);
 
@@ -215,14 +206,14 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     private void handleBleeding(HealthCapability health) {
         this.getCondition(BLEED).setValue(this.nextTickBleed);
 
-        PlayerBlood blood = (PlayerBlood) health.getComponent(BLOOD);
+        Blood blood = (Blood) health.getComponent(BLOOD);
         blood.addConditionValue(BLOOD_LOSS, this.nextTickBleed * DELTA * Config.bleed_volume_ratio * this.getVitalityWeight());
     }
 
-    protected void updateBoneEffect(Player player) {
-        if (armor == null) armor = player.getAttribute(Attributes.ARMOR);
-        if (armor_toughness == null) armor_toughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
-        if (knock_back_resist == null) knock_back_resist = player.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
+    protected void updateBoneEffect(LivingEntity entity) {
+        if (armor == null) armor = entity.getAttribute(Attributes.ARMOR);
+        if (armor_toughness == null) armor_toughness = entity.getAttribute(Attributes.ARMOR_TOUGHNESS);
+        if (knock_back_resist == null) knock_back_resist = entity.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
 
         updateStoneBoneEffect();
         updateCopperBoneEffect();
