@@ -31,7 +31,8 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.BLOOD_PACK_EMPTY.getKey())
                 .add(ModItems.GYPSUM.getKey())
                 .add(ModItems.MORPHINE.getKey())
-                .add(ModItems.SUTURE.getKey());
+                .add(ModItems.SUTURE.getKey())
+                .add(ModItems.NALOXONE.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS)
                 .add(SHEARS)
