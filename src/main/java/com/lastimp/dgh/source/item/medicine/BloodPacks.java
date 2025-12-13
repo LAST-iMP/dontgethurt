@@ -6,6 +6,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.source.core.bodyPart.Blood;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,8 +19,8 @@ public class BloodPacks extends AbstractDirectHealItems {
     }
 
     @Override
-    public boolean heal(@NotNull ServerPlayer source, @NotNull ServerPlayer target) {
-        return HealthCapability.getAndSet(target, health -> {
+    public boolean heal(@NotNull ServerPlayer source, @NotNull LivingEntity entity) {
+        return HealthCapability.getAndSet(entity, health -> {
             Blood blood = (Blood) health.getComponent(BodyComponents.BLOOD);
             if (!blood.abnormal(BLOOD_LOSS)) return false;
 

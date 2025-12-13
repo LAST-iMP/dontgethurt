@@ -44,7 +44,7 @@ public abstract class AbstractDirectHealItems extends AbstractHealingItem{
         super(properties);
     }
 
-    public abstract boolean heal(@NotNull ServerPlayer source, @NotNull ServerPlayer target);
+    public abstract boolean heal(@NotNull ServerPlayer source, @NotNull LivingEntity entity);
 
     protected abstract BodyComponents getAvaComponent();
 

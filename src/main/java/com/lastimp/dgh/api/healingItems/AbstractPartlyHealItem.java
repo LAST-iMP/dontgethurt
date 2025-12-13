@@ -4,6 +4,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.item.medicine.Sutures;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -16,13 +17,13 @@ public abstract class AbstractPartlyHealItem extends AbstractHealingItem{
         initComponents();
     }
 
-    public boolean heal(@NotNull ServerPlayer source, @NotNull ServerPlayer target, BodyComponents component) {
+    public boolean heal(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
         if (component == null) return false;
         if (!this.getApplicableComponents().contains(component)) return false;
-        return this.healOn(source, target, component);
+        return this.healOn(source, entity, component);
     }
 
-    protected abstract boolean healOn(@NotNull ServerPlayer source, @NotNull ServerPlayer target, BodyComponents component);
+    protected abstract boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component);
 
     public HashSet<BodyComponents> getApplicableComponents() {
         return applicableComponents;
