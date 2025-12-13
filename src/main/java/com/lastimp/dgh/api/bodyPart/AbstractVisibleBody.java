@@ -340,15 +340,23 @@ public abstract class AbstractVisibleBody extends AbstractBody {
             uuid_bone_netherite = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
 
         if (this.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS) {
-            if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_netherite) == null)
-                knock_back_resist.addPermanentModifier(new AttributeModifier(
+            if (armor != null && armor.getModifier(uuid_bone_netherite) == null)
+                armor.addPermanentModifier(new AttributeModifier(
                         uuid_bone_netherite,
-                        0.25,
-                        AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                        2,
+                        AttributeModifier.Operation.ADD_VALUE
+                ));
+            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_netherite) == null)
+                armor_toughness.addPermanentModifier(new AttributeModifier(
+                        uuid_bone_netherite,
+                        1,
+                        AttributeModifier.Operation.ADD_VALUE
                 ));
         } else {
-            if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_netherite) != null)
-                knock_back_resist.removeModifier(uuid_bone_netherite);
+            if (armor != null && armor.getModifier(uuid_bone_netherite) != null)
+                armor.removeModifier(uuid_bone_netherite);
+            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_netherite) != null)
+                armor_toughness.removeModifier(uuid_bone_netherite);
         }
     }
 

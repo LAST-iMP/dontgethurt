@@ -78,7 +78,7 @@ public class HealingEventHandler {
         if (event.getAmount() < 0.01) return;
 
         float amount = event.getAmount() / (player.getMaxHealth() * Config.body_life_factor);
-        HealingHandler.handleValindaHealing(player, amount);
+        HealingHandler.handleValindaHealing(player, amount * Config.healing_factor);
     }
 
     private static boolean checkTotemDeathProtection(PlayerHealthCapability health, ServerPlayer player) {
