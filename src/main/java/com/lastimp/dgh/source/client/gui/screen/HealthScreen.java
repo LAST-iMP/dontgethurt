@@ -16,15 +16,20 @@ import com.lastimp.dgh.source.core.player.PlayerHealthCapability;
 import com.lastimp.dgh.source.item.tool.HealthScanner;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.joml.Matrix4f;
 
 import java.util.HashMap;
 
@@ -35,9 +40,17 @@ import static com.lastimp.dgh.source.client.gui.component.HealthComponentWidget.
 
 public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private static final ResourceLocation HUD_BACKGROUND = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
+    private static final ResourceLocation HUD_HEART_BEAT = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud.png");
+    private static final ResourceLocation HUD_HEART_BEAT_ACC = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud_acc.png");
+    private static final ResourceLocation HUD_HEART_BEAT_ACC2 = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud_acc2.png");
+    private static final ResourceLocation HUD_HEART_BEAT_STOP = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud_stop.png");
 
     private static final int PANEL_WIDTH = 256;   // 面板宽度
     private static final int PANEL_HEIGHT = 215;  // 面板高度
+    private static final int HEART_BEAT_X = 210;
+    private static final int HEART_BEAT_Y = 188;
+    private static final int HEART_BEAT_WIDTH = 40;
+    private static final int HEART_BEAT_HEIGHT = 16;
 
     private final HashMap<BodyComponents, HealthComponentWidget> componentWidgets = new HashMap<>();
     private final HashMap<ResourceLocation, HealthConditionWidget> conditionWidgets = new HashMap<>();
@@ -172,6 +185,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         int panelY = (guiGraphics.guiHeight() - PANEL_HEIGHT) / 2;
 
         guiGraphics.blit(HUD_BACKGROUND, panelX, panelY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+        renderHeartBeat(guiGraphics);
     }
 
     @Override
@@ -186,6 +200,22 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    }
+
+    protected void renderHeartBeat(GuiGraphics guiGraphics) {
+        int panelX = (guiGraphics.guiWidth() - PANEL_WIDTH) / 2 + HEART_BEAT_X;
+        int panelY = (guiGraphics.guiHeight() - PANEL_HEIGHT) / 2 + HEART_BEAT_Y;
+        RenderSystem.enableBlend();
+        int max_width = (int) (HEART_BEAT_WIDTH * 0.75);
+        long tick = GuiOpenWrapper.MINECRAFT.get().level.getGameTime();
+        for (int i = 0; i < max_width; i++) {
+            int location = Math.toIntExact((i + tick) % HEART_BEAT_WIDTH);
+            guiGraphics.setColor(0.0F, (float) i / max_width, 0.0F, 1.0F);
+            guiGraphics.blit(HUD_HEART_BEAT, panelX + location, panelY, 0, location, 0, 1, HEART_BEAT_HEIGHT, HEART_BEAT_WIDTH, HEART_BEAT_HEIGHT);
+        }
+
+        guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.disableBlend();
     }
 
     @Override

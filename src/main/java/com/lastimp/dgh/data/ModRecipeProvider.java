@@ -286,6 +286,11 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('b', Items.IRON_NUGGET)
                 .unlockedBy("has_iron", has(Items.IRON_INGOT))
                 .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.NALOXONE.get(), 1)
+                .requires(ModItems.MORPHINE, 1)
+                .requires(Items.GOLDEN_APPLE, 1)
+                .unlockedBy("has_mophine", has(ModItems.MORPHINE))
+                .save(recipeOutput);
 
         var book = PatchouliAPI.get().getBookStack(Common.ResourceLocation(DontGetHurt.MODID, "medical_guide"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, book)
