@@ -3,6 +3,7 @@ package com.lastimp.dgh.source.item.tool;
 
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.source.client.gui.menuProvider.HealthMenuProvider;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -62,13 +63,13 @@ public class HealthScanner extends AbstractHealingItem {
 
     @Override
     public @NotNull InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
-        if (!(target instanceof Player)) {
-            return InteractionResult.PASS;
+        if (!HealthCapability.has(target)) {
+            return InteractionResult.SUCCESS;
         }
         if (!player.level().isClientSide) {
             HealthMenuProvider.open(player, target.getUUID(), true);
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.CONSUME;
     }
 
 

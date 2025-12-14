@@ -9,7 +9,8 @@ import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.client.gui.menu.HealthMenu;
-import com.lastimp.dgh.source.core.player.PlayerDyingHandler;
+import com.lastimp.dgh.source.core.Utils;
+import com.lastimp.dgh.source.core.player.DyingHandler;
 import com.lastimp.dgh.source.register.ModItems;
 import com.lastimp.dgh.source.client.gui.menuProvider.HealthCareBagMenuProvider;
 import com.lastimp.dgh.source.client.gui.menuProvider.HealthMenuProvider;
@@ -29,8 +30,10 @@ public class ServerPayloadHandler {
     public static void handleReadAllConditionData(final MyReadAllConditionData data, final IPayloadContext context) {
         context.enqueueWork(() -> {
                     UUID uuid = new UUID(data.id_most(), data.id_least());
-                    ServerPlayer targetPlayer = (ServerPlayer) context.player().level().getPlayerByUUID(uuid);
-                    HealthCapability health = HealthCapability.get(targetPlayer);
+                    ServerPlayer sender = (ServerPlayer) context.player();
+                    var target = Utils.getLivingWithHealth(sender.serverLevel(), uuid);
+                    if (target == null) return;
+                    HealthCapability health = HealthCapability.get(target);
 
                     PacketDistributor.sendToPlayer(
                             (ServerPlayer) context.player(),
@@ -61,7 +64,7 @@ public class ServerPayloadHandler {
                                 SurgeryToolBagMenuProvider.open(player, slot);
                             break;
                         case GIVE_UP:
-                            PlayerDyingHandler.setDead(player);
+                            DyingHandler.setPlayerDead(player);
                             break;
                         case CALL_FOR_HELP:
                             player.getServer().getPlayerList().getPlayers().forEach(p -> {
@@ -91,7 +94,8 @@ public class ServerPayloadHandler {
                         healthMenu.openBag(stack);
                     } else {
                         UUID targetID = new UUID(data.id_most(), data.id_least());
-                        ServerPlayer target = (ServerPlayer) sourcePlayer.level().getPlayerByUUID(targetID);
+                        var target = Utils.getLivingWithHealth(((ServerPlayer) context.player()).serverLevel(), targetID);
+                        if (target == null) return;
                         BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
                         HealingHandler.useItemOn(stack, sourcePlayer, target, component);
                     }

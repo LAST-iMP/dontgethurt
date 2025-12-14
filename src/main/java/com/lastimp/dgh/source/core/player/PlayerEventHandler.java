@@ -48,15 +48,4 @@ public class PlayerEventHandler {
         if (itemStack.is(ModItems.HEALTH_SCANNER)) return true;
         return false;
     }
-
-    @SubscribeEvent
-    public static void onBreath(LivingBreatheEvent event) {
-        if (event.getEntity().level().isClientSide()) return;
-        if (!(event.getEntity() instanceof Player player)) return;
-
-        var health = HealthCapability.get(player);
-        if (health.getComponent(TORSO).abnormal(RESPIRATORY_ARREST)) {
-            event.setCanBreathe(false);
-        }
-    }
 }

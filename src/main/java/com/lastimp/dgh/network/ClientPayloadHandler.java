@@ -5,13 +5,8 @@ import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import com.lastimp.dgh.source.item.tool.BloodScanner;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-
-import java.util.UUID;
 
 public class ClientPayloadHandler {
     private static HealthScreen healthScreen = null;
@@ -23,14 +18,6 @@ public class ClientPayloadHandler {
                     OperationType operation = OperationType.valueOf(data.oper());
                     if (operation == OperationType.HEALTH_SCANN && healthScreen != null) {
                         healthScreen.setHealthData(health);
-                    } else if (operation == OperationType.BLOOD_SCANN) {
-                        UUID uuid = new UUID(data.id_most(), data.id_least());
-                        var player = context.player();
-                        var target = player.level().getEntitiesOfClass(
-                                LivingEntity.class, AABB.ofSize(player.getEyePosition(), 20, 20, 20),
-                                (entity) -> entity.getUUID().equals(uuid)
-                        ).getFirst();
-                        BloodScanner.scanHealth(context.player(), health, target.getScoreboardName());
                     } else if (operation == OperationType.SYN) {
                         ClientPayloadHandler.setHealth(health);
                     }
@@ -39,10 +26,6 @@ public class ClientPayloadHandler {
                     context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
                     return null;
                 });
-    }
-
-    public static HealthScreen getHealthScreen() {
-        return healthScreen;
     }
 
     public static void setHealthScreen(HealthScreen healthScreen) {

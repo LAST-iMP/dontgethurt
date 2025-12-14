@@ -7,7 +7,7 @@ import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.neoforge.Common;
-import com.lastimp.dgh.source.core.player.PlayerDyingHandler;
+import com.lastimp.dgh.source.core.player.DyingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.core.component.DataComponents;
@@ -46,7 +46,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
                 if (!source.addItem(head)) {
                     source.drop(head, true, true);
                 }
-                PlayerDyingHandler.setDead(player);
+                DyingHandler.setPlayerDead(player);
             } else {
                 body.setConditionValue(SAWED_BONES, BodyCondition.get(SAWED_BONES).maxValue());
                 body.setConditionValue(DRILLED_BONES, BodyCondition.get(DRILLED_BONES).defaultValue());
