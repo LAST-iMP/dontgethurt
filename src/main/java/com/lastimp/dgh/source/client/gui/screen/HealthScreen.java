@@ -8,6 +8,7 @@ import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.client.gui.component.HealthComponentWidget;
 import com.lastimp.dgh.source.client.gui.component.HealthConditionWidget;
 import com.lastimp.dgh.source.client.gui.menu.HealthMenu;
+import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
@@ -223,9 +224,15 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     @Override
     protected void containerTick() {
-        if (Minecraft.getInstance().level.getPlayerByUUID(this.menu.targetEntity).isDeadOrDying())
+        var mc = GuiOpenWrapper.MINECRAFT.get();
+        if (mc.level == null || mc.player == null) {
             GuiOpenWrapper.MINECRAFT.get().setScreen(null);
-        else {
+            return;
+        }
+        var target = Utils.getLiving(mc.level, this.menu.targetEntity, mc.player.getEyePosition(), 40);
+        if (target == null || target.isDeadOrDying()) {
+            GuiOpenWrapper.MINECRAFT.get().setScreen(null);
+        } else {
             PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
                     this.menu.targetEntity, null, HEALTH_SCANN, Minecraft.getInstance().player.registryAccess()
             ));
@@ -234,10 +241,6 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     public void setHealthData(HealthCapability healthData) {
         HealthScreen.healthData = healthData;
-    }
-
-    public static HealthCapability getHealthData() {
-        return healthData;
     }
 
     public BodyComponents getSelectedComponent() {

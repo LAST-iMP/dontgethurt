@@ -6,21 +6,22 @@ import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.GAME)
-public class PlayerDyingHandler {
+public class DyingHandler {
     private static boolean showingScreen = false;
 
     @SubscribeEvent
@@ -49,36 +50,54 @@ public class PlayerDyingHandler {
         }
     }
 
-    public static void setShowingScreen(boolean showingScreen) {
-        PlayerDyingHandler.showingScreen = showingScreen;
-    }
-
-    public static boolean showingScreen() {
-        return PlayerDyingHandler.showingScreen;
-    }
-
     @SubscribeEvent
-    public static void onJump(LivingEvent.LivingJumpEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+    public static void onEntityTick(EntityTickEvent.Pre event) {
+        if (event.getEntity().level().isClientSide) return;
+        if (!(event.getEntity() instanceof LivingEntity livingEntity)) return;
+        if (livingEntity instanceof Player) return;
+        if (!HealthCapability.has(livingEntity)) return;
 
-        HealthCapability health = HealthCapability.get(player);
-        if (true || health.vitality() < 0) {
-            player.setDeltaMovement(0, 0, 0); // 阻止起跳速度
+        if (!event.getEntity().level().isClientSide) {
+            if (HealthCapability.isDying(livingEntity)) {
+                if (livingEntity.isSleeping()) livingEntity.stopSleeping();
+                livingEntity.stopUsingItem();
+                livingEntity.setPose(Pose.SWIMMING);
+                if (livingEntity instanceof Mob mob) {
+                    mob.setNoAi(true);
+                }
+            } else {
+                livingEntity.setPose(Pose.STANDING);
+                if (livingEntity instanceof Mob mob) {
+                    mob.setNoAi(false);
+                }
+            }
         }
     }
 
-    public static void setDead(Player player) {
+    public static void setShowingScreen(boolean showingScreen) {
+        DyingHandler.showingScreen = showingScreen;
+    }
+
+    public static boolean showingScreen() {
+        return DyingHandler.showingScreen;
+    }
+
+    public static void setPlayerDead(Player player) {
         if (player.isSleeping()) player.stopSleeping();
         if (player.isFallFlying()) player.stopFallFlying();
         player.stopUsingItem();
         if (player.level().isClientSide)
             GuiOpenWrapper.MINECRAFT.get().setScreen(null);
-        player.hurt(new DamageSource(getKillerDamageType(player)),player.getMaxHealth() * 1000);
+        setLivingDead(player);
     }
 
-    public static Holder<DamageType> getKillerDamageType(Player player) {
-        var damageType = player.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE);
-        var health = HealthCapability.get(player);
+    public static void setLivingDead(LivingEntity entity) {
+        entity.hurt(new DamageSource(getKillerDamageType(entity)),entity.getMaxHealth() * 1000);
+    }
+
+    public static Holder<DamageType> getKillerDamageType(LivingEntity entity) {
+        var damageType = entity.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE);
+        var health = HealthCapability.get(entity);
 
         var head = health.getComponent(HEAD);
         if (head.getConditionValue(TRAUMATIC_SHOCK) > 0.4) {

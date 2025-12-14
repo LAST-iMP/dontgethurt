@@ -39,7 +39,7 @@ public class Gypsum extends AbstractPartlyHealItem {
         applicableComponents.add(BodyComponents.RIGHT_LEG);
     }
 
-    public static boolean cut(ServerPlayer target, BodyComponents component) {
+    public static boolean cut(LivingEntity target, BodyComponents component) {
         if (!ModItems.GYPSUM.get().getApplicableComponents().contains(component)) return false;
 
         return HealthCapability.getAndSet(target, health -> {

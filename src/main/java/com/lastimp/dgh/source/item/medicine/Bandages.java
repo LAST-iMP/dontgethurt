@@ -41,7 +41,7 @@ public class Bandages extends AbstractPartlyHealItem {
         body.setConditionValue(condition, BodyCondition.get(condition).defaultValue());
     }
 
-    public static boolean cut(ServerPlayer target, BodyComponents component) {
+    public static boolean cut(LivingEntity target, BodyComponents component) {
         return HealthCapability.getAndSet(target, health -> {
             AbstractBody body = health.getComponent(component);
             if (body.abnormal(BANDAGED)) {

@@ -27,11 +27,12 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     private int nearBedTick = 0;
 
     public static boolean has(LivingEntity entity) {
-        return entity.hasData(ModCapabilities.HEALTH);
+        return HealthProvider.has(entity);
     }
 
     public static HealthCapability get(LivingEntity entity) {
-        return entity.getData(ModCapabilities.HEALTH);
+        if (has(entity)) return entity.getData(ModCapabilities.HEALTH.get());
+        else return null;
     }
 
     public static void set(LivingEntity entity, HealthCapability capability) {
@@ -98,8 +99,8 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
                 this.getComponent(RIGHT_LEG).abnormal(INTENSE_PAIN);
     }
 
-    public static boolean isDying(Player player) {
-        return player.getHealth() < 0.05 && !player.isDeadOrDying();
+    public static boolean isDying(LivingEntity entity) {
+        return entity.getHealth() < 0.05 && !entity.isDeadOrDying();
     }
 
     public boolean safeSurgery() {
