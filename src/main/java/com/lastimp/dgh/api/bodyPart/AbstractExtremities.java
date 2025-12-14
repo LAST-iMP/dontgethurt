@@ -9,13 +9,14 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 
 public abstract class AbstractExtremities extends AbstractVisibleBody {
-    private static final Collection<ResourceLocation> uniqueConditions = new ArrayList<>();
+    private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
     private static List<ResourceLocation> EXTREMITY_CONDITIONS;
 
     public static void addCondition(Collection<ResourceLocation> key) {

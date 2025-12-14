@@ -7,6 +7,8 @@ import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.BloodScanner;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.UUID;
@@ -23,7 +25,12 @@ public class ClientPayloadHandler {
                         healthScreen.setHealthData(health);
                     } else if (operation == OperationType.BLOOD_SCANN) {
                         UUID uuid = new UUID(data.id_most(), data.id_least());
-                        BloodScanner.scanHealth(context.player(), health, context.player().level().getPlayerByUUID(uuid).getScoreboardName());
+                        var player = context.player();
+                        var target = player.level().getEntitiesOfClass(
+                                LivingEntity.class, AABB.ofSize(player.getEyePosition(), 20, 20, 20),
+                                (entity) -> entity.getUUID().equals(uuid)
+                        ).getFirst();
+                        BloodScanner.scanHealth(context.player(), health, target.getScoreboardName());
                     } else if (operation == OperationType.SYN) {
                         ClientPayloadHandler.setHealth(health);
                     }

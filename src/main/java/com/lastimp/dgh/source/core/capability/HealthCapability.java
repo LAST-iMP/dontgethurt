@@ -26,6 +26,10 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     private float almostDead = 1.0f;
     private int nearBedTick = 0;
 
+    public static boolean has(LivingEntity entity) {
+        return entity.hasData(ModCapabilities.HEALTH);
+    }
+
     public static HealthCapability get(LivingEntity entity) {
         return entity.getData(ModCapabilities.HEALTH);
     }
