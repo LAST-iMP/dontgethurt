@@ -383,7 +383,9 @@ public class BodyCondition {
         }
     }
 
+    private static boolean initialized = false;
     public static void init() {
+        if (initialized) return;
         for (var key : conditions.keySet()) {
             conditions.get(key).get();
         }
@@ -456,6 +458,7 @@ public class BodyCondition {
             Sutures.addCoverOnHeal(key);
             Scalpel.addDiscoverOnHeal(key);
         }
+        initialized = true;
     }
 }
 

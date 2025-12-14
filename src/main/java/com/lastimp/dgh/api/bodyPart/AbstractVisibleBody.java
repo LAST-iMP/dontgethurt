@@ -14,10 +14,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.DontGetHurt.EPS;
@@ -25,7 +22,7 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public abstract class AbstractVisibleBody extends AbstractBody {
-    private static final Collection<ResourceLocation> uniqueConditions = new ArrayList<>();
+    private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
     private static List<ResourceLocation> ANY_BODY_CONDITIONS;
     private float nextTickBleed;
 

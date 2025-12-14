@@ -9,6 +9,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -49,7 +51,12 @@ public class MyReadAllConditionData {
             ClientPayloadHandler.getHealthScreen().setHealthData(health);
         } else if (operation == OperationType.BLOOD_SCANN) {
             UUID uuid = new UUID(data.id_most(), data.id_least());
-            BloodScanner.scanHealth(Minecraft.getInstance().player, health, Minecraft.getInstance().level.getPlayerByUUID(uuid).getScoreboardName());
+            var player = ctx.get().getSender();
+            var target = player.level().getEntitiesOfClass(
+                    LivingEntity.class, AABB.ofSize(player.getEyePosition(), 20, 20, 20),
+                    (entity) -> entity.getUUID().equals(uuid)
+            ).get(0);
+            BloodScanner.scanHealth(ctx.get().getSender(), health, target.getScoreboardName());
         } else if (operation == OperationType.SYN) {
             ClientPayloadHandler.setHealth(health);
         }
