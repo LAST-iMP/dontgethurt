@@ -5,7 +5,7 @@
   "mixins": [
   ],
   "client": [
-    "PlayerRendererMixin"
+    "LivingEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

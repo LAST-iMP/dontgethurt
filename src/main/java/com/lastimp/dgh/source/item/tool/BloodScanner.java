@@ -35,19 +35,14 @@ public class BloodScanner extends AbstractHealingItem {
     @Override
     public @NotNull InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
         if (!player.level().isClientSide) {
-            this.scanEntity(player, target);
+            if (!HealthCapability.has(target)) {
+                player.sendSystemMessage(Component.literal(target.getName().getString() + "的血液很正常"));
+            } else {
+                var name = target instanceof Player ? target.getScoreboardName() : target.getName().getString();
+                BloodScanner.scanHealth(player, HealthCapability.get(target), name);
+            }
         }
         return InteractionResult.SUCCESS;
-    }
-
-    private void scanEntity(Player player, LivingEntity entity) {
-        if (!(entity instanceof Player target)) {
-            player.sendSystemMessage(Component.literal(entity.getName().getString() + "的血液很正常"));
-        } else {
-            Network.SERVER_INSTANCE.sendToServer(MyReadAllConditionData.getInstance(
-                            target.getUUID(), null, OperationType.BLOOD_SCANN
-                    ));
-        }
     }
 
     public static void scanHealth(Player player, HealthCapability health, String name) {
@@ -65,7 +60,7 @@ public class BloodScanner extends AbstractHealingItem {
             }
         }
         if (!hasAbnormal) {
-            player.sendSystemMessage(Component.literal(name + "的血液状态正常"));
+            player.sendSystemMessage(Component.literal(name + "的血液很正常"));
         }
     }
 }

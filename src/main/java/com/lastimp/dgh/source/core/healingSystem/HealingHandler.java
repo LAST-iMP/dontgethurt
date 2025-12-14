@@ -18,6 +18,7 @@ import com.lastimp.dgh.source.item.medicine.Gypsum;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -77,7 +78,7 @@ public class HealingHandler {
         return false;
     }
 
-    public static void useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, ServerPlayer target, BodyComponents component) {
+    public static void useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, LivingEntity target, BodyComponents component) {
         if (target == null) return;
         if (source.getCooldowns().isOnCooldown(itemStack.getItem())) return;
 

@@ -2,15 +2,12 @@
 package com.lastimp.dgh.network.message;
 
 import com.lastimp.dgh.network.ClientPayloadHandler;
+import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.api.enums.OperationType;
-import com.lastimp.dgh.source.item.tool.BloodScanner;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.AABB;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -49,14 +46,6 @@ public class MyReadAllConditionData {
         OperationType operation = OperationType.valueOf(data.oper());
         if (operation == OperationType.HEALTH_SCANN && ClientPayloadHandler.getHealthScreen() != null) {
             ClientPayloadHandler.getHealthScreen().setHealthData(health);
-        } else if (operation == OperationType.BLOOD_SCANN) {
-            UUID uuid = new UUID(data.id_most(), data.id_least());
-            var player = ctx.get().getSender();
-            var target = player.level().getEntitiesOfClass(
-                    LivingEntity.class, AABB.ofSize(player.getEyePosition(), 20, 20, 20),
-                    (entity) -> entity.getUUID().equals(uuid)
-            ).get(0);
-            BloodScanner.scanHealth(ctx.get().getSender(), health, target.getScoreboardName());
         } else if (operation == OperationType.SYN) {
             ClientPayloadHandler.setHealth(health);
         }
@@ -65,8 +54,10 @@ public class MyReadAllConditionData {
     public static void handlerServer(final MyReadAllConditionData data, Supplier<NetworkEvent.Context> ctx) {
         var context = ctx.get();
         UUID uuid = new UUID(data.id_most(), data.id_least());
-        ServerPlayer targetPlayer = (ServerPlayer) context.getSender().level().getPlayerByUUID(uuid);
-        HealthCapability health = HealthCapability.get(targetPlayer);
+        ServerPlayer sender = context.getSender();
+        var target = Utils.getLivingWithHealth(sender.serverLevel(), uuid);
+        if (target == null) return;
+        HealthCapability health = HealthCapability.get(target);
 
         Network.CLIENT_INSTANCE.send(
                 PacketDistributor.PLAYER.with(context::getSender),

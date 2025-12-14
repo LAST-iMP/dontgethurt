@@ -5,6 +5,7 @@ import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.source.client.gui.menuProvider.HealthCareBagMenuProvider;
 import com.lastimp.dgh.source.client.gui.menuProvider.HealthMenuProvider;
 import com.lastimp.dgh.source.client.gui.menuProvider.SurgeryToolBagMenuProvider;
+import com.lastimp.dgh.source.core.player.DyingHandler;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -49,7 +50,7 @@ public class MyKeyPressedData {
                     SurgeryToolBagMenuProvider.open(player, slot);
                 break;
             case GIVE_UP:
-                player.kill();
+                DyingHandler.setPlayerDead(player);
                 break;
             case CALL_FOR_HELP:
                 player.getServer().getPlayerList().getPlayers().forEach(p -> {

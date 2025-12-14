@@ -1,10 +1,43 @@
 package com.lastimp.dgh.source.core;
 
+import com.lastimp.dgh.source.core.capability.HealthCapability;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+
+import java.util.List;
+import java.util.UUID;
 
 public abstract class Utils {
     public static final RandomSource randomSource = RandomSource.create(987654321);
+
+    public static List<LivingEntity> getLivingWithHealth(ServerLevel level, Vec3 center, int range) {
+        return level.getEntitiesOfClass(
+                LivingEntity.class, AABB.ofSize(center, range, range, range),
+                HealthCapability::has
+        );
+    }
+
+    public static LivingEntity getLivingWithHealth(ServerLevel level, UUID uuid) {
+        if (level.getEntity(uuid) instanceof LivingEntity livingEntity)
+            if (HealthCapability.has(livingEntity))
+                return livingEntity;
+        return null;
+    }
+
+    public static LivingEntity getLiving(ClientLevel level, UUID uuid, Vec3 center, int range) {
+        var result = level.getEntitiesOfClass(
+                LivingEntity.class, AABB.ofSize(center, range, range, range),
+                (entity) -> entity.getUUID().equals(uuid)
+        );
+        if (!result.isEmpty())
+            return result.get(0);
+        return null;
+    }
 
     public static int getRandomIndex(float... weight) {
         for (int i = 0; i < weight.length; i++) {

@@ -5,6 +5,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.ServerPayloadHandler;
 import com.lastimp.dgh.source.client.gui.menu.HealthMenu;
+import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -49,7 +50,8 @@ public class MyHealingItemUseData {
             healthMenu.openBag(stack);
         } else {
             UUID targetID = new UUID(data.id_most(), data.id_least());
-            ServerPlayer target = (ServerPlayer) sourcePlayer.level().getPlayerByUUID(targetID);
+            var target = Utils.getLivingWithHealth(ctx.get().getSender().serverLevel(), targetID);
+            if (target == null) return;
             BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
             HealingHandler.useItemOn(stack, sourcePlayer, target, component);
         }
