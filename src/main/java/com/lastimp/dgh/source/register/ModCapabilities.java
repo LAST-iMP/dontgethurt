@@ -22,7 +22,7 @@ public class ModCapabilities {
             DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, DontGetHurt.MODID);
 
     public static final Supplier<AttachmentType<HealthCapability>> HEALTH =
-            ATTACHMENT_TYPES.register("health", () -> AttachmentType.serializable(HealthCapability::new).build());
+            ATTACHMENT_TYPES.register("player_health", () -> AttachmentType.serializable(HealthCapability::new).build());
 
     public static void register(IEventBus eventBus) {
         ATTACHMENT_TYPES.register(eventBus);

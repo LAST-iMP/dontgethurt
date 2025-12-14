@@ -21,7 +21,7 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.ANALGESIA;
 
 public class Torso extends AbstractVisibleBody {
-    private static final Collection<ResourceLocation> uniqueConditions = new ArrayList<>();
+    private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
     private static List<ResourceLocation> TORSO_CONDITIONS;
 
     private AttributeInstance fly_speed;
