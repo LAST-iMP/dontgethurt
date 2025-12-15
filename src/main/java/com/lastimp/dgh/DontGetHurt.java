@@ -40,6 +40,7 @@ public class DontGetHurt
         ModMenus.register(modEventBus);
         ModCapabilities.register(modEventBus);
         ModEffects.register(modEventBus);
+        ModSounds.register(modEventBus);
 
         NeoForge.EVENT_BUS.register(this);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
