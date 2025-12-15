@@ -152,6 +152,9 @@ dependencies {
     compileOnly files('libs/tacz-neoforge-1.21.1-1.1.7-r1.jar')
     runtimeOnly files('libs/tacz-neoforge-1.21.1-1.1.7-r1.jar')
 
+    compileOnly files('libs/touhoulittlemaid-1.4.6-neoforge+mc1.21.1.jar')
+    runtimeOnly files('libs/touhoulittlemaid-1.4.6-neoforge+mc1.21.1.jar')
+
     // Example mod dependency using a file as dependency
     // implementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
 
