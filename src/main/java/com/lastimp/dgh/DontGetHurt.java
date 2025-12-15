@@ -38,6 +38,7 @@ public class DontGetHurt
         ModCreativeModTabs.register(modEventBus);
         ModMenus.register(modEventBus);
         ModEffects.register(modEventBus);
+        ModSounds.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
         FMLJavaModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -52,6 +53,7 @@ public class DontGetHurt
         ModCreativeModTabs.register(modEventBus);
         ModMenus.register(modEventBus);
         ModEffects.register(modEventBus);
+        ModSounds.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

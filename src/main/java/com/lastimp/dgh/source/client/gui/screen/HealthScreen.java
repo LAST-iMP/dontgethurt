@@ -18,12 +18,15 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.HealthScanner;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
+import com.lastimp.dgh.source.register.ModSounds;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -204,13 +207,20 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     protected void renderHeartBeat(GuiGraphics guiGraphics) {
         int panelX = (guiGraphics.guiWidth() - PANEL_WIDTH) / 2 + HEART_BEAT_X;
         int panelY = (guiGraphics.guiHeight() - PANEL_HEIGHT) / 2 + HEART_BEAT_Y;
-        RenderSystem.enableBlend();
         int max_width = (int) (HEART_BEAT_WIDTH * 0.75);
+
         long tick = GuiOpenWrapper.MINECRAFT.get().level.getGameTime();
+        ResourceLocation heartBeat = HUD_HEART_BEAT;
+        if (healthData != null) {
+            if (healthData.vitality() < 0.1) heartBeat = HUD_HEART_BEAT_STOP;
+            else if (healthData.vitality() < 0.4) heartBeat = HUD_HEART_BEAT_ACC2;
+            else if (healthData.vitality() < 0.75) heartBeat = HUD_HEART_BEAT_ACC;
+        }
+        RenderSystem.enableBlend();
         for (int i = 0; i < max_width; i++) {
             int location = Math.toIntExact((i + tick) % HEART_BEAT_WIDTH);
             guiGraphics.setColor(0.0F, (float) i / max_width, 0.0F, 1.0F);
-            guiGraphics.blit(HUD_HEART_BEAT, panelX + location, panelY, 0, location, 0, 1, HEART_BEAT_HEIGHT, HEART_BEAT_WIDTH, HEART_BEAT_HEIGHT);
+            guiGraphics.blit(heartBeat, panelX + location, panelY, 0, location, 0, 1, HEART_BEAT_HEIGHT, HEART_BEAT_WIDTH, HEART_BEAT_HEIGHT);
         }
 
         guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -231,6 +241,23 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
             Network.SERVER_INSTANCE.sendToServer(MyReadAllConditionData.getInstance(
                     this.menu.targetEntity, null, HEALTH_SCANN
             ));
+        }
+
+        long tick = GuiOpenWrapper.MINECRAFT.get().level.getGameTime();
+        SoundEvent sound = ModSounds.HEARTBEAT_NORMAL.get();
+        if (healthData != null) {
+            if (healthData.vitality() < 0.1) {
+                sound = ModSounds.HEARTBEAT_STOP.get();
+            } else if (healthData.vitality() < 0.4) {
+                sound = ModSounds.HEARTBEAT_ACC2.get();
+            } else if (healthData.vitality() < 0.75) {
+                sound = ModSounds.HEARTBEAT_ACC.get();
+            }
+        }
+        if (tick % HEART_BEAT_WIDTH == 1) {
+            GuiOpenWrapper.MINECRAFT.get().getSoundManager().play(
+                    SimpleSoundInstance.forUI( sound, 1.0f)
+            );
         }
     }
 
