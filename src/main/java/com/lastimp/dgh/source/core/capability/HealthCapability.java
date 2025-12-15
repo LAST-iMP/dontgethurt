@@ -9,7 +9,6 @@ import com.lastimp.dgh.source.core.bodyPart.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.function.Function;
@@ -25,6 +24,8 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     private long livingTick = 0;
     private float almostDead = 1.0f;
     private int nearBedTick = 0;
+    private float outerHealing = 0;
+    private float outerHealingDelta = 0;
 
     public static boolean has(LivingEntity entity) {
         return HealthProvider.has(entity);
@@ -61,11 +62,10 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.armBreak = (AbstractExtremities.available(this, LEFT_ARM) ? 0 : 1) + (AbstractExtremities.available(this, RIGHT_ARM) ? 0 : 1);
         this.slowDown = this.body.slowDownLevel(this);
         this.vitality = 1.0f - this.body.updateVitalityLost(this, entity);
-
-        float bloodVitalityLost = this.getComponent(BLOOD).updateVitalityLost(this, entity);
-        if (this.vitality + bloodVitalityLost < this.almostDead)
-            this.almostDead = this.vitality + bloodVitalityLost;
+        this.almostDead = Math.min(this.almostDead, this.vitality);
         this.nearBedTick--;
+        this.outerHealing = Math.max(0, this.outerHealing - this.outerHealingDelta);
+        this.outerHealingDelta = this.outerHealing <= 0 ? 0 : Math.min(1.0f / 20, this.outerHealing + 1.0f / 60 / 20);
     }
 
     @Override
@@ -77,6 +77,8 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         tag.putLong("livingTick", this.livingTick);
         tag.putFloat("almostDead", this.almostDead);
         tag.putInt("nearBedTick", this.nearBedTick);
+        tag.putFloat("outerHealing", this.outerHealing);
+        tag.putFloat("outerHealingDelta", this.outerHealingDelta);
         return tag;
     }
 
@@ -90,6 +92,8 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.livingTick = nbt.getLong("livingTick");
         this.almostDead = nbt.getFloat("almostDead");
         this.nearBedTick = nbt.getInt("nearBedTick");
+        this.outerHealing = nbt.getFloat("outerHealing");
+        this.outerHealingDelta = nbt.getFloat("outerHealingDelta");
     }
 
     public boolean intensePain() {
@@ -137,5 +141,13 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     public void setNearBedTick(int nearBedTick) {
         this.nearBedTick = nearBedTick;
+    }
+
+    public float outerHealing() {
+        return outerHealing;
+    }
+
+    public void setOuterHealing(float outerHealing) {
+        this.outerHealing = outerHealing;
     }
 }
