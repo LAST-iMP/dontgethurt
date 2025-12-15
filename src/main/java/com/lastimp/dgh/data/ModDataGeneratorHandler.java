@@ -61,5 +61,10 @@ public class ModDataGeneratorHandler {
                                 new LootTableProvider.SubProviderEntry(ModLootTableProvider.ModBlockLootProvider::new, LootContextParamSets.BLOCK)
                 ), lp)
         );
+
+        event.getGenerator().addProvider(
+                event.includeClient(),
+                (DataProvider.Factory<ModSoundsProvider>) output -> new ModSoundsProvider(output, DontGetHurt.MODID, efh)
+        );
     }
 }

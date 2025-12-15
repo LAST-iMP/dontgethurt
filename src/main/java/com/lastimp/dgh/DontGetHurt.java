@@ -42,6 +42,7 @@ public class DontGetHurt
         ModMenus.register(modEventBus);
         ModCapabilities.register(modEventBus);
         ModEffects.register(modEventBus);
+        ModSounds.register(modEventBus);
     }
 
 

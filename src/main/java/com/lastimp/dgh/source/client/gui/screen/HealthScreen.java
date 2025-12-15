@@ -17,12 +17,17 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.HealthScanner;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
+import com.lastimp.dgh.source.register.ModSounds;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -210,8 +215,6 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
             else if (healthData.vitality() < 0.4) heartBeat = HUD_HEART_BEAT_ACC2;
             else if (healthData.vitality() < 0.75) heartBeat = HUD_HEART_BEAT_ACC;
         }
-//        GuiOpenWrapper.MINECRAFT.get().player.playSound();
-
         RenderSystem.enableBlend();
         for (int i = 0; i < max_width; i++) {
             int location = Math.toIntExact((i + tick) % HEART_BEAT_WIDTH);
@@ -236,6 +239,23 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
             PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
                     this.menu.targetEntity, null, HEALTH_SCANN, Minecraft.getInstance().player.registryAccess()
             ));
+        }
+
+        long tick = GuiOpenWrapper.MINECRAFT.get().level.getGameTime();
+        SoundEvent sound = ModSounds.HEARTBEAT_NORMAL.get();
+        if (healthData != null) {
+            if (healthData.vitality() < 0.1) {
+                sound = ModSounds.HEARTBEAT_STOP.get();
+            } else if (healthData.vitality() < 0.4) {
+                sound = ModSounds.HEARTBEAT_ACC2.get();
+            } else if (healthData.vitality() < 0.75) {
+                sound = ModSounds.HEARTBEAT_ACC.get();
+            }
+        }
+        if (tick % HEART_BEAT_WIDTH == 1) {
+            GuiOpenWrapper.MINECRAFT.get().getSoundManager().play(
+                    SimpleSoundInstance.forUI( sound, 1.0f)
+            );
         }
     }
 
