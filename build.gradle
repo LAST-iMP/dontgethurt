@@ -162,6 +162,8 @@ dependencies {
     compileOnly fg.deobf("curse.maven:timeless-and-classics-zero-1028108:7278003-sources-7278003")
     runtimeOnly fg.deobf("curse.maven:timeless-and-classics-zero-1028108:7278003-sources-7278003")
 
+    compileOnly files('libs/touhoulittlemaid-1.4.6-forge+mc1.20.1.jar')
+
     // MixinExtras
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")) {
