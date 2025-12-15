@@ -114,11 +114,11 @@ public class HealingHandler {
             float injury = 0;
             for (var component : BodyComponents.VISIBLE_BODIES) {
                 AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
-                injury += injuryCheck(body, BURN, states) * 3;
-                injury += injuryCheck(body, OPEN_WOUND, states) * 3;
+                injury += injuryCheck(body, BURN, states);
+                injury += injuryCheck(body, OPEN_WOUND, states);
                 injury += injuryCheck(body, INTERNAL_INJURY, states) * 2;
                 if (component == HEAD)
-                    injury += injuryCheck(body, BRAIN_DAMAGE, states) * 5;
+                    injury += injuryCheck(body, BRAIN_DAMAGE, states) * 3;
             }
             if (injury < 0.001) return h;
 

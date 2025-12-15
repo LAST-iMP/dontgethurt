@@ -7,7 +7,10 @@ import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.core.capability.HealthProvider;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.npc.Villager;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -25,6 +28,14 @@ public class ModEventBus {
                 EntityType.PLAYER,
                 new HealthProvider()
         );
+        HealthProvider.add(ServerPlayer.class);
+        HealthProvider.add(LocalPlayer.class);
+        event.registerEntity(
+                ModCapabilities.HEALTH_HANDLER,
+                EntityType.VILLAGER,
+                new HealthProvider()
+        );
+        HealthProvider.add(Villager.class);
     }
 
     @SubscribeEvent
