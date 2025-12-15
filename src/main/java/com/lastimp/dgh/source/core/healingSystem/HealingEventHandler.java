@@ -10,6 +10,7 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -47,27 +47,26 @@ public class HealingEventHandler {
         if (event.getEntity().level().isClientSide) return;
         var livingEntity = event.getEntity();
         if (!HealthCapability.has(livingEntity)) return;
-        boolean isPlayer = livingEntity instanceof ServerPlayer;
 
-        var health = HealthCapability.getAndSet(livingEntity, h -> {
+        HealthCapability.getAndSet(livingEntity, h -> {
             h = h.update(livingEntity);
-            if (!isPlayer) {
+            if (!(livingEntity instanceof ServerPlayer player)) {
                 updateLivingHealth(h, livingEntity);
-            } else if (!checkTotemDeathProtection(h, (ServerPlayer) livingEntity)) {
-                updatePlayerHealth(h, (ServerPlayer) livingEntity);
+            } else {
+                if (!checkTotemDeathProtection(h, player)) {
+                    updatePlayerHealth(h, player);
+                }
+                Network.CLIENT_INSTANCE.send(
+                        PacketDistributor.PLAYER.with(() -> (ServerPlayer) livingEntity),
+                        MyReadAllConditionData.getInstance(livingEntity.getUUID(), h, SYN)
+                );
             }
             return h;
         });
-        if (isPlayer) {
-            Network.CLIENT_INSTANCE.send(
-                    PacketDistributor.PLAYER.with(() -> (ServerPlayer) livingEntity),
-                    MyReadAllConditionData.getInstance(livingEntity.getUUID(), health, SYN)
-            );
-        }
     }
 
     private static void updateLivingHealth(HealthCapability health, LivingEntity entity) {
-        float maxHealth = entity.getMaxHealth() * health.vitality();
+        float maxHealth = getHealthWithOuterHealing(health, entity);
         if (entity.isDeadOrDying()) {
             DyingHandler.setLivingDead(entity);
         } else if (maxHealth > 0) {
@@ -81,7 +80,7 @@ public class HealingEventHandler {
     }
 
     private static void updatePlayerHealth(HealthCapability health, ServerPlayer player) {
-        float maxHealth = player.getMaxHealth() * health.vitality();
+        float maxHealth = getHealthWithOuterHealing(health, player);
         if (player.isDeadOrDying()) {
             DyingHandler.setPlayerDead(player);
         } else if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative()) {
@@ -96,6 +95,11 @@ public class HealingEventHandler {
         }
     }
 
+    private static float getHealthWithOuterHealing(HealthCapability health, LivingEntity entity) {
+        float maxHealth = entity.getMaxHealth() * health.vitality() + health.outerHealing();
+        return Math.min(maxHealth, entity.getMaxHealth());
+    }
+
     @SubscribeEvent
     public static void onHealing(LivingHealEvent event) {
         if (event.getEntity().level().isClientSide()) return;
@@ -103,11 +107,14 @@ public class HealingEventHandler {
         if (!HealthCapability.has(entity)) return;
 
         float amount = event.getAmount() * Config.healing_factor;
-        entity.setAbsorptionAmount(entity.getAbsorptionAmount() + amount);
+        HealthCapability.getAndSet(entity, (h) -> {
+            h.setOuterHealing(Mth.clamp(h.outerHealing() + amount, 0, entity.getMaxHealth()));
+            return h;
+        });
     }
 
     private static boolean checkTotemDeathProtection(HealthCapability health, ServerPlayer player) {
-        if (health.vitality() > 0) return false;
+        if (getHealthWithOuterHealing(health, player) > 0) return false;
 
         ItemStack itemstack = null;
         for (InteractionHand interactionhand : InteractionHand.values()) {
@@ -125,7 +132,7 @@ public class HealingEventHandler {
         CriteriaTriggers.USED_TOTEM.trigger(player, itemstack);
         player.gameEvent(GameEvent.ITEM_INTERACT_FINISH);
 
-        HealingHandler.handleValindaHealing(player, player.getMaxHealth() / 2);
+        HealingHandler.handleValindaHealing(player, 2);
         player.setHealth(1);
         player.removeAllEffects();
         player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));

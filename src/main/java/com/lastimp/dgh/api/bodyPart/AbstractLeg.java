@@ -84,9 +84,10 @@ public abstract class AbstractLeg extends AbstractExtremities{
 
     @SubscribeEvent
     public static void onFall(LivingFallEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return;
+        var entity = event.getEntity();
+        if (!HealthCapability.has(entity)) return;
 
-        var health = HealthCapability.get(player);
+        var health = HealthCapability.get(entity);
         var left_leg = health.getComponent(BodyComponents.LEFT_LEG);
         var right_leg = health.getComponent(BodyComponents.RIGHT_LEG);
         int safe_distance = 0;
