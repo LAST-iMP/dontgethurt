@@ -172,6 +172,18 @@ public class BodyCondition {
             (name) -> create(name)
             .setHealing( 0.0f, 0.0f).isComfort().eyeVisible().build()
     );
+    public static final ResourceLocation ARTERIAL_BLEEDING = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "arterial_bleeding"),
+            (name) -> create(name)
+                    .setHealing(0, 0).isInjury().eyeVisible().build()
+    );
+    public static final ResourceLocation CLAMPED_ARTERIES = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "clamped_arteries"),
+            (name) -> create(name)
+                    .setHealing(0, 0).isInjury().eyeVisible().build()
+    );
+    public static final ResourceLocation GANGRENE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "gangrene"),
+            (name) -> create(name)
+                    .setHealing(0, 0).isInjury().eyeVisible().build()
+    );
     //躯干
     public static final ResourceLocation ANALGESIA = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "analgesia"),
             (name) -> create(name)
@@ -180,6 +192,10 @@ public class BodyCondition {
     public static final ResourceLocation RESPIRATORY_ARREST= addCondition(Common.ResourceLocation(DontGetHurt.MODID, "respiratory_arrest"),
             (name) -> create(name)
             .setHealing(0.5f, 1.0f).isInjury().eyeVisible().build()
+    );
+    public static final ResourceLocation AORTIC_RUPTURE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "aortic_rupture"),
+            (name) -> create(name)
+                    .setHealing(0, 0).isInjury().eyeVisible().build()
     );
     //头脑
     public static final ResourceLocation WITHDRAW = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "withdraw"),
@@ -423,7 +439,10 @@ public class BodyCondition {
         ));
 
         AbstractExtremities.addCondition(List.of(
-                DISLOCATION
+                DISLOCATION,
+                ARTERIAL_BLEEDING,
+                CLAMPED_ARTERIES,
+                GANGRENE
         ));
 
         Head.addCondition(List.of(
@@ -447,7 +466,8 @@ public class BodyCondition {
 
         Torso.addCondition(List.of(
                 ANALGESIA,
-                RESPIRATORY_ARREST
+                RESPIRATORY_ARREST,
+                AORTIC_RUPTURE
         ));
 
         Sutures.addCoverOnHeal(SAWED_BONES);

@@ -39,7 +39,7 @@ public abstract class AbstractDirectHealItems extends AbstractHealingItem{
         if (!player.level().isClientSide && HealthCapability.has(interactionTarget)) {
             HealingHandler.useItemOn(player.getItemInHand(usedHand), (ServerPlayer) player, interactionTarget, this.getAvaComponent());
         }
-        return super.interactLivingEntity(stack, player, interactionTarget, usedHand);
+        return InteractionResult.SUCCESS;
     }
 
 }
