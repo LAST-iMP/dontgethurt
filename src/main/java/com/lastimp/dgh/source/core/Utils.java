@@ -1,5 +1,6 @@
 package com.lastimp.dgh.source.core;
 
+import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.server.level.ServerLevel;
@@ -75,18 +76,16 @@ public abstract class Utils {
     }
 
     public static boolean randomCheck(float value, float threshold, float factor, float p_min, float p_max, int checkTimes) {
-        if (checkTimes >= 0) {
-            while (checkTimes-- > 0) {
-                if (randomCheck(value, threshold, factor, p_min, p_max))
-                    return true;
-            }
-            return randomCheck(value, threshold, factor, p_min, p_max);
+        if (checkTimes < 0) {
+            do {
+                if (randomCheck(value, threshold, factor, p_min, p_max)) return true;
+            } while (++checkTimes <= 0);
+            return false;
         } else {
-            while (checkTimes++ < 0) {
-                if (!randomCheck(value, threshold, factor, p_min, p_max))
-                    return false;
-            }
-            return randomCheck(value, threshold, factor, p_min, p_max);
+            do {
+                if (!randomCheck(value, threshold, factor, p_min, p_max)) return false;
+            } while (--checkTimes >= 0);
+            return true;
         }
     }
 }

@@ -12,52 +12,24 @@ import com.lastimp.dgh.source.core.bodyPart.Torso;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public abstract class InternalInjuryHandler {
-    public static void handle(AbstractBody body, float damageAmount) {
-        if (body instanceof AbstractVisibleBody visibleBody)
-            damageAmount *= (1.0f - visibleBody.getConditionValue(INTERNAL_RES) * Config.resistance_max);
+    public static void handle(AbstractVisibleBody body, float damageAmount) {
+        damageAmount *= (1.0f - body.getConditionValue(INTERNAL_RES) * Config.resistance_max);
         body.injury(INTERNAL_INJURY, damageAmount);
     }
 
-    public static void handleBluntTrauma(AbstractBody body, float damageAmount) {
-        handle(body, damageAmount);
-        if (!(body instanceof AbstractVisibleBody visibleBody)) return;
-        if (body.abnormal(SAWED_BONES)) return;
-
-        float threshold = visibleBody.fractThreshold();
-        float factor = (1.0f - threshold) / Config.baseFractureMaxProb;
-
-        damageAmount += body.getCondition(INTERNAL_INJURY).getValue();
-        if (Utils.randomCheck(damageAmount, threshold, factor, 0.0f, Config.baseFractureMaxProb, visibleBody.fractCheckTimes())) {
-            visibleBody.setConditionValue(FRACTURE, BodyCondition.get(FRACTURE).maxValue());
-            if (visibleBody.abnormal(PLASTER_CAST))
-                visibleBody.setConditionValue(PLASTER_CAST, BodyCondition.get(PLASTER_CAST).defaultValue());
-        }
-
-        factor = (1.0f - Config.baseDislocationThreshold) / Config.baseDislocationMaxProb;
-        if (!(visibleBody instanceof AbstractExtremities extremities)) return;
-        if (Utils.randomCheck(damageAmount, Config.baseDislocationThreshold, factor, 0.0f, Config.baseDislocationMaxProb, visibleBody.fractCheckTimes())) {
-            if (!extremities.abnormal(FRACTURE) && !extremities.isBadBandaged() && !extremities.isBadBandaged())
-                extremities.setConditionValue(DISLOCATION, BodyCondition.get(DISLOCATION).maxValue());
-        }
+    public static void handleBluntTrauma(AbstractVisibleBody visibleBody, float damageAmount) {
+        handle(visibleBody, damageAmount);
+        float damage = visibleBody.getConditionValue(INTERNAL_INJURY) + visibleBody.getConditionHidden(INTERNAL_INJURY);
+        if (visibleBody instanceof AbstractExtremities extremities)
+            FollowInjuryHandler.dislocationHandler(extremities, damage);
+        FollowInjuryHandler.fractionHandler(visibleBody, damage);
     }
 
-    public static void handleExplosion(AbstractBody body, float damageAmount) {
+    public static void handleExplosion(AbstractVisibleBody body, float damageAmount) {
         handle(body, damageAmount);
-        if (!(body instanceof AbstractVisibleBody visibleBody)) return;
-        if (body.abnormal(SAWED_BONES)) return;
-
-        float factor = 1.0f - Config.baseFractureThreshold;
-        damageAmount += body.getCondition(INTERNAL_INJURY).getValue();
-        if (Utils.randomCheck(damageAmount, Config.baseFractureThreshold, factor, 0.0f, 1.0f)) {
-            visibleBody.setConditionValue(FRACTURE, BodyCondition.get(FRACTURE).maxValue());
-            if (visibleBody.abnormal(PLASTER_CAST))
-                visibleBody.setConditionValue(PLASTER_CAST, BodyCondition.get(PLASTER_CAST).defaultValue());
-        }
-
-        if (!(visibleBody instanceof AbstractExtremities extremities)) return;
-        if (Utils.randomCheck(damageAmount, 0, 1.0f, 0.35f, 0.36f)) {
-            if (!extremities.isBadBandaged() && !extremities.isBadBandaged())
-                extremities.setConditionValue(DISLOCATION, BodyCondition.get(DISLOCATION).maxValue());
-        }
+        float damage = body.getConditionValue(INTERNAL_INJURY) + body.getConditionHidden(INTERNAL_INJURY);
+        if (body instanceof AbstractExtremities extremities)
+            FollowInjuryHandler.dislocationHandler(extremities, damage, 0, 1, 0.35f, 0.36f, 0);
+        FollowInjuryHandler.fractionHandler(body, damage, Config.baseFractureThreshold, 0.9f - Config.baseFractureThreshold, 0.0f, 1.0f, 0);
     }
 }
