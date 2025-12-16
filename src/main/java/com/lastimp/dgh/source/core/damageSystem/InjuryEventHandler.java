@@ -3,6 +3,7 @@ package com.lastimp.dgh.source.core.damageSystem;
 
 import com.lastimp.dgh.Config;
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModDamageType;
 import com.lastimp.dgh.source.core.Utils;
@@ -78,7 +79,7 @@ public class InjuryEventHandler {
             float[] weight = Utils.getRandom(1, 1);
             for (int i = 0; i < LEGS.size(); i++) {
                 var leg = h.getComponent(LEGS.get(i));
-                InternalInjuryHandler.handleBluntTrauma(leg, damageAmount * weight[i]);
+                InternalInjuryHandler.handleBluntTrauma((AbstractVisibleBody) leg, damageAmount * weight[i]);
             }
             return h;
         });
@@ -109,8 +110,8 @@ public class InjuryEventHandler {
             float[] weight = Utils.getRandom(1.5f,3,2,2,1.5f,1.5f);
             for (int i = 0; i < VISIBLE_BODIES.size(); i++) {
                 var body = h.getComponent(VISIBLE_BODIES.get(i));
-                OpenWoundHandler.handleExplosion(body, 0.5f * damageAmount * weight[i]);
-                InternalInjuryHandler.handleExplosion(body, 0.5f * damageAmount * weight[i]);
+                OpenWoundHandler.handleExplosion((AbstractVisibleBody) body, 0.5f * damageAmount * weight[i]);
+                InternalInjuryHandler.handleExplosion((AbstractVisibleBody) body, 0.5f * damageAmount * weight[i]);
             }
             return h;
         });
@@ -120,7 +121,7 @@ public class InjuryEventHandler {
     public static void handleEntityAttack(float damageAmount, LivingEntity entity, LivingDamageEvent event) {
         HealthCapability.getAndSet(entity, h -> {
             var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(1,2,2,2,0.5f,0.5f)));
-            OpenWoundHandler.handleEntityAttack(body, damageAmount);
+            OpenWoundHandler.handleEntityAttack((AbstractVisibleBody) body, damageAmount);
             return h;
         });
         event.setAmount(0f);
@@ -134,7 +135,7 @@ public class InjuryEventHandler {
     public static void handleDefaultDamage(float damageAmount, LivingEntity entity, LivingDamageEvent event) {
         HealthCapability.getAndSet(entity, h -> {
             var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(1,2,2,2,0.5f,0.5f)));
-            InternalInjuryHandler.handleBluntTrauma(body, damageAmount);
+            InternalInjuryHandler.handleBluntTrauma((AbstractVisibleBody) body, damageAmount);
             return h;
         });
         event.setAmount(0f);

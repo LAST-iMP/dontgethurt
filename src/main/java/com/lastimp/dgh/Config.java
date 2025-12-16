@@ -68,7 +68,7 @@ public class Config {
             .defineInRange("BASE_DISLOCATION_MAX_PROB", 0.8, 0, 1.0);
 
     public static final ForgeConfigSpec.DoubleValue BASE_FRACTURE_MAX_PROB = BUILDER
-            .defineInRange("BASE_FRACTURE_MAX_PROB", 0.5, 0, 1.0);
+            .defineInRange("BASE_FRACTURE_MAX_PROB", 0.8, 0, 1.0);
 
     // 构建配置
     public static final ForgeConfigSpec SPEC = BUILDER.pop().build();

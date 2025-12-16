@@ -47,12 +47,15 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(BodyCondition.DRILLED_BONES.toString(), "骨骼钻孔");
         this.add(BodyCondition.SAWED_BONES.toString(), "骨锯开");
 
-
         this.add(BodyCondition.DISLOCATION.toString(), "脱臼");
         this.add(BodyCondition.PLASTER_CAST.toString(), "石膏固定");
+        this.add(BodyCondition.ARTERIAL_BLEEDING.toString(), "动脉出血");
+        this.add(BodyCondition.CLAMPED_ARTERIES.toString(), "动脉夹闭");
+        this.add(BodyCondition.GANGRENE.toString(), "坏疽");
 
         this.add(BodyCondition.ANALGESIA.toString(), "镇痛");
         this.add(BodyCondition.RESPIRATORY_ARREST.toString(), "呼吸停止");
+        this.add(BodyCondition.AORTIC_RUPTURE.toString(), "主动脉破裂");
 
         this.add(BodyCondition.WITHDRAW.toString(), "戒断");
         this.add(BodyCondition.TRAUMATIC_SHOCK.toString(), "手术休克");
