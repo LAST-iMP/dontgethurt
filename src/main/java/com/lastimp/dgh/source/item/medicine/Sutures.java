@@ -2,6 +2,7 @@
 package com.lastimp.dgh.source.item.medicine;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
+import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
@@ -29,16 +30,23 @@ public class Sutures extends AbstractPartlyHealItem {
             AbstractBody body = health.getComponent(component);
 
             boolean success = false;
-            if (success |= body.abnormal(OPEN_WOUND))
+            if (body.abnormal(OPEN_WOUND)) {
                 body.healing(OPEN_WOUND, -0.2f);
-            if (success |= body.abnormal(SURGERY_INCISION))
+                success = true;
+            }
+            if (body.abnormal(SURGERY_INCISION)) {
                 body.setConditionValue(SURGERY_INCISION, BodyCondition.get(SURGERY_INCISION).defaultValue());
-            if (success |= body.abnormal(CLAMPED_BLEEDING))
                 body.setConditionValue(CLAMPED_BLEEDING, BodyCondition.get(CLAMPED_BLEEDING).defaultValue());
-            if (success |= body.abnormal(RETRACTED_SKIN))
+                success = true;
+            }
+            if (body.abnormal(RETRACTED_SKIN)) {
                 body.setConditionValue(RETRACTED_SKIN, BodyCondition.get(RETRACTED_SKIN).defaultValue());
-            if (success |= body.abnormal(DRILLED_BONES))
                 body.setConditionValue(DRILLED_BONES, BodyCondition.get(DRILLED_BONES).defaultValue());
+                body.setConditionValue(CLAMPED_ARTERIES, BodyCondition.get(CLAMPED_ARTERIES).defaultValue());
+                if (body instanceof AbstractExtremities extremities)
+                    extremities.setConditionValue(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).defaultValue());
+                success = true;
+            }
 
             if (success) {
                 for (var key : cover) {

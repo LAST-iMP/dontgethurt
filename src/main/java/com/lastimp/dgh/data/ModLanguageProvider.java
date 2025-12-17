@@ -117,6 +117,8 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.BONE_DIMOND.get(), "钻骨");
         this.add(ModItems.BONE_NETHERITE.get(), "下界合金骨");
         this.add(ModItems.NALOXONE.get(), "烯丙羟吗啡酮");
+        this.add(ModItems.MEDICAL_STENT.get(), "医用支架");
+        this.add(ModItems.TOURNIQUET.get(), "动脉止血带");
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");
         this.add(ModEffects.INTENSE_PAIN_EFFECT.get(), "剧痛");

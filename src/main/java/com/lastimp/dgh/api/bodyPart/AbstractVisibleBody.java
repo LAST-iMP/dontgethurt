@@ -188,28 +188,29 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void handleSurgery(HealthCapability health) {
         Head head = (Head) health.getComponent(HEAD);
+        float factor = health.safeSurgery() ? 0.1f : 1;
         if (this.abnormal(SURGERY_INCISION)) {
-            if (!this.abnormal(CLAMPED_BLEEDING))
-                this.nextTickBleed += 0.23f;
-            if (!health.safeSurgery())
-                head.injury(TRAUMATIC_SHOCK, 0.02f * DELTA);
+            if (!this.abnormal(CLAMPED_BLEEDING)) {
+                Blood blood = (Blood) health.getComponent(BLOOD);
+                blood.addConditionValue(BLOOD_LOSS, 0.007f * DELTA);
+            }
+            head.injury(TRAUMATIC_SHOCK, 0.02f * DELTA * factor);
         }
         if (this.abnormal(RETRACTED_SKIN))
-            if (!health.safeSurgery())
-                head.injury(TRAUMATIC_SHOCK, 0.02f * DELTA);
+            head.injury(TRAUMATIC_SHOCK, 0.02f * DELTA * factor);
         if (this.abnormal(DRILLED_BONES))
-            if (!health.safeSurgery())
-                head.injury(TRAUMATIC_SHOCK, 0.015f * DELTA);
+            head.injury(TRAUMATIC_SHOCK, 0.015f * DELTA * factor);
         if (this.abnormal(SAWED_BONES))
-            if (!health.safeSurgery())
-                head.injury(TRAUMATIC_SHOCK, 0.015f * DELTA);
+            head.injury(TRAUMATIC_SHOCK, 0.015f * DELTA * factor);
     }
 
     private void handleBleeding(HealthCapability health) {
+        if (this.abnormal(CLAMPED_BLEEDING))
+            this.nextTickBleed = 0;
         this.getCondition(BLEED).setValue(this.nextTickBleed);
 
         Blood blood = (Blood) health.getComponent(BLOOD);
-        blood.addConditionValue(BLOOD_LOSS, this.nextTickBleed * DELTA * Config.bleed_volume_ratio * this.getVitalityWeight());
+        blood.addConditionValue(BLOOD_LOSS, this.nextTickBleed * DELTA * Config.bleed_volume_ratio);
     }
 
     protected void updateBoneEffect(LivingEntity entity) {

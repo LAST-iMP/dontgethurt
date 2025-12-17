@@ -291,6 +291,22 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(Items.GOLDEN_APPLE, 1)
                 .unlockedBy("has_mophine", has(ModItems.MORPHINE))
                 .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.TOURNIQUET.get(), 2)
+                .pattern(" a ")
+                .pattern("a a")
+                .pattern("ba ")
+                .define('a', Items.LEATHER)
+                .define('b', Items.STRING)
+                .unlockedBy("has_leather", has(Items.LEATHER))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.MEDICAL_STENT.get(), 1)
+                .pattern(" ba")
+                .pattern("bab")
+                .pattern("ab ")
+                .define('a', Items.STRING)
+                .define('b', Items.IRON_NUGGET)
+                .unlockedBy("has_iron", has(Items.IRON_INGOT))
+                .save(recipeOutput);
 
         var book = PatchouliAPI.get().getBookStack(Common.ResourceLocation(DontGetHurt.MODID, "medical_guide"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, book)

@@ -178,11 +178,11 @@ public class BodyCondition {
     );
     public static final ResourceLocation CLAMPED_ARTERIES = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "clamped_arteries"),
             (name) -> create(name)
-                    .setHealing(0, 0).isInjury().eyeVisible().build()
+                    .setHealing(0, 0).isPain().eyeVisible().build()
     );
     public static final ResourceLocation GANGRENE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "gangrene"),
             (name) -> create(name)
-                    .setHealing(0, 0).isInjury().eyeVisible().build()
+                    .setHealing(1.0f / Config.base_self_healing_time, 0).isInjury().eyeVisible().build()
     );
     //躯干
     public static final ResourceLocation ANALGESIA = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "analgesia"),
@@ -420,6 +420,7 @@ public class BodyCondition {
                 BANDAGED,
                 BANDAGED_DIRTY,
                 OINTMENT,
+                CLAMPED_ARTERIES,
 
                 FRACTURE,
                 INTENSE_PAIN,
@@ -441,7 +442,6 @@ public class BodyCondition {
         AbstractExtremities.addCondition(List.of(
                 DISLOCATION,
                 ARTERIAL_BLEEDING,
-                CLAMPED_ARTERIES,
                 GANGRENE
         ));
 

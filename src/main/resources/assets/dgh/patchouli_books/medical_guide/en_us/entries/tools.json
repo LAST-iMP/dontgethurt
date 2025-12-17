@@ -1,5 +1,5 @@
 {
-  "name": "Utility Tools",
+  "name": "实用工具",
   "icon": "dgh:health_scanner",
   "category": "dgh:tools_and_medic",
   "read_by_default": false,
@@ -7,10 +7,10 @@
   "pages": [
     {
       "type": "spotlight",
-      "title": "Health Scanner",
+      "title": "健康扫描仪",
       "item": "dgh:health_scanner",
       "scale": 1.2,
-      "text": "Health Scanner! It allows you to open your own or others' health interface by right-clicking. Compared to naked-eye observation, it shows more information and lets you heal others!",
+      "text": "健康扫描仪！它能够通过右键打开自己或者其他人的健康界面。相比于肉眼观察，它能够显示更多信息，而且允许你治疗他人！",
       "link_recipe": true
     },
     {
@@ -19,10 +19,10 @@
     },
     {
       "type": "spotlight",
-      "title": "Blood Scanner",
+      "title": "血液扫描仪",
       "item": "dgh:blood_scanner",
       "scale": 1.2,
-      "text": "Blood Scanner! It allows you to scan your own or others' blood information by right-clicking.",
+      "text": "血液扫描仪！它能够通过右键来扫描自己或者其他人的血液信息。",
       "link_recipe": true
     },
     {
@@ -31,10 +31,10 @@
     },
     {
       "type": "spotlight",
-      "title": "Wooden Wrench",
+      "title": "木扳手",
       "item": "dgh:wood_wrench",
       "scale": 1.2,
-      "text": "Give a good jerk to dislocated limbs.",
+      "text": "给脱臼的四肢狠狠来一下。",
       "link_recipe": true
     },
     {
@@ -43,10 +43,10 @@
     },
     {
       "type": "spotlight",
-      "title": "Medical Kit",
+      "title": "医疗包",
       "item": "dgh:health_care_bag",
       "scale": 1.2,
-      "text": "Filled with your lifesaving stuff.",
+      "text": "装满你的救命玩意儿。",
       "link_recipe": true
     },
     {
@@ -55,10 +55,22 @@
     },
     {
       "type": "spotlight",
-      "title": "Scalpel",
+      "title": "医疗床",
+      "item": "dgh:operating_bed",
+      "scale": 1.2,
+      "text": "在手术床旁无需麻醉。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:operating_bed"
+    },
+    {
+      "type": "spotlight",
+      "title": "手术刀",
       "item": "dgh:scalpel",
       "scale": 1.2,
-      "text": "Cut open the skin.",
+      "text": "切开皮肤。",
       "link_recipe": true
     },
     {
@@ -67,10 +79,10 @@
     },
     {
       "type": "spotlight",
-      "title": "Hemostat",
+      "title": "止血钳",
       "item": "dgh:hemostat",
       "scale": 1.2,
-      "text": "Stop bleeding.",
+      "text": "阻断出血。",
       "link_recipe": true
     },
     {
@@ -79,10 +91,10 @@
     },
     {
       "type": "spotlight",
-      "title": "Retractor",
+      "title": "牵开器",
       "item": "dgh:retractor",
       "scale": 1.2,
-      "text": "Pull back the skin.",
+      "text": "拉开皮肤。",
       "link_recipe": true
     },
     {
@@ -91,10 +103,10 @@
     },
     {
       "type": "spotlight",
-      "title": "Surgical Drill",
+      "title": "手术钻",
       "item": "dgh:surgical_drill",
       "scale": 1.2,
-      "text": "Drill through bones.",
+      "text": "钻开骨头。",
       "link_recipe": true
     },
     {
@@ -103,15 +115,111 @@
     },
     {
       "type": "spotlight",
-      "title": "Bone Implants",
+      "title": "骨骼植入物",
       "item": "dgh:bone_implants",
       "scale": 1.2,
-      "text": "Completely heal your bones.",
+      "text": "彻底治好你的骨折。",
       "link_recipe": true
     },
     {
       "type": "crafting",
       "recipe": "dgh:bone_implants"
+    },
+    {
+      "type": "spotlight",
+      "title": "骨骼置换物",
+      "item": "dgh:bone_natural",
+      "scale": 1.2,
+      "text": "更新你的骨头！注意，四肢需要2根，胸部需要8根。置换不彻底等于彻底不置换！",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_wood"
+    },
+    {
+      "type": "spotlight",
+      "title": "木骨",
+      "item": "dgh:bone_wood",
+      "scale": 1.2,
+      "text": "每个手+10%挖掘速度，每个腿+10%移动速度，胸口+20%飞行速度。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_wood"
+    },
+    {
+      "type": "spotlight",
+      "title": "石骨",
+      "item": "dgh:bone_stone",
+      "scale": 1.2,
+      "text": "每个部位+15%击退抗性，+0.5护甲。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_stone"
+    },
+    {
+      "type": "spotlight",
+      "title": "铜骨",
+      "item": "dgh:bone_copper",
+      "scale": 1.2,
+      "text": "每个部位+0.5护甲，+1韧性，骨折阈值+0.1。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_copper"
+    },
+    {
+      "type": "spotlight",
+      "title": "铁骨",
+      "item": "dgh:bone_iron",
+      "scale": 1.2,
+      "text": "每个部位+1护甲，骨折阈值+0.05。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_iron"
+    },
+    {
+      "type": "spotlight",
+      "title": "金骨",
+      "item": "dgh:bone_gold",
+      "scale": 1.2,
+      "text": "每个部位+2韧性，骨折阈值+0.2。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_gold"
+    },
+    {
+      "type": "spotlight",
+      "title": "钻石骨",
+      "item": "dgh:bone_dimond",
+      "scale": 1.2,
+      "text": "每个部位+2护甲，骨折优势判定+1。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_dimond"
+    },
+    {
+      "type": "spotlight",
+      "title": "下界合金骨",
+      "item": "dgh:bone_dimond",
+      "scale": 1.2,
+      "text": "每个部位+2护甲，+1韧性，骨折阈值+0.1，骨折优势判定+1。每个手+10%攻击速度，每个腿+1跳跃提升(最多2，不叠加)，胸口+25%击退抗性。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:bone_dimond"
     }
   ]
 }
