@@ -1,10 +1,8 @@
 
 package com.lastimp.dgh.api.bodyPart;
 
-import com.lastimp.dgh.DontGetHurt;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -51,7 +49,7 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
     }
 
     public float getDisplayValue() {
-        return Math.min(1.0f, displayValue);
+        return Math.min(2.0f, displayValue);
     }
 
     public float getHiddenValue() {

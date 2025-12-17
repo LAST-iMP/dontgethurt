@@ -32,7 +32,8 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.GYPSUM.getKey())
                 .add(ModItems.MORPHINE.getKey())
                 .add(ModItems.SUTURE.getKey())
-                .add(ModItems.NALOXONE.getKey());
+                .add(ModItems.NALOXONE.getKey())
+                .add(ModItems.TOURNIQUET.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS)
                 .add(SHEARS)
@@ -62,7 +63,8 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.BONE_IRON.getKey())
                 .add(ModItems.BONE_GOLD.getKey())
                 .add(ModItems.BONE_DIMOND.getKey())
-                .add(ModItems.BONE_NETHERITE.getKey());
+                .add(ModItems.BONE_NETHERITE.getKey())
+                .add(ModItems.MEDICAL_STENT.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_BASIC)
                 .add(SHEARS)
@@ -92,7 +94,8 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.BONE_IRON.getKey())
                 .add(ModItems.BONE_GOLD.getKey())
                 .add(ModItems.BONE_DIMOND.getKey())
-                .add(ModItems.BONE_NETHERITE.getKey());
+                .add(ModItems.BONE_NETHERITE.getKey())
+                .add(ModItems.MEDICAL_STENT.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_SHEARS)
                 .add(SHEARS)

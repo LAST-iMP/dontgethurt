@@ -13,7 +13,7 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(br)$(li)部位指定$(li2)绷带$(li2)缝合线$(li2)石膏$(br)$(li)直接使用$(li2)(空)血包$(li2)吗啡"
+      "text": "$(br)$(li)部位指定$(li2)绷带$(li2)缝合线$(li2)石膏$(br)$(li)直接使用$(li2)(空)血包$(li2)吗啡$(li2)医用支架$(li2)止血带"
     },
     {
       "type": "spotlight",
@@ -45,7 +45,7 @@
       "title": "绷带",
       "item": "dgh:bandage",
       "scale": 1.2,
-      "text": "使用绷带包扎伤口，阻止出血，稳定脱臼。$(br)$(li)效果$(li2)阻止出血(内伤无效)$(li)负面效果$(li2)变脏后增加内伤$(li2)降低移动速度$(li)主治$(li2)烧伤$(li)副治$(li2)开放伤、脱臼、骨折",
+      "text": "使用绷带包扎伤口，阻止出血，稳定脱臼。使用剪刀或手术刀去除。$(br)$(li)效果$(li2)阻止出血(内伤无效)$(li)负面效果$(li2)变脏后增加内伤$(li2)降低移动速度$(li)主治$(li2)烧伤$(li)副治$(li2)开放伤、脱臼、骨折",
       "link_recipe": true
     },
     {
@@ -75,6 +75,30 @@
     {
       "type": "crafting",
       "recipe": "dgh:gypsum"
+    },
+    {
+      "type": "spotlight",
+      "title": "医用支架",
+      "item": "dgh:medical_stent",
+      "scale": 1.2,
+      "text": "在手术流程中使用以治疗主动脉破裂。$(br)$(li)效果$(li2)治疗主动脉破裂$(br)$(li)主治$(li2)主动脉破裂",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:medical_stent"
+    },
+    {
+      "type": "spotlight",
+      "title": "止血带",
+      "item": "dgh:tourniquet",
+      "scale": 1.2,
+      "text": "在四肢或头部使用，暂时阻断动脉出血。$(br)$(li)效果$(li2)阻断动脉出血(li)负面效果$(li2)长时间使用造成坏疽$(li2)在头部使用造成脑损伤和缺氧$(br)$(li)主治$(li2)动脉出血",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:tourniquet"
     }
   ]
 }

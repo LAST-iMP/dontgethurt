@@ -14,6 +14,7 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.medicine.Bandages;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.source.item.medicine.Gypsum;
+import com.lastimp.dgh.source.item.medicine.Tourniquet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -85,6 +86,7 @@ public class HealingHandler {
         if (itemStack.is(MEDICAL_TOOLS_SHEARS)) {
             success |= Bandages.cut(target, component);
             success |= Gypsum.cut(target, component);
+            success |= Tourniquet.cut(target, component);
         }
         if (itemStack.getItem() instanceof AbstractDirectHealItems item) {
             success = item.heal(source, target);

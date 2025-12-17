@@ -1,9 +1,12 @@
 package com.lastimp.dgh.api.bodyPart;
 
+import com.lastimp.dgh.Config;
 import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayList;
@@ -11,12 +14,14 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public abstract class AbstractExtremities extends AbstractVisibleBody {
     private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
     private static List<ResourceLocation> EXTREMITY_CONDITIONS;
+    private int tourniquetTick = 0;
 
     public static void addCondition(Collection<ResourceLocation> key) {
         uniqueConditions.addAll(key);
@@ -55,6 +60,8 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
     public AbstractBody update(HealthCapability health, LivingEntity entity) {
         super.update(health, entity);
         this.handleDislocation(health);
+        this.handleArterialBleeding(health);
+        this.handleGangrene(health);
         return this;
     }
 
@@ -64,6 +71,28 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
         Torso torso = (Torso) health.getComponent(TORSO);
         if (!torso.abnormal(ANALGESIA) && !this.isBandaged() && !this.isBadBandaged()) {
             this.setConditionValue(INTENSE_PAIN, BodyCondition.get(INTENSE_PAIN).maxValue());
+        }
+    }
+
+    private void handleArterialBleeding(HealthCapability health) {
+        float bleed = this.getConditionValue(BLEED);
+        if (bleed > 0.8) {
+            this.injury(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).maxValue());
+        }
+        if (this.abnormal(ARTERIAL_BLEEDING) && !this.abnormal(CLAMPED_ARTERIES)) {
+            var blood = health.getComponent(BLOOD);
+            blood.injury(BLOOD_LOSS, Config.fractureBloodRatio * DELTA);
+        }
+    }
+
+    private void handleGangrene(HealthCapability health) {
+        if (this.abnormal(CLAMPED_ARTERIES)) {
+            this.tourniquetTick++;
+        } else {
+            this.tourniquetTick = 0;
+        }
+        if (this.tourniquetTick >= 4800) {
+            this.injury(GANGRENE, BodyCondition.get(GANGRENE).healingSpeed() * 2 * DELTA);
         }
     }
 }

@@ -287,6 +287,20 @@ public class ModItems {
                     .stacksTo(16)
     );
 
+    public static final DeferredItem<MedicalStent> MEDICAL_STENT = registerItem(
+            "medical_stent",
+            MedicalStent::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final DeferredItem<Tourniquet> TOURNIQUET = registerItem(
+            "tourniquet",
+            Tourniquet::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
     private static <T extends Item> DeferredItem<T> registerItem(String name, Function<Item.Properties, ? extends T> func, Item.Properties properties) {
         DeferredItem<T> item = ITEMS.registerItem(name, func, properties);
         ITEMS_SET.add(item);
