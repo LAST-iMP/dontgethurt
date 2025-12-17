@@ -38,8 +38,10 @@ public class HealthConditionWidget extends AbstractWidget {
         guiGraphics.renderOutline(this.getX(), this.getY(), this.width, this.height, borderColor);
 
         // draw filled portion
-        int filled = (int) (this.width * severity);
+        int filled = (int) (this.width * Math.min(severity, 1.0));
         guiGraphics.fill(this.getX() + 1, this.getY() + 1, Mth.clamp(this.getX() + filled, this.getX() + 1, this.getX() + this.width - 1), this.getY() + this.height - 1, fgColor);
+        if (severity > 1)
+            guiGraphics.fill(this.getX() + 1, this.getY() + 1, Mth.clamp((int)(this.getX() + this.width * (severity - 1)), this.getX() + 1, this.getX() + this.width - 1), this.getY() + this.height - 1, 0xFF7E0000);
 
         // draw icon from texture (if you want to use atlas, supply proper tex size)
 

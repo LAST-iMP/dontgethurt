@@ -13,7 +13,7 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(br2)$(li)致命伤$(li2)烧伤$(li2)开放伤$(li2)内伤$(li2)脑损伤$(li)苦痛$(li2)脱臼$(li2)骨折$(li2)出血$(li2)呼吸停止$(li2)手术休克$(li2)戒断"
+      "text": "$(br2)$(li)致命伤$(li2)烧伤$(li2)开放伤$(li2)内伤$(li2)脑损伤$(li)苦痛$(li2)脱臼$(li2)骨折$(li2)出血$(li2)呼吸停止$(li2)手术休克$(li2)戒断$(li2)动脉出血$(li2)主动脉破裂$(li2)坏疽"
     },
     {
       "type": "image",
@@ -134,7 +134,7 @@
       "images": [
         "dgh:textures/book/fracture.png"
       ],
-      "text": "手术休克由未经麻醉的手术行为引起。"
+      "text": "手术休克由未经麻醉的手术行为引起，麻醉后或在治疗床旁边进行手术可以将手术休克降低至十分之一。"
     },
     {
       "type": "text",
@@ -154,6 +154,34 @@
       "type": "text",
       "scale": 1.2,
       "text": "$(li)有效部位$(li2)头部$(br)$(li)影响$(li2)戒断反应$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)疗剂(未实装)"
+    },
+    {
+      "type": "image",
+      "title": "动脉出血/主动脉破裂",
+      "border": true,
+      "images": [
+        "dgh:textures/book/arterial_bleeding.png"
+      ],
+      "text": "由严重的伤口出血引起，小概率由骨折引起。$(br)胸口的动脉出血为主动脉破裂，更加的严重与危险。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)严重失血$(br)$(li)急救措施$(li2)止血带$(br)$(li)治疗措施$(li2)手术缝合/主动脉破裂手术"
+    },
+    {
+      "type": "image",
+      "title": "坏疽",
+      "border": true,
+      "images": [
+        "dgh:textures/book/gangrene.png"
+      ],
+      "text": "由过长时间佩戴止血带引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)四肢$(br)$(li)影响$(li2)败血症(未实装)$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)移除止血带"
     }
   ]
 }

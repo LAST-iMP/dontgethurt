@@ -16,9 +16,12 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.*;
 
+import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.DontGetHurt.EPS;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.ANALGESIA;
+import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
+import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
 
 public class Torso extends AbstractVisibleBody {
     private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
@@ -64,7 +67,8 @@ public class Torso extends AbstractVisibleBody {
     @Override
     public AbstractBody update(HealthCapability health, LivingEntity entity) {
         super.update(health, entity);
-        this.handleRespiratoryArrest();
+        this.handleRespiratoryArrest(health);
+        this.handleAorticRupture(health);
         return this;
     }
 
@@ -119,10 +123,22 @@ public class Torso extends AbstractVisibleBody {
         return Config.baseFractureThreshold + 0.1f;
     }
 
-    private void handleRespiratoryArrest() {
-        if (!this.abnormalOnlyHidden(SAWED_BONES)) return;
+    private void handleRespiratoryArrest(HealthCapability health) {
+        var head = health.getComponent(HEAD);
+        if (this.abnormalOnlyHidden(SAWED_BONES) || head.abnormal(CLAMPED_ARTERIES)) {
+            this.injury(RESPIRATORY_ARREST, BodyCondition.get(RESPIRATORY_ARREST).maxValue());
+        }
+    }
 
-        this.injury(RESPIRATORY_ARREST, BodyCondition.get(RESPIRATORY_ARREST).maxValue());
+    private void handleAorticRupture(HealthCapability health) {
+        float bleed = this.getConditionValue(BLEED);
+        if (bleed > 0.8) {
+            this.injury(AORTIC_RUPTURE, BodyCondition.get(AORTIC_RUPTURE).maxValue());
+        }
+        if (this.abnormal(AORTIC_RUPTURE)) {
+            var blood = health.getComponent(BLOOD);
+            blood.injury(BLOOD_LOSS, Config.fractureBloodRatio * 3 * DELTA);
+        }
     }
 
     public boolean safeSurgery() {

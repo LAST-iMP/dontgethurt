@@ -11,7 +11,7 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 public class Config {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder()
             .comment("General settings")
-            .push("general_1.1.6");
+            .push("general_1.1.7");
 
     public static final ForgeConfigSpec.DoubleValue BODY_LIFE_FACTOR = BUILDER
             .defineInRange("BODY_LIFE_FACTOR", 1.0f, 0, 1000);
@@ -38,7 +38,7 @@ public class Config {
             .defineInRange("INTERNAL_FOOD_HEALING",4.0,1.0, Float.MAX_VALUE);
 
     public static final ForgeConfigSpec.DoubleValue BLEED_VOLUME_RATIO = BUILDER
-            .defineInRange("BLEED_VOLUME_RATIO",0.03,0, Float.MAX_VALUE);
+            .defineInRange("BLEED_VOLUME_RATIO",0.005,0, Float.MAX_VALUE);
 
     public static final ForgeConfigSpec.DoubleValue WITHDRAW_RATIO = BUILDER
             .defineInRange("WITHDRAW_RATIO",0.03,0, Float.MAX_VALUE);
@@ -70,9 +70,6 @@ public class Config {
     public static final ForgeConfigSpec.DoubleValue BASE_FRACTURE_MAX_PROB = BUILDER
             .defineInRange("BASE_FRACTURE_MAX_PROB", 0.8, 0, 1.0);
 
-    // 构建配置
-    public static final ForgeConfigSpec SPEC = BUILDER.pop().build();
-
     public static float body_life_factor;
     public static float healing_factor;
     public static float dirty_bandage_ratio;
@@ -95,6 +92,19 @@ public class Config {
     public static float baseFractureThreshold;
     public static float baseDislocationMaxProb;
     public static float baseFractureMaxProb;
+
+
+    public static final ForgeConfigSpec.DoubleValue FRACTURE_ARTERIAL_PROB = BUILDER
+            .defineInRange("FRACTURE_ARTERIAL_PROB", 0.1, 0, 1.0);
+
+    public static final ForgeConfigSpec.DoubleValue FRACTURE_BLOOD_RATIO = BUILDER
+            .defineInRange("FRACTURE_ARTERIAL_PROB", 0.015, 0, 1.0);
+
+    public static float fractureArterialProb;
+    public static float fractureBloodRatio;
+
+    // 构建配置
+    public static final ForgeConfigSpec SPEC = BUILDER.pop().build();
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -119,6 +129,8 @@ public class Config {
         baseFractureThreshold = (float) (double) BASE_FRACTURE_THRESHOLD.get();
         baseDislocationMaxProb = (float) (double) BASE_DISLOCATION_MAX_PROB.get();
         baseFractureMaxProb = (float) (double) BASE_FRACTURE_MAX_PROB.get();
+        fractureArterialProb = (float) (double) FRACTURE_ARTERIAL_PROB.get();
+        fractureBloodRatio = (float) (double) FRACTURE_BLOOD_RATIO.get();
         BodyCondition.init();
     }
 

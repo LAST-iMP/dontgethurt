@@ -299,6 +299,20 @@ public class ModItems {
                     .stacksTo(16)
     );
 
+    public static final RegistryObject<Item> MEDICAL_STENT = registerItem(
+            "medical_stent",
+            MedicalStent::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> TOURNIQUET = registerItem(
+            "tourniquet",
+            Tourniquet::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

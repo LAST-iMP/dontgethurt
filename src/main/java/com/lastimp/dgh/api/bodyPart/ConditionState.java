@@ -50,7 +50,7 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
     }
 
     public float getDisplayValue() {
-        return displayValue;
+        return Math.min(2.0f, displayValue);
     }
 
     public float getHiddenValue() {
