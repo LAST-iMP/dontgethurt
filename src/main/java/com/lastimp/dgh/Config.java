@@ -102,8 +102,12 @@ public class Config {
     public static final ModConfigSpec.DoubleValue FRACTURE_BLOOD_RATIO = BUILDER
             .defineInRange("FRACTURE_ARTERIAL_PROB", 0.015, 0, 1.0);
 
+    public static final ModConfigSpec.IntValue BASE_HEALING_SHIELD_TIME = BUILDER
+            .defineInRange("BASE_FRACTURE_MAX_PROB", 100, 0, 10000);
+
     public static float fractureArterialProb;
     public static float fractureBloodRatio;
+    public static int baseHealingShieldTime;
 
     // 构建配置
     public static final ModConfigSpec SPEC = BUILDER.pop().build();
@@ -133,6 +137,8 @@ public class Config {
         baseFractureMaxProb = (float) BASE_FRACTURE_MAX_PROB.getAsDouble();
         fractureArterialProb = (float) FRACTURE_ARTERIAL_PROB.getAsDouble();
         fractureBloodRatio = (float) FRACTURE_BLOOD_RATIO.getAsDouble();
+
+        baseHealingShieldTime = BASE_HEALING_SHIELD_TIME.getAsInt();
         BodyCondition.init();
     }
 
