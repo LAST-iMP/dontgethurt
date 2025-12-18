@@ -63,6 +63,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.armBreak = (AbstractExtremities.available(this, LEFT_ARM) ? 0 : 1) + (AbstractExtremities.available(this, RIGHT_ARM) ? 0 : 1);
         this.slowDown = this.body.slowDownLevel(this);
         this.vitality = 1.0f - this.body.updateVitalityLost(this, entity);
+        this.vitality = (this.vitality > 0.999f) ? 1.0f : this.vitality;
         this.almostDead = Math.min(this.almostDead, this.vitality);
         this.nearBedTick--;
         this.outerHealing = Math.max(0, this.outerHealing - this.outerHealingDelta);
