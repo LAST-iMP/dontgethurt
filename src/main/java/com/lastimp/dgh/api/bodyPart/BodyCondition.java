@@ -114,6 +114,14 @@ public class BodyCondition {
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isResist().eyeVisible().build()
     );
+    public static final ResourceLocation BONE_DAMAGE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bone_damage"),
+            (name) -> create(name)
+                    .setHealing(1.0f / Config.base_self_healing_time / 2, 1.0f).isPain().build()
+    );
+    public static final ResourceLocation BONE_DEATH = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bone_death"),
+            (name) -> create(name)
+                    .setHealing(0, 0).isPain().build()
+    );
     //手术
     public static final ResourceLocation SURGERY_INCISION = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "scalpel"),
             (name) -> create(name)
@@ -209,6 +217,9 @@ public class BodyCondition {
             (name) -> create(name)
                     .setHealing(0, 0).isInjury().build()
     );
+    public static final ResourceLocation PNEUMOTHORAX = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "pneumothorax"),
+            (name) -> create(name).setHealing(0, 0).isPain().build()
+    );
     //头脑
     public static final ResourceLocation WITHDRAW = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "withdraw"),
             (name) -> create(name)
@@ -222,6 +233,9 @@ public class BodyCondition {
             (name) -> create(name)
                     .setValues(0.0f, 0.0f, 2.0f)
                     .setHealing(0.001f, 2.0f).isInjury().build()
+    );
+    public static final ResourceLocation COMA = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "coma"),
+            (name) -> create(name).setHealing(0.2f, 1.0f).isInjury().build()
     );
 
     //血液
@@ -239,6 +253,7 @@ public class BodyCondition {
     );
     public static final ResourceLocation BLOOD_PRESSURE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "blood_pressure"),
             (name) -> create(name)
+                    .setValues(1.0f, 0.0f, 2.0f)
                     .setHealing(0.0f, 0.0f).isBlood().build()
     );
     public static final ResourceLocation PH_LEVEL = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "ph_level"),
@@ -439,6 +454,8 @@ public class BodyCondition {
                 FRACTURE,
                 INTENSE_PAIN,
                 PLASTER_CAST,
+                BONE_DAMAGE,
+                BONE_DEATH,
 
                 BONE_WOOD,
                 BONE_STONE,
@@ -462,7 +479,8 @@ public class BodyCondition {
         Head.addCondition(List.of(
                 WITHDRAW,
                 TRAUMATIC_SHOCK,
-                BRAIN_DAMAGE
+                BRAIN_DAMAGE,
+                COMA
         ));
 
         Blood.addCondition(List.of(
@@ -484,7 +502,8 @@ public class BodyCondition {
                 AORTIC_RUPTURE,
                 HEARTRATE_INCREASE,
                 HEARTRATE_IRREGULAR,
-                HEARTRATE_STOP
+                HEARTRATE_STOP,
+                PNEUMOTHORAX
         ));
 
         Sutures.addCoverOnHeal(SAWED_BONES);
