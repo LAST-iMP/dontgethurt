@@ -6,6 +6,7 @@
     "dgh:gypsum",
     "dgh:morphine",
     "dgh:suture",
-    "dgh:naloxone"
+    "dgh:naloxone",
+    "dgh:tourniquet"
   ]
 }

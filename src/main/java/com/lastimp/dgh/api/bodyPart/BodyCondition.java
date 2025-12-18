@@ -197,6 +197,18 @@ public class BodyCondition {
             (name) -> create(name)
                     .setHealing(0, 0).isInjury().eyeVisible().build()
     );
+    public static final ResourceLocation HEARTRATE_INCREASE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "heartrate_increase"),
+            (name) -> create(name)
+                    .setHealing(0, 0).isInjury().build()
+    );
+    public static final ResourceLocation HEARTRATE_IRREGULAR = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "heartrate_irregular"),
+            (name) -> create(name)
+                    .setHealing(0, 0).isInjury().build()
+    );
+    public static final ResourceLocation HEARTRATE_STOP = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "heartrate_stop"),
+            (name) -> create(name)
+                    .setHealing(0, 0).isInjury().build()
+    );
     //头脑
     public static final ResourceLocation WITHDRAW = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "withdraw"),
             (name) -> create(name)
@@ -469,7 +481,10 @@ public class BodyCondition {
         Torso.addCondition(List.of(
                 ANALGESIA,
                 RESPIRATORY_ARREST,
-                AORTIC_RUPTURE
+                AORTIC_RUPTURE,
+                HEARTRATE_INCREASE,
+                HEARTRATE_IRREGULAR,
+                HEARTRATE_STOP
         ));
 
         Sutures.addCoverOnHeal(SAWED_BONES);

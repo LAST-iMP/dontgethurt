@@ -100,8 +100,12 @@ public class Config {
     public static final ForgeConfigSpec.DoubleValue FRACTURE_BLOOD_RATIO = BUILDER
             .defineInRange("FRACTURE_ARTERIAL_PROB", 0.015, 0, 1.0);
 
+    public static final ForgeConfigSpec.IntValue BASE_HEALING_SHIELD_TIME = BUILDER
+            .defineInRange("BASE_FRACTURE_MAX_PROB", 100, 0, 10000);
+
     public static float fractureArterialProb;
     public static float fractureBloodRatio;
+    public static int baseHealingShieldTime;
 
     // 构建配置
     public static final ForgeConfigSpec SPEC = BUILDER.pop().build();
@@ -131,6 +135,8 @@ public class Config {
         baseFractureMaxProb = (float) (double) BASE_FRACTURE_MAX_PROB.get();
         fractureArterialProb = (float) (double) FRACTURE_ARTERIAL_PROB.get();
         fractureBloodRatio = (float) (double) FRACTURE_BLOOD_RATIO.get();
+
+        baseHealingShieldTime = BASE_HEALING_SHIELD_TIME.get();
         BodyCondition.init();
     }
 
