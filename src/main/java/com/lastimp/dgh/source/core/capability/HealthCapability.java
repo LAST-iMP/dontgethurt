@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh.source.core.capability;
 
+import com.lastimp.dgh.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.source.register.ModCapabilities;
@@ -13,6 +14,7 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.function.Function;
 
+import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
@@ -65,7 +67,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.almostDead = Math.min(this.almostDead, this.vitality);
         this.nearBedTick--;
         this.outerHealing = Math.max(0, this.outerHealing - this.outerHealingDelta);
-        this.outerHealingDelta = this.outerHealing <= 0 ? 0 : Math.min(1.0f / 20, this.outerHealing + 1.0f / 60 / 20);
+        this.outerHealingDelta = this.outerHealing <= 0 ? 0 : Math.min(DELTA, this.outerHealing + DELTA / Config.baseHealingShieldTime);
     }
 
     @Override
