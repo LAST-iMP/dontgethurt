@@ -52,6 +52,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     @Override
     public AbstractBody update(HealthCapability health, LivingEntity entity) {
+        super.update(health, entity);
         handleBandaged();
         handleBurning();
         handleInternalInjury();

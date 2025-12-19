@@ -107,6 +107,8 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     }
 
     public static boolean isDying(LivingEntity entity) {
+        var health = HealthCapability.get(entity);
+        if (health != null && health.getComponent(HEAD).abnormal(COMA)) return true;
         return entity.getHealth() < 0.05 && !entity.isDeadOrDying();
     }
 

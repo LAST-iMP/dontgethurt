@@ -7,13 +7,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
@@ -22,11 +24,16 @@ import static com.lastimp.dgh.DontGetHurt.EPS;
 public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     private final HashMap<ResourceLocation, ConditionState> state = new HashMap<>();
+    private static final HashMap<String, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> handlers = new LinkedHashMap<>();
 
     public AbstractBody() {
         for (var condition : this.getBodyConditions()) {
             state.put(condition, new ConditionState(BodyCondition.get(condition).defaultValue()));
         }
+    }
+
+    public static void addHandler(String ID, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>> handler) {
+        handlers.put(ID, handler);
     }
 
     public abstract List<ResourceLocation> getBodyConditions();
@@ -85,7 +92,12 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         this.addConditionHidden(key, value);
     }
 
-    public abstract AbstractBody update(HealthCapability health, LivingEntity entity);
+    public AbstractBody update(HealthCapability health, LivingEntity entity) {
+        for (var handler : handlers.values()) {
+            handler.accept(Triple.of(health, entity, this));
+        }
+        return this;
+    }
 
     public AbstractBody updatePre(HealthCapability health, LivingEntity entity) {
         return this;

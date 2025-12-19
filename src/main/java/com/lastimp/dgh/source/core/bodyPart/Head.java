@@ -8,7 +8,6 @@ import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,6 +59,7 @@ public class Head extends AbstractVisibleBody {
         super.update(health, entity);
         this.handleWithdraw(health);
         this.handleTraumaticShock(health);
+        this.handleComa(health);
         return this;
     }
 
@@ -104,4 +104,10 @@ public class Head extends AbstractVisibleBody {
             this.injury(BRAIN_DAMAGE, value * 0.01f * DELTA);
     }
 
+    private void handleComa(HealthCapability health) {
+        var torso = health.getComponent(TORSO);
+        if (torso.abnormal(HEARTRATE_STOP)) {
+            this.injury(COMA, BodyCondition.get(COMA).maxValue());
+        }
+    }
 }
