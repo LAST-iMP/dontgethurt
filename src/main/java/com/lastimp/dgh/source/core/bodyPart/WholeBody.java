@@ -62,6 +62,7 @@ public class WholeBody extends AbstractBody {
 
     @Override
     public AbstractBody update(HealthCapability health, LivingEntity entity) {
+        super.update(health, entity);
         for (BodyComponents components : this.components.keySet()) {
             this.updateComponent(components, health, entity);
         }

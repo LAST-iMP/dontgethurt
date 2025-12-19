@@ -61,6 +61,7 @@ public class Head extends AbstractVisibleBody {
         super.update(health, entity);
         this.handleWithdraw(health);
         this.handleTraumaticShock(health);
+        this.handleComa(health);
         return this;
     }
 
@@ -103,5 +104,12 @@ public class Head extends AbstractVisibleBody {
             health.getComponent(TORSO).injury(RESPIRATORY_ARREST, BodyCondition.get(RESPIRATORY_ARREST).maxValue());
         if (value > 0.1f)
             this.injury(BRAIN_DAMAGE, value * 0.01f * DELTA);
+    }
+
+    private void handleComa(HealthCapability health) {
+        var torso = health.getComponent(TORSO);
+        if (torso.abnormal(HEARTRATE_STOP)) {
+            this.injury(COMA, BodyCondition.get(COMA).maxValue());
+        }
     }
 }
