@@ -14,6 +14,7 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.function.Function;
 
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.COMA;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.INTENSE_PAIN;
 
@@ -106,6 +107,8 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     }
 
     public static boolean isDying(LivingEntity entity) {
+        var health = HealthCapability.get(entity);
+        if (health != null && health.getComponent(HEAD).abnormal(COMA)) return true;
         return entity.getHealth() < 0.05 && !entity.isDeadOrDying();
     }
 

@@ -58,6 +58,7 @@ public class Blood extends AbstractBody {
 
     @Override
     public AbstractBody update(HealthCapability health, LivingEntity entity) {
+        super.update(health, entity);
         this.handleBloodVolume(health);
         this.handleOpiateAddicted(health);
         this.handleOxygen(health, entity);
