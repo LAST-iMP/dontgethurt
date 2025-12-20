@@ -4,6 +4,7 @@ package com.lastimp.dgh.source.client.gui.screen;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.neoforge.Common;
+import com.lastimp.dgh.source.client.eventHandler.ForgeClientEventHandler;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.client.gui.component.HealthComponentWidget;
 import com.lastimp.dgh.source.client.gui.component.HealthConditionWidget;
@@ -28,6 +29,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.HashMap;
@@ -37,6 +40,7 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.OperationType.HEALTH_SCANN;
 import static com.lastimp.dgh.source.client.gui.component.HealthComponentWidget.*;
 
+@OnlyIn(value = Dist.CLIENT)
 public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private static final ResourceLocation HUD_BACKGROUND = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
     private static final ResourceLocation HUD_HEART_BEAT = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud.png");
@@ -58,7 +62,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     public HealthScreen(HealthMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        HealingHandler.setHealthScreen(this);
+        ForgeClientEventHandler.setHealthScreen(this);
         ClientPayloadHandler.setHealthScreen(this);
     }
 
@@ -215,7 +219,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         GuiOpenWrapper.MINECRAFT.get().setScreen(null);
 
         setHealthData(null);
-        HealingHandler.setHealthScreen(null);
+        ForgeClientEventHandler.setHealthScreen(null);
         ClientPayloadHandler.setHealthScreen(null);
         super.onClose();
     }
