@@ -5,12 +5,12 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.Network;
+import com.lastimp.dgh.source.client.eventHandler.ForgeClientEventHandler;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.client.gui.component.HealthComponentWidget;
 import com.lastimp.dgh.source.client.gui.component.HealthConditionWidget;
 import com.lastimp.dgh.source.client.gui.menu.HealthMenu;
 import com.lastimp.dgh.source.core.Utils;
-import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
@@ -58,7 +58,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     public HealthScreen(HealthMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        HealingHandler.setHealthScreen(this);
+        ForgeClientEventHandler.setHealthScreen(this);
         ClientPayloadHandler.setHealthScreen(this);
     }
 
@@ -195,7 +195,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         GuiOpenWrapper.MINECRAFT.get().setScreen(null);
 
         setHealthData(null);
-        HealingHandler.setHealthScreen(null);
+        ForgeClientEventHandler.setHealthScreen(null);
         ClientPayloadHandler.setHealthScreen(null);
         super.onClose();
     }

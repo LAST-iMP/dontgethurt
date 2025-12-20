@@ -3,7 +3,6 @@ package com.lastimp.dgh.source.register;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.capability.HealthProvider;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -30,9 +29,7 @@ public class ModCapabilities {
         if (event.getObject() instanceof Player) {
             event.addCapability(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "health"), new HealthProvider());
         }
-        HealthProvider.add(Player.class);
         HealthProvider.add(ServerPlayer.class);
-        HealthProvider.add(LocalPlayer.class);
         if (event.getObject() instanceof Villager) {
             event.addCapability(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "health"), new HealthProvider());
         }
