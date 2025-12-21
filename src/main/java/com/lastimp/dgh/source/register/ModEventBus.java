@@ -10,9 +10,11 @@ import com.lastimp.dgh.source.core.capability.HealthProvider;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -57,5 +59,22 @@ public class ModEventBus {
                 MyKeyPressedData.STREAM_CODEC,
                 ServerPayloadHandler::handleClientPress
         );
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity().level().isClientSide) return;
+
+        var player = event.getEntity();
+
+        var data = player.getPersistentData();
+        var key = "dgh_new_player";
+
+        if (!data.getBoolean(key)) {
+            player.getInventory().add(new ItemStack(ModItems.HEALTH_CARE_BAG.get()));
+            player.getInventory().add(new ItemStack(ModItems.BANDAGE.get(), 8));
+            player.getInventory().add(new ItemStack(ModItems.MORPHINE.get(), 2));
+            data.putBoolean(key, true);
+        }
     }
 }
