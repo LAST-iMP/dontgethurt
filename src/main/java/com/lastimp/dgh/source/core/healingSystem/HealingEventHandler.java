@@ -35,14 +35,6 @@ import static com.lastimp.dgh.api.enums.OperationType.SYN;
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class HealingEventHandler {
     @SubscribeEvent
-    public static void logIn(PlayerEvent.PlayerLoggedInEvent event) {
-        GameRules rules = event.getEntity().level().getGameRules();
-        if(event.getEntity().level().getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION)) {
-            rules.getRule(GameRules.RULE_NATURAL_REGENERATION).set(false, event.getEntity().level().getServer());
-        }
-    }
-
-    @SubscribeEvent
     public static void onHealthUpdate(LivingEvent.LivingTickEvent event) {
         if (event.getEntity().level().isClientSide) return;
         var livingEntity = event.getEntity();
