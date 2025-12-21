@@ -3,12 +3,13 @@ package com.lastimp.dgh.source.core.capability;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
+import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.source.register.ModCapabilities;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.*;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.function.Function;
@@ -34,6 +35,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     }
 
     public static HealthCapability get(LivingEntity entity) {
+        if (entity instanceof LocalPlayer) return ClientPayloadHandler.health();
         if (has(entity)) return entity.getCapability(ModCapabilities.HEALTH, null).orElse(new HealthCapability());
         else return null;
     }
