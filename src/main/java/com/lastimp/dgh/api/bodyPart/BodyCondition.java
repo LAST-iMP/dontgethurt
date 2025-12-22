@@ -52,7 +52,7 @@ public class BodyCondition {
     //肢体
     public static final ResourceLocation BURN = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "burn"),
             (name) -> create(name)
-                    .setHealing(1.0f / Config.base_self_healing_time, 0.2f)
+                    .setHealing(1.0f / Config.base_self_healing_time, 0.25f)
                     .setValues(0.0f, 0.0f, 2.0f)
                     .isInjury().eyeVisible().build()
     );
@@ -64,7 +64,7 @@ public class BodyCondition {
     );
     public static final ResourceLocation OPEN_WOUND = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "open_wound"),
             (name) -> create(name)
-                    .setHealing(1.0f / Config.base_self_healing_time, 0.5f)
+                    .setHealing(1.0f / Config.base_self_healing_time, 0.25f)
                     .setValues(0.0f, 0.0f, 2.0f)
                     .isInjury().eyeVisible().build()
     );

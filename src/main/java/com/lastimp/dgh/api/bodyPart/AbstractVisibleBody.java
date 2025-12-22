@@ -10,6 +10,7 @@ import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -58,10 +59,9 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     @Override
     public AbstractBody update(HealthCapability health, LivingEntity entity) {
         super.update(health, entity);
-        handleBandaged();
-        handleBurning();
-        handleInternalInjury();
-        handleOpenWound();
+        handleBurning(entity);
+        handleInternalInjury(entity);
+        handleOpenWound(entity);
         handleFracture(health);
         handleSurgery(health);
         handleBleeding(health);
@@ -136,25 +136,28 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
     }
 
-    private void handleBurning() {
+    private void handleBurning(LivingEntity entity) {
         if (!this.abnormalWithHidden(BURN)) return;
         this.handleBandageAcc(BURN, Config.bandage_acc);
         this.handleCover(BURN);
+        this.handleFoodAcc(entity, BURN, 1.0f);
 
         if (isBandaged()) return;
         this.nextTickBleed += this.getCondition(BURN).getValue() * Config.burn_bleed_ratio;
     }
 
-    private void handleInternalInjury() {
+    private void handleInternalInjury(LivingEntity entity) {
         if (!this.abnormalWithHidden(INTERNAL_INJURY)) return;
+        this.handleFoodAcc(entity, INTERNAL_INJURY, 1.0f);
 
         this.nextTickBleed += this.getCondition(INTERNAL_INJURY).getValue() * Config.internal_bleed_ratio;
     }
 
-    private void handleOpenWound() {
+    private void handleOpenWound(LivingEntity entity) {
         if (!this.abnormalWithHidden(OPEN_WOUND)) return;
         this.handleBandageAcc(OPEN_WOUND, Config.bandage_acc);
         this.handleCover(OPEN_WOUND);
+        this.handleFoodAcc(entity, OPEN_WOUND, 1.0f);
 
         if (isBandaged()) return;
         this.nextTickBleed += this.getCondition(OPEN_WOUND).getValue() * Config.open_wound_bleed_ratio;
@@ -171,6 +174,22 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         if (!isBandaged() && !isBadBandaged()) {
             this.setConditionValue(condition, state.getValue() + state.getHiddenValue());
             state.setHiddenValue(BodyCondition.get(condition).defaultValue());
+        }
+    }
+
+    protected void handleFoodAcc(LivingEntity entity, ResourceLocation condition, float acc) {
+        if (!this.abnormalWithHidden(condition)) return;
+        if (!(entity instanceof ServerPlayer player)) return;
+
+        var food = player.getFoodData();
+        if (food.getFoodLevel() < 19) return;
+        var state = this.getCondition(condition);
+        if (BodyCondition.get(condition).healingTS() < state.getTotalValue()) return;
+
+        if (this.abnormalOnlyHidden(condition)) {
+            this.healingHidden(condition, - BodyCondition.get(condition).healingSpeed() * DELTA * acc);
+        } else {
+            this.healing(condition, - BodyCondition.get(condition).healingSpeed() * DELTA * acc);
         }
     }
 
