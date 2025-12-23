@@ -1,7 +1,6 @@
 
 package com.lastimp.dgh;
 
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.client.gui.screen.BagScreen;
 import com.lastimp.dgh.source.register.*;
@@ -30,33 +29,35 @@ public class DontGetHurt
     public static final float EPS = 0.0001f;
 
     public DontGetHurt() {
+        FMLJavaModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::commonSetup);
 
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
-        ModCreativeModTabs.register(modEventBus);
         ModMenus.register(modEventBus);
         ModEffects.register(modEventBus);
         ModSounds.register(modEventBus);
+        ModCreativeModTabs.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
-        FMLJavaModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
     public DontGetHurt(FMLJavaModLoadingContext context) {
+        context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+
         IEventBus modEventBus = context.getModEventBus();
         modEventBus.addListener(this::commonSetup);
 
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
-        ModCreativeModTabs.register(modEventBus);
         ModMenus.register(modEventBus);
         ModEffects.register(modEventBus);
         ModSounds.register(modEventBus);
+        ModCreativeModTabs.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
-        context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
 

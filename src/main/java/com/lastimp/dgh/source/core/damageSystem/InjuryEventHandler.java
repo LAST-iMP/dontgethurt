@@ -42,6 +42,7 @@ public class InjuryEventHandler {
         if (event.getEntity().level().isClientSide) return;
         var livingEntity = event.getEntity();
         if (!HealthCapability.has(livingEntity)) return;
+        DontGetHurt.LOGGER.info(event.getSource().toString() + " " + event.getAmount());
 
         float damageAmount = event.getAmount();
         float absorption = livingEntity.getAbsorptionAmount();
@@ -62,7 +63,7 @@ public class InjuryEventHandler {
         } else if (source.is(DamageTypeTags.IS_FIRE)) {
             handleBurning(damageAmount, livingEntity, event);
         } else if (source.is(DamageTypeTags.IS_DROWNING)) {
-            handleDrowning(damageAmount, livingEntity, event);
+            handleDrowning(0.05f, livingEntity, event);
         } else if (source.is(DamageTypeTags.IS_EXPLOSION)) {
             handleExplosion(damageAmount, livingEntity, event);
         } else if (source.getEntity() != null && source.getEntity() instanceof LivingEntity) {
