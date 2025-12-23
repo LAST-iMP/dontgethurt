@@ -27,23 +27,23 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 public class DontGetHurt
 {
     public static final String MODID = "dgh";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     public static final float DELTA = 0.05f;
     public static final float EPS = 0.0001f;
 
     public DontGetHurt(IEventBus modEventBus, ModContainer modContainer) {
+        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         modEventBus.addListener(this::commonSetup);
 
         ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
-        ModCreativeModTabs.register(modEventBus);
         ModMenus.register(modEventBus);
         ModCapabilities.register(modEventBus);
         ModEffects.register(modEventBus);
         ModSounds.register(modEventBus);
+        ModCreativeModTabs.register(modEventBus);
 
         NeoForge.EVENT_BUS.register(this);
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
 
