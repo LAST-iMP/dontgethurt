@@ -13,4 +13,7 @@ public class ModTags {
     public static final TagKey<Item> MEDICAL_TOOLS_SURGERY = ItemTags.create(Common.ResourceLocation("c", "medical_tools_surgery"));
     public static final TagKey<Item> MEDICAL_TOOLS_SHEARS = ItemTags.create(Common.ResourceLocation("forge", "shears"));
     public static final TagKey<Item> MEDICAL_TOOLS_BAGS = ItemTags.create(Common.ResourceLocation("c", "medical_tools_bags"));
+
+    public static final TagKey<Item> OXYGEN_SUPPLIERS = ItemTags.create(Common.ResourceLocation("c", "oxygen_suppliers"));
+    public static final TagKey<Item> AUTOPULSE = ItemTags.create(Common.ResourceLocation("c", "autopulse"));
 }

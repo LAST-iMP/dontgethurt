@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:string"
+    },
+    "b": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "pattern": [
+    " ba",
+    "bab",
+    "ab "
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:medical_stent"
+  }
+}

@@ -15,21 +15,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
-import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
-import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public class Head extends AbstractVisibleBody {
     private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
     private static List<ResourceLocation> HEAD_CONDITIONS;
-
-    public Head() {
-        super();
-    }
-
-    public Head(Void v) {
-        this();
-    }
 
     public static void addCondition(Collection<ResourceLocation> key) {
         uniqueConditions.addAll(key);
@@ -59,6 +50,7 @@ public class Head extends AbstractVisibleBody {
         super.update(health, entity);
         this.handleWithdraw(health);
         this.handleTraumaticShock(health);
+        this.handleBrainDamage(health);
         this.handleComa(health);
         return this;
     }
@@ -100,8 +92,23 @@ public class Head extends AbstractVisibleBody {
         var value = this.getConditionValue(TRAUMATIC_SHOCK);
         if (value > 0.3f)
             health.getComponent(TORSO).injury(RESPIRATORY_ARREST, BodyCondition.get(RESPIRATORY_ARREST).maxValue());
-        if (value > 0.1f)
-            this.injury(BRAIN_DAMAGE, value * 0.01f * DELTA);
+    }
+
+    private void handleBrainDamage(HealthCapability health) {
+        //起因
+        var blood = health.getComponent(BLOOD);
+        if (this.abnormal(FRACTURE) && !this.isBandaged() && !this.isBadBandaged()) {
+            this.injury(BRAIN_DAMAGE, 0.001f * DELTA);
+        }
+        if (blood.getConditionValue(OXYGEN) > 0.1f) {
+            this.injury(BRAIN_DAMAGE, blood.getConditionValue(OXYGEN) * 0.01f * DELTA);
+        }
+        if (this.getConditionValue(TRAUMATIC_SHOCK) > 0.1f) {
+            this.injury(BRAIN_DAMAGE, this.getConditionValue(TRAUMATIC_SHOCK) * 0.01f * DELTA);
+        }
+        if (blood.abnormal(SEPSIS)) {
+            this.injury(BRAIN_DAMAGE, 0.001f * 4 * blood.getConditionValue(SEPSIS) * DELTA);
+        }
     }
 
     private void handleComa(HealthCapability health) {

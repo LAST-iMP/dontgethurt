@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "dgh:oxygen_mask"
+    },
+    {
+      "item": "minecraft:bamboo_block"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:oxygen_mask"
+  }
+}

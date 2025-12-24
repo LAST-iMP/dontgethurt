@@ -9,10 +9,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.awt.*;
 
+@OnlyIn(value = Dist.CLIENT)
 public class DyingScreen extends Screen {
     private static final int PANEL_WIDTH = 238;   // 面板宽度
     private static final int PANEL_HEIGHT = 214;  // 面板高度

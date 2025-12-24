@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "dgh:antiseptic_sprayer"
+    },
+    {
+      "item": "dgh:antiseptic"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:antiseptic_sprayer"
+  }
+}

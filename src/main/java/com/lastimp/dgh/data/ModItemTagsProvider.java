@@ -11,6 +11,7 @@ import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +34,12 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.MORPHINE.getKey())
                 .add(ModItems.SUTURE.getKey())
                 .add(ModItems.NALOXONE.getKey())
-                .add(ModItems.TOURNIQUET.getKey());
+                .add(ModItems.TOURNIQUET.getKey())
+                .add(ModItems.NEEDLE.getKey())
+                .add(ModItems.ADRENALINE.getKey())
+                .add(ModItems.ANTISEPTIC.getKey())
+                .add(ModItems.ANTIBIOTICS.getKey())
+                .add(ModItems.ANTIBIOTIC_OINTMENT.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS)
                 .add(SHEARS)
@@ -64,13 +70,20 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.BONE_GOLD.getKey())
                 .add(ModItems.BONE_DIMOND.getKey())
                 .add(ModItems.BONE_NETHERITE.getKey())
-                .add(ModItems.MEDICAL_STENT.getKey());
+                .add(ModItems.MEDICAL_STENT.getKey())
+                .add(ModItems.DRAINAGE.getKey())
+                .add(ModItems.OXYGEN_MASK.getKey())
+                .add(ModItems.ANTISEPTIC_SPRAYER.getKey())
+                .add(ModItems.AUTOPULSE.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_BASIC)
                 .add(SHEARS)
                 .add(ModItems.HEALTH_SCANNER.getKey())
                 .add(ModItems.BLOOD_SCANNER.getKey())
-                .add(ModItems.WOOD_WRENCH.getKey());
+                .add(ModItems.WOOD_WRENCH.getKey())
+                .add(ModItems.OXYGEN_MASK.getKey())
+                .add(ModItems.ANTISEPTIC_SPRAYER.getKey())
+                .add(ModItems.AUTOPULSE.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_SURGERY)
                 .add(ModItems.SCALPEL.getKey())
@@ -95,7 +108,9 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.BONE_GOLD.getKey())
                 .add(ModItems.BONE_DIMOND.getKey())
                 .add(ModItems.BONE_NETHERITE.getKey())
-                .add(ModItems.MEDICAL_STENT.getKey());
+                .add(ModItems.MEDICAL_STENT.getKey())
+                .add(ModItems.DRAINAGE.getKey())
+                .add(ModItems.OXYGEN_MASK.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_SHEARS)
                 .add(SHEARS)
@@ -107,5 +122,10 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
 
         this.tag(ItemTags.BEDS)
                 .add(ModItems.OPERATING_BED_BLOCK_ITEM.getKey());
+
+        this.tag(ModTags.OXYGEN_SUPPLIERS)
+                .add(ModItems.OXYGEN_MASK.getKey());
+        this.tag(ModTags.AUTOPULSE)
+                .add(ModItems.AUTOPULSE.getKey());
     }
 }

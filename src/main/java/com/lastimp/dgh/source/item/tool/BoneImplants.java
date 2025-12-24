@@ -32,6 +32,8 @@ public class BoneImplants extends AbstractPartlyHealItem {
             if (body.abnormal(DRILLED_BONES) && body.abnormal(FRACTURE)) {
                 if (body.boneCrafted() != boneType) return false;
                 body.healing(FRACTURE, -BodyCondition.get(FRACTURE).maxValue());
+                body.healing(BONE_DAMAGE, -BodyCondition.get(BONE_DAMAGE).maxValue());
+                body.healing(BONE_DEATH, -BodyCondition.get(BONE_DEATH).maxValue());
                 return true;
             }
             return false;

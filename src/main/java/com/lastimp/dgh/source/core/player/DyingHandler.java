@@ -2,7 +2,6 @@ package com.lastimp.dgh.source.core.player;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.tags.ModDamageType;
-import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -22,23 +21,11 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class DyingHandler {
-    private static boolean showingScreen = false;
-
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Pre event) {
         var player = event.getEntity();
 
-        if (event.getEntity().level().isClientSide) {
-            if (player.getUUID().equals(GuiOpenWrapper.MINECRAFT.get().player.getUUID())){
-                if (HealthCapability.isDying(player) && !showingScreen()) {
-                    GuiOpenWrapper.openDyingScreen();
-                    setShowingScreen(true);
-                } else if (!HealthCapability.isDying(player) && showingScreen()){
-                    GuiOpenWrapper.closeDyingScreen();
-                    setShowingScreen(false);
-                }
-            }
-        } else {
+        if (!event.getEntity().level().isClientSide) {
             if (HealthCapability.isDying(player)) {
                 if (player.isSleeping()) player.stopSleeping();
                 if (player.isFallFlying()) player.stopFallFlying();
@@ -74,20 +61,10 @@ public class DyingHandler {
         }
     }
 
-    public static void setShowingScreen(boolean showingScreen) {
-        DyingHandler.showingScreen = showingScreen;
-    }
-
-    public static boolean showingScreen() {
-        return DyingHandler.showingScreen;
-    }
-
     public static void setPlayerDead(Player player) {
         if (player.isSleeping()) player.stopSleeping();
         if (player.isFallFlying()) player.stopFallFlying();
         player.stopUsingItem();
-        if (player.level().isClientSide)
-            GuiOpenWrapper.MINECRAFT.get().setScreen(null);
         setLivingDead(player);
     }
 

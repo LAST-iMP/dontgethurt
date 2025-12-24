@@ -5,8 +5,11 @@ import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModItems;
+import com.lastimp.dgh.source.register.ModPotions;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.alchemy.Potion;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import static com.lastimp.dgh.api.tags.ModDamageType.*;
 
@@ -37,6 +40,9 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(BodyCondition.INTERNAL_RES.toString(), "内伤抗性");
         this.add(BodyCondition.OPEN_WOUND_RES.toString(), "外伤抗性");
 
+        this.add(BodyCondition.BONE_DAMAGE.toString(), "骨损伤");
+        this.add(BodyCondition.BONE_DEATH.toString(), "骨坏死");
+
         this.add(BodyCondition.SURGERY_INCISION.toString(), "手术切口");
         this.add(BodyCondition.CLAMPED_BLEEDING.toString(), "夹闭止血");
         this.add(BodyCondition.RETRACTED_SKIN.toString(), "皮肤牵开");
@@ -52,10 +58,16 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(BodyCondition.ANALGESIA.toString(), "镇痛");
         this.add(BodyCondition.RESPIRATORY_ARREST.toString(), "呼吸停止");
         this.add(BodyCondition.AORTIC_RUPTURE.toString(), "主动脉破裂");
+        this.add(BodyCondition.HEARTRATE_INCREASE.toString(), "心率加快");
+        this.add(BodyCondition.HEARTRATE_IRREGULAR.toString(), "心律不齐");
+        this.add(BodyCondition.HEARTRATE_STOP.toString(), "心跳停止");
+        this.add(BodyCondition.PNEUMOTHORAX.toString(), "气胸");
+        this.add(BodyCondition.PNEUMOTHORAX_NEEDLE.toString(), "气胸针");
 
         this.add(BodyCondition.WITHDRAW.toString(), "戒断");
         this.add(BodyCondition.TRAUMATIC_SHOCK.toString(), "手术休克");
         this.add(BodyCondition.BRAIN_DAMAGE.toString(), "脑损伤");
+        this.add(BodyCondition.COMA.toString(), "昏迷");
 
         this.add(BodyCondition.SEPSIS.toString(), "败血症");
         this.add(BodyCondition.HEMOTRANSFUSION.toString(), "输血性休克");
@@ -66,6 +78,8 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(BodyCondition.OPIATE_OVERDOSE.toString(), "阿片中毒");
         this.add(BodyCondition.OPIATE_ADDICTED.toString(), "阿片成瘾");
         this.add(BodyCondition.OXYGEN.toString(), "低血氧");
+        this.add(BodyCondition.ANTIBIOTICS.toString(), "广谱抗生素");
+
         this.add(BodyCondition.BONE_WOOD.toString(), "木骨植入");
         this.add(BodyCondition.BONE_STONE.toString(), "石骨植入");
         this.add(BodyCondition.BONE_COPPER.toString(), "铜骨植入");
@@ -119,6 +133,15 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.NALOXONE.get(), "烯丙羟吗啡酮");
         this.add(ModItems.MEDICAL_STENT.get(), "医用支架");
         this.add(ModItems.TOURNIQUET.get(), "动脉止血带");
+        this.add(ModItems.NEEDLE.get(), "气胸针");
+        this.add(ModItems.DRAINAGE.get(), "引流管");
+        this.add(ModItems.ADRENALINE.get(), "肾上腺素");
+        this.add(ModItems.OXYGEN_MASK.get(), "急救呼吸气囊");
+        this.add(ModItems.ANTIBIOTIC_OINTMENT.get(), "抗生素软膏");
+        this.add(ModItems.ANTISEPTIC_SPRAYER.get(), "消毒喷雾器");
+        this.add(ModItems.ANTISEPTIC.get(), "消毒剂");
+        this.add(ModItems.AUTOPULSE.get(), "自动心肺复苏器");
+        this.add(ModItems.ANTIBIOTICS.get(), "广谱抗生素");
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");
         this.add(ModEffects.INTENSE_PAIN_EFFECT.get(), "剧痛");
@@ -126,9 +149,15 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModEffects.CRAVING_EFFECT.get(), "渴望");
         this.add(ModEffects.KEEP_LIVING_EFFECT.get(), "长生久视");
         this.add(ModEffects.CURE_EFFECT.get(), "重振旗鼓");
-        this.add(ModEffects.PALE_SKIN.get(), "皮肤苍白");
-        this.add(ModEffects.HARD_BREATH.get(), "呼吸困难");
-//        this.add(ModEffects.INCREASED_HEARTRATE.get(), "心跳加快");
+        this.add(ModEffects.PALE_SKIN_EFFECT.get(), "皮肤苍白");
+        this.add(ModEffects.HARD_BREATH_EFFECT.get(), "呼吸困难");
+        this.add(ModEffects.INCREASED_HEARTRATE_EFFECT.get(), "心跳加快");
+        this.add(ModEffects.INFLAMMATION_EFFECT.get(), "炎症");
+        this.add(ModEffects.FEVER_EFFECT.get(), "发烧");
+        this.add(ModEffects.ADRENALINE_EFFECT.get(), "肾上腺素");
+        this.add(ModEffects.COMBAT_STIMULANT_EFFECT.get(), "战斗兴奋剂");
+
+        this.addPotion(ModPotions.COMBAT_STIMULANT_POTION, "战斗兴奋剂");
 
         this.add("death.attack."+OPEN_WOUND_DAMAGE.location(), "%1$s 的身体被撕碎了");
         this.add("death.attack."+INTERNAL_INJURY_DAMAGE.location(), "%1$s 体内一塌糊涂");
@@ -145,5 +174,17 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add("death.attack."+BLEED_DAMAGE.location()+".player", "%1$s 失血过多");
         this.add("death.attack."+SURGERY_DAMAGE.location()+".player", "%1$s 死于手术事故");
         this.add("death.attack."+CANT_BREATH_DAMAGE.location()+".player", "%1$s 无法呼吸");
+    }
+
+    private void addPotion(DeferredHolder<Potion, Potion> potion, String translation) {
+        String potionName = ModPotions.POTIONS.get(potion);
+        // 普通药水
+        this.add("item.minecraft.potion.effect." + potionName, translation);
+        // 喷溅药水
+        this.add("item.minecraft.splash_potion.effect." + potionName, "喷溅型" + translation);
+        // 滞留药水
+        this.add("item.minecraft.lingering_potion.effect." + potionName, "滞留型" + translation);
+        // 药箭（如果你允许合成）
+        this.add("item.minecraft.tipped_arrow.effect." + potionName, translation + "之箭");
     }
 }

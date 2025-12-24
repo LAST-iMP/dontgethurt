@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "dgh:antiseptic"
+    },
+    "b": {
+      "tag": "minecraft:buttons"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    " r ",
+    "iai",
+    " bi"
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:antiseptic_sprayer"
+  }
+}

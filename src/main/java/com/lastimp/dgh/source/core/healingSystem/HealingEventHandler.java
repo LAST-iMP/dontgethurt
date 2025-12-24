@@ -2,6 +2,7 @@ package com.lastimp.dgh.source.core.healingSystem;
 
 import com.lastimp.dgh.Config;
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.core.player.DyingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -27,19 +28,12 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.COMA;
 import static com.lastimp.dgh.api.enums.OperationType.SYN;
 
 
 @EventBusSubscriber(modid = DontGetHurt.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class HealingEventHandler {
-    @SubscribeEvent
-    public static void logIn(PlayerEvent.PlayerLoggedInEvent event) {
-        GameRules rules = event.getEntity().level().getGameRules();
-        if(event.getEntity().level().getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION)) {
-            rules.getRule(GameRules.RULE_NATURAL_REGENERATION).set(false, event.getEntity().level().getServer());
-        }
-    }
-
     @SubscribeEvent
     public static void onHealthUpdate(EntityTickEvent.Pre event) {
         if (event.getEntity().level().isClientSide) return;
@@ -66,6 +60,8 @@ public class HealingEventHandler {
         float maxHealth = getHealthWithOuterHealing(health, entity);
         if (entity.isDeadOrDying()) {
             DyingHandler.setLivingDead(entity);
+        } else if (health.getComponent(BodyComponents.HEAD).abnormal(COMA)) {
+            entity.setHealth(0.01f);
         } else if (maxHealth > 0) {
             if ((int)maxHealth != (int)entity.getHealth())
                 entity.setHealth(maxHealth);
@@ -80,7 +76,9 @@ public class HealingEventHandler {
         float maxHealth = getHealthWithOuterHealing(health, player);
         if (player.isDeadOrDying()) {
             DyingHandler.setPlayerDead(player);
-        } else if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative()) {
+        } else if (health.getComponent(BodyComponents.HEAD).abnormal(COMA)) {
+            player.setHealth(0.01f);
+        }  else if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative()) {
             player.setHealth(player.getMaxHealth());
         } else if (maxHealth > 0) {
             if ((int)maxHealth != (int)player.getHealth())

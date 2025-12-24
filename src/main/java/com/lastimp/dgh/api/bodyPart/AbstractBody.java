@@ -16,7 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.DontGetHurt.EPS;
@@ -172,8 +172,8 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         }
     }
 
-    public static <T extends AbstractBody> AbstractBody buildFromNBT(HolderLookup.Provider provider, CompoundTag nbt, Function<Void, T> constructor) {
-        T body = constructor.apply(null);
+    public static <T extends AbstractBody> AbstractBody buildFromNBT(HolderLookup.Provider provider, CompoundTag nbt, Supplier<T> constructor) {
+        T body = constructor.get();
         body.deserializeNBT(provider, nbt);
         return body;
     }

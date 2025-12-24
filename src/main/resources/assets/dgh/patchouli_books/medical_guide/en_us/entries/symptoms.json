@@ -70,6 +70,33 @@
       "text": "呼吸困难提示有低血氧或呼吸停止。"
     },
     {
+      "type": "image",
+      "title": "心跳加快",
+      "border": true,
+      "images": [
+        "dgh:textures/book/heartrate_increase.png"
+      ],
+      "text": "心跳加快提示可能有心颤或兴奋剂。"
+    },
+    {
+      "type": "image",
+      "title": "炎症",
+      "border": true,
+      "images": [
+        "dgh:textures/book/infection.png"
+      ],
+      "text": "炎症提示有伤口感染。"
+    },
+    {
+      "type": "image",
+      "title": "发烧",
+      "border": true,
+      "images": [
+        "dgh:textures/book/fever_effect.png"
+      ],
+      "text": "发烧提示有败血症。"
+    },
+    {
       "type": "text",
       "title": "恶心",
       "text": "在本mod中，恶心提示可能有严重戒断反应。"

@@ -2,6 +2,7 @@ package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.buffs.SymptomsEffect;
+import com.lastimp.dgh.source.buffs.buff.AdrenalineEffect;
 import com.lastimp.dgh.source.buffs.buff.CureEffect;
 import com.lastimp.dgh.source.buffs.buff.KeepLivingEffect;
 import com.lastimp.dgh.source.buffs.debuff.IntensePainEffect;
@@ -31,15 +32,15 @@ public class ModEffects {
             "craving_effect", () -> new SymptomsEffect(0xFFFFBE4F)
     );
 
-    public static final DeferredHolder<MobEffect, SymptomsEffect> PALE_SKIN = MOB_EFFECTS.register(
+    public static final DeferredHolder<MobEffect, SymptomsEffect> PALE_SKIN_EFFECT = MOB_EFFECTS.register(
             "pale_skin_effect", () -> new SymptomsEffect(0xFFFFBE4F)
     );
 
-    public static final DeferredHolder<MobEffect, SymptomsEffect> HARD_BREATH = MOB_EFFECTS.register(
+    public static final DeferredHolder<MobEffect, SymptomsEffect> HARD_BREATH_EFFECT = MOB_EFFECTS.register(
             "hard_breath_effect", () -> new SymptomsEffect(0xFFFFBE4F)
     );
 
-    public static final DeferredHolder<MobEffect, SymptomsEffect> INCREASED_HEARTRATE = MOB_EFFECTS.register(
+    public static final DeferredHolder<MobEffect, SymptomsEffect> INCREASED_HEARTRATE_EFFECT = MOB_EFFECTS.register(
             "increased_heartrate_effect", () -> new SymptomsEffect(0xFFFFBE4F)
     );
 
@@ -49,6 +50,22 @@ public class ModEffects {
 
     public static final DeferredHolder<MobEffect, CureEffect> CURE_EFFECT = MOB_EFFECTS.register(
             "cure_effect", () -> new CureEffect(0xFF88FFD4)
+    );
+
+    public static final DeferredHolder<MobEffect, SymptomsEffect> INFLAMMATION_EFFECT = MOB_EFFECTS.register(
+            "inflammation_effect", () -> new SymptomsEffect(0xFFFFBE4F)
+    );
+
+    public static final DeferredHolder<MobEffect, SymptomsEffect> FEVER_EFFECT = MOB_EFFECTS.register(
+            "fever_effect", () -> new SymptomsEffect(0xFFFFBE4F)
+    );
+
+    public static final DeferredHolder<MobEffect, AdrenalineEffect> ADRENALINE_EFFECT = MOB_EFFECTS.register(
+            "adrenaline_effect", () -> new AdrenalineEffect(0xFF00FF00)
+    );
+
+    public static final DeferredHolder<MobEffect, SymptomsEffect> COMBAT_STIMULANT_EFFECT = MOB_EFFECTS.register(
+            "combat_stimulant_effect", () -> new SymptomsEffect(0xFF00FF00)
     );
 
     public static void register(IEventBus eventBus) {

@@ -4,6 +4,7 @@ package com.lastimp.dgh.source.core.damageSystem;
 import com.lastimp.dgh.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModDamageType;
 import com.lastimp.dgh.source.core.Utils;
@@ -18,6 +19,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 
+import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
@@ -40,6 +42,7 @@ public class InjuryEventHandler {
         if (event.getEntity().level().isClientSide) return;
         var livingEntity = event.getEntity();
         if (!HealthCapability.has(livingEntity)) return;
+        DontGetHurt.LOGGER.info(event.getSource() + " " + event.getAmount());
 
         float damageAmount = event.getAmount();
         float absorption = livingEntity.getAbsorptionAmount();
@@ -60,7 +63,7 @@ public class InjuryEventHandler {
         } else if (source.is(DamageTypeTags.IS_FIRE)) {
             handleBurning(damageAmount, livingEntity, event);
         } else if (source.is(DamageTypeTags.IS_DROWNING)) {
-            handleDrowning(damageAmount, livingEntity, event);
+            handleDrowning(livingEntity, event);
         } else if (source.is(DamageTypeTags.IS_EXPLOSION)) {
             handleExplosion(damageAmount, livingEntity, event);
         } else if (source.getEntity() != null && source.getEntity() instanceof LivingEntity) {
@@ -94,10 +97,10 @@ public class InjuryEventHandler {
         event.setAmount(0f);
     }
 
-    public static void handleDrowning(float damageAmount, LivingEntity entity, LivingDamageEvent event) {
+    public static void handleDrowning(LivingEntity entity, LivingDamageEvent event) {
         HealthCapability.getAndSet(entity, h -> {
             Blood blood = (Blood) h.getComponent(BLOOD);
-            blood.injury(OXYGEN, damageAmount / 20);
+            blood.injury(OXYGEN, -BodyCondition.get(OXYGEN).healingSpeed() * DELTA);
             return h;
         });
         event.setAmount(0f);

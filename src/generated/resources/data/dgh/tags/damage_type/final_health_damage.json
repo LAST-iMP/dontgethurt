@@ -1,0 +1,11 @@
+{
+  "values": [
+    "dgh:open_wound",
+    "dgh:internal_injury",
+    "dgh:burn",
+    "dgh:brain_damage",
+    "dgh:bleed",
+    "dgh:surgery",
+    "dgh:cant_breath"
+  ]
+}

@@ -10,10 +10,13 @@
     },
     "c": {
       "item": "dgh:blood_pack_empty"
+    },
+    "d": {
+      "item": "minecraft:glass"
     }
   },
   "pattern": [
-    " a ",
+    " d ",
     "bcb",
     "aaa"
   ],

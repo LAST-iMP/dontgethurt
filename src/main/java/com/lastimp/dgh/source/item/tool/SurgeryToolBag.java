@@ -1,6 +1,6 @@
 package com.lastimp.dgh.source.item.tool;
 
-import com.lastimp.dgh.source.client.gui.menuProvider.SurgeryToolBagMenuProvider;
+import com.lastimp.dgh.source.core.menu.menuProvider.SurgeryToolBagMenuProvider;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;

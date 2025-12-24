@@ -16,7 +16,7 @@ public class EventBus {
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity().level().isClientSide) return;
-        if (!ModList.get().isLoaded("Patchouli")) return;
+        if (!ModList.get().isLoaded("patchouli")) return;
 
         var player = event.getEntity();
 

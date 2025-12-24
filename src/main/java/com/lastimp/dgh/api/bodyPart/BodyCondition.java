@@ -52,7 +52,7 @@ public class BodyCondition {
     //肢体
     public static final ResourceLocation BURN = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "burn"),
             (name) -> create(name)
-                    .setHealing(1.0f / Config.base_self_healing_time, 0.2f)
+                    .setHealing(1.0f / Config.base_self_healing_time, 0.25f)
                     .setValues(0.0f, 0.0f, 2.0f)
                     .isInjury().eyeVisible().build()
     );
@@ -64,7 +64,7 @@ public class BodyCondition {
     );
     public static final ResourceLocation OPEN_WOUND = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "open_wound"),
             (name) -> create(name)
-                    .setHealing(1.0f / Config.base_self_healing_time, 0.5f)
+                    .setHealing(1.0f / Config.base_self_healing_time, 0.25f)
                     .setValues(0.0f, 0.0f, 2.0f)
                     .isInjury().eyeVisible().build()
     );
@@ -74,7 +74,7 @@ public class BodyCondition {
     );
     public static final ResourceLocation INFECTION = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "infection"),
             (name) -> create(name)
-                    .setHealing(0.0f, 0.0f).isInjury().eyeVisible().build()
+                    .setHealing(1.0f / Config.base_self_healing_time, 0.0f).isInjury().eyeVisible().build()
     );
     public static final ResourceLocation FOREIGN_OBJECT = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "foreign_object"),
             (name) -> create(name)
@@ -99,7 +99,7 @@ public class BodyCondition {
     );
     public static final ResourceLocation OINTMENT = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "ointment"),
             (name) -> create(name)
-                    .setHealing( 1.0f / Config.base_med_available_time, 0.0f).isComfort().eyeVisible().build()
+                    .setHealing( 1.0f / Config.base_med_available_time, 1.0f).isComfort().eyeVisible().build()
     );
 
     public static final ResourceLocation BURN_RES = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "burn_resist"),
@@ -207,18 +207,21 @@ public class BodyCondition {
     );
     public static final ResourceLocation HEARTRATE_INCREASE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "heartrate_increase"),
             (name) -> create(name)
-                    .setHealing(0, 0).isInjury().build()
+                    .setHealing(1.0f / 60, 0).isInjury().build()
     );
     public static final ResourceLocation HEARTRATE_IRREGULAR = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "heartrate_irregular"),
             (name) -> create(name)
-                    .setHealing(0, 0).isInjury().build()
+                    .setHealing(1.0f / 40, 0).isInjury().build()
     );
     public static final ResourceLocation HEARTRATE_STOP = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "heartrate_stop"),
             (name) -> create(name)
-                    .setHealing(0, 0).isInjury().build()
+                    .setHealing(1.0f / 20, 0).isInjury().build()
     );
     public static final ResourceLocation PNEUMOTHORAX = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "pneumothorax"),
             (name) -> create(name).setHealing(0, 0).isPain().build()
+    );
+    public static final ResourceLocation PNEUMOTHORAX_NEEDLE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "pneumothorax_needle"),
+            (name) -> create(name).setHealing(1.0f/ Config.base_med_available_time, 1.0f).build()
     );
     //头脑
     public static final ResourceLocation WITHDRAW = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "withdraw"),
@@ -235,13 +238,13 @@ public class BodyCondition {
                     .setHealing(0.001f, 2.0f).isInjury().build()
     );
     public static final ResourceLocation COMA = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "coma"),
-            (name) -> create(name).setHealing(0.2f, 1.0f).isInjury().build()
+            (name) -> create(name).setHealing(0.2f, 1.0f).eyeVisible().isInjury().build()
     );
 
     //血液
     public static final ResourceLocation SEPSIS = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "sepsis"),
             (name) -> create(name)
-                    .setHealing(0.0f, 0.0f).isBlood().build()
+                    .setHealing(0.0095f / 2, 0.3f).isBlood().build()
     );
     public static final ResourceLocation HEMOTRANSFUSION = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "hemotransfusion"),
             (name) -> create(name)
@@ -254,7 +257,7 @@ public class BodyCondition {
     public static final ResourceLocation BLOOD_PRESSURE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "blood_pressure"),
             (name) -> create(name)
                     .setValues(1.0f, 0.0f, 2.0f)
-                    .setHealing(0.0f, 0.0f).isBlood().build()
+                    .setHealing(1.0f / Config.volume_self_healing_time, 0.0f).isBlood().build()
     );
     public static final ResourceLocation PH_LEVEL = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "ph_level"),
             (name) -> create(name)
@@ -276,7 +279,10 @@ public class BodyCondition {
             (name) -> create(name)
                     .setHealing(0.05f, 0.0f).isBlood().build()
     );
-
+    public static final ResourceLocation ANTIBIOTICS = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "antibiotics"),
+            (name) -> create(name)
+                    .setHealing(0.005f, 1.0f).isBlood().build()
+    );
     public static final String pathRoot = "container/condition_icons/";
 
     private final ResourceLocation name;
@@ -496,7 +502,8 @@ public class BodyCondition {
 
                 OPIATE_OVERDOSE,
                 OPIATE_ADDICTED,
-                OXYGEN
+                OXYGEN,
+                ANTIBIOTICS
         ));
 
         Torso.addCondition(List.of(
@@ -506,7 +513,9 @@ public class BodyCondition {
                 HEARTRATE_INCREASE,
                 HEARTRATE_IRREGULAR,
                 HEARTRATE_STOP,
-                PNEUMOTHORAX
+                PNEUMOTHORAX,
+
+                PNEUMOTHORAX_NEEDLE
         ));
 
         Sutures.addCoverOnHeal(SAWED_BONES);

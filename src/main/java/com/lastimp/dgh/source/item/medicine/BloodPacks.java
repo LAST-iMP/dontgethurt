@@ -25,6 +25,7 @@ public class BloodPacks extends AbstractDirectHealItems {
             if (!blood.abnormal(BLOOD_LOSS)) return false;
 
             blood.healing(BLOOD_LOSS, -0.25f);
+            blood.healing(BLOOD_PRESSURE, 0.25f);
 
             ItemStack stack = new ItemStack(ModItems.BLOOD_PACK_EMPTY.get());
             if (!source.addItem(stack)) {

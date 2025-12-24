@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": {
+      "item": "minecraft:bamboo_block"
+    },
+    "g": {
+      "item": "minecraft:glass"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "w": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    " g ",
+    "wbw",
+    " i "
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:oxygen_mask"
+  }
+}

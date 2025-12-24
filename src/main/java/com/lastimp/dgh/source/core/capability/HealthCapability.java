@@ -4,6 +4,10 @@ package com.lastimp.dgh.source.core.capability;
 import com.lastimp.dgh.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
+import com.lastimp.dgh.api.healingItems.AbstractHealingEquipment;
+import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.source.core.menu.component.DynamicItemHandler;
+import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.register.ModCapabilities;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.*;
@@ -20,6 +24,8 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class HealthCapability implements INBTSerializable<CompoundTag> {
     private final WholeBody body = new WholeBody();
+    private final DynamicItemHandler oxygenMask = new DynamicItemHandler();
+    private final DynamicItemHandler autoPulse = new DynamicItemHandler();
     private float vitality = 1.0f;
     private int slowDown = 0;
     private int armBreak = 0;
@@ -28,6 +34,14 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     private int nearBedTick = 0;
     private float outerHealing = 0;
     private float outerHealingDelta = 0;
+    private boolean isInfected = false;
+    private int oxygenMaskCoolDown = 0;
+    private int autoPulseCoolDown = 0;
+
+    public HealthCapability() {
+        oxygenMask.addAllowed(ModTags.OXYGEN_SUPPLIERS);
+        autoPulse.addAllowed(ModTags.AUTOPULSE);
+    }
 
     public static boolean has(LivingEntity entity) {
         return HealthProvider.has(entity);
@@ -54,9 +68,36 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     }
 
     public HealthCapability update(LivingEntity entity) {
+        this.updateALLEquipments(entity);
         this.body.update(this, entity);
         this.updateLabels(entity);
         return this;
+    }
+
+    public void updateALLEquipments(LivingEntity entity) {
+        if (updateEquipment(entity, this.oxygenMask, this.oxygenMaskCoolDown)) {
+            this.oxygenMaskCoolDown = this.getCoolDown(this.oxygenMask);
+            this.oxygenMask.getStackInSlot(0).hurtAndBreak(1, Utils.randomSource, entity, () -> {});
+        } else if (this.oxygenMaskCoolDown > 0) {
+            this.oxygenMaskCoolDown--;
+        }
+        if (updateEquipment(entity, this.autoPulse, this.autoPulseCoolDown)) {
+            this.autoPulseCoolDown = this.getCoolDown(this.autoPulse);
+            this.autoPulse.getStackInSlot(0).hurtAndBreak(1, Utils.randomSource, entity, () -> {});
+        } else if (this.autoPulseCoolDown > 0) {
+            this.autoPulseCoolDown--;
+        }
+    }
+
+    private boolean updateEquipment(LivingEntity entity, DynamicItemHandler handler, int cooldown) {
+        var equip = handler.getStackInSlot(0);
+        if (equip.isEmpty() || cooldown > 0) return false;
+        if (equip.getDamageValue() >= equip.getMaxDamage()) return false;
+        return ((AbstractHealingEquipment)equip.getItem()).heal(entity);
+    }
+
+    private int getCoolDown(DynamicItemHandler handler) {
+        return ((AbstractHealingEquipment)handler.getStackInSlot(0).getItem()).getMaxCooldown();
     }
 
     private void updateLabels(LivingEntity entity) {
@@ -69,6 +110,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.nearBedTick--;
         this.outerHealing = Math.max(0, this.outerHealing - this.outerHealingDelta);
         this.outerHealingDelta = this.outerHealing <= 0 ? 0 : Math.min(DELTA, this.outerHealing + DELTA / Config.baseHealingShieldTime);
+        this.isInfected = this.body.isInfected();
     }
 
     @Override
@@ -82,6 +124,11 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         tag.putInt("nearBedTick", this.nearBedTick);
         tag.putFloat("outerHealing", this.outerHealing);
         tag.putFloat("outerHealingDelta", this.outerHealingDelta);
+        tag.putBoolean("isInfected", this.isInfected);
+        tag.put("oxygenMask", this.oxygenMask.serializeNBT(provider));
+        tag.put("autoPulse", this.autoPulse.serializeNBT(provider));
+        tag.putInt("oxygenMaskCoolDown", this.oxygenMaskCoolDown);
+        tag.putInt("autoPulseCoolDown", this.autoPulseCoolDown);
         return tag;
     }
 
@@ -97,6 +144,11 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.nearBedTick = nbt.getInt("nearBedTick");
         this.outerHealing = nbt.getFloat("outerHealing");
         this.outerHealingDelta = nbt.getFloat("outerHealingDelta");
+        this.isInfected = nbt.getBoolean("isInfected");
+        this.oxygenMask.deserializeNBT(provider, nbt.getCompound("oxygenMask"));
+        this.autoPulse.deserializeNBT(provider, nbt.getCompound("autoPulse"));
+        this.oxygenMaskCoolDown = nbt.getInt("oxygenMaskCoolDown");
+        this.autoPulseCoolDown = nbt.getInt("autoPulseCoolDown");
     }
 
     public boolean intensePain() {
@@ -154,5 +206,25 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     public void setOuterHealing(float outerHealing) {
         this.outerHealing = outerHealing;
+    }
+
+    public boolean isInfected() {
+        return this.isInfected;
+    }
+
+    public DynamicItemHandler oxygenMask() {
+        return oxygenMask;
+    }
+
+    public DynamicItemHandler autoPulse() {
+        return autoPulse;
+    }
+
+    public int autoPulseCoolDown() {
+        return autoPulseCoolDown;
+    }
+
+    public int oxygenMaskCoolDown() {
+        return oxygenMaskCoolDown;
     }
 }

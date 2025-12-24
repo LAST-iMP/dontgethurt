@@ -13,7 +13,17 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(br2)$(li)致命伤$(li2)烧伤$(li2)开放伤$(li2)内伤$(li2)脑损伤$(li)苦痛$(li2)脱臼$(li2)骨折$(li2)出血$(li2)呼吸停止$(li2)手术休克$(li2)戒断$(li2)动脉出血$(li2)主动脉破裂$(li2)坏疽"
+      "text": "$(br)伤口分为：$(li)致命伤$(li)苦痛$(br2)苦痛影响身体状态，致命伤会导致死亡"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)致命伤$(li2)烧伤$(li2)开放伤$(li2)内伤$(li2)脑损伤$(li2)出血$(li2)呼吸停止$(li2)手术休克$(li2)戒断$(li2)动脉出血$(li2)主动脉破裂$(li2)坏疽$(li2)心率不齐$(li2)心脏骤停"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)苦痛$(li2)伤口感染$(li2)脱臼$(li2)骨折$(li2)昏迷$(li2)心跳加快$(li2)骨损伤$(li2)骨坏死$(li2)气胸"
     },
     {
       "type": "image",
@@ -55,7 +65,7 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)对生命的直接损害$(li2)微量失血$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)进食、手术中镊子清理$(br)$(li)注意事项$(li2)轻微内伤通常不用理会"
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)对生命的直接损害$(li2)微量失血$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)时间、手术中镊子清理$(br)$(li)注意事项$(li2)轻微内伤通常不用理会"
     },
     {
       "type": "image",
@@ -64,12 +74,138 @@
       "images": [
         "dgh:textures/book/brain_damage.png"
       ],
-      "text": "脑损伤由失血过多引起的缺氧、呼吸暂停、休克等引起。"
+      "text": "由头部骨折、低血氧、休克、败血症引起。"
     },
     {
       "type": "text",
       "scale": 1.2,
       "text": "$(li)有效部位$(li2)头部$(br)$(li)影响$(li2)对生命的直接损害$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)治疗病因$(br)"
+    },
+    {
+      "type": "image",
+      "title": "出血",
+      "border": true,
+      "images": [
+        "dgh:textures/book/bleeding.png"
+      ],
+      "text": "出血由伤口、未止血的手术切口引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)失血$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)治疗病因$(br)"
+    },
+    {
+      "type": "image",
+      "title": "呼吸停止",
+      "border": true,
+      "images": [
+        "dgh:textures/book/respiratory_arrest.png"
+      ],
+      "text": "由严重休克反应、脑损伤、低血氧、阿片中毒引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)胸腔$(br)$(li)影响$(li2)低血氧$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)治疗病因$(br)"
+    },
+    {
+      "type": "image",
+      "title": "手术休克",
+      "border": true,
+      "images": [
+        "dgh:textures/book/fracture.png"
+      ],
+      "text": "由未经麻醉的手术引起，麻醉或在治疗床旁边进行手术会将手术休克降低至十分之一。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)头$(br)$(li)影响$(li2)休克、大脑受损$(br)$(li)急救措施$(li2)使用吗啡麻醉$(li2)放置医疗床$(br)$(li)治疗措施$(li2)停止手术$(br)"
+    },
+    {
+      "type": "image",
+      "title": "戒断",
+      "border": true,
+      "images": [
+        "dgh:textures/book/withdraw.png"
+      ],
+      "text": "由阿片成瘾引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)头部$(br)$(li)影响$(li2)戒断反应$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)烯丙羟吗啡酮"
+    },
+    {
+      "type": "image",
+      "title": "动脉出血/主动脉破裂",
+      "border": true,
+      "images": [
+        "dgh:textures/book/arterial_bleeding.png"
+      ],
+      "text": "由严重的伤口出血引起，小概率由骨折引起。$(br)胸口为主动脉破裂。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)严重失血$(br)$(li)急救措施$(li2)止血带$(br)$(li)治疗措施$(li2)手术缝合/主动脉破裂手术"
+    },
+    {
+      "type": "image",
+      "title": "坏疽",
+      "border": true,
+      "images": [
+        "dgh:textures/book/gangrene.png"
+      ],
+      "text": "由过长时间佩戴止血带引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)四肢$(br)$(li)影响$(li2)败血症$(br)$(li)急救措施$(li2)无(br)$(li)治疗措施$(li2)移除止血带"
+    },
+    {
+      "type": "image",
+      "title": "心率不齐",
+      "border": true,
+      "images": [
+        "dgh:textures/book/heartrate_irregular.png"
+      ],
+      "text": "由低血氧、低血压、主动脉破裂造成的心颤引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)胸部$(br)$(li)影响$(li2)低血压、心脏骤停$(br)$(li)急救措施$(li2)肾上腺素$(br)$(li)治疗措施$(li2)治疗病因"
+    },
+    {
+      "type": "image",
+      "title": "心脏骤停",
+      "border": true,
+      "images": [
+        "dgh:textures/book/heartrate_stop.png"
+      ],
+      "text": "由心颤造成的严重心率不齐引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)胸部$(br)$(li)影响$(li2)低血压、低血氧$(br)$(li)急救措施$(li2)肾上腺素(br)$(li)治疗措施$(li2)治疗病因"
+    },
+    {
+      "type": "image",
+      "title": "伤口感染",
+      "border": true,
+      "images": [
+        "dgh:textures/book/infection.png"
+      ],
+      "text": "伤口感染由未包扎或脏绷带下的伤口引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)败血症$(br)$(li)治疗措施(li2)消毒喷雾$(li2)抗生素软膏"
     },
     {
       "type": "image",
@@ -101,87 +237,45 @@
     },
     {
       "type": "image",
-      "title": "出血",
+      "title": "骨损伤",
       "border": true,
       "images": [
-        "dgh:textures/book/bleeding.png"
+        "dgh:textures/book/bone_damage.png"
       ],
-      "text": "出血由伤口、未止血的手术切口引起。"
+      "text": "骨损伤由低血氧或败血症引起。"
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)失血$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)治疗病因$(br)"
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)骨坏死$(br)$(li)治疗措施$(li2)骨合成手术$(br)$(li)注意事项$(li2)通常无需理会"
     },
     {
       "type": "image",
-      "title": "呼吸停止",
+      "title": "骨坏死",
       "border": true,
       "images": [
-        "dgh:textures/book/respiratory_arrest.png"
+        "dgh:textures/book/bone_death.png"
       ],
-      "text": "通常由严重休克反应引起。"
+      "text": "骨坏死由严重骨损伤引起。"
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)胸腔$(br)$(li)影响$(li2)低血氧$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)治疗病因$(br)"
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)骨折$(br)$(li)治疗措施$(li2)全身骨合成手术"
     },
     {
       "type": "image",
-      "title": "手术休克",
+      "title": "气胸",
       "border": true,
       "images": [
-        "dgh:textures/book/fracture.png"
+        "dgh:textures/book/pneumothorax.png"
       ],
-      "text": "手术休克由未经麻醉的手术行为引起，麻醉后或在治疗床旁边进行手术可以将手术休克降低至十分之一。"
+      "text": "气胸由胸部伤口或胸部骨折引起。"
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)头$(br)$(li)影响$(li2)休克、大脑受损$(br)$(li)急救措施$(li2)使用吗啡麻醉$(br)$(li)治疗措施$(li2)停止手术$(br)"
-    },
-    {
-      "type": "image",
-      "title": "戒断",
-      "border": true,
-      "images": [
-        "dgh:textures/book/withdraw.png"
-      ],
-      "text": "由阿片成瘾引起。"
-    },
-    {
-      "type": "text",
-      "scale": 1.2,
-      "text": "$(li)有效部位$(li2)头部$(br)$(li)影响$(li2)戒断反应$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)疗剂(未实装)"
-    },
-    {
-      "type": "image",
-      "title": "动脉出血/主动脉破裂",
-      "border": true,
-      "images": [
-        "dgh:textures/book/arterial_bleeding.png"
-      ],
-      "text": "由严重的伤口出血引起，小概率由骨折引起。$(br)胸口的动脉出血为主动脉破裂，更加的严重与危险。"
-    },
-    {
-      "type": "text",
-      "scale": 1.2,
-      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)严重失血$(br)$(li)急救措施$(li2)止血带$(br)$(li)治疗措施$(li2)手术缝合/主动脉破裂手术"
-    },
-    {
-      "type": "image",
-      "title": "坏疽",
-      "border": true,
-      "images": [
-        "dgh:textures/book/gangrene.png"
-      ],
-      "text": "由过长时间佩戴止血带引起。"
-    },
-    {
-      "type": "text",
-      "scale": 1.2,
-      "text": "$(li)有效部位$(li2)四肢$(br)$(li)影响$(li2)败血症(未实装)$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)移除止血带"
+      "text": "$(li)有效部位$(li2)胸部$(br)$(li)影响$(li2)呼吸困难、低血氧$(br)$(li)急救措施$(li2)气胸针$(br)$(li)治疗措施$(li2)气胸手术"
     }
   ]
 }

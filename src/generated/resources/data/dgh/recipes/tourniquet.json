@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:leather"
+    },
+    "b": {
+      "item": "minecraft:string"
+    }
+  },
+  "pattern": [
+    " a ",
+    "a a",
+    "ba "
+  ],
+  "result": {
+    "count": 2,
+    "id": "dgh:tourniquet"
+  }
+}

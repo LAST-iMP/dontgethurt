@@ -7,8 +7,6 @@ import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.network.ServerPayloadHandler;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
@@ -30,8 +28,6 @@ public class ModEventBus {
                 new HealthProvider()
         );
         HealthProvider.add(Player.class);
-        HealthProvider.add(ServerPlayer.class);
-        HealthProvider.add(LocalPlayer.class);
         event.registerEntity(
                 ModCapabilities.HEALTH_HANDLER,
                 EntityType.VILLAGER,

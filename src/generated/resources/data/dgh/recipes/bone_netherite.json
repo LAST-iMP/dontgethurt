@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:bone"
+    },
+    "b": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "pattern": [
+    " b ",
+    "bab",
+    " b "
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:bone_netherite"
+  }
+}

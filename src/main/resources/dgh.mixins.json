@@ -4,9 +4,10 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "dgh.refmap.json",
   "mixins": [
+    "PlayerMixin"
   ],
   "client": [
-    "LivingEntityRendererMixin"
+    "client.LivingEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
