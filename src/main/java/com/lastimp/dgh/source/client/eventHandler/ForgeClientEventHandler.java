@@ -6,17 +6,18 @@ import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
-import com.lastimp.dgh.source.client.gui.component.DynamicSlotItemHandler;
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.source.core.menu.component.DynamicSlot;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
@@ -24,6 +25,7 @@ import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+@OnlyIn(value = Dist.CLIENT)
 @EventBusSubscriber(modid = DontGetHurt.MODID,value = Dist.CLIENT)
 public class ForgeClientEventHandler {
     private static HealthScreen healthScreen = null;
@@ -36,7 +38,7 @@ public class ForgeClientEventHandler {
         assert healthScreen.getSlotUnderMouse() != null;
         var slot = healthScreen.getSlotUnderMouse();
         int index = slot.getSlotIndex();
-        if (slot instanceof DynamicSlotItemHandler)
+        if (slot instanceof DynamicSlot)
             index += 36;
         PacketDistributor.sendToServer(MyHealingItemUseData.getInstance(
                 healthScreen.getMenu().targetEntity, index, healthScreen.getSelectedComponent()

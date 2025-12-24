@@ -7,6 +7,11 @@
     "dgh:morphine",
     "dgh:suture",
     "dgh:naloxone",
-    "dgh:tourniquet"
+    "dgh:tourniquet",
+    "dgh:needle",
+    "dgh:adrenaline",
+    "dgh:antiseptic",
+    "dgh:antibiotics",
+    "dgh:antibiotic_ointment"
   ]
 }

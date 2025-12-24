@@ -4,11 +4,15 @@ package com.lastimp.dgh.api.bodyPart;
 import com.lastimp.dgh.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
+import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
+import com.lastimp.dgh.source.register.ModEffects;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -16,7 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,6 +48,8 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     private ResourceLocation uuid_bone_dimond;
     private ResourceLocation uuid_bone_netherite;
 
+    private int nextFractureTick = 1200;
+
     public static void addCondition(Collection<ResourceLocation> key) {
         uniqueConditions.addAll(key);
     }
@@ -63,10 +69,13 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         handleBurning(entity);
         handleInternalInjury(entity);
         handleOpenWound(entity);
+        handleInfection();
         handleFracture(health);
         handleSurgery(health);
         handleBleeding(health);
         updateBoneEffect(entity);
+        handleBoneDamage(health);
+        handleBoneDeath();
         return this;
     }
 
@@ -120,20 +129,11 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     private void handleBandaged() {
         if (isBandaged()) {
             var bandage = BodyCondition.get(BANDAGED);
-            this.healing(BANDAGED, - bandage.healingSpeed() * DELTA);
-            if (this.abnormalWithHidden(BURN)) {
-                this.addConditionValue(BANDAGED, - bandage.healingSpeed() * DELTA);
-            }
+            var factor = this.abnormalWithHidden(BURN) ? 2 : 1;
+            this.addConditionValue(BANDAGED, - bandage.healingSpeed() * DELTA * factor);
             if (!isBandaged()) {
-                var bandageDirty = BodyCondition.get(BANDAGED_DIRTY);
-                this.getCondition(BANDAGED_DIRTY).setValue(bandageDirty.maxValue());
+                this.injury(BANDAGED_DIRTY, BodyCondition.get(BANDAGED_DIRTY).maxValue());
             }
-        }
-
-        if (this.abnormal(BANDAGED_DIRTY) && this.abnormalWithHidden(BURN)) {
-            this.injury(BURN, this.getCondition(BURN).getHiddenValue() * Config.dirty_bandage_ratio * DELTA);
-        } else if (this.abnormal(BANDAGED_DIRTY) && this.abnormalWithHidden(OPEN_WOUND)) {
-            this.injury(INTERNAL_INJURY, this.getCondition(OPEN_WOUND).getHiddenValue() * Config.dirty_bandage_ratio * DELTA);
         }
     }
 
@@ -142,14 +142,16 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.handleBandageAcc(BURN, Config.bandage_acc);
         this.handleCover(BURN);
         this.handleFoodAcc(entity, BURN, 1.0f);
+        this.handleInjuryInfection(BURN);
+        this.handleCombatStimulant(entity, BURN);
 
-        if (isBandaged()) return;
-        this.nextTickBleed += this.getCondition(BURN).getValue() * Config.burn_bleed_ratio;
+        if (!isBandaged()) this.nextTickBleed += this.getCondition(BURN).getValue() * Config.burn_bleed_ratio;
     }
 
     private void handleInternalInjury(LivingEntity entity) {
         if (!this.abnormalWithHidden(INTERNAL_INJURY)) return;
         this.handleFoodAcc(entity, INTERNAL_INJURY, 1.0f);
+        this.handleCombatStimulant(entity, INTERNAL_INJURY);
 
         this.nextTickBleed += this.getCondition(INTERNAL_INJURY).getValue() * Config.internal_bleed_ratio;
     }
@@ -159,6 +161,8 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.handleBandageAcc(OPEN_WOUND, Config.bandage_acc);
         this.handleCover(OPEN_WOUND);
         this.handleFoodAcc(entity, OPEN_WOUND, 1.0f);
+        this.handleInjuryInfection(OPEN_WOUND);
+        this.handleCombatStimulant(entity, OPEN_WOUND);
 
         if (isBandaged()) return;
         this.nextTickBleed += this.getCondition(OPEN_WOUND).getValue() * Config.open_wound_bleed_ratio;
@@ -191,6 +195,31 @@ public abstract class AbstractVisibleBody extends AbstractBody {
             this.healingHidden(condition, - BodyCondition.get(condition).healingSpeed() * DELTA * acc);
         } else {
             this.healing(condition, - BodyCondition.get(condition).healingSpeed() * DELTA * acc);
+        }
+    }
+
+    private void handleInjuryInfection(ResourceLocation condition) {
+        ConditionState state = this.getCondition(condition);
+        if (isBadBandaged()) {
+            this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * DELTA * 3 * state.getTotalValue());
+        } else if (!isBandaged()) {
+            this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * DELTA * state.getTotalValue());
+        }
+    }
+
+    private void handleInfection() {
+        if (this.abnormal(OINTMENT))
+            this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * 2 * DELTA);
+        else
+            this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * DELTA);
+    }
+
+    private void handleCombatStimulant(LivingEntity entity, ResourceLocation condition) {
+        if (!entity.hasEffect(ModEffects.COMBAT_STIMULANT_EFFECT)) return;
+        if (this.abnormalOnlyHidden(condition)) {
+            this.healingHidden(condition, -0.02f * DELTA);
+        } else {
+            this.healing(condition, -0.02f * DELTA);
         }
     }
 
@@ -232,6 +261,33 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
         Blood blood = (Blood) health.getComponent(BLOOD);
         blood.addConditionValue(BLOOD_LOSS, this.nextTickBleed * DELTA * Config.bleed_volume_ratio);
+    }
+
+    private void handleBoneDamage(HealthCapability health) {
+        if (this.abnormal(SAWED_BONES)) return;
+        var blood = health.getComponent(BLOOD);
+        if (blood.abnormal(OXYGEN)) {
+            this.injury(BONE_DAMAGE, blood.getConditionValue(OXYGEN) * 1.1f * BodyCondition.get(BONE_DAMAGE).healingSpeed() * DELTA);
+        }
+        if (blood.abnormal(SEPSIS)) {
+            this.injury(BONE_DAMAGE, blood.getConditionValue(SEPSIS) * 2 * BodyCondition.get(BONE_DAMAGE).healingSpeed() * DELTA);
+        }
+    }
+
+    private void handleBoneDeath() {
+        if (this.abnormal(SAWED_BONES)) return;
+        if (this.getConditionValue(BONE_DAMAGE) > 0.9f) {
+            this.injury(BONE_DEATH, BodyCondition.get(BONE_DEATH).maxValue());
+        }
+
+        if (!this.abnormal(BONE_DEATH) || this.abnormalWithHidden(FRACTURE)) {
+            this.nextFractureTick = (int) (1200 + Utils.randomBetween(-1, 1) * 600);
+        } else {
+            this.nextFractureTick--;
+            if (this.nextFractureTick <= 0) {
+                this.injury(FRACTURE, BodyCondition.get(FRACTURE).maxValue());
+            }
+        }
     }
 
     protected void updateBoneEffect(LivingEntity entity) {
@@ -410,5 +466,22 @@ public abstract class AbstractVisibleBody extends AbstractBody {
                 return key;
         }
         return null;
+    }
+
+    public boolean isInfected() {
+        return this.getConditionValue(INFECTION) > 0.1;
+    }
+
+    @Override
+    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
+        var nbt = super.serializeNBT(provider);
+        nbt.putInt("nextFractureTick", this.nextFractureTick);
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+        this.nextFractureTick = nbt.getInt("nextFractureTick");
+        super.deserializeNBT(provider, nbt);
     }
 }

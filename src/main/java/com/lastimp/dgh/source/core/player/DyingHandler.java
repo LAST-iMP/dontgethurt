@@ -34,17 +34,7 @@ public class DyingHandler {
     public static void onPlayerTick(PlayerTickEvent.Pre event) {
         var player = event.getEntity();
 
-        if (event.getEntity().level().isClientSide) {
-            if (player.getUUID().equals(GuiOpenWrapper.MINECRAFT.get().player.getUUID())){
-                if (HealthCapability.isDying(player) && !showingScreen()) {
-                    GuiOpenWrapper.openDyingScreen();
-                    setShowingScreen(true);
-                } else if (!HealthCapability.isDying(player) && showingScreen()){
-                    GuiOpenWrapper.closeDyingScreen();
-                    setShowingScreen(false);
-                }
-            }
-        } else {
+        if (!event.getEntity().level().isClientSide) {
             if (HealthCapability.isDying(player)) {
                 if (player.isSleeping()) player.stopSleeping();
                 if (player.isFallFlying()) player.stopFallFlying();

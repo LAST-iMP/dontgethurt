@@ -13,16 +13,13 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder()
             .comment("General settings")
-            .push("general_1.1.7");
+            .push("general_1.2.0");
 
     public static final ModConfigSpec.DoubleValue BODY_LIFE_FACTOR = BUILDER
             .defineInRange("BODY_LIFE_FACTOR", 1.0f, 0, 1000);
 
     public static final ModConfigSpec.DoubleValue HEALING_FACTOR = BUILDER
             .defineInRange("BODY_LIFE_FACTOR", 0.5f, 0, 1000);
-
-    public static final ModConfigSpec.DoubleValue DIRTY_BANDAGE_RATIO = BUILDER
-            .defineInRange("DIRTY_BANDAGE_RATIO",0.05,0,1);
 
     public static final ModConfigSpec.DoubleValue BANDAGE_ACC = BUILDER
             .defineInRange("BANDAGE_ACC",2.0,0,10);
@@ -74,7 +71,6 @@ public class Config {
 
     public static float body_life_factor;
     public static float healing_factor;
-    public static float dirty_bandage_ratio;
     public static float bandage_acc;
     public static float burn_bleed_ratio;
     public static float internal_bleed_ratio;
@@ -105,9 +101,13 @@ public class Config {
     public static final ModConfigSpec.IntValue BASE_HEALING_SHIELD_TIME = BUILDER
             .defineInRange("BASE_FRACTURE_MAX_PROB", 100, 0, 10000);
 
+    public static final ModConfigSpec.DoubleValue BASE_PNEUMOTHORAX_PROB = BUILDER
+            .defineInRange("BASE_FRACTURE_MAX_PROB", 0.05, 0, 1);
+
     public static float fractureArterialProb;
     public static float fractureBloodRatio;
     public static int baseHealingShieldTime;
+    public static float basePneumothoraxProb;
 
     // 构建配置
     public static final ModConfigSpec SPEC = BUILDER.pop().build();
@@ -116,7 +116,6 @@ public class Config {
     static void onLoad(final ModConfigEvent event) {
         body_life_factor = (float) BODY_LIFE_FACTOR.getAsDouble();
         healing_factor = (float) HEALING_FACTOR.getAsDouble();
-        dirty_bandage_ratio = (float) DIRTY_BANDAGE_RATIO.getAsDouble();
         bandage_acc = (float) BANDAGE_ACC.getAsDouble();
         burn_bleed_ratio = (float) BURN_BLEED_RATIO.getAsDouble();
         internal_bleed_ratio = (float) INTERNAL_BLEED_RATIO.getAsDouble();
@@ -139,6 +138,7 @@ public class Config {
         fractureBloodRatio = (float) FRACTURE_BLOOD_RATIO.getAsDouble();
 
         baseHealingShieldTime = BASE_HEALING_SHIELD_TIME.getAsInt();
+        basePneumothoraxProb = (float) BASE_PNEUMOTHORAX_PROB.getAsDouble();
         BodyCondition.init();
     }
 

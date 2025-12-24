@@ -5,9 +5,13 @@ import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.Utils;
+import com.lastimp.dgh.source.core.bodyPart.Torso;
 import net.minecraft.util.Mth;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.DISLOCATION;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.FRACTURE;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.PLASTER_CAST;
 
 public abstract class FollowInjuryHandler {
     public static void dislocationHandler(AbstractExtremities body, float damageAmount) {
@@ -40,13 +44,20 @@ public abstract class FollowInjuryHandler {
             if (body.abnormal(PLASTER_CAST))
                 body.setConditionValue(PLASTER_CAST, BodyCondition.get(PLASTER_CAST).defaultValue());
             if (body instanceof AbstractExtremities extremities)
-                handleArterialBleeding(extremities);
+                arterialBleedingHandler(extremities);
         }
     }
 
-    public static void handleArterialBleeding(AbstractExtremities body) {
+    public static void arterialBleedingHandler(AbstractExtremities body) {
         if (Mth.randomBetween(Utils.randomSource, 0f, 1.0f) < Config.fractureArterialProb) {
             body.injury(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).maxValue());
         }
+    }
+
+    public static void pneumothoraxHandler(AbstractVisibleBody body) {
+        if (!(body instanceof Torso torso)) return;
+        if (Mth.randomBetween(Utils.randomSource, 0f, 1.0f) > Config.basePneumothoraxProb) return;
+
+        torso.injury(PNEUMOTHORAX, BodyCondition.get(PNEUMOTHORAX).maxValue());
     }
 }

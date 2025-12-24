@@ -1,9 +1,8 @@
-package com.lastimp.dgh.source.block.renderer;
+package com.lastimp.dgh.source.client.renderer;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.block.OperatingBedBlock;
-import com.lastimp.dgh.source.register.MyModelLayers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -29,9 +28,12 @@ import net.minecraft.world.level.block.entity.BedBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import static net.minecraft.client.renderer.Sheets.BED_SHEET;
 
+@OnlyIn(value = Dist.CLIENT)
 public class OperatingBedRenderer implements BlockEntityRenderer<OperatingBedBlock.Entity> {
     private static final Material material = new Material(BED_SHEET, Common.ResourceLocation(DontGetHurt.MODID, "entity/bed/operating_bed"));
     private final ModelPart headRoot;

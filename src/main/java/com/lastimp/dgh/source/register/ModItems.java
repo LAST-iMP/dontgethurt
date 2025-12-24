@@ -303,6 +303,73 @@ public class ModItems {
                     .stacksTo(16)
     );
 
+    public static final DeferredItem<Needle> NEEDLE = registerItem(
+            "needle",
+            Needle::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final DeferredItem<Drainage> DRAINAGE = registerItem(
+            "drainage",
+            Drainage::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final DeferredItem<Adrenaline> ADRENALINE = registerItem(
+            "adrenaline",
+            Adrenaline::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final DeferredItem<OxygenMask> OXYGEN_MASK = registerItem(
+            "oxygen_mask",
+            OxygenMask::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(400)
+    );
+
+    public static final DeferredItem<AntibioticOintment> ANTIBIOTIC_OINTMENT = registerItem(
+            "antibiotic_ointment",
+            AntibioticOintment::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(4)
+    );
+
+    public static final DeferredItem<AntisepticSprayer> ANTISEPTIC_SPRAYER = registerItem(
+            "antiseptic_sprayer",
+            AntisepticSprayer::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(10)
+    );
+
+    public static final DeferredItem<Item> ANTISEPTIC = registerItem(
+            "antiseptic",
+            Item::new,
+            new Item.Properties()
+                    .stacksTo(64)
+    );
+
+    public static final DeferredItem<Autopulse> AUTOPULSE = registerItem(
+            "autopulse",
+            Autopulse::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(400)
+    );
+
+    public static final DeferredItem<Antibiotics> ANTIBIOTICS = registerItem(
+            "antibiotics",
+            Antibiotics::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
     private static <T extends Item> DeferredItem<T> registerItem(String name, Function<Item.Properties, ? extends T> func, Item.Properties properties) {
         DeferredItem<T> item = ITEMS.registerItem(name, func, properties);
         ITEMS_SET.add(item);

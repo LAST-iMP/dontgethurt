@@ -28,6 +28,10 @@
     "dgh:bone_gold",
     "dgh:bone_dimond",
     "dgh:bone_netherite",
-    "dgh:medical_stent"
+    "dgh:medical_stent",
+    "dgh:drainage",
+    "dgh:oxygen_mask",
+    "dgh:antiseptic_sprayer",
+    "dgh:autopulse"
   ]
 }

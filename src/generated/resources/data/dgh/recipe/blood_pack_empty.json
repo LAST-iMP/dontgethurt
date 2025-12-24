@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "a": {
-      "item": "minecraft:iron_nugget"
+      "tag": "minecraft:wool"
     },
     "b": {
       "item": "minecraft:leather"

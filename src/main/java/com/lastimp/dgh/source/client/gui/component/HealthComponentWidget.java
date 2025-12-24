@@ -9,7 +9,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
+@OnlyIn(value = Dist.CLIENT)
 public class HealthComponentWidget extends Button {
     public static final ResourceLocation SPRITES_HEAD = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_head.png");
     public static final ResourceLocation SPRITES_TORSO = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/sprites/widget/health_hud_torso.png");

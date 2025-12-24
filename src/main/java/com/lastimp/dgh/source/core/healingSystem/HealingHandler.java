@@ -3,6 +3,7 @@ package com.lastimp.dgh.source.core.healingSystem;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
+import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.medicine.Bandages;
@@ -35,14 +36,18 @@ public class HealingHandler {
             success |= Gypsum.cut(target, component);
             success |= Tourniquet.cut(target, component);
         }
-        if (itemStack.getItem() instanceof AbstractDirectHealItems item) {
+
+        if (!(itemStack.getItem() instanceof AbstractHealingItem healingItem)) return;
+        if (!healingItem.available(itemStack)) return;
+
+        if (healingItem instanceof AbstractDirectHealItems item) {
             success = item.heal(source, target);
-        } else if (itemStack.getItem() instanceof AbstractPartlyHealItem item) {
+        } else if (healingItem instanceof AbstractPartlyHealItem item) {
             success = item.heal(source, target, component);
         }
 
         if (success)
-            source.getCooldowns().addCooldown(itemStack.getItem(), 10);
+            source.getCooldowns().addCooldown(healingItem, 10);
 
         if (success && itemStack.isDamageableItem()) {
             itemStack.hurtAndBreak(1, source.serverLevel(), source, (i) -> {});

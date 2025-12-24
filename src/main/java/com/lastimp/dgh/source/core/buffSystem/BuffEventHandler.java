@@ -4,7 +4,6 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -12,7 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
@@ -41,7 +39,7 @@ public class BuffEventHandler {
         if (health.slowDown() <= 0) return;
         var newEffect = new MobEffectInstance(
                 ModEffects.STAGGER_EFFECT,
-                40, health.slowDown() - 1
+                39, health.slowDown() - 1
         );
         entity.addEffect(newEffect);
     }
@@ -51,7 +49,7 @@ public class BuffEventHandler {
 
         var newEffect = new MobEffectInstance(
                 MobEffects.DIG_SLOWDOWN,
-                40, health.armBreak() - 1
+                39, health.armBreak() - 1
         );
         entity.addEffect(newEffect);
     }
@@ -61,19 +59,19 @@ public class BuffEventHandler {
         var state = head.getCondition(WITHDRAW);
         if (!head.abnormal(WITHDRAW)) return;
         if (state.getValue() > 0.2f) {
-            entity.addEffect(new MobEffectInstance(ModEffects.CRAVING_EFFECT, 100));
+            entity.addEffect(new MobEffectInstance(ModEffects.CRAVING_EFFECT, 99));
         }
         if (state.getValue() > 0.3f) {
-            entity.addEffect(new MobEffectInstance(ModEffects.SWEATING_EFFECT, 100));
+            entity.addEffect(new MobEffectInstance(ModEffects.SWEATING_EFFECT, 99));
         }
         if (state.getValue() > 0.4f) {
-            entity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200));
+            entity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 199));
         }
     }
 
     private static void updateLivingTimeEffects(HealthCapability health, LivingEntity entity) {
         int amp = (int) Math.sqrt((double) health.livingTick() / 1000);
-        amp = Math.min(amp, 40);
+        amp = Math.min(amp, 39);
         if (amp < 1) return;
         var newEffect = new MobEffectInstance(
                 ModEffects.KEEP_LIVING_EFFECT,
@@ -86,11 +84,11 @@ public class BuffEventHandler {
     private static void updateCureEffects(HealthCapability health, LivingEntity entity) {
         if (health.vitality() < 0.999f) return;
         if (health.almostDead() < 0.2f) {
-            entity.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2400, 2));
+            entity.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2399, 2));
         } else if (health.almostDead() < 0.5f) {
-            entity.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2400, 1));
+            entity.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2399, 1));
         } else if (health.almostDead() < 0.8f) {
-            entity.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2400, 0));
+            entity.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2399, 0));
         } else {
             return;
         }
@@ -99,20 +97,30 @@ public class BuffEventHandler {
 
     private static void updateSymptomsEffects(HealthCapability health, LivingEntity entity) {
         if (health.intensePain() && Mth.randomBetween(Utils.randomSource, 0.0f, 1.0f) < 0.007f) {
-            var newEffect = new MobEffectInstance(ModEffects.INTENSE_PAIN_EFFECT, 60);
+            var newEffect = new MobEffectInstance(ModEffects.INTENSE_PAIN_EFFECT, 59);
             entity.addEffect(newEffect);
         }
-        if (health.getComponent(BLOOD).getConditionValue(BLOOD_LOSS) > 0.4f) {
-            entity.addEffect(new MobEffectInstance(ModEffects.PALE_SKIN, 100));
-        }
-        if (health.getComponent(BLOOD).getConditionValue(OXYGEN) > 0.2f || health.getComponent(TORSO).abnormal(RESPIRATORY_ARREST))
-            entity.addEffect(new MobEffectInstance(ModEffects.HARD_BREATH, 100));
-        if (health.getComponent(BLOOD).getConditionValue(OXYGEN) > 0.5f)
-            entity.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 100));
-        var value = health.getComponent(BLOOD).getConditionValue(BLOOD_LOSS);
-        if (value > 0.6f)
-            entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 100,
-                    (int) ((value - 0.6f) / 0.2f)
+        var blood = health.getComponent(BLOOD);
+        var torso = health.getComponent(TORSO);
+        if (blood.getConditionValue(BLOOD_LOSS) > 0.4f || blood.getConditionValue(BLOOD_PRESSURE) < 0.5)
+            entity.addEffect(new MobEffectInstance(ModEffects.PALE_SKIN_EFFECT, 99));
+        if (blood.getConditionValue(OXYGEN) > 0.2f || torso.abnormal(RESPIRATORY_ARREST) || torso.getConditionValue(PNEUMOTHORAX) > 0.4)
+            entity.addEffect(new MobEffectInstance(ModEffects.HARD_BREATH_EFFECT, 99));
+        if (blood.getConditionValue(OXYGEN) > 0.5f || blood.getConditionValue(SEPSIS) > 0.4 || blood.getConditionValue(BLOOD_PRESSURE) < 0.6)
+            entity.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 99));
+        if (blood.getConditionValue(BLOOD_PRESSURE) < 0.3f)
+            entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 99));
+
+        var bloodLoss = blood.getConditionValue(BLOOD_LOSS);
+        if (bloodLoss > 0.6f)
+            entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 99,
+                    (int) ((bloodLoss - 0.6f) / 0.2f)
             ));
+        if (torso.abnormal(HEARTRATE_INCREASE))
+            entity.addEffect(new MobEffectInstance(ModEffects.INCREASED_HEARTRATE_EFFECT, 99));
+        if (health.isInfected())
+            entity.addEffect(new MobEffectInstance(ModEffects.INFLAMMATION_EFFECT, 99));
+        if (blood.getConditionValue(SEPSIS) > 0.05)
+            entity.addEffect(new MobEffectInstance(ModEffects.FEVER_EFFECT, 99));
     }
 }

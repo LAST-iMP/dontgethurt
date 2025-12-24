@@ -1,7 +1,6 @@
 package com.lastimp.dgh.source.core;
 
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -29,14 +28,8 @@ public abstract class Utils {
         return null;
     }
 
-    public static LivingEntity getLiving(ClientLevel level, UUID uuid, Vec3 center, int range) {
-        var result = level.getEntitiesOfClass(
-                LivingEntity.class, AABB.ofSize(center, range, range, range),
-                (entity) -> entity.getUUID().equals(uuid)
-        );
-        if (!result.isEmpty())
-            return result.getFirst();
-        return null;
+    public static float randomBetween(float min, float max) {
+        return Mth.randomBetween(randomSource, min, max);
     }
 
     public static int getRandomIndex(float... weight) {

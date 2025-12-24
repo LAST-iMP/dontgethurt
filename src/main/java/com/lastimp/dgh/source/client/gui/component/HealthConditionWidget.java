@@ -9,7 +9,10 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
+@OnlyIn(value = Dist.CLIENT)
 public class HealthConditionWidget extends AbstractWidget {
     private final ResourceLocation texture;
     private final int iconSize = 12;

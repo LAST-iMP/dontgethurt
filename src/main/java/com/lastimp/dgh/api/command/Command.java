@@ -4,7 +4,7 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.neoforge.Common;
-import com.lastimp.dgh.source.client.gui.menuProvider.HealthMenuProvider;
+import com.lastimp.dgh.source.core.menu.menuProvider.HealthMenuProvider;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
@@ -181,7 +181,11 @@ public class Command {
         CommandSourceStack source = context.getSource();
         source.sendSuccess(() -> Component.literal("已将玩家" + player.getScoreboardName() + "重置"), true);
 
-        HealthCapability.set(player, new HealthCapability());
+        var oldHealth = HealthCapability.get(player);
+        var newHealth = new HealthCapability();
+        newHealth.autoPulse().setStackInSlot(0, oldHealth.autoPulse().getStackInSlot(0));
+        newHealth.oxygenMask().setStackInSlot(0, oldHealth.oxygenMask().getStackInSlot(0));
+        HealthCapability.set(player, newHealth);
         return 1;
     }
 }

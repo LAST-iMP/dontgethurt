@@ -8,37 +8,12 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "所有医疗药品都可以在打开医疗面板并选择部位后使用。血包这种不需要指定部位的，可以直接右键使用。"
+      "text": "所有医疗药品都可以在打开医疗面板并选择部位后使用。血包等不需要指定部位的，可以直接右键使用。"
     },
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(br)$(li)部位指定$(li2)绷带$(li2)缝合线$(li2)石膏$(br)$(li)直接使用$(li2)(空)血包$(li2)吗啡$(li2)医用支架$(li2)止血带"
-    },
-    {
-      "type": "spotlight",
-      "title": "血包",
-      "item": "dgh:blood_pack",
-      "scale": 1.2,
-      "text": "对自己或别人使用空血包来储存血液，紧急的时候可以直接补充血容量。$(br)$(li)效果$(li2)降低失血(血包)$(li2)增加失血(空血包)$(br)$(li)主治$(li2)失血",
-      "link_recipe": true
-    },
-    {
-      "type": "crafting",
-      "recipe": "dgh:blood_pack_empty",
-      "recipe2": "dgh:blood_pack_empty_unfill"
-    },
-    {
-      "type": "spotlight",
-      "title": "吗啡",
-      "item": "dgh:morphine",
-      "scale": 1.2,
-      "text": "对自己或别人使用吗啡进行镇痛。$(br)$(li)效果$(li2)增加镇痛$(li)负面效果$(li2)增加阿片成瘾$(li2)增加阿片中毒$(br)$(li)主治$(li2)肢体失能、剧痛",
-      "link_recipe": true
-    },
-    {
-      "type": "crafting",
-      "recipe": "dgh:morphine"
+      "text": "$(li)部位指定$(li2)绷带$(li2)缝合线$(li2)石膏$(li2)医用支架$(li2)止血带$(li2)气胸针$(li2)引流管$(li2)抗生素软膏$(br)$(li)直接使用$(li2)(空)血包$(li2)吗啡$(li2)烯丙羟吗啡酮$(li2)肾上腺素$(li2)广谱抗生素$(li2)战斗兴奋剂$(br)"
     },
     {
       "type": "spotlight",
@@ -93,12 +68,115 @@
       "title": "止血带",
       "item": "dgh:tourniquet",
       "scale": 1.2,
-      "text": "在四肢或头部使用，暂时阻断动脉出血。$(br)$(li)效果$(li2)阻断动脉出血(li)负面效果$(li2)长时间使用造成坏疽$(li2)在头部使用造成脑损伤和缺氧$(br)$(li)主治$(li2)动脉出血",
+      "text": "在四肢或头部使用，暂时阻断动脉出血。$(br)$(li)效果$(li2)阻断动脉出血$(li)负面效果$(li2)长时间使用造成坏疽$(li2)在头部使用造成脑损伤和缺氧$(br)$(li)主治$(li2)动脉出血",
       "link_recipe": true
     },
     {
       "type": "crafting",
       "recipe": "dgh:tourniquet"
+    },
+    {
+      "type": "spotlight",
+      "title": "气胸针",
+      "item": "dgh:needle",
+      "scale": 1.2,
+      "text": "胸部使用，暂时缓解气胸。$(br)$(li)效果$(li2)暂时缓解气胸$(li)负面效果$(li2)无$(br)$(li)主治$(li2)气胸",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:needle"
+    },
+    {
+      "type": "spotlight",
+      "title": "引流管",
+      "item": "dgh:drainage",
+      "scale": 1.2,
+      "text": "在手术流程中使用以治疗气胸。$(br)$(li)效果$(li2)治疗气胸$(li)负面效果$(li2)无$(br)$(li)主治$(li2)气胸",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:drainage"
+    },
+    {
+      "type": "spotlight",
+      "title": "抗生素软膏",
+      "item": "dgh:antibiotic_ointment",
+      "scale": 1.2,
+      "text": "涂抹软膏，降低感染。$(br)$(li)效果$(li2)降低感染$(li)负面效果$(li2)无$(br)$(li)主治$(li2)伤口感染",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:antibiotic_ointment"
+    },
+    {
+      "type": "spotlight",
+      "title": "血包",
+      "item": "dgh:blood_pack",
+      "scale": 1.2,
+      "text": "对自己或别人使用空血包来储存血液，紧急的时候可以直接补充血容量。$(br)$(li)效果$(li2)降低失血、增加血压(血包)$(li2)增加失血、降低血压(空血包)$(br)$(li)主治$(li2)失血",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:blood_pack_empty",
+      "recipe2": "dgh:blood_pack_empty_unfill"
+    },
+    {
+      "type": "spotlight",
+      "title": "吗啡",
+      "item": "dgh:morphine",
+      "scale": 1.2,
+      "text": "对自己或别人使用吗啡进行镇痛。$(br)$(li)效果$(li2)增加镇痛$(li)负面效果$(li2)增加阿片成瘾$(li2)增加阿片中毒$(br)$(li)主治$(li2)肢体失能、剧痛",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:morphine"
+    },
+    {
+      "type": "spotlight",
+      "title": "烯丙羟吗啡酮",
+      "item": "dgh:naloxone",
+      "scale": 1.2,
+      "text": "对自己或别人使用降低阿片中毒。$(br)$(li)效果$(li2)降低阿片中毒$(li2)降低阿片成瘾$(li)负面效果$(li2)无$(br)$(li)主治$(li2)阿片中毒",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:naloxone"
+    },
+    {
+      "type": "spotlight",
+      "title": "肾上腺素",
+      "item": "dgh:adrenaline",
+      "scale": 1.2,
+      "text": "对自己或别人使用降低心颤、增加血压。$(br)$(li)效果$(li2)降低心颤$(li2)增加血压$(li2)增加近战伤害$(li)负面效果$(li2)无$(br)$(li)主治$(li2)心颤",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:adrenaline"
+    },
+    {
+      "type": "spotlight",
+      "title": "广谱抗生素",
+      "item": "dgh:antibiotics",
+      "scale": 1.2,
+      "text": "对自己或别人使用降低败血症。$(br)$(li)效果$(li2)降低败血症$(li)负面效果$(li2)无$(br)$(li)主治$(li2)败血症",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:antibiotics"
+    },
+    {
+      "title": "战斗兴奋剂",
+      "type": "text",
+      "scale": 1.2,
+      "text": "持续治疗全身伤势。$(br)$(li)效果$(li2)持续治疗全身伤势$(li)负面效果$(li2)增加阿片上瘾$(br)配方详见炼药"
     }
   ]
 }

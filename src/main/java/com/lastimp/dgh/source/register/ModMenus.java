@@ -1,8 +1,8 @@
 package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.client.gui.menu.BagMenu;
-import com.lastimp.dgh.source.client.gui.menu.HealthMenu;
+import com.lastimp.dgh.source.core.menu.BagMenu;
+import com.lastimp.dgh.source.core.menu.HealthMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
