@@ -1,9 +1,11 @@
-package com.lastimp.dgh.source.client.gui.menu;
+package com.lastimp.dgh.source.core.menu;
 
-import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.client.gui.component.DynamicSlotItemHandler;
+import com.lastimp.dgh.source.core.Utils;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.source.core.menu.component.DynamicSlot;
 import com.lastimp.dgh.source.register.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -17,13 +19,13 @@ import java.util.UUID;
 
 public class HealthMenu extends AbstractContainerMenu {
     protected IItemHandler handler;
-    private final List<DynamicSlotItemHandler> bagSlots = new ArrayList<>();
+    private final List<DynamicSlot> bagSlots = new ArrayList<>();
+    private final List<DynamicSlot> equipments = new ArrayList<>();
     public final UUID targetEntity;
     public final boolean isDevice;
 
     public HealthMenu(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
         this(pContainerId, inv, buf.readUUID(), buf.readBoolean());
-        DontGetHurt.LOGGER.info("Client Side Menu");
     }
 
     public HealthMenu(int pContainerId, Inventory inv, UUID targetEntity, boolean isDevice) {
@@ -31,7 +33,10 @@ public class HealthMenu extends AbstractContainerMenu {
         this.targetEntity = targetEntity;
         this.isDevice = isDevice;
         layoutPlayerInventorySlots(inv);
-        DontGetHurt.LOGGER.info("Server Side Menu");
+        if (inv.player.level() instanceof ServerLevel serverLevel) {
+            var entity = Utils.getLivingWithHealth(serverLevel, targetEntity);
+            if (entity != null) this.setEquipments(HealthCapability.get(entity));
+        }
     }
 
     public void openBag(ItemStack stack) {
@@ -48,6 +53,11 @@ public class HealthMenu extends AbstractContainerMenu {
         for (var slot : bagSlots) {
             slot.setHandler(handler);
         }
+    }
+
+    public void setEquipments(HealthCapability health) {
+        equipments.get(0).setHandler(health.oxygenMask());
+        equipments.get(1).setHandler(health.autoPulse());
     }
 
     public ItemStack getStackBySlotNum(int slotNum) {
@@ -101,9 +111,17 @@ public class HealthMenu extends AbstractContainerMenu {
         // 动态背包内部
         for (int row = 0; row < 9; row++) {
             int index = row;
-            var newSlot = new DynamicSlotItemHandler(null, index, 234, 22 + row * 18);
+            var newSlot = new DynamicSlot(null, index, 234, 22 + row * 18);
             this.addSlot(newSlot);
             this.bagSlots.add(newSlot);
         }
+        //装备槽位
+        var oxygenMask = new DynamicSlot(null, 0, 210, 130);
+        this.addSlot(oxygenMask);
+        this.equipments.add(oxygenMask);
+
+        var autoPulse = new DynamicSlot(null, 0, 210, 130 + 18);
+        this.addSlot(autoPulse);
+        this.equipments.add(autoPulse);
     }
 }

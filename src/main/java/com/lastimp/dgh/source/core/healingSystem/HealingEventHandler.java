@@ -3,6 +3,7 @@ package com.lastimp.dgh.source.core.healingSystem;
 
 import com.lastimp.dgh.Config;
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.core.player.DyingHandler;
@@ -29,6 +30,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.COMA;
 import static com.lastimp.dgh.api.enums.OperationType.SYN;
 
 
@@ -61,6 +63,8 @@ public class HealingEventHandler {
         float maxHealth = getHealthWithOuterHealing(health, entity);
         if (entity.isDeadOrDying()) {
             DyingHandler.setLivingDead(entity);
+        } else if (health.getComponent(BodyComponents.HEAD).abnormal(COMA)) {
+            entity.setHealth(0.01f);
         } else if (maxHealth > 0) {
             if ((int)maxHealth != (int)entity.getHealth())
                 entity.setHealth(maxHealth);
@@ -75,6 +79,8 @@ public class HealingEventHandler {
         float maxHealth = getHealthWithOuterHealing(health, player);
         if (player.isDeadOrDying()) {
             DyingHandler.setPlayerDead(player);
+        } else if (health.getComponent(BodyComponents.HEAD).abnormal(COMA)) {
+            player.setHealth(0.01f);
         } else if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative()) {
             player.setHealth(player.getMaxHealth());
         } else if (maxHealth > 0) {

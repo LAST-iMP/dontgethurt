@@ -313,6 +313,73 @@ public class ModItems {
                     .stacksTo(16)
     );
 
+    public static final RegistryObject<Item> NEEDLE = registerItem(
+            "needle",
+            Needle::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> DRAINAGE = registerItem(
+            "drainage",
+            Drainage::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> ADRENALINE = registerItem(
+            "adrenaline",
+            Adrenaline::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> OXYGEN_MASK = registerItem(
+            "oxygen_mask",
+            OxygenMask::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(400)
+    );
+
+    public static final RegistryObject<Item> ANTIBIOTIC_OINTMENT = registerItem(
+            "antibiotic_ointment",
+            AntibioticOintment::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(4)
+    );
+
+    public static final RegistryObject<Item> ANTISEPTIC_SPRAYER = registerItem(
+            "antiseptic_sprayer",
+            AntisepticSprayer::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(10)
+    );
+
+    public static final RegistryObject<Item> ANTISEPTIC = registerItem(
+            "antiseptic",
+            Item::new,
+            new Item.Properties()
+                    .stacksTo(64)
+    );
+
+    public static final RegistryObject<Item> AUTOPULSE = registerItem(
+            "autopulse",
+            Autopulse::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(400)
+    );
+
+    public static final RegistryObject<Item> ANTIBIOTICS = registerItem(
+            "antibiotics",
+            Antibiotics::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

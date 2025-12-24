@@ -2,6 +2,7 @@ package com.lastimp.dgh.source.core.player;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.register.ModItems;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -21,12 +22,14 @@ public class PlayerEventBus {
         }
 
         var data = player.getPersistentData();
+        var persistedTag = data.getCompound(Player.PERSISTED_NBT_TAG);
         var key = "dgh_new_player";
-        if (!data.getBoolean(key)) {
+        if (!persistedTag.getBoolean(key)) {
             player.getInventory().add(new ItemStack(ModItems.HEALTH_CARE_BAG.get()));
             player.getInventory().add(new ItemStack(ModItems.BANDAGE.get(), 8));
             player.getInventory().add(new ItemStack(ModItems.MORPHINE.get(), 2));
-            data.putBoolean(key, true);
+            persistedTag.putBoolean(key, true);
+            data.put(Player.PERSISTED_NBT_TAG, persistedTag);
         }
     }
 }

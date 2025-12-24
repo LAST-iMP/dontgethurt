@@ -1,18 +1,12 @@
 
 package com.lastimp.dgh.network.message;
 
-import com.lastimp.dgh.network.ClientPayloadHandler;
-import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.api.enums.OperationType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public class MyReadAllConditionData {
     private long id_most;
@@ -40,31 +34,6 @@ public class MyReadAllConditionData {
         buf.writeNbt(this.tag);
         buf.writeUtf(this.oper);
     }
-
-    public static void handlerClient(final MyReadAllConditionData data, Supplier<NetworkEvent.Context> ctx) {
-        HealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag());
-        OperationType operation = OperationType.valueOf(data.oper());
-        if (operation == OperationType.HEALTH_SCANN && ClientPayloadHandler.getHealthScreen() != null) {
-            ClientPayloadHandler.getHealthScreen().setHealthData(health);
-        } else if (operation == OperationType.SYN) {
-            ClientPayloadHandler.setHealth(health);
-        }
-    }
-
-    public static void handlerServer(final MyReadAllConditionData data, Supplier<NetworkEvent.Context> ctx) {
-        var context = ctx.get();
-        UUID uuid = new UUID(data.id_most(), data.id_least());
-        ServerPlayer sender = context.getSender();
-        var target = Utils.getLivingWithHealth(sender.serverLevel(), uuid);
-        if (target == null) return;
-        HealthCapability health = HealthCapability.get(target);
-
-        Network.CLIENT_INSTANCE.send(
-                PacketDistributor.PLAYER.with(context::getSender),
-                MyReadAllConditionData.getInstance(uuid, health, OperationType.valueOf(data.oper()))
-        );
-    }
-
 
     public static MyReadAllConditionData getInstance(UUID uuid, HealthCapability health, OperationType operation) {
         return new MyReadAllConditionData(uuid, health, operation);

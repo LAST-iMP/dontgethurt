@@ -1,4 +1,4 @@
-package com.lastimp.dgh.source.client.gui.menu;
+package com.lastimp.dgh.source.core.menu;
 
 import com.lastimp.dgh.source.register.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;

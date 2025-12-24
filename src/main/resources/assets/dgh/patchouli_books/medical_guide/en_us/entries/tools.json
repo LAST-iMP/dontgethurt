@@ -115,6 +115,45 @@
     },
     {
       "type": "spotlight",
+      "title": "消毒喷雾器",
+      "item": "dgh:antiseptic_sprayer",
+      "scale": 1.2,
+      "text": "给胳膊消毒。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:antiseptic_sprayer",
+      "recipe2": "dgh:antiseptic_sprayer_repair"
+    },
+    {
+      "type": "spotlight",
+      "title": "急救呼吸气囊",
+      "item": "dgh:oxygen_mask",
+      "scale": 1.2,
+      "text": "泵入氧气。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:oxygen_mask",
+      "recipe2": "dgh:oxygen_mask_repair"
+    },
+    {
+      "type": "spotlight",
+      "title": "自动心肺复苏器",
+      "item": "dgh:autopulse",
+      "scale": 1.2,
+      "text": "让心脏和肺重新工作。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:autopulse",
+      "recipe2": "dgh:autopulse_repair"
+    },
+    {
+      "type": "spotlight",
       "title": "骨骼植入物",
       "item": "dgh:bone_implants",
       "scale": 1.2,

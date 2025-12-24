@@ -2,6 +2,7 @@
 package com.lastimp.dgh.source.core.bodyPart;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
+import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -31,6 +32,15 @@ public class WholeBody extends AbstractBody {
 
     public AbstractBody getComponent(BodyComponents component) {
         return component == WHOLE_BODY ? this : components.get(component);
+    }
+
+    public boolean isInfected() {
+        for (var component : VISIBLE_BODIES) {
+            if (((AbstractVisibleBody)this.getComponent(component)).isInfected()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

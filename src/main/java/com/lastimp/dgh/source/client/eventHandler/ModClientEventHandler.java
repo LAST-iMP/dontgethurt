@@ -1,15 +1,17 @@
 package com.lastimp.dgh.source.client.eventHandler;
 
-import com.lastimp.dgh.source.block.renderer.OperatingBedRenderer;
+import com.lastimp.dgh.source.client.renderer.OperatingBedRenderer;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.source.register.ModBlocks;
-import com.lastimp.dgh.source.register.MyModelLayers;
+import com.lastimp.dgh.source.client.renderer.MyModelLayers;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+@OnlyIn(value = Dist.CLIENT)
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ModClientEventHandler {
     @SubscribeEvent

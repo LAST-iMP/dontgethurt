@@ -1,6 +1,7 @@
 package com.lastimp.dgh.compact.TaZC.mixin;
 
 import com.lastimp.dgh.network.ClientPayloadHandler;
+import com.lastimp.dgh.source.client.ClientAccessor;
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.tacz.guns.api.client.animation.ObjectAnimationRunner;
@@ -32,9 +33,9 @@ public class ObjectAnimationRunnerMixin {
         var reloadState = IGunOperator.fromLivingEntity(player).getSynReloadState();
         boolean check = reloadState.getStateType() != ReloadState.StateType.NOT_RELOADING;
         check |= IGunOperator.fromLivingEntity(player).getSynIsBolting();
-        check &= ClientPayloadHandler.health() != null;
+        check &= ClientAccessor.health() != null;
 
-        var scale = check ? 1.0 - 0.4 * ClientPayloadHandler.health().armBreak() : 1;
+        var scale = check ? 1.0 - 0.4 * ClientAccessor.health().armBreak() : 1;
 
         var deltaUnscaled = original - dgh$lastTimeUnscaled;
         dgh$lastTimeUnscaled += deltaUnscaled;

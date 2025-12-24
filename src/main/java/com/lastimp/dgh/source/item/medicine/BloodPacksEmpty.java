@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_LOSS;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_PRESSURE;
 
 public class BloodPacksEmpty extends AbstractDirectHealItems {
     public BloodPacksEmpty(Properties properties) {
@@ -27,6 +28,7 @@ public class BloodPacksEmpty extends AbstractDirectHealItems {
             if (currCondition > BodyCondition.get(BLOOD_LOSS).maxValue() - 0.3f) return false;
 
             blood.injury(BLOOD_LOSS, 0.25f);
+            blood.healing(BLOOD_PRESSURE, -0.25f);
             if (!source.getStringUUID().equals(entity.getStringUUID()))
                 source.attack(entity);
 

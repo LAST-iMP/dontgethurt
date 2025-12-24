@@ -3,12 +3,15 @@ package com.lastimp.dgh.source.client.hotkey;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@OnlyIn(value = Dist.CLIENT)
 public class KeyBinding {
     public static final String KEY_CATEGORY_DGH = "key.category.dgh";
 

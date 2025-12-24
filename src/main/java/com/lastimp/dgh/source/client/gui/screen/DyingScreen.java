@@ -2,7 +2,6 @@ package com.lastimp.dgh.source.client.gui.screen;
 
 import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
-import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
@@ -11,9 +10,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import static com.lastimp.dgh.api.enums.OperationType.HEALTH_SCANN;
-
+@OnlyIn(value = Dist.CLIENT)
 public class DyingScreen extends Screen {
     private static final int PANEL_WIDTH = 238;   // 面板宽度
     private static final int PANEL_HEIGHT = 214;  // 面板高度

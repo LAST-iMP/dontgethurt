@@ -1,7 +1,7 @@
-package com.lastimp.dgh.source.client.gui.menuProvider;
+package com.lastimp.dgh.source.core.menu.menuProvider;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.client.gui.menu.BagMenu;
+import com.lastimp.dgh.source.core.menu.BagMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;

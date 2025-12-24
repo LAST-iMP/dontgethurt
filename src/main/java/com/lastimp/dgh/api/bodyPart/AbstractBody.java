@@ -1,6 +1,7 @@
 package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.DontGetHurt.EPS;
@@ -171,8 +173,8 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         }
     }
 
-    public static <T extends AbstractBody> AbstractBody buildFromNBT(CompoundTag nbt, Function<Void, T> constructor) {
-        T body = constructor.apply(null);
+    public static <T extends AbstractBody> AbstractBody buildFromNBT(CompoundTag nbt, Supplier<T> constructor) {
+        T body = constructor.get();
         body.deserializeNBT(nbt);
         return body;
     }

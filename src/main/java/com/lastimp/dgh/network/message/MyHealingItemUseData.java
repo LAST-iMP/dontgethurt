@@ -1,19 +1,9 @@
 package com.lastimp.dgh.network.message;
 
-import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.api.tags.ModTags;
-import com.lastimp.dgh.network.ServerPayloadHandler;
-import com.lastimp.dgh.source.client.gui.menu.HealthMenu;
-import com.lastimp.dgh.source.core.Utils;
-import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public class MyHealingItemUseData {
     private long id_most;
@@ -40,21 +30,6 @@ public class MyHealingItemUseData {
         buf.writeLong(this.id_least);
         buf.writeInt(this.slotNum);
         buf.writeUtf(this.component);
-    }
-
-    public static void handlerServer(final MyHealingItemUseData data, Supplier<NetworkEvent.Context> ctx) {
-        ServerPlayer sourcePlayer = ctx.get().getSender();
-        if (!(sourcePlayer.containerMenu instanceof HealthMenu healthMenu)) return;
-        ItemStack stack = healthMenu.getStackBySlotNum(data.slotNum());
-        if (stack.is(ModTags.MEDICAL_TOOLS_BAGS)) {
-            healthMenu.openBag(stack);
-        } else {
-            UUID targetID = new UUID(data.id_most(), data.id_least());
-            var target = Utils.getLivingWithHealth(ctx.get().getSender().serverLevel(), targetID);
-            if (target == null) return;
-            BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
-            HealingHandler.useItemOn(stack, sourcePlayer, target, component);
-        }
     }
 
     public static MyHealingItemUseData getInstance(UUID targetId, int slotNum, BodyComponents components) {

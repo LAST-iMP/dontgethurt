@@ -10,10 +10,13 @@
     },
     "c": {
       "item": "dgh:bandage"
+    },
+    "d": {
+      "item": "minecraft:glass"
     }
   },
   "pattern": [
-    " a ",
+    " d ",
     "bcb",
     "aaa"
   ],

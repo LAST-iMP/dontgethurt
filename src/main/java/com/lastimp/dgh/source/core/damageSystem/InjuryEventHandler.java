@@ -4,6 +4,7 @@ package com.lastimp.dgh.source.core.damageSystem;
 import com.lastimp.dgh.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModDamageType;
 import com.lastimp.dgh.source.core.Utils;
@@ -19,6 +20,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.VISIBLE_BODIES;
@@ -63,7 +65,7 @@ public class InjuryEventHandler {
         } else if (source.is(DamageTypeTags.IS_FIRE)) {
             handleBurning(damageAmount, livingEntity, event);
         } else if (source.is(DamageTypeTags.IS_DROWNING)) {
-            handleDrowning(0.05f, livingEntity, event);
+            handleDrowning(livingEntity, event);
         } else if (source.is(DamageTypeTags.IS_EXPLOSION)) {
             handleExplosion(damageAmount, livingEntity, event);
         } else if (source.getEntity() != null && source.getEntity() instanceof LivingEntity) {
@@ -97,10 +99,10 @@ public class InjuryEventHandler {
         event.setAmount(0f);
     }
 
-    public static void handleDrowning(float damageAmount, LivingEntity entity, LivingDamageEvent event) {
+    public static void handleDrowning(LivingEntity entity, LivingDamageEvent event) {
         HealthCapability.getAndSet(entity, h -> {
             Blood blood = (Blood) h.getComponent(BLOOD);
-            blood.injury(OXYGEN, damageAmount / 20);
+            blood.injury(OXYGEN, -BodyCondition.get(OXYGEN).healingSpeed() * DELTA);
             return h;
         });
         event.setAmount(0f);

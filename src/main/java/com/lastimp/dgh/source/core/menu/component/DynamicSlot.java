@@ -1,4 +1,4 @@
-package com.lastimp.dgh.source.client.gui.component;
+package com.lastimp.dgh.source.core.menu.component;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -8,12 +8,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-public class DynamicSlotItemHandler extends Slot {
-    private static Container emptyInventory = new SimpleContainer(0);
-    private int index;
+public class DynamicSlot extends Slot {
+    private static final Container emptyInventory = new SimpleContainer(0);
+    private final int index;
     private IItemHandler handler;
 
-    public DynamicSlotItemHandler(IItemHandler handler, int index, int x, int y) {
+    public DynamicSlot(IItemHandler handler, int index, int x, int y) {
         super(emptyInventory, index, x, y);
         this.handler = handler;
         this.index = index;

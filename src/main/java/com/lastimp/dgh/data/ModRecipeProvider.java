@@ -2,13 +2,24 @@
 package com.lastimp.dgh.data;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.register.ModItems;
+import com.lastimp.dgh.source.register.ModPotions;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.common.crafting.StrictNBTIngredient;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.function.Consumer;
@@ -20,7 +31,7 @@ public class ModRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> recipeOutput) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.BANDAGE.get(), 4)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.BANDAGE.get(), 8)
                 .pattern("aaa")
                 .define('a', ItemTags.WOOL)
                 .unlockedBy("has_wool", has(ItemTags.WOOL))
@@ -29,14 +40,14 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern(" a ")
                 .pattern("b b")
                 .pattern(" b ")
-                .define('a', Items.IRON_NUGGET)
+                .define('a', ItemTags.WOOL)
                 .define('b', Items.LEATHER)
                 .unlockedBy("has_leather", has(Items.LEATHER))
-                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "blood_pack_empty"));
+                .save(recipeOutput, Common.ResourceLocation(DontGetHurt.MODID, "blood_pack_empty"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.BLOOD_PACK_EMPTY.get())
                 .requires(ModItems.BLOOD_PACK.get(), 1)
                 .unlockedBy("has_blood_pack", has(ModItems.BLOOD_PACK.get()))
-                .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "blood_pack_empty_unfill"));
+                .save(recipeOutput, Common.ResourceLocation(DontGetHurt.MODID, "blood_pack_empty_unfill"));
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SUTURE.get(), 8)
                 .pattern("c a")
                 .pattern("ca ")
@@ -47,21 +58,23 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_string", has(Items.STRING))
                 .save(recipeOutput);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.BLOOD_SCANNER.get(), 1)
-                .pattern(" a ")
+                .pattern(" d ")
                 .pattern("bcb")
                 .pattern("aaa")
                 .define('a', Items.IRON_INGOT)
                 .define('b', Items.REDSTONE)
                 .define('c', ModItems.BLOOD_PACK_EMPTY.get())
+                .define('d', Items.GLASS)
                 .unlockedBy("has_blood_pack_empty", has(ModItems.BLOOD_PACK_EMPTY.get()))
                 .save(recipeOutput);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.HEALTH_SCANNER.get(), 1)
-                .pattern(" a ")
+                .pattern(" d ")
                 .pattern("bcb")
                 .pattern("aaa")
                 .define('a', Items.IRON_INGOT)
                 .define('b', Items.REDSTONE)
                 .define('c', ModItems.BANDAGE.get())
+                .define('d', Items.GLASS)
                 .unlockedBy("has_bandage", has(ModItems.BANDAGE.get()))
                 .save(recipeOutput);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.GYPSUM.get(), 1)
@@ -213,9 +226,13 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('f', Items.CHEST)
                 .unlockedBy("has_chest", has(Items.CHEST))
                 .save(recipeOutput);
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.OPERATING_BED_BLOCK_ITEM.get(), 1)
-                .requires(ItemTags.BEDS)
-                .requires(ModItems.MORPHINE.get(), 1)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.OPERATING_BED_BLOCK_ITEM.get(), 1)
+                .pattern(" c ")
+                .pattern("bab")
+                .pattern("   ")
+                .define('a', ItemTags.BEDS)
+                .define('b', Items.IRON_BARS)
+                .define('c', ModItems.MORPHINE.get())
                 .unlockedBy("has_bad", has(ItemTags.BEDS))
                 .save(recipeOutput);
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.BONE_NATURAL.get(), 1)
@@ -288,7 +305,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.NALOXONE.get(), 1)
                 .requires(ModItems.MORPHINE.get(), 1)
-                .requires(Items.GOLDEN_APPLE, 1)
+                .requires(Items.MILK_BUCKET, 1)
+                .requires(Items.GLOWSTONE_DUST, 2)
                 .unlockedBy("has_mophine", has(ModItems.MORPHINE.get()))
                 .save(recipeOutput);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.TOURNIQUET.get(), 2)
@@ -307,6 +325,99 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('b', Items.IRON_NUGGET)
                 .unlockedBy("has_iron", has(Items.IRON_INGOT))
                 .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.NEEDLE.get(), 1)
+                .pattern("  b")
+                .pattern(" a ")
+                .pattern("a  ")
+                .define('a', Items.IRON_NUGGET)
+                .define('b', Items.IRON_INGOT)
+                .unlockedBy("has_iron", has(Items.IRON_INGOT))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.DRAINAGE.get(), 2)
+                .pattern("cbb")
+                .pattern("  b")
+                .pattern("abb")
+                .define('a', Items.IRON_NUGGET)
+                .define('b', Items.STRING)
+                .define('c', Items.LEATHER)
+                .unlockedBy("has_string", has(Items.STRING))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.ADRENALINE.get(), 1)
+                .pattern(" c ")
+                .pattern("sbs")
+                .pattern("rmr")
+                .define('b', Items.GLASS_BOTTLE)
+                .define('c', Items.GOLDEN_CARROT)
+                .define('s', Items.SUGAR)
+                .define('r', Items.REDSTONE)
+                .define('m', Items.GLISTERING_MELON_SLICE)
+                .unlockedBy("has_sugar", has(Items.SUGAR))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.OXYGEN_MASK.get(), 1)
+                .pattern(" g ")
+                .pattern("wbw")
+                .pattern(" i ")
+                .define('g', Items.GLASS)
+                .define('w', ItemTags.WOOL)
+                .define('i', Items.IRON_INGOT)
+                .define('b', Items.BAMBOO_BLOCK)
+                .unlockedBy("has_bamboo", has(Items.BAMBOO))
+                .save(recipeOutput, Common.ResourceLocation(DontGetHurt.MODID, "oxygen_mask"));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.OXYGEN_MASK.get(), 1)
+                .requires(ModItems.OXYGEN_MASK.get(), 1)
+                .requires(Items.BAMBOO_BLOCK, 1)
+                .unlockedBy("has_bamboo", has(Items.BAMBOO))
+                .save(recipeOutput, Common.ResourceLocation(DontGetHurt.MODID, "oxygen_mask_repair"));
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.AUTOPULSE.get(), 1)
+                .pattern("igi")
+                .pattern("rar")
+                .pattern("idi")
+                .define('i', Items.IRON_INGOT)
+                .define('g', Items.GOLD_INGOT)
+                .define('r', Items.REDSTONE)
+                .define('a', ModItems.ADRENALINE.get())
+                .define('d', Items.DIAMOND)
+                .unlockedBy("has_iron", has(Items.IRON_INGOT))
+                .save(recipeOutput, Common.ResourceLocation(DontGetHurt.MODID, "autopulse"));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.AUTOPULSE.get(), 1)
+                .requires(ModItems.AUTOPULSE.get(), 1)
+                .requires(ModItems.ADRENALINE.get(), 1)
+                .unlockedBy("has_iron", has(Items.IRON_INGOT))
+                .save(recipeOutput, Common.ResourceLocation(DontGetHurt.MODID, "autopulse_repair"));
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.ANTISEPTIC.get(), 2)
+                .requires(Items.GLASS_BOTTLE, 2)
+                .requires(Items.WATER_BUCKET, 1)
+                .requires(Items.BLAZE_POWDER, 1)
+                .unlockedBy("has_blaze", has(Items.BLAZE_POWDER))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.ANTISEPTIC_SPRAYER.get(), 1)
+                .pattern(" r ")
+                .pattern("iai")
+                .pattern(" bi")
+                .define('i', Items.IRON_INGOT)
+                .define('a', ModItems.ANTISEPTIC.get())
+                .define('r', Items.REDSTONE)
+                .define('b', ItemTags.BUTTONS)
+                .unlockedBy("has_iron", has(Items.IRON_INGOT))
+                .save(recipeOutput, Common.ResourceLocation(DontGetHurt.MODID, "antiseptic_sprayer"));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.ANTISEPTIC_SPRAYER.get(), 1)
+                .requires(ModItems.ANTISEPTIC_SPRAYER.get(), 1)
+                .requires(ModItems.ANTISEPTIC.get(), 1)
+                .unlockedBy("has_iron", has(Items.IRON_INGOT))
+                .save(recipeOutput, Common.ResourceLocation(DontGetHurt.MODID, "antiseptic_sprayer_repair"));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.ANTIBIOTICS.get(), 1)
+                .requires(ModItems.ANTISEPTIC.get(), 1)
+                .requires(Items.SUGAR, 1)
+                .requires(Items.BROWN_MUSHROOM, 1)
+                .requires(Items.RED_MUSHROOM, 1)
+                .unlockedBy("has_sugar", has(Items.SUGAR))
+                .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.ANTIBIOTIC_OINTMENT.get(), 1)
+                .requires(ModItems.ANTIBIOTICS.get(), 1)
+                .requires(Items.SLIME_BALL, 2)
+                .unlockedBy("has_slime_ball", has(Items.SLIME_BALL))
+                .save(recipeOutput);
 
         var book = PatchouliAPI.get().getBookStack(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "medical_guide"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, book.getItem())
@@ -314,5 +425,24 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(ModItems.BANDAGE.get(), 1)
                 .unlockedBy("has_book", has(Items.BOOK))
                 .save(recipeOutput, ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "medical_guide"));
+    }
+
+    @SubscribeEvent
+    public static void onCommonSetup(FMLCommonSetupEvent event) {
+        // 必须使用enqueueWork确保在主线程执行配方注册
+        event.enqueueWork(() -> {
+            // 1. 注册基础配方：粗制药水 + 金胡萝卜 → 肾上腺素药水
+            registerBasicBrewingRecipe(Potions.STRONG_REGENERATION, new ItemStack(ModItems.MORPHINE.get()), ModPotions.COMBAT_STIMULANT_POTION.get());
+        });
+    }
+
+    private static void registerBasicBrewingRecipe(Potion inputPotion, ItemStack ingredient, Potion outputPotion) {
+        ItemStack inputStack = PotionUtils.setPotion(new ItemStack(Items.POTION), inputPotion);
+        ItemStack outputStack = PotionUtils.setPotion(new ItemStack(Items.POTION), outputPotion);
+        BrewingRecipeRegistry.addRecipe(
+                StrictNBTIngredient.of(inputStack),
+                StrictNBTIngredient.of(ingredient),
+                outputStack
+        );
     }
 }

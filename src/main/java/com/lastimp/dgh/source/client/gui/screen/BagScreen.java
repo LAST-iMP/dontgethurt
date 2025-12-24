@@ -3,14 +3,17 @@ package com.lastimp.dgh.source.client.gui.screen;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
-import com.lastimp.dgh.source.client.gui.menu.BagMenu;
+import com.lastimp.dgh.source.core.menu.BagMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(value = Dist.CLIENT)
 public class BagScreen extends AbstractContainerScreen<BagMenu> {
     private static final ResourceLocation HUD_BACKGROUND = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/healthcare_bag_hud.png");
 

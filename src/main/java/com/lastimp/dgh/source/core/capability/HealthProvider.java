@@ -41,6 +41,9 @@ public class HealthProvider implements ICapabilitySerializable<CompoundTag> {
     }
 
     public static <T extends LivingEntity> boolean has(LivingEntity entity) {
-        return availClasses.contains(entity.getClass());
+        for (Class<? extends LivingEntity> testClass : availClasses) {
+            if (testClass.isInstance(entity)) return true;
+        }
+        return false;
     }
 }

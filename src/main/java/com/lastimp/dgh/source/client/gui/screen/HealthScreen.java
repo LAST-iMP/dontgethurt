@@ -5,22 +5,21 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.Network;
+import com.lastimp.dgh.source.client.ClientAccessor;
 import com.lastimp.dgh.source.client.eventHandler.ForgeClientEventHandler;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.client.gui.component.HealthComponentWidget;
 import com.lastimp.dgh.source.client.gui.component.HealthConditionWidget;
-import com.lastimp.dgh.source.client.gui.menu.HealthMenu;
-import com.lastimp.dgh.source.core.Utils;
+import com.lastimp.dgh.source.core.menu.HealthMenu;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.HealthScanner;
-import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.register.ModSounds;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -29,14 +28,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.HashMap;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.FRACTURE;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.HEARTRATE_INCREASE;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.OperationType.HEALTH_SCANN;
 import static com.lastimp.dgh.source.client.gui.component.HealthComponentWidget.*;
 
+@OnlyIn(value = Dist.CLIENT)
 public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private static final ResourceLocation HUD_BACKGROUND = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
     private static final ResourceLocation HUD_HEART_BEAT = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud.png");
@@ -59,7 +62,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     public HealthScreen(HealthMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         ForgeClientEventHandler.setHealthScreen(this);
-        ClientPayloadHandler.setHealthScreen(this);
+        ClientAccessor.setHealthScreen(this);
     }
 
     @Override
@@ -106,8 +109,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.player == null || mc.options.hideGui) return;
+        if (!ClientAccessor.canRenderGui()) return;
         this.refreshComponent();
         this.refreshCondition();
 
@@ -196,7 +198,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
         setHealthData(null);
         ForgeClientEventHandler.setHealthScreen(null);
-        ClientPayloadHandler.setHealthScreen(null);
+        ClientAccessor.setHealthScreen(null);
         super.onClose();
     }
 
@@ -212,9 +214,10 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         long tick = GuiOpenWrapper.MINECRAFT.get().level.getGameTime();
         ResourceLocation heartBeat = HUD_HEART_BEAT;
         if (healthData != null) {
-            if (healthData.vitality() < 0.1) heartBeat = HUD_HEART_BEAT_STOP;
-            else if (healthData.vitality() < 0.4) heartBeat = HUD_HEART_BEAT_ACC2;
-            else if (healthData.vitality() < 0.75) heartBeat = HUD_HEART_BEAT_ACC;
+            Torso torso = (Torso) healthData.getComponent(TORSO);
+            if (torso.abnormal(HEARTRATE_STOP)) heartBeat = HUD_HEART_BEAT_STOP;
+            else if (torso.abnormal(HEARTRATE_IRREGULAR)) heartBeat = HUD_HEART_BEAT_ACC2;
+            else if (torso.abnormal(HEARTRATE_INCREASE)) heartBeat = HUD_HEART_BEAT_ACC;
         }
         RenderSystem.enableBlend();
         for (int i = 0; i < max_width; i++) {
@@ -234,7 +237,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
             GuiOpenWrapper.MINECRAFT.get().setScreen(null);
             return;
         }
-        var target = Utils.getLiving(mc.level, this.menu.targetEntity, mc.player.getEyePosition(), 40);
+        var target = ClientAccessor.getLiving(mc.level, this.menu.targetEntity, mc.player.getEyePosition(), 40);
         if (target == null || target.isDeadOrDying()) {
             GuiOpenWrapper.MINECRAFT.get().setScreen(null);
         } else {
@@ -243,16 +246,18 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
             ));
         }
 
+        this.playSound();
+        this.updateEquipVisibleCoolDown();
+    }
+
+    private void playSound() {
         long tick = GuiOpenWrapper.MINECRAFT.get().level.getGameTime();
         SoundEvent sound = ModSounds.HEARTBEAT_NORMAL.get();
         if (healthData != null) {
-            if (healthData.vitality() < 0.1) {
-                sound = ModSounds.HEARTBEAT_STOP.get();
-            } else if (healthData.vitality() < 0.4) {
-                sound = ModSounds.HEARTBEAT_ACC2.get();
-            } else if (healthData.vitality() < 0.75) {
-                sound = ModSounds.HEARTBEAT_ACC.get();
-            }
+            Torso torso = (Torso) healthData.getComponent(TORSO);
+            if (torso.abnormal(HEARTRATE_STOP)) sound = ModSounds.HEARTBEAT_STOP.get();
+            else if (torso.abnormal(HEARTRATE_IRREGULAR)) sound = ModSounds.HEARTBEAT_ACC2.get();
+            else if (torso.abnormal(HEARTRATE_INCREASE)) sound = ModSounds.HEARTBEAT_ACC.get();
         }
         if (tick % HEART_BEAT_WIDTH == 1) {
             GuiOpenWrapper.MINECRAFT.get().getSoundManager().play(
@@ -261,8 +266,18 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         }
     }
 
+    private void updateEquipVisibleCoolDown() {
+        var player = GuiOpenWrapper.MINECRAFT.get().player;
+        if (player == null || HealthScreen.healthData == null) return;
+        var cooldowns = player.getCooldowns();
+        var oxygenMask = this.menu.getSlot(45).getItem().getItem();
+        if (!cooldowns.isOnCooldown(oxygenMask))
+            cooldowns.addCooldown(oxygenMask, HealthScreen.healthData.autoPulseCoolDown());
+    }
+
     public void setHealthData(HealthCapability healthData) {
         HealthScreen.healthData = healthData;
+        if (healthData != null) this.menu.setEquipments(healthData);
     }
 
     public BodyComponents getSelectedComponent() {

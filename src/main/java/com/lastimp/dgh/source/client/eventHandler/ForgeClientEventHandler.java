@@ -7,9 +7,8 @@ import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
-import com.lastimp.dgh.source.client.gui.component.DynamicSlotItemHandler;
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
-import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
+import com.lastimp.dgh.source.core.menu.component.DynamicSlot;
 import com.lastimp.dgh.source.register.ModCapabilities;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
@@ -20,6 +19,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.client.event.ScreenEvent;
@@ -28,19 +28,20 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+@OnlyIn(value = Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID, value = Dist.CLIENT)
 public class ForgeClientEventHandler {
     private static HealthScreen healthScreen = null;
 
     @SubscribeEvent
-    public static void onScannerHealing(ScreenEvent.MouseButtonPressed event) {
+    public static void onScannerHealing(ScreenEvent.MouseButtonPressed.Pre event) {
         if (event.getButton() != 1) return;
         if (!screenHealingCheck()) return;
 
         assert healthScreen.getSlotUnderMouse() != null;
         var slot = healthScreen.getSlotUnderMouse();
         int index = slot.getSlotIndex();
-        if (slot instanceof DynamicSlotItemHandler)
+        if (slot instanceof DynamicSlot)
             index += 36;
         Network.SERVER_INSTANCE.sendToServer(MyHealingItemUseData.getInstance(
                 healthScreen.getMenu().targetEntity, index, healthScreen.getSelectedComponent()
@@ -71,6 +72,7 @@ public class ForgeClientEventHandler {
 
         return false;
     }
+
     @SubscribeEvent
     public static void onUseMenuItem(ScreenEvent.MouseButtonPressed.Pre event) {
         if (event.getButton() != 1) return;

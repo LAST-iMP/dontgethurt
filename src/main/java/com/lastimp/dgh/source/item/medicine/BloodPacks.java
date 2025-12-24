@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_LOSS;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_PRESSURE;
 
 public class BloodPacks extends AbstractDirectHealItems {
 
@@ -25,6 +26,7 @@ public class BloodPacks extends AbstractDirectHealItems {
             if (!blood.abnormal(BLOOD_LOSS)) return false;
 
             blood.healing(BLOOD_LOSS, -0.25f);
+            blood.healing(BLOOD_PRESSURE, 0.25f);
 
             ItemStack stack = new ItemStack(ModItems.BLOOD_PACK_EMPTY.get());
             if (!source.addItem(stack)) {
