@@ -76,10 +76,6 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
     }
 
     private void handleArterialBleeding(HealthCapability health) {
-        float bleed = this.getConditionValue(BLEED);
-        if (bleed > 0.8) {
-            this.injury(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).maxValue());
-        }
         if (this.abnormal(ARTERIAL_BLEEDING) && !this.abnormal(CLAMPED_ARTERIES)) {
             var blood = health.getComponent(BLOOD);
             blood.injury(BLOOD_LOSS, Config.fractureBloodRatio * DELTA);

@@ -17,6 +17,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -44,7 +45,7 @@ public class Command {
                                 )
                                 .then(Commands.literal("add")
                                         .requires(source -> source.hasPermission(2))
-                                        .then(Commands.argument("player", EntityArgument.player())
+                                        .then(Commands.argument("entity", EntityArgument.entities())
                                                 .then(Commands.argument("Component", StringArgumentType.string())
                                                         .then(Commands.argument("Condition", StringArgumentType.string())
                                                                 .then(Commands.argument("value", FloatArgumentType.floatArg(-2, 2))
@@ -55,7 +56,7 @@ public class Command {
                                 )
                                 .then(Commands.literal("reset")
                                         .requires(source -> source.hasPermission(2))
-                                        .then(Commands.argument("player", EntityArgument.player())
+                                        .then(Commands.argument("entity", EntityArgument.entities())
                                                 .then(Commands.argument("Component", StringArgumentType.string())
                                                         .then(Commands.argument("Condition", StringArgumentType.string())
                                                                 .executes(Command::resetComponentCondition)
@@ -122,70 +123,87 @@ public class Command {
     }
 
     public static int addComponentCondition(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        ServerPlayer player = EntityArgument.getPlayer(context, "player");
+        var entities = EntityArgument.getEntities(context, "entity");
         BodyComponents components = BodyComponents.valueOf(StringArgumentType.getString(context, "Component").toUpperCase());
         var condition = Common.ResourceBySeperator(StringArgumentType.getString(context, "Condition"), ':');
         float value = FloatArgumentType.getFloat(context, "value");
 
         CommandSourceStack source = context.getSource();
-        source.sendSuccess(
-                () -> Component.literal("已将玩家" + player.getScoreboardName() + "的" + components + BodyCondition.get(condition) + "增加" + value),
-                true
-        );
+        for (var entity : entities) {
+            if (!(entity instanceof LivingEntity livingEntity)) continue;
+            if (!HealthCapability.has(livingEntity)) continue;
+            source.sendSuccess(
+                    () -> Component.literal("已将实体" + livingEntity.getScoreboardName() + "的" + components + BodyCondition.get(condition) + "增加" + value),
+                    true
+            );
+            HealthCapability.getAndSet(livingEntity, h -> {
+                h.getComponent(components).addConditionValue(condition, value);
+                return 1;
+            });
+        }
 
-        return HealthCapability.getAndSet(player, h -> {
-            h.getComponent(components).addConditionValue(condition, value);
-            return 1;
-        });
+        return 1;
     }
 
     public static int resetComponentCondition(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        ServerPlayer player = EntityArgument.getPlayer(context, "player");
+        var entities = EntityArgument.getEntities(context, "entity");
         BodyComponents components = BodyComponents.valueOf(StringArgumentType.getString(context, "Component").toUpperCase());
         var condition = Common.ResourceBySeperator(StringArgumentType.getString(context, "Condition"), ':');
 
         CommandSourceStack source = context.getSource();
-        source.sendSuccess(
-                () -> Component.literal("已将玩家" + player.getScoreboardName() + "的" + components + BodyCondition.get(condition) + "重置"),
-                true
-        );
-
-        return HealthCapability.getAndSet(player, h -> {
-            h.getComponent(components).setConditionValue(condition, BodyCondition.get(condition).defaultValue());
-            return 1;
-        });
+        for (var entity : entities) {
+            if (!(entity instanceof LivingEntity livingEntity)) continue;
+            if (!HealthCapability.has(livingEntity)) continue;
+            source.sendSuccess(
+                    () -> Component.literal("已将实体" + livingEntity.getScoreboardName() + "的" + components + BodyCondition.get(condition) + "重置"),
+                    true
+            );
+            HealthCapability.getAndSet(livingEntity, h -> {
+                h.getComponent(components).setConditionValue(condition, BodyCondition.get(condition).defaultValue());
+                return 1;
+            });
+        }
+        return 1;
     }
 
     public static int resetComponent(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        ServerPlayer player = EntityArgument.getPlayer(context, "player");
+        var entities = EntityArgument.getEntities(context, "entity");
         BodyComponents components = BodyComponents.valueOf(StringArgumentType.getString(context, "Component").toUpperCase());
 
         CommandSourceStack source = context.getSource();
-        source.sendSuccess(
-                () -> Component.literal("已将玩家" + player.getScoreboardName() + "的" + components + "重置"),
-                true
-        );
-
-        return HealthCapability.getAndSet(player, h -> {
-            var body = h.getComponent(components);
-            for (var condition : body.getBodyConditions()) {
-                body.setConditionValue(condition, BodyCondition.get(condition).defaultValue());
-            }
-            return 1;
-        });
+        for (var entity : entities) {
+            if (!(entity instanceof LivingEntity livingEntity)) continue;
+            if (!HealthCapability.has(livingEntity)) continue;
+            source.sendSuccess(
+                    () -> Component.literal("已将实体" + livingEntity.getScoreboardName() + "的" + components + "重置"),
+                    true
+            );
+            HealthCapability.getAndSet(livingEntity, h -> {
+                var body = h.getComponent(components);
+                for (var condition : body.getBodyConditions()) {
+                    body.setConditionValue(condition, BodyCondition.get(condition).defaultValue());
+                }
+                return 1;
+            });
+        }
+        return 1;
     }
 
     public static int reset(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        ServerPlayer player = EntityArgument.getPlayer(context, "player");
+        var entities = EntityArgument.getEntities(context, "entity");
 
         CommandSourceStack source = context.getSource();
-        source.sendSuccess(() -> Component.literal("已将玩家" + player.getScoreboardName() + "重置"), true);
+        for (var entity : entities) {
+            if (!(entity instanceof LivingEntity livingEntity)) continue;
+            if (!HealthCapability.has(livingEntity)) continue;
+            source.sendSuccess(() -> Component.literal("已将实体" + livingEntity.getScoreboardName() + "重置"), true);
 
-        var oldHealth = HealthCapability.get(player);
-        var newHealth = new HealthCapability();
-        newHealth.autoPulse().setStackInSlot(0, oldHealth.autoPulse().getStackInSlot(0));
-        newHealth.oxygenMask().setStackInSlot(0, oldHealth.oxygenMask().getStackInSlot(0));
-        oldHealth.deserializeNBT(newHealth.serializeNBT());
+            var oldHealth = HealthCapability.get(livingEntity);
+            var newHealth = new HealthCapability();
+            newHealth.autoPulse().setStackInSlot(0, oldHealth.autoPulse().getStackInSlot(0));
+            newHealth.oxygenMask().setStackInSlot(0, oldHealth.oxygenMask().getStackInSlot(0));
+            oldHealth.deserializeNBT(newHealth.serializeNBT());
+        }
         return 1;
     }
 }

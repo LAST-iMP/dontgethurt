@@ -24,6 +24,7 @@ public abstract class InternalInjuryHandler {
             FollowInjuryHandler.dislocationHandler(extremities, damage);
         FollowInjuryHandler.fractionHandler(visibleBody, damage);
         FollowInjuryHandler.pneumothoraxHandler(visibleBody);
+        FollowInjuryHandler.arterialBleedingHandler(visibleBody);
     }
 
     public static void handleExplosion(AbstractVisibleBody body, float damageAmount) {
@@ -33,5 +34,6 @@ public abstract class InternalInjuryHandler {
             FollowInjuryHandler.dislocationHandler(extremities, damage, 0, 1, 0.35f, 0.36f, 0);
         FollowInjuryHandler.fractionHandler(body, damage, Config.baseFractureThreshold, 0.9f - Config.baseFractureThreshold, 0.0f, 1.0f, 0);
         FollowInjuryHandler.pneumothoraxHandler(body);
+        FollowInjuryHandler.arterialBleedingHandler(body);
     }
 }
