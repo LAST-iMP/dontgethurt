@@ -9,8 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.DRILLED_BONES;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.RETRACTED_SKIN;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class SurgicalDrill extends AbstractPartlyHealItem {
     public SurgicalDrill(Properties properties) {
@@ -23,6 +22,7 @@ public class SurgicalDrill extends AbstractPartlyHealItem {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             if (!body.abnormal(RETRACTED_SKIN)) return false;
             if (body.abnormal(DRILLED_BONES)) return false;
+            if (body.abnormal(SAWED_BONES)) return false;
 
             body.setConditionValue(DRILLED_BONES, BodyCondition.get(DRILLED_BONES).maxValue());
             return true;

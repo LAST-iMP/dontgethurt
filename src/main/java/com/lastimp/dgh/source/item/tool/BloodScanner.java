@@ -2,12 +2,9 @@
 package com.lastimp.dgh.source.item.tool;
 
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
-import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -16,7 +13,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.bloodConditions;
@@ -56,7 +52,7 @@ public class BloodScanner extends AbstractHealingItem {
                     player.sendSystemMessage(Component.literal(name + "的血液状态为："));
                 hasAbnormal = true;
                 player.sendSystemMessage(
-                        Component.literal(Component.translatable(condition.toString()).getString() + ": " + String.format("%.2f", value))
+                        Component.translatable(condition.toString(), Component.literal(": " + String.format("%.2f", value)))
                 );
             }
         }
