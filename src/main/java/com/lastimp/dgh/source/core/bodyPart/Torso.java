@@ -185,7 +185,7 @@ public class Torso extends AbstractVisibleBody {
         var blood = health.getComponent(BLOOD);
         var head = health.getComponent(HEAD);
         var torso = health.getComponent(TORSO);
-        if (blood.getConditionValue(OXYGEN) > 0.9 || head.getConditionValue(SURGERY_INCISION) > 0.6) {
+        if (blood.getConditionValue(OXYGEN) > 0.9 || head.getConditionValue(TRAUMATIC_SHOCK) > 0.6) {
             this.addHeartRate(3.0f);
         } else if (this.isFibrillation(health)) {
             float factor = entity.hasEffect(ModEffects.ADRENALINE_EFFECT.get()) ? 0.5f : 1.0f;

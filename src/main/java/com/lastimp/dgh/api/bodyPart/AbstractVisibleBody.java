@@ -261,6 +261,8 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     private void handleBoneDamage(HealthCapability health) {
         if (this.abnormal(SAWED_BONES)) return;
         var blood = health.getComponent(BLOOD);
+
+        if (this.abnormalWithHidden(SAWED_BONES)) return;
         if (blood.abnormal(OXYGEN)) {
             this.injury(BONE_DAMAGE, blood.getConditionValue(OXYGEN) * 1.1f * BodyCondition.get(BONE_DAMAGE).healingSpeed() * DELTA);
         }
