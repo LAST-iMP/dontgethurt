@@ -210,7 +210,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     private void handleInfection() {
         if (this.abnormal(OINTMENT))
             this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * 2 * DELTA);
-        else
+        else if (this.isBandaged())
             this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * DELTA);
     }
 

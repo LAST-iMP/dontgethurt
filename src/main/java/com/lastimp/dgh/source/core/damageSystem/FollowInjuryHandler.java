@@ -43,14 +43,22 @@ public abstract class FollowInjuryHandler {
             body.setConditionValue(FRACTURE, BodyCondition.get(FRACTURE).maxValue());
             if (body.abnormal(PLASTER_CAST))
                 body.setConditionValue(PLASTER_CAST, BodyCondition.get(PLASTER_CAST).defaultValue());
-            if (body instanceof AbstractExtremities extremities)
-                arterialBleedingHandler(extremities);
+            arterialBleedingByFractionHandler(body);
         }
     }
 
-    public static void arterialBleedingHandler(AbstractExtremities body) {
-        if (Mth.randomBetween(Utils.randomSource, 0f, 1.0f) < Config.fractureArterialProb) {
-            body.injury(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).maxValue());
+    public static void arterialBleedingByFractionHandler(AbstractVisibleBody body) {
+        if (body instanceof AbstractExtremities extremities && Mth.randomBetween(Utils.randomSource, 0f, 1.0f) < Config.fractureArterialProb) {
+            extremities.injury(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).maxValue());
+        }
+    }
+
+    public static void arterialBleedingHandler(AbstractVisibleBody body) {
+        float bleed = body.getConditionValue(BLEED);
+        if (body instanceof AbstractExtremities extremities && bleed > 0.8) {
+            extremities.injury(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).maxValue());
+        } else if (body instanceof Torso torso && bleed > 0.8) {
+            torso.injury(AORTIC_RUPTURE, BodyCondition.get(AORTIC_RUPTURE).maxValue());
         }
     }
 

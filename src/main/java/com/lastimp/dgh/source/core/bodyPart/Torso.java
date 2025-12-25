@@ -151,10 +151,6 @@ public class Torso extends AbstractVisibleBody {
     }
 
     private void handleAorticRupture(HealthCapability health) {
-        float bleed = this.getConditionValue(BLEED);
-        if (bleed > 0.8) {
-            this.injury(AORTIC_RUPTURE, BodyCondition.get(AORTIC_RUPTURE).maxValue());
-        }
         if (this.abnormal(AORTIC_RUPTURE)) {
             var blood = health.getComponent(BLOOD);
             blood.injury(BLOOD_LOSS, Config.fractureBloodRatio * 3 * DELTA);

@@ -10,8 +10,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.DRILLED_BONES;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.FRACTURE;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.BONE_DAMAGE;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.BONE_DEATH;
 
 public class BoneImplants extends AbstractPartlyHealItem {
     private final ResourceLocation boneType;
@@ -33,6 +34,8 @@ public class BoneImplants extends AbstractPartlyHealItem {
             if (body.abnormal(DRILLED_BONES) && body.abnormal(FRACTURE)) {
                 if (body.boneCrafted() != boneType) return false;
                 body.healing(FRACTURE, -BodyCondition.get(FRACTURE).maxValue());
+                body.healing(BONE_DAMAGE, -BodyCondition.get(BONE_DAMAGE).maxValue());
+                body.healing(BONE_DEATH, -BodyCondition.get(BONE_DEATH).maxValue());
                 return true;
             }
             return false;

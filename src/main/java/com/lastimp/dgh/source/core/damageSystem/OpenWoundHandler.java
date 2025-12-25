@@ -22,6 +22,7 @@ public class OpenWoundHandler {
         float damage = body.getConditionValue(OPEN_WOUND) + body.getConditionHidden(OPEN_WOUND);
         FollowInjuryHandler.fractionHandler(body, damage);
         FollowInjuryHandler.pneumothoraxHandler(body);
+        FollowInjuryHandler.arterialBleedingHandler(body);
     }
 
     public static void handleExplosion(AbstractVisibleBody body, float damageAmount) {
@@ -29,5 +30,6 @@ public class OpenWoundHandler {
         float damage = body.getConditionValue(OPEN_WOUND) + body.getConditionHidden(OPEN_WOUND);
         FollowInjuryHandler.fractionHandler(body, damage, Config.baseFractureThreshold, 0.9f - Config.baseFractureThreshold, 0.0f, 1.0f, 0);
         FollowInjuryHandler.pneumothoraxHandler(body);
+        FollowInjuryHandler.arterialBleedingHandler(body);
     }
 }
