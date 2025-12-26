@@ -32,4 +32,15 @@ public class PlayerEventBus {
             data.put(Player.PERSISTED_NBT_TAG, persistedTag);
         }
     }
+
+    @SubscribeEvent
+    public static void logOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (event.getEntity().level().isClientSide) return;
+        var player = event.getEntity();
+
+        GameRules rules = event.getEntity().level().getGameRules();
+        if(!player.level().getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION)) {
+            rules.getRule(GameRules.RULE_NATURAL_REGENERATION).set(true, event.getEntity().level().getServer());
+        }
+    }
 }
