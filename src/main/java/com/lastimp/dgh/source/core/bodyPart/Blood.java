@@ -116,18 +116,17 @@ public class Blood extends AbstractBody {
         var bloodPressure = this.getConditionValue(BLOOD_PRESSURE);
         if (bloodPressure < 0.7) {
             if (this.getConditionValue(OXYGEN) < (0.7 - bloodPressure)) {
-                this.setConditionValue(OXYGEN, (0.7f - bloodPressure) / 0.7f);
+                this.injury(OXYGEN, 0.5f * BodyCondition.get(OXYGEN).healingSpeed() * DELTA);
                 oxygenLost = true;
             }
         }
         var torso = health.getComponent(TORSO);
         if (torso.abnormal(HEARTRATE_STOP)) {
-            this.injury(OXYGEN, 0.1f * DELTA);
+            this.injury(OXYGEN, BodyCondition.get(OXYGEN).healingSpeed() * DELTA);
             oxygenLost = true;
         }
         if (!oxygenLost && !torso.abnormal(RESPIRATORY_ARREST) && torso.getConditionValue(PNEUMOTHORAX) < 0.1 && entity.getAirSupply() >= 2) {
-            var oxygen = BodyCondition.get(OXYGEN);
-            this.healing(OXYGEN, -oxygen.healingSpeed() * DELTA);
+            this.healing(OXYGEN, -BodyCondition.get(OXYGEN).healingSpeed() * DELTA);
             entity.setAirSupply(entity.getAirSupply() - 1);
         }
     }
