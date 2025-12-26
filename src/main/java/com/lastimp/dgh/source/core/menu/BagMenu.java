@@ -1,5 +1,7 @@
 package com.lastimp.dgh.source.core.menu;
 
+import com.lastimp.dgh.source.core.capability.BagItemCapabilityProvider;
+import com.lastimp.dgh.source.item.bases.BackpackInventory;
 import com.lastimp.dgh.source.register.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -8,26 +10,21 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
 public class BagMenu extends AbstractContainerMenu {
-    private final IItemHandler handler;
+    private final ItemStack bagStack;
+    private final BackpackInventory handler;
 
     //服务端
     public BagMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inv, ItemStack bagStack) {
         super(menuType, containerId);
-        this.handler = getBackPackHandler(bagStack);
+        this.bagStack = bagStack;
+        this.handler = (BackpackInventory) BagItemCapabilityProvider.getBackPackHandler(bagStack);
         layoutPlayerInventorySlots(inv);
-    }
-
-    public static IItemHandler getBackPackHandler(ItemStack bagStack) {
-        return bagStack.getCapability(ForgeCapabilities.ITEM_HANDLER)
-                .orElseThrow(() -> new IllegalStateException("No item handler"));
     }
 
     public static class HealthCareBag extends BagMenu {
@@ -50,6 +47,12 @@ public class BagMenu extends AbstractContainerMenu {
         }
     }
 
+    @Override
+    public void removed(@NotNull Player player) {
+        var bagTag = this.bagStack.getOrCreateTag();
+        bagTag.put("inv", this.handler.serializeNBT());
+        super.removed(player);
+    }
 
     @Override
     public boolean stillValid(Player player) {

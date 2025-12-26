@@ -1,6 +1,7 @@
 package com.lastimp.dgh.source.item.tool;
 
 import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.source.core.capability.BagItemCapabilityProvider;
 import com.lastimp.dgh.source.core.menu.menuProvider.SurgeryToolBagMenuProvider;
 import com.lastimp.dgh.source.item.bases.BackpackInventory;
 import net.minecraft.core.Direction;
@@ -8,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -32,31 +34,7 @@ public class SurgeryToolBag extends Item {
         BackpackInventory inventory = new BackpackInventory(9);
         inventory.addAllowed(ModTags.MEDICAL_TOOLS_SURGERY);
 
-        // 如果 nbt 不为 null 且有数据，反序列化
-        if (nbt != null && nbt.contains("inv")) {
-            inventory.deserializeNBT(nbt);
-        }
-
-        return new ICapabilitySerializable<CompoundTag>() {
-            private final LazyOptional<IItemHandler> opt = LazyOptional.of(() -> inventory);
-
-            @Override
-            public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
-                return ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, opt);
-            }
-
-            @Override
-            public CompoundTag serializeNBT() {
-                CompoundTag tag = new CompoundTag();
-                tag.put("inv", inventory.serializeNBT());
-                return tag;
-            }
-
-            @Override
-            public void deserializeNBT(CompoundTag nbt) {
-                inventory.deserializeNBT(nbt.getCompound("inv"));
-            }
-        };
+        return new BagItemCapabilityProvider(inventory, stack);
     }
 
     @Override

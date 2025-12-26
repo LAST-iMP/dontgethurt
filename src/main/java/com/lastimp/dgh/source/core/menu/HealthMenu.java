@@ -1,8 +1,10 @@
 package com.lastimp.dgh.source.core.menu;
 
 import com.lastimp.dgh.source.core.Utils;
+import com.lastimp.dgh.source.core.capability.BagItemCapabilityProvider;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.menu.component.DynamicSlot;
+import com.lastimp.dgh.source.item.bases.BackpackInventory;
 import com.lastimp.dgh.source.register.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
@@ -12,13 +14,15 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class HealthMenu extends AbstractContainerMenu {
-    protected IItemHandler handler;
+    protected BackpackInventory handler;
+    private ItemStack bagStack;
     private final List<DynamicSlot> bagSlots = new ArrayList<>();
     private final List<DynamicSlot> equipments = new ArrayList<>();
     public final UUID targetEntity;
@@ -40,13 +44,18 @@ public class HealthMenu extends AbstractContainerMenu {
     }
 
     public void openBag(ItemStack stack) {
-        this.handler = BagMenu.getBackPackHandler(stack);
+        this.bagStack = stack;
+        this.handler = (BackpackInventory) BagItemCapabilityProvider.getBackPackHandler(stack);
         this.setBagHandler(this.handler);
     }
 
     public void closeBag() {
-        handler = null;
-        this.setBagHandler(null);
+        if (this.handler != null) {
+            var bagTag = this.bagStack.getOrCreateTag();
+            bagTag.put("inv", this.handler.serializeNBT());
+            this.handler = null;
+            this.setBagHandler(null);
+        }
     }
 
     private void setBagHandler(IItemHandler handler) {
@@ -63,6 +72,12 @@ public class HealthMenu extends AbstractContainerMenu {
     public ItemStack getStackBySlotNum(int slotNum) {
         if (slotNum >= 36 && this.handler == null) return ItemStack.EMPTY;
         return this.getSlot(slotNum).getItem();
+    }
+
+    @Override
+    public void removed(@NotNull Player player) {
+        this.closeBag();
+        super.removed(player);
     }
 
     @Override
