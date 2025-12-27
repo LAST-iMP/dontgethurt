@@ -44,6 +44,7 @@ public class HealthMenu extends AbstractContainerMenu {
     }
 
     public void openBag(ItemStack stack) {
+        this.closeBag();
         this.bagStack = stack;
         this.handler = (BackpackInventory) BagItemCapabilityProvider.getBackPackHandler(stack);
         this.setBagHandler(this.handler);
