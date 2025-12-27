@@ -18,6 +18,9 @@ public class Config {
     public static final ModConfigSpec.DoubleValue BODY_LIFE_FACTOR = BUILDER
             .defineInRange("BODY_LIFE_FACTOR", 1.0f, 0, 1000);
 
+    public static final ModConfigSpec.BooleanValue TRADITION_HEALING = BUILDER
+            .define("TRADITION_HEALING", false);
+
     public static final ModConfigSpec.DoubleValue HEALING_FACTOR = BUILDER
             .defineInRange("BODY_LIFE_FACTOR", 0.5f, 0, 1000);
 
@@ -70,6 +73,7 @@ public class Config {
             .defineInRange("BASE_FRACTURE_MAX_PROB", 0.8, 0, 1.0);
 
     public static float body_life_factor;
+    public static boolean tradition_healing;
     public static float healing_factor;
     public static float bandage_acc;
     public static float burn_bleed_ratio;
@@ -115,6 +119,7 @@ public class Config {
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         body_life_factor = (float) BODY_LIFE_FACTOR.getAsDouble();
+        tradition_healing = TRADITION_HEALING.getAsBoolean();
         healing_factor = (float) HEALING_FACTOR.getAsDouble();
         bandage_acc = (float) BANDAGE_ACC.getAsDouble();
         burn_bleed_ratio = (float) BURN_BLEED_RATIO.getAsDouble();

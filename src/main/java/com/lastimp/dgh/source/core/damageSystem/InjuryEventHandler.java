@@ -14,7 +14,6 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
@@ -110,7 +109,7 @@ public class InjuryEventHandler {
 
     public static void handleExplosion(float damageAmount, LivingEntity entity, LivingDamageEvent.Pre event) {
         HealthCapability.getAndSet(entity, h -> {
-            float[] weight = Utils.getRandom(1.5f,3,2,2,1.5f,1.5f);
+            float[] weight = Utils.getRandom(1,1.5f,1.5f,1.5f,1.2f,1.2f);
             for (int i = 0; i < VISIBLE_BODIES.size(); i++) {
                 var body = h.getComponent(VISIBLE_BODIES.get(i));
                 OpenWoundHandler.handleExplosion((AbstractVisibleBody) body, 0.5f * damageAmount * weight[i]);
@@ -123,7 +122,7 @@ public class InjuryEventHandler {
 
     public static void handleEntityAttack(float damageAmount, LivingEntity entity, LivingDamageEvent.Pre event) {
         HealthCapability.getAndSet(entity, h -> {
-            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(1,2,2,2,0.5f,0.5f)));
+            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(1,1.5f,1.5f,1.5f,1.2f,1.2f)));
             OpenWoundHandler.handleEntityAttack((AbstractVisibleBody) body, damageAmount);
             return h;
         });
@@ -137,7 +136,7 @@ public class InjuryEventHandler {
 
     public static void handleDefaultDamage(float damageAmount, LivingEntity entity, LivingDamageEvent.Pre event) {
         HealthCapability.getAndSet(entity, h -> {
-            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(1,2,2,2,0.5f,0.5f)));
+            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(1,1.5f,1.5f,1.5f,1.2f,1.2f)));
             InternalInjuryHandler.handleBluntTrauma((AbstractVisibleBody) body, damageAmount);
             return h;
         });
