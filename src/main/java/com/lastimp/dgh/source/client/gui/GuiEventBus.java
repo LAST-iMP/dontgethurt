@@ -1,7 +1,6 @@
 package com.lastimp.dgh.source.client.gui;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.client.ClientAccessor;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -26,13 +25,11 @@ public class GuiEventBus {
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         var player = event.player;
         if (player.level().isClientSide) {
-            if (player.getUUID().equals(GuiOpenWrapper.MINECRAFT.get().player.getUUID())){
-                if (HealthCapability.isDying(player) && !ClientAccessor.showingScreen()) {
+            if (player.getUUID().equals(GuiOpenWrapper.localPlayerUUID())){
+                if (HealthCapability.isDying(player) && GuiOpenWrapper.canOpenDyingScreen()) {
                     GuiOpenWrapper.openDyingScreen();
-                    ClientAccessor.setShowingScreen(true);
-                } else if (!HealthCapability.isDying(player) && ClientAccessor.showingScreen()){
+                } else if (!HealthCapability.isDying(player)){
                     GuiOpenWrapper.closeDyingScreen();
-                    ClientAccessor.setShowingScreen(false);
                 }
             }
         }

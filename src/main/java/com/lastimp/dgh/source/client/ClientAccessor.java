@@ -16,7 +16,6 @@ import java.util.UUID;
 public abstract class ClientAccessor {
     private static HealthScreen healthScreen = null;
     private static HealthCapability health = null;
-    private static boolean showingScreen = false;
 
     public static boolean canRenderGui() {
         Minecraft mc = Minecraft.getInstance();
@@ -47,13 +46,5 @@ public abstract class ClientAccessor {
 
     public static void setHealthScreen(HealthScreen healthScreen) {
         ClientAccessor.healthScreen = healthScreen;
-    }
-
-    public static boolean showingScreen() {
-        return showingScreen;
-    }
-
-    public static void setShowingScreen(boolean showingScreen) {
-        ClientAccessor.showingScreen = showingScreen;
     }
 }

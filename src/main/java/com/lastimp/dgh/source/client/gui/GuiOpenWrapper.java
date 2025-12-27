@@ -7,6 +7,9 @@ import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.source.register.ModMenus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CraftingScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -14,6 +17,8 @@ import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+
+import java.util.UUID;
 
 @OnlyIn(value = Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -25,13 +30,27 @@ public class GuiOpenWrapper {
         MINECRAFT.get().setScreen(null);
     }
 
+    public static boolean canOpenDyingScreen() {
+        var screen = MINECRAFT.get().screen;
+        if (screen == null) return true;
+        if (screen instanceof DyingScreen) return false;
+
+        return screen instanceof AbstractContainerScreen<?>;
+    }
+
     public static void openDyingScreen() {
+        if (MINECRAFT.get().screen instanceof DyingScreen) return;
+        closeScreen();
         MINECRAFT.get().forceSetScreen(new DyingScreen(Component.translatable("gui." + DontGetHurt.MODID + "dying_screen.title")));
     }
 
     public static void closeDyingScreen() {
         if (MINECRAFT.get().screen instanceof DyingScreen)
-            MINECRAFT.get().setScreen(null);
+            closeScreen();
+    }
+
+    public static UUID localPlayerUUID() {
+        return GuiOpenWrapper.MINECRAFT.get().player.getUUID();
     }
 
     @SubscribeEvent
