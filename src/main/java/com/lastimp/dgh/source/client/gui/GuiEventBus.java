@@ -26,13 +26,11 @@ public class GuiEventBus {
     public static void onPlayerTick(PlayerTickEvent.Pre event) {
         var player = event.getEntity();
         if (player.level().isClientSide) {
-            if (player.getUUID().equals(GuiOpenWrapper.MINECRAFT.get().player.getUUID())){
-                if (HealthCapability.isDying(player) && !ClientAccessor.showingScreen()) {
+            if (player.getUUID().equals(GuiOpenWrapper.localPlayerUUID())){
+                if (HealthCapability.isDying(player) && GuiOpenWrapper.canOpenDyingScreen()) {
                     GuiOpenWrapper.openDyingScreen();
-                    ClientAccessor.setShowingScreen(true);
-                } else if (!HealthCapability.isDying(player) && ClientAccessor.showingScreen()){
+                } else if (!HealthCapability.isDying(player)){
                     GuiOpenWrapper.closeDyingScreen();
-                    ClientAccessor.setShowingScreen(false);
                 }
             }
         }
