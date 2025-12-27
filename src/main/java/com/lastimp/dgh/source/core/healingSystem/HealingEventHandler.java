@@ -105,10 +105,14 @@ public class HealingEventHandler {
         if (!HealthCapability.has(entity)) return;
 
         float amount = event.getAmount() * Config.healing_factor;
-        HealthCapability.getAndSet(entity, (h) -> {
-            h.setOuterHealing(Mth.clamp(h.outerHealing() + amount, 0, entity.getMaxHealth()));
-            return h;
-        });
+        if (Config.tradition_healing) {
+            HealingHandler.handleValindaHealing(entity, amount / (entity.getMaxHealth() * Config.body_life_factor));
+        } else {
+            HealthCapability.getAndSet(entity, (h) -> {
+                h.setOuterHealing(Mth.clamp(h.outerHealing() + amount, 0, entity.getMaxHealth()));
+                return h;
+            });
+        }
     }
 
     private static boolean checkTotemDeathProtection(HealthCapability health, ServerPlayer player) {

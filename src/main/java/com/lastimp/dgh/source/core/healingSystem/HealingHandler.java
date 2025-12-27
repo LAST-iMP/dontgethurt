@@ -59,9 +59,9 @@ public class HealingHandler {
         }
     }
 
-    public static void handleValindaHealing(ServerPlayer player, float amount) {
+    public static void handleValindaHealing(LivingEntity entity, float amount) {
         List<Pair<AbstractVisibleBody, ResourceLocation>> states = new ArrayList<>();
-        HealthCapability.getAndSet(player, h -> {
+        HealthCapability.getAndSet(entity, h -> {
             float injury = 0;
             for (var component : BodyComponents.VISIBLE_BODIES) {
                 AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);

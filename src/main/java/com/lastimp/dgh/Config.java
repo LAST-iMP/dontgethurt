@@ -16,6 +16,9 @@ public class Config {
     public static final ForgeConfigSpec.DoubleValue BODY_LIFE_FACTOR = BUILDER
             .defineInRange("BODY_LIFE_FACTOR", 1.0f, 0, 1000);
 
+    public static final ForgeConfigSpec.BooleanValue TRADITION_HEALING = BUILDER
+            .define("TRADITION_HEALING", false);
+
     public static final ForgeConfigSpec.DoubleValue HEALING_FACTOR = BUILDER
             .defineInRange("BODY_LIFE_FACTOR", 0.5f, 0, 1000);
 
@@ -68,6 +71,7 @@ public class Config {
             .defineInRange("BASE_FRACTURE_MAX_PROB", 0.8, 0, 1.0);
 
     public static float body_life_factor;
+    public static boolean tradition_healing;
     public static float healing_factor;
     public static float bandage_acc;
     public static float burn_bleed_ratio;
@@ -113,6 +117,7 @@ public class Config {
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         body_life_factor = (float) (double)BODY_LIFE_FACTOR.get();
+        tradition_healing = TRADITION_HEALING.get();
         healing_factor = (float) (double)HEALING_FACTOR.get();
         bandage_acc = (float) (double)BANDAGE_ACC.get();
         burn_bleed_ratio = (float) (double) BURN_BLEED_RATIO.get();
