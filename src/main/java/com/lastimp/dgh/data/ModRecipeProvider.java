@@ -16,14 +16,19 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.function.Consumer;
 
+@Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRecipeProvider extends RecipeProvider {
     public ModRecipeProvider(PackOutput output) {
         super(output);
@@ -429,9 +434,7 @@ public class ModRecipeProvider extends RecipeProvider {
 
     @SubscribeEvent
     public static void onCommonSetup(FMLCommonSetupEvent event) {
-        // 必须使用enqueueWork确保在主线程执行配方注册
         event.enqueueWork(() -> {
-            // 1. 注册基础配方：粗制药水 + 金胡萝卜 → 肾上腺素药水
             registerBasicBrewingRecipe(Potions.STRONG_REGENERATION, new ItemStack(ModItems.MORPHINE.get()), ModPotions.COMBAT_STIMULANT_POTION.get());
         });
     }
@@ -440,8 +443,8 @@ public class ModRecipeProvider extends RecipeProvider {
         ItemStack inputStack = PotionUtils.setPotion(new ItemStack(Items.POTION), inputPotion);
         ItemStack outputStack = PotionUtils.setPotion(new ItemStack(Items.POTION), outputPotion);
         BrewingRecipeRegistry.addRecipe(
-                StrictNBTIngredient.of(inputStack),
-                StrictNBTIngredient.of(ingredient),
+                Ingredient.of(inputStack),
+                Ingredient.of(ingredient),
                 outputStack
         );
     }
