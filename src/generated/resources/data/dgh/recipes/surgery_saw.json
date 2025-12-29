@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:iron_ingot"
+    },
+    "b": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "pattern": [
+    "  a",
+    " ab",
+    "ab "
+  ],
+  "result": {
+    "item": "dgh:surgery_saw"
+  },
+  "show_notification": true
+}

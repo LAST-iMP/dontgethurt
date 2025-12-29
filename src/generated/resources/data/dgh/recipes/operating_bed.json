@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "tag": "minecraft:beds"
+    },
+    "b": {
+      "item": "minecraft:iron_bars"
+    },
+    "c": {
+      "item": "dgh:morphine"
+    }
+  },
+  "pattern": [
+    " c ",
+    "bab",
+    "   "
+  ],
+  "result": {
+    "item": "dgh:operating_bed"
+  },
+  "show_notification": true
+}
