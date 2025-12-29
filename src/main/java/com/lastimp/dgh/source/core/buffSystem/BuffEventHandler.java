@@ -83,7 +83,9 @@ public class BuffEventHandler {
 
     private static void updateCureEffects(HealthCapability health, LivingEntity entity) {
         if (health.vitality() < 0.999f) return;
-        if (health.almostDead() < 0.2f) {
+        if (health.almostDead() < -0.1f) {
+            entity.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2399, 3));
+        } else if (health.almostDead() < 0.2f) {
             entity.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2399, 2));
         } else if (health.almostDead() < 0.5f) {
             entity.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2399, 1));

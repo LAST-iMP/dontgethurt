@@ -14,7 +14,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import java.util.UUID;
 
-public record MyReadAllConditionData(long id_most, long id_least, CompoundTag tag, String oper) implements CustomPacketPayload {
+public record MyReadAllConditionData(long id_most, long id_least, int entityID, CompoundTag tag, String oper) implements CustomPacketPayload {
     public static final Type<MyReadAllConditionData> TYPE = new Type<>(Common.ResourceLocation(DontGetHurt.MODID, "my_read_all_condition"));
 
     public static final StreamCodec<ByteBuf, MyReadAllConditionData> STREAM_CODEC = StreamCodec.composite(
@@ -22,6 +22,8 @@ public record MyReadAllConditionData(long id_most, long id_least, CompoundTag ta
             MyReadAllConditionData::id_most,
             ByteBufCodecs.VAR_LONG,
             MyReadAllConditionData::id_least,
+            ByteBufCodecs.VAR_INT,
+            MyReadAllConditionData::entityID,
             ByteBufCodecs.COMPOUND_TAG,
             MyReadAllConditionData::tag,
             ByteBufCodecs.STRING_UTF8,
@@ -34,11 +36,12 @@ public record MyReadAllConditionData(long id_most, long id_least, CompoundTag ta
         return TYPE;
     }
 
-    public static MyReadAllConditionData getInstance(UUID uuid, HealthCapability health, OperationType operation, HolderLookup.Provider provider) {
+    public static MyReadAllConditionData getInstance(UUID uuid, int entityID, CompoundTag tag, OperationType operation) {
         return new MyReadAllConditionData(
                 uuid.getMostSignificantBits(),
                 uuid.getLeastSignificantBits(),
-                health == null ? new CompoundTag() : health.serializeNBT(provider),
+                entityID,
+                tag,
                 operation.toString()
         );
     }

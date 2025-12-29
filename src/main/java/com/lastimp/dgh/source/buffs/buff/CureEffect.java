@@ -1,12 +1,16 @@
 package com.lastimp.dgh.source.buffs.buff;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.gossip.GossipType;
+import net.minecraft.world.entity.npc.Villager;
+import org.jetbrains.annotations.NotNull;
 
 public class CureEffect extends MobEffect {
     public CureEffect(int color) {
@@ -37,5 +41,20 @@ public class CureEffect extends MobEffect {
         if (livingEntity.getAbsorptionAmount() < amplifier * 2 + 2)
             livingEntity.setAbsorptionAmount(amplifier * 2 + 2);
         return true;
+    }
+
+    @Override
+    public void onEffectAdded(LivingEntity livingEntity, int amplifier) {
+        super.onEffectAdded(livingEntity, amplifier);
+        this.onVillagerAddEffect(livingEntity, amplifier);
+    }
+
+    private void onVillagerAddEffect(@NotNull LivingEntity entity, int amplifier) {
+        if (!(entity instanceof Villager villager)) return;
+        var lastHealer = HealthCapability.get(villager).lastHealer();
+        villager.getGossips().add(lastHealer, GossipType.MINOR_POSITIVE, 25);
+        if (amplifier >= 3) {
+            villager.getGossips().add(lastHealer, GossipType.MAJOR_POSITIVE, 20);
+        }
     }
 }

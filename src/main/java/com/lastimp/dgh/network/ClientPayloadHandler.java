@@ -8,20 +8,25 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
+import java.util.Objects;
+
 public class ClientPayloadHandler {
     public static void handleReadAllConditionData(final MyReadAllConditionData data, final IPayloadContext context) {
         context.enqueueWork(() -> {
-                    HealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag(), context.player().registryAccess());
-                    OperationType operation = OperationType.valueOf(data.oper());
-                    if (operation == OperationType.HEALTH_SCANN && ClientAccessor.healthScreen() != null) {
-                        ClientAccessor.healthScreen().setHealthData(health);
-                    } else if (operation == OperationType.SYN) {
-                        ClientAccessor.setHealth(health);
-                    }
-                })
-                .exceptionally(e -> {
-                    context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
-                    return null;
-                });
+            OperationType operation = OperationType.valueOf(data.oper());
+            if (operation == OperationType.HEALTH_SCANN && ClientAccessor.healthScreen() != null) {
+                HealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag(), context.player().registryAccess());
+                ClientAccessor.healthScreen().setHealthData(health);
+            } else if (operation == OperationType.SYN) {
+                var entity = ClientAccessor.getLiving(data.entityID());
+                if (entity != null && HealthCapability.has(entity)) {
+                    Objects.requireNonNull(HealthCapability.get(entity)).lightDeserializeNBT(data.tag());
+                }
+            }
+        })
+        .exceptionally(e -> {
+            context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
+            return null;
+        });
     }
 }

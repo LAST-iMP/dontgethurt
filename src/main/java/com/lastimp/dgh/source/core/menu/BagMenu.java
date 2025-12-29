@@ -1,9 +1,8 @@
 package com.lastimp.dgh.source.core.menu;
 
-import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.source.item.bases.AbstractMedicalBags;
 import com.lastimp.dgh.source.register.ModMenus;
 import com.lastimp.dgh.source.item.bases.BackpackInventory;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,6 +20,8 @@ public abstract class BagMenu extends AbstractContainerMenu {
     //服务端
     public BagMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inv, ItemStack bagStack) {
         super(menuType, containerId);
+        this.handler = ((AbstractMedicalBags)bagStack.getItem()).getBackPackHandler(bagStack);
+        this.layoutPlayerInventorySlots(inv);
     }
 
     public static class HealthCareBag extends BagMenu {
@@ -30,15 +31,6 @@ public abstract class BagMenu extends AbstractContainerMenu {
 
         public HealthCareBag(int pContainerId, Inventory inv, ItemStack bagStack) {
             super(ModMenus.HEALTH_CARE_BAG_MENU.get(), pContainerId, inv, bagStack);
-            this.handler = getBackPackHandler(bagStack);
-            this.layoutPlayerInventorySlots(inv);
-        }
-
-        public static BackpackInventory getBackPackHandler(ItemStack bagStack) {
-            var backpack = new BackpackInventory(bagStack, DataComponents.CONTAINER, 9);
-            backpack.addAllowed(ModTags.MEDICINE);
-            backpack.addAllowed(ModTags.MEDICAL_TOOLS_BASIC);
-            return backpack;
         }
     }
 
@@ -49,14 +41,16 @@ public abstract class BagMenu extends AbstractContainerMenu {
 
         public SurgeryToolBag(int pContainerId, Inventory inv, ItemStack bagStack) {
             super(ModMenus.SURGERY_TOOL_BAG_MENU.get(), pContainerId, inv, bagStack);
-            this.handler = getBackPackHandler(bagStack);
-            this.layoutPlayerInventorySlots(inv);
+        }
+    }
+
+    public static class LimbRefBag extends BagMenu {
+        public LimbRefBag(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
+            this(pContainerId, inv, inv.player.getInventory().getItem(buf.readInt()));
         }
 
-        public static BackpackInventory getBackPackHandler(ItemStack bagStack) {
-            var backpack = new BackpackInventory(bagStack, DataComponents.CONTAINER, 9);
-            backpack.addAllowed(ModTags.MEDICAL_TOOLS_SURGERY);
-            return backpack;
+        public LimbRefBag(int pContainerId, Inventory inv, ItemStack bagStack) {
+            super(ModMenus.LIMB_REF_BAG_MENU.get(), pContainerId, inv, bagStack);
         }
     }
 

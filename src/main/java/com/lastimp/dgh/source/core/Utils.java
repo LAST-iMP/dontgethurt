@@ -2,9 +2,13 @@ package com.lastimp.dgh.source.core;
 
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -13,6 +17,21 @@ import java.util.UUID;
 
 public abstract class Utils {
     public static final RandomSource randomSource = RandomSource.create(987654321);
+
+    public static void drop(Item item, LivingEntity entity, int amount) {
+        var stack=  new ItemStack(item, amount);
+        drop(stack, entity);
+    }
+
+    public static void drop(ItemStack stack, LivingEntity entity) {
+        if (entity instanceof ServerPlayer player) {
+            if (!player.addItem(stack)) {
+                player.drop(stack, true, true);
+            }
+        } else {
+            entity.level().addFreshEntity(new ItemEntity(entity.level(),entity.getX(), entity.getY(), entity.getZ(), stack.copy()));
+        }
+    }
 
     public static List<LivingEntity> getLivingWithHealth(ServerLevel level, Vec3 center, int range) {
         return level.getEntitiesOfClass(

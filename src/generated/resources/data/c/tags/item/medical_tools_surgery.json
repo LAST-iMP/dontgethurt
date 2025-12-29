@@ -24,6 +24,8 @@
     "dgh:bone_netherite",
     "dgh:medical_stent",
     "dgh:drainage",
-    "dgh:oxygen_mask"
+    "dgh:oxygen_mask",
+    "dgh:human_hand",
+    "dgh:human_leg"
   ]
 }

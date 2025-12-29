@@ -8,6 +8,7 @@ import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
+import net.minecraft.world.entity.LivingEntity;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
@@ -17,19 +18,21 @@ public class OpenWoundHandler {
         body.injury(OPEN_WOUND, damageAmount);
     }
 
-    public static void handleEntityAttack(AbstractVisibleBody body, float damageAmount) {
+    public static void handleEntityAttack(LivingEntity entity, AbstractVisibleBody body, float damageAmount) {
         handle(body, damageAmount);
         float damage = body.getConditionValue(OPEN_WOUND) + body.getConditionHidden(OPEN_WOUND);
         FollowInjuryHandler.fractionHandler(body, damage);
         FollowInjuryHandler.pneumothoraxHandler(body);
         FollowInjuryHandler.arterialBleedingHandler(body);
+        FollowInjuryHandler.traumaticAmputationHandler(entity, body, damage, Config.baseAmputationThreshold, Config.baseAmputationMaxProb - Config.baseAmputationThreshold, 0.0f, Config.baseAmputationMaxProb);
     }
 
-    public static void handleExplosion(AbstractVisibleBody body, float damageAmount) {
+    public static void handleExplosion(LivingEntity entity, AbstractVisibleBody body, float damageAmount) {
         handle(body, damageAmount);
         float damage = body.getConditionValue(OPEN_WOUND) + body.getConditionHidden(OPEN_WOUND);
         FollowInjuryHandler.fractionHandler(body, damage, Config.baseFractureThreshold, 0.9f - Config.baseFractureThreshold, 0.0f, 1.0f, 0);
         FollowInjuryHandler.pneumothoraxHandler(body);
         FollowInjuryHandler.arterialBleedingHandler(body);
+        FollowInjuryHandler.traumaticAmputationHandler(entity, body, damage, Config.baseAmputationThreshold, Config.baseAmputationMaxProb - Config.baseAmputationThreshold, 0.0f, Config.baseAmputationMaxProb);
     }
 }

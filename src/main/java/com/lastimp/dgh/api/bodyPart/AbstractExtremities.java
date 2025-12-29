@@ -41,11 +41,19 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
         return EXTREMITY_CONDITIONS;
     }
 
+    @Override
+    public boolean canHurtBone() {
+        if (this.abnormalWithHidden(TRAUMATIC_AMPUTATION)) return false;
+        if (this.abnormalWithHidden(SURGICAL_AMPUTATION)) return false;
+        return super.canHurtBone();
+    }
+
     public boolean available(HealthCapability health) {
         boolean available = this.isBandaged() || this.isBadBandaged() || !this.abnormal(DISLOCATION);
         available &= this.abnormal(PLASTER_CAST) || !this.abnormalWithHidden(FRACTURE);
         available |= health.getComponent(TORSO).abnormal(ANALGESIA);
         available &= !this.abnormalWithHidden(SAWED_BONES);
+        available &= (!this.abnormal(TRAUMATIC_AMPUTATION) && !this.abnormal(SURGICAL_AMPUTATION));
         return available;
     }
 
@@ -55,6 +63,15 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
         return body.available(health);
     }
 
+    public boolean visible() {
+        return (!this.abnormal(TRAUMATIC_AMPUTATION) && !this.abnormal(SURGICAL_AMPUTATION));
+    }
+
+    public static boolean visible(HealthCapability health, BodyComponents components) {
+        if (!BodyComponents.EXTREMITIES.contains(components)) return true;
+        AbstractExtremities body = (AbstractExtremities) health.getComponent(components);
+        return body.visible();
+    }
 
     @Override
     public AbstractBody update(HealthCapability health, LivingEntity entity) {

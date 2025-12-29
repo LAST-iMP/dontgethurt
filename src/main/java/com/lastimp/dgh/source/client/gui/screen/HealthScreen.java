@@ -22,6 +22,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -238,7 +239,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
             GuiOpenWrapper.MINECRAFT.get().setScreen(null);
         } else {
             PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
-                    this.menu.targetEntity, null, HEALTH_SCANN, ClientAccessor.registryAccess()
+                    this.menu.targetEntity, 0, new CompoundTag(), HEALTH_SCANN
             ));
         }
 
@@ -268,7 +269,10 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         var cooldowns = player.getCooldowns();
         var oxygenMask = this.menu.getSlot(45).getItem().getItem();
         if (!cooldowns.isOnCooldown(oxygenMask))
-            cooldowns.addCooldown(oxygenMask, HealthScreen.healthData.autoPulseCoolDown());
+            cooldowns.addCooldown(oxygenMask, HealthScreen.healthData.oxygenMaskCoolDown());
+        var autopulse = this.menu.getSlot(46).getItem().getItem();
+        if (!cooldowns.isOnCooldown(autopulse))
+            cooldowns.addCooldown(autopulse, HealthScreen.healthData.autoPulseCoolDown());
     }
 
     public void setHealthData(HealthCapability healthData) {

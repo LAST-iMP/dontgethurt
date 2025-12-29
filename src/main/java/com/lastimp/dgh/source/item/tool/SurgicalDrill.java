@@ -23,6 +23,7 @@ public class SurgicalDrill extends AbstractPartlyHealItem {
             if (!body.abnormal(RETRACTED_SKIN)) return false;
             if (body.abnormal(DRILLED_BONES)) return false;
             if (body.abnormal(SAWED_BONES)) return false;
+            if (body.abnormal(TRAUMATIC_AMPUTATION) || body.abnormal(SURGICAL_AMPUTATION)) return false;
 
             body.setConditionValue(DRILLED_BONES, BodyCondition.get(DRILLED_BONES).maxValue());
             return true;

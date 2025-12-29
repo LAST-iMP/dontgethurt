@@ -1,9 +1,9 @@
 package com.lastimp.dgh.source.client;
 
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
-import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
@@ -16,7 +16,6 @@ import java.util.UUID;
 @OnlyIn(value = Dist.CLIENT)
 public abstract class ClientAccessor {
     private static HealthScreen healthScreen = null;
-    private static HealthCapability health = null;
 
     public static RegistryAccess registryAccess() {
         return Minecraft.getInstance().player.registryAccess();
@@ -25,6 +24,14 @@ public abstract class ClientAccessor {
     public static boolean canRenderGui() {
         Minecraft mc = Minecraft.getInstance();
         return !(mc.level == null || mc.player == null || mc.options.hideGui);
+    }
+
+    public static ClientLevel getLevel() {
+        return Minecraft.getInstance().level;
+    }
+
+    public static AbstractClientPlayer getPlayer() {
+        return Minecraft.getInstance().player;
     }
 
     public static LivingEntity getLiving(ClientLevel level, UUID uuid, Vec3 center, int range) {
@@ -37,12 +44,12 @@ public abstract class ClientAccessor {
         return null;
     }
 
-    public static HealthCapability health() {
-        return health;
-    }
-
-    public static void setHealth(HealthCapability health) {
-        ClientAccessor.health = health;
+    public static LivingEntity getLiving(int id) {
+        var result = getLevel().getEntity(id);
+        if (result instanceof LivingEntity livingEntity) {
+            return livingEntity;
+        }
+        return null;
     }
 
     public static HealthScreen healthScreen() {

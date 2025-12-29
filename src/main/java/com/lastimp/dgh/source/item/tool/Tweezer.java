@@ -22,11 +22,11 @@ public class Tweezer extends AbstractPartlyHealItem {
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
         return HealthCapability.getAndSet(entity, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
-
-            body.injury(OPEN_WOUND, 0.05f);
             if (body.abnormal(RETRACTED_SKIN)) {
-                body.healing(INTERNAL_INJURY, -Mth.randomBetween(Utils.randomSource, 0.03f, 0.1f));
+                body.injury(OPEN_WOUND, 0.03f);
+                body.healing(INTERNAL_INJURY, -Mth.randomBetween(Utils.randomSource, 0.05f, 0.2f));
             } else {
+                body.injury(OPEN_WOUND, 0.05f);
                 body.setConditionValue(INTENSE_PAIN, BodyCondition.get(INTENSE_PAIN).maxValue());
             }
             return true;

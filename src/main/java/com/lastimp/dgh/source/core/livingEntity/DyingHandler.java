@@ -1,12 +1,10 @@
-package com.lastimp.dgh.source.core.player;
+package com.lastimp.dgh.source.core.livingEntity;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.tags.ModDamageType;
-import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,9 +13,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_LOSS;
@@ -28,24 +24,6 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID)
 public class DyingHandler {
-    private static boolean showingScreen = false;
-
-    @SubscribeEvent
-    public static void onPlayerTick(PlayerTickEvent.Pre event) {
-        var player = event.getEntity();
-
-        if (!event.getEntity().level().isClientSide) {
-            if (HealthCapability.isDying(player)) {
-                if (player.isSleeping()) player.stopSleeping();
-                if (player.isFallFlying()) player.stopFallFlying();
-                player.stopUsingItem();
-                player.setForcedPose(Pose.SWIMMING);
-            } else {
-                player.setForcedPose(null);
-            }
-        }
-    }
-
     @SubscribeEvent
     public static void onEntityTick(EntityTickEvent.Pre event) {
         if (event.getEntity().level().isClientSide) return;
@@ -70,33 +48,6 @@ public class DyingHandler {
         }
     }
 
-    public static void setShowingScreen(boolean showingScreen) {
-        DyingHandler.showingScreen = showingScreen;
-    }
-
-    public static boolean showingScreen() {
-        return DyingHandler.showingScreen;
-    }
-
-    @SubscribeEvent
-    public static void onJump(LivingEvent.LivingJumpEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer player)) return;
-
-        HealthCapability health = HealthCapability.get(player);
-        if (true || health.vitality() < 0) {
-            player.setDeltaMovement(0, 0, 0); // 阻止起跳速度
-        }
-    }
-
-    public static void setPlayerDead(Player player) {
-        if (player.isSleeping()) player.stopSleeping();
-        if (player.isFallFlying()) player.stopFallFlying();
-        player.stopUsingItem();
-        if (player.level().isClientSide)
-            GuiOpenWrapper.MINECRAFT.get().setScreen(null);
-        setLivingDead(player);
-    }
-
     public static void setLivingDead(LivingEntity entity) {
         entity.hurt(new DamageSource(getKillerDamageType(entity)),entity.getMaxHealth() * 1000);
     }
@@ -115,13 +66,13 @@ public class DyingHandler {
             return damageType.getOrThrow(ModDamageType.CANT_BREATH_DAMAGE);
         }
 
-        if (head.getConditionValue(BRAIN_DAMAGE) > 0.8) {
-            return damageType.getOrThrow(ModDamageType.BRAIN_DAMAGE);
-        }
-
         var blood = health.getComponent(BLOOD);
         if (blood.getConditionValue(BLOOD_LOSS) > 0.7) {
             return damageType.getOrThrow(ModDamageType.BLEED_DAMAGE);
+        }
+
+        if (head.getConditionValue(BRAIN_DAMAGE) > 0.9) {
+            return damageType.getOrThrow(ModDamageType.BRAIN_DAMAGE);
         }
 
         var left_arm = health.getComponent(LEFT_ARM);

@@ -55,5 +55,6 @@ public class GuiOpenWrapper {
         event.register(ModMenus.HEALTH_MENU.get(), HealthScreen::new);
         event.register(ModMenus.HEALTH_CARE_BAG_MENU.get(), BagScreen::new);
         event.register(ModMenus.SURGERY_TOOL_BAG_MENU.get(), BagScreen::new);
+        event.register(ModMenus.LIMB_REF_BAG_MENU.get(), BagScreen::new);
     }
 }

@@ -5,6 +5,7 @@ import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.healingItems.AbstractHealingEquipment;
 import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.core.menu.component.DynamicItemHandler;
 import com.lastimp.dgh.source.register.ModCapabilities;
 import com.lastimp.dgh.api.enums.BodyComponents;
@@ -12,14 +13,18 @@ import com.lastimp.dgh.source.core.bodyPart.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.util.UUID;
 import java.util.function.Function;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.COMA;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.INTENSE_PAIN;
+import static com.lastimp.dgh.api.enums.OperationType.SYN;
 
 public class HealthCapability implements INBTSerializable<CompoundTag> {
     private final WholeBody body = new WholeBody();
@@ -27,7 +32,6 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     private final DynamicItemHandler autoPulse = new DynamicItemHandler();
     private float vitality = 1.0f;
     private int slowDown = 0;
-    private int armBreak = 0;
     private long livingTick = 0;
     private float almostDead = 1.0f;
     private int nearBedTick = 0;
@@ -36,6 +40,16 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     private boolean isInfected = false;
     private int oxygenMaskCoolDown = 0;
     private int autoPulseCoolDown = 0;
+
+    private int armBreak = 0;
+    private boolean leftArmVisible = true;
+    private boolean rightArmVisible = true;
+    private boolean leftLegVisible = true;
+    private boolean rightLegVisible = true;
+
+    private UUID lastHealer = UUID.randomUUID();
+
+    private boolean isDirty = true;
 
     public HealthCapability() {
         oxygenMask.addAllowed(ModTags.OXYGEN_SUPPLIERS);
@@ -101,7 +115,8 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     private void updateLabels(LivingEntity entity) {
         if (this.livingTick + 1 > 0) this.livingTick++;
-        this.armBreak = (AbstractExtremities.available(this, LEFT_ARM) ? 0 : 1) + (AbstractExtremities.available(this, RIGHT_ARM) ? 0 : 1);
+        var newArmBreak = (AbstractExtremities.available(this, LEFT_ARM) ? 0 : 1) + (AbstractExtremities.available(this, RIGHT_ARM) ? 0 : 1);
+        this.armBreak = updateIfDirty(newArmBreak, this.armBreak);
         this.slowDown = this.body.slowDownLevel(this);
         this.vitality = 1.0f - this.body.updateVitalityLost(this, entity);
         this.vitality = (this.vitality > 0.999f) ? 1.0f : this.vitality;
@@ -110,44 +125,82 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.outerHealing = Math.max(0, this.outerHealing - this.outerHealingDelta);
         this.outerHealingDelta = this.outerHealing <= 0 ? 0 : Math.min(1.0f / 20, this.outerHealing + 1.0f / 60 / 20);
         this.isInfected = this.body.isInfected();
+
+        this.leftArmVisible = updateIfDirty(AbstractExtremities.visible(this, LEFT_ARM), this.leftArmVisible);
+        this.rightArmVisible = updateIfDirty(AbstractExtremities.visible(this, RIGHT_ARM), this.rightArmVisible);
+        this.leftLegVisible = updateIfDirty(AbstractExtremities.visible(this, LEFT_LEG), this.leftLegVisible);
+        this.rightLegVisible = updateIfDirty(AbstractExtremities.visible(this, RIGHT_LEG), this.rightLegVisible);
+    }
+
+    private <T> T updateIfDirty(T value, T oldValue) {
+        if (value != oldValue) {
+            this.isDirty = true;
+        }
+        return value;
+    }
+
+    public void SYNIfDirty(LivingEntity livingEntity) {
+        if (!this.isDirty) return;
+        PacketDistributor.sendToPlayersNear(
+                (ServerLevel) livingEntity.level(), null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), 64,
+                MyReadAllConditionData.getInstance(livingEntity.getUUID(), livingEntity.getId(), this.lightSerializeNBT(), SYN)
+        );
+        this.isDirty = false;
+    }
+
+    public CompoundTag lightSerializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.putInt("armBreak", this.armBreak);
+        tag.putBoolean("leftArmVisible", this.leftArmVisible);
+        tag.putBoolean("rightArmVisible", this.rightArmVisible);
+        tag.putBoolean("leftLegVisible", this.leftLegVisible);
+        tag.putBoolean("rightLegVisible", this.rightLegVisible);
+        return tag;
     }
 
     @Override
     public CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        CompoundTag tag = this.body.serializeNBT(provider);
+        CompoundTag tag = new CompoundTag();
+        tag.put("body", this.body.serializeNBT(provider));
         tag.putFloat("playerVitality", this.vitality);
-        tag.putInt("slowDown", this.slowDown);
-        tag.putInt("armBreak", this.armBreak);
         tag.putLong("livingTick", this.livingTick);
         tag.putFloat("almostDead", this.almostDead);
         tag.putInt("nearBedTick", this.nearBedTick);
         tag.putFloat("outerHealing", this.outerHealing);
         tag.putFloat("outerHealingDelta", this.outerHealingDelta);
-        tag.putBoolean("isInfected", this.isInfected);
         tag.put("oxygenMask", this.oxygenMask.serializeNBT(provider));
         tag.put("autoPulse", this.autoPulse.serializeNBT(provider));
         tag.putInt("oxygenMaskCoolDown", this.oxygenMaskCoolDown);
         tag.putInt("autoPulseCoolDown", this.autoPulseCoolDown);
+        tag.putUUID("lastHealer", this.lastHealer);
         return tag;
+    }
+
+    public void lightDeserializeNBT(CompoundTag nbt) {
+        if (nbt == null) return;
+        this.armBreak = nbt.getInt("armBreak");
+        this.leftArmVisible = nbt.getBoolean("leftArmVisible");
+        this.rightArmVisible = nbt.getBoolean("rightArmVisible");
+        this.leftLegVisible = nbt.getBoolean("leftLegVisible");
+        this.rightLegVisible = nbt.getBoolean("rightLegVisible");
     }
 
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         if (nbt == null) return;
-        this.body.deserializeNBT(provider, nbt);
+        this.body.deserializeNBT(provider, nbt.getCompound("body"));
         this.vitality = nbt.getFloat("playerVitality");
-        this.slowDown = nbt.getInt("slowDown");
-        this.armBreak = nbt.getInt("armBreak");
         this.livingTick = nbt.getLong("livingTick");
         this.almostDead = nbt.getFloat("almostDead");
         this.nearBedTick = nbt.getInt("nearBedTick");
         this.outerHealing = nbt.getFloat("outerHealing");
         this.outerHealingDelta = nbt.getFloat("outerHealingDelta");
-        this.isInfected = nbt.getBoolean("isInfected");
         this.oxygenMask.deserializeNBT(provider, nbt.getCompound("oxygenMask"));
         this.autoPulse.deserializeNBT(provider, nbt.getCompound("autoPulse"));
         this.oxygenMaskCoolDown = nbt.getInt("oxygenMaskCoolDown");
         this.autoPulseCoolDown = nbt.getInt("autoPulseCoolDown");
+        if (nbt.get("lastHealer") != null)
+            this.lastHealer = nbt.getUUID("lastHealer");
     }
 
     public boolean intensePain() {
@@ -191,10 +244,6 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         return armBreak;
     }
 
-    public int nearBedTick() {
-        return nearBedTick;
-    }
-
     public void setNearBedTick(int nearBedTick) {
         this.nearBedTick = nearBedTick;
     }
@@ -225,5 +274,29 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     public int oxygenMaskCoolDown() {
         return oxygenMaskCoolDown;
+    }
+
+    public boolean leftArmVisible() {
+        return leftArmVisible;
+    }
+
+    public boolean leftLegVisible() {
+        return leftLegVisible;
+    }
+
+    public boolean rightArmVisible() {
+        return rightArmVisible;
+    }
+
+    public boolean rightLegVisible() {
+        return rightLegVisible;
+    }
+
+    public void setLastHealer(UUID lastHealer) {
+        this.lastHealer = lastHealer;
+    }
+
+    public UUID lastHealer() {
+        return lastHealer;
     }
 }

@@ -263,11 +263,15 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         blood.addConditionValue(BLOOD_LOSS, this.nextTickBleed * DELTA * Config.bleed_volume_ratio);
     }
 
+    public boolean canHurtBone() {
+        return !this.abnormalWithHidden(SAWED_BONES);
+    }
+
     private void handleBoneDamage(HealthCapability health) {
         if (this.abnormal(SAWED_BONES)) return;
         var blood = health.getComponent(BLOOD);
 
-        if (this.abnormalWithHidden(SAWED_BONES)) return;
+        if (!this.canHurtBone()) return;
         if (blood.abnormal(OXYGEN)) {
             this.injury(BONE_DAMAGE, blood.getConditionValue(OXYGEN) * 1.1f * BodyCondition.get(BONE_DAMAGE).healingSpeed() * DELTA);
         }
@@ -277,7 +281,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     private void handleBoneDeath() {
-        if (this.abnormal(SAWED_BONES)) return;
+        if (!this.canHurtBone()) return;
         if (this.getConditionValue(BONE_DAMAGE) > 0.9f) {
             this.injury(BONE_DEATH, BodyCondition.get(BONE_DEATH).maxValue());
         }

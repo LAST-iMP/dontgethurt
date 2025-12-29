@@ -8,9 +8,11 @@ import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
+import com.lastimp.dgh.source.client.ClientAccessor;
+import com.lastimp.dgh.source.core.livingEntity.player.PlayerDyingHandler;
 import com.lastimp.dgh.source.core.menu.HealthMenu;
 import com.lastimp.dgh.source.core.Utils;
-import com.lastimp.dgh.source.core.player.DyingHandler;
+import com.lastimp.dgh.source.core.menu.menuProvider.LimbRefMenuProvider;
 import com.lastimp.dgh.source.register.ModItems;
 import com.lastimp.dgh.source.core.menu.menuProvider.HealthCareBagMenuProvider;
 import com.lastimp.dgh.source.core.menu.menuProvider.HealthMenuProvider;
@@ -29,21 +31,21 @@ public class ServerPayloadHandler {
 
     public static void handleReadAllConditionData(final MyReadAllConditionData data, final IPayloadContext context) {
         context.enqueueWork(() -> {
-                    UUID uuid = new UUID(data.id_most(), data.id_least());
-                    ServerPlayer sender = (ServerPlayer) context.player();
-                    var target = Utils.getLivingWithHealth(sender.serverLevel(), uuid);
-                    if (target == null) return;
-                    HealthCapability health = HealthCapability.get(target);
+            UUID uuid = new UUID(data.id_most(), data.id_least());
+            ServerPlayer sender = (ServerPlayer) context.player();
+            var target = Utils.getLivingWithHealth(sender.serverLevel(), uuid);
+            if (target == null) return;
 
-                    PacketDistributor.sendToPlayer(
-                            (ServerPlayer) context.player(),
-                            MyReadAllConditionData.getInstance(uuid, health, OperationType.valueOf(data.oper()), context.player().registryAccess())
-                    );
-                })
-                .exceptionally(e -> {
-                    context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
-                    return null;
-                });
+            var tag = HealthCapability.get(target).serializeNBT(ClientAccessor.registryAccess());
+            PacketDistributor.sendToPlayer(
+                    (ServerPlayer) context.player(),
+                    MyReadAllConditionData.getInstance(uuid, target.getId(), tag, OperationType.valueOf(data.oper()))
+            );
+        })
+        .exceptionally(e -> {
+            context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
+            return null;
+        });
     }
 
     public static void handleClientPress(final MyKeyPressedData data, final IPayloadContext context) {
@@ -62,9 +64,11 @@ public class ServerPayloadHandler {
                                 HealthCareBagMenuProvider.open(player, slot);
                             if (slot.is(ModItems.SURGERY_TOOL_BAG))
                                 SurgeryToolBagMenuProvider.open(player, slot);
+                            if (slot.is(ModItems.LIMB_REF_BEG.get()))
+                                LimbRefMenuProvider.open(player, slot);
                             break;
                         case GIVE_UP:
-                            DyingHandler.setPlayerDead(player);
+                            PlayerDyingHandler.setPlayerDead(player);
                             break;
                         case CALL_FOR_HELP:
                             player.getServer().getPlayerList().getPlayers().forEach(p -> {

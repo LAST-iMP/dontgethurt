@@ -4,9 +4,9 @@ package com.lastimp.dgh.source.core.healingSystem;
 import com.lastimp.dgh.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.network.message.MyReadAllConditionData;
-import com.lastimp.dgh.source.core.player.DyingHandler;
+import com.lastimp.dgh.source.core.livingEntity.DyingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.source.core.livingEntity.player.PlayerDyingHandler;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -19,18 +19,14 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.COMA;
-import static com.lastimp.dgh.api.enums.OperationType.SYN;
 
 
 @EventBusSubscriber(modid = DontGetHurt.MODID)
@@ -45,14 +41,10 @@ public class HealingEventHandler {
             h = h.update(livingEntity);
             if (!(livingEntity instanceof ServerPlayer player)) {
                 updateLivingHealth(h, livingEntity);
-            } else {
-                if (!checkTotemDeathProtection(h, player)) {
-                    updatePlayerHealth(h, player);
-                }
-                PacketDistributor.sendToPlayer((ServerPlayer) livingEntity, MyReadAllConditionData.getInstance(
-                        livingEntity.getUUID(), h, SYN, livingEntity.registryAccess()
-                ));
+            } else if (!checkTotemDeathProtection(h, player)) {
+                updatePlayerHealth(h, player);
             }
+            h.SYNIfDirty(livingEntity);
             return h;
         });
     }
@@ -76,7 +68,7 @@ public class HealingEventHandler {
     private static void updatePlayerHealth(HealthCapability health, ServerPlayer player) {
         float maxHealth = getHealthWithOuterHealing(health, player);
         if (player.isDeadOrDying()) {
-            DyingHandler.setPlayerDead(player);
+            PlayerDyingHandler.setPlayerDead(player);
         } else if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative()) {
             player.setHealth(player.getMaxHealth());
         } else if (health.getComponent(BodyComponents.HEAD).abnormal(COMA) && maxHealth > 0) {
@@ -87,7 +79,7 @@ public class HealingEventHandler {
         } else if (maxHealth > -player.getMaxHealth() && player.getServer().getPlayerList().getPlayers().size() > 1) {
             player.setHealth(0.01f);
         } else {
-            DyingHandler.setPlayerDead(player);
+            PlayerDyingHandler.setPlayerDead(player);
         }
     }
 

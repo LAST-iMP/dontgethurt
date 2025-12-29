@@ -19,6 +19,7 @@ public class ModMenus {
     public static final Supplier<MenuType<HealthMenu>> HEALTH_MENU = registerMenuType(HealthMenu::new, "health_menu");
     public static final Supplier<MenuType<BagMenu>> HEALTH_CARE_BAG_MENU = registerMenuType(BagMenu.HealthCareBag::new, "health_care_bag_menu");
     public static final Supplier<MenuType<BagMenu>> SURGERY_TOOL_BAG_MENU = registerMenuType(BagMenu.SurgeryToolBag::new, "surgery_tool_bag_menu");
+    public static final Supplier<MenuType<BagMenu>> LIMB_REF_BAG_MENU = registerMenuType(BagMenu.LimbRefBag::new, "limb_ref_bag_menu");
 
     private static <T extends AbstractContainerMenu> Supplier<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
         return MENU_TYPES.register(name, () -> IMenuTypeExtension.create(factory));

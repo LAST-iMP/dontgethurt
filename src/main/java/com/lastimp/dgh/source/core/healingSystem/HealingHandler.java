@@ -47,8 +47,13 @@ public class HealingHandler {
             success = item.heal(source, target, component);
         }
 
-        if (success)
+        if (success) {
             source.getCooldowns().addCooldown(healingItem, 10);
+            HealthCapability.getAndSet(target, h -> {
+                h.setLastHealer(source.getUUID());
+                return true;
+            });
+        }
 
         if (success && itemStack.isDamageableItem()) {
             itemStack.hurtAndBreak(1, source.serverLevel(), source, (i) -> {});

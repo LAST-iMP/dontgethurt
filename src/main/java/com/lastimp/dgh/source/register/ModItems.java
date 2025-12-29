@@ -2,6 +2,8 @@
 package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.item.limbs.HumanHand;
+import com.lastimp.dgh.source.item.limbs.HumanLeg;
 import com.lastimp.dgh.source.item.medicine.*;
 import com.lastimp.dgh.source.item.tool.*;
 import net.minecraft.core.component.DataComponents;
@@ -100,6 +102,14 @@ public class ModItems {
     public static final DeferredItem<SurgeryToolBag> SURGERY_TOOL_BAG = registerItem(
             "surgery_tool_bag",
             SurgeryToolBag::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .component(DataComponents.CONTAINER, ItemContainerContents.EMPTY)
+    );
+
+    public static final DeferredItem<LimbRefBeg> LIMB_REF_BEG = registerItem(
+            "limb_ref_beg",
+            LimbRefBeg::new,
             new Item.Properties()
                     .stacksTo(1)
                     .component(DataComponents.CONTAINER, ItemContainerContents.EMPTY)
@@ -368,6 +378,20 @@ public class ModItems {
             Antibiotics::new,
             new Item.Properties()
                     .stacksTo(16)
+    );
+
+    public static final DeferredItem<HumanHand> HUMAN_HAND = registerItem(
+            "human_hand",
+            HumanHand::new,
+            new Item.Properties()
+                    .stacksTo(1)
+    );
+
+    public static final DeferredItem<HumanLeg> HUMAN_LEG = registerItem(
+            "human_leg",
+            HumanLeg::new,
+            new Item.Properties()
+                    .stacksTo(1)
     );
 
     private static <T extends Item> DeferredItem<T> registerItem(String name, Function<Item.Properties, ? extends T> func, Item.Properties properties) {
