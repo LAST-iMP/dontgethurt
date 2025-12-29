@@ -63,11 +63,7 @@ public class ForgeClientEventHandler {
 
         var itemStack = slot.getItem();
         if (itemStack.isEmpty()) return false;
-        if (itemStack.is(ModTags.MEDICINE)) return true;
-        if (itemStack.is(ModTags.MEDICAL_TOOLS)) return true;
-        if (itemStack.is(ModTags.MEDICAL_TOOLS_BAGS)) return true;
-
-        return false;
+        return ModTags.isHealthScreenAvaItem(itemStack);
     }
 
     @SubscribeEvent

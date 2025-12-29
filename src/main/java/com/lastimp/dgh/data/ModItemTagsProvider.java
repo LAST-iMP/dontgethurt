@@ -126,5 +126,39 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.OXYGEN_MASK.getKey());
         this.tag(ModTags.AUTOPULSE)
                 .add(ModItems.AUTOPULSE.getKey());
+
+        //tfc
+        this.tag(ModTags.MEDICAL_TOOLS)
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/bismuth_bronze"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/black_bronze"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/bronze"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/copper"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/wrought_iron"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/steel"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/black_steel"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/blue_steel"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/red_steel"));
+
+        this.tag(ModTags.MEDICAL_TOOLS_BASIC)
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/bismuth_bronze"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/black_bronze"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/bronze"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/copper"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/wrought_iron"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/steel"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/black_steel"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/blue_steel"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/red_steel"));
+
+        this.tag(ModTags.MEDICAL_TOOLS_SHEARS)
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/bismuth_bronze"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/black_bronze"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/bronze"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/copper"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/wrought_iron"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/steel"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/black_steel"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/blue_steel"))
+                .addOptional(Common.ResourceLocation("tfc", "metal/shears/red_steel"));
     }
 }

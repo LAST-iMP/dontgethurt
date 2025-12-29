@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": {
+      "item": "minecraft:glass_bottle"
+    },
+    "c": {
+      "item": "minecraft:golden_carrot"
+    },
+    "m": {
+      "item": "minecraft:glistering_melon_slice"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "s": {
+      "item": "minecraft:sugar"
+    }
+  },
+  "pattern": [
+    " c ",
+    "sbs",
+    "rmr"
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:adrenaline"
+  }
+}

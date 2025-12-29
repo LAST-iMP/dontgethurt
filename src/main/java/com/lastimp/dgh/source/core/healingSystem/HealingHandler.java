@@ -5,6 +5,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
+import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.medicine.Bandages;
 import com.lastimp.dgh.source.item.medicine.Gypsum;
@@ -31,7 +32,7 @@ public class HealingHandler {
         if (source.getCooldowns().isOnCooldown(itemStack.getItem())) return;
 
         boolean success = false;
-        if (itemStack.is(MEDICAL_TOOLS_SHEARS)) {
+        if (ModTags.isShears(itemStack)) {
             success |= Bandages.cut(target, component);
             success |= Gypsum.cut(target, component);
             success |= Tourniquet.cut(target, component);

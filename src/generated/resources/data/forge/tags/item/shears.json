@@ -1,12 +1,7 @@
 {
   "values": [
     "minecraft:shears",
-    "dgh:health_scanner",
-    "dgh:blood_scanner",
-    "dgh:wood_wrench",
-    "dgh:oxygen_mask",
-    "dgh:antiseptic_sprayer",
-    "dgh:autopulse",
+    "dgh:scalpel",
     {
       "id": "tfc:metal/shears/bismuth_bronze",
       "required": false

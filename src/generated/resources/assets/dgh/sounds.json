@@ -1,0 +1,26 @@
+{
+  "heartbeat_acc": {
+    "sounds": [
+      "dgh:heartbeat_acc"
+    ],
+    "subtitle": "dgh:heartbeat_acc"
+  },
+  "heartbeat_acc2": {
+    "sounds": [
+      "dgh:heartbeat_acc2"
+    ],
+    "subtitle": "dgh:heartbeat_acc2"
+  },
+  "heartbeat_normal": {
+    "sounds": [
+      "dgh:heartbeat_normal"
+    ],
+    "subtitle": "dgh:heartbeat_normal"
+  },
+  "heartbeat_stop": {
+    "sounds": [
+      "dgh:heartbeat_stop"
+    ],
+    "subtitle": "dgh:heartbeat_stop"
+  }
+}
