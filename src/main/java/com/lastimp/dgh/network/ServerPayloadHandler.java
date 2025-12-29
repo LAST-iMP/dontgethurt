@@ -95,6 +95,7 @@ public class ServerPayloadHandler {
                 if (target == null) return;
                 BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
                 HealingHandler.useItemOn(stack, sourcePlayer, target, component);
+                healthMenu.getSlot(data.slotNum()).setByPlayer(stack);
             }
         });
         context.setPacketHandled(true);

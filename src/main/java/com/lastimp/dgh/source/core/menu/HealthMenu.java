@@ -43,8 +43,15 @@ public class HealthMenu extends AbstractContainerMenu {
         }
     }
 
+    public void saveBag() {
+        if (this.handler != null) {
+            var bagTag = this.bagStack.getOrCreateTag();
+            bagTag.put("inv", this.handler.serializeNBT());
+        }
+    }
+
     public void openBag(ItemStack stack) {
-        this.closeBag();
+        this.saveBag();
         this.bagStack = stack;
         this.handler = (BackpackInventory) BagItemCapabilityProvider.getBackPackHandler(stack);
         this.setBagHandler(this.handler);
@@ -52,8 +59,7 @@ public class HealthMenu extends AbstractContainerMenu {
 
     public void closeBag() {
         if (this.handler != null) {
-            var bagTag = this.bagStack.getOrCreateTag();
-            bagTag.put("inv", this.handler.serializeNBT());
+            this.saveBag();
             this.handler = null;
             this.setBagHandler(null);
         }
