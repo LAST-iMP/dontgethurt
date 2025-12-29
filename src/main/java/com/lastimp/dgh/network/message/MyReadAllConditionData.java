@@ -11,32 +11,36 @@ import java.util.UUID;
 public class MyReadAllConditionData {
     private long id_most;
     private long id_least;
+    private int entityID;
     private CompoundTag tag;
     private String oper;
 
     public MyReadAllConditionData(FriendlyByteBuf buffer) {
         this.id_most = buffer.readLong();
         this.id_least = buffer.readLong();
+        this.entityID = buffer.readInt();
         this.tag = buffer.readNbt();
         this.oper = buffer.readUtf();
     }
 
-    public MyReadAllConditionData(UUID uuid, HealthCapability health, OperationType operation) {
+    public MyReadAllConditionData(UUID uuid, int entityID, CompoundTag tag, OperationType operation) {
         this.id_most = uuid.getMostSignificantBits();
         this.id_least = uuid.getLeastSignificantBits();
-        this.tag = health != null ? health.serializeNBT() : new CompoundTag();
+        this.entityID = entityID;
+        this.tag = tag;
         this.oper = operation.name();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeLong(this.id_most);
         buf.writeLong(this.id_least);
+        buf.writeInt(this.entityID);
         buf.writeNbt(this.tag);
         buf.writeUtf(this.oper);
     }
 
-    public static MyReadAllConditionData getInstance(UUID uuid, HealthCapability health, OperationType operation) {
-        return new MyReadAllConditionData(uuid, health, operation);
+    public static MyReadAllConditionData getInstance(UUID uuid, int entityID, CompoundTag tag, OperationType operation) {
+        return new MyReadAllConditionData(uuid, entityID, tag, operation);
     }
 
     public static HealthCapability getHealthFromInstance(CompoundTag tag) {
@@ -51,6 +55,10 @@ public class MyReadAllConditionData {
 
     public long id_most() {
         return id_most;
+    }
+
+    public int entityID() {
+        return entityID;
     }
 
     public String oper() {

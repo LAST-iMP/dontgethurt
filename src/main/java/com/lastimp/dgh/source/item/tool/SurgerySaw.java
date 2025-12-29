@@ -1,14 +1,15 @@
 package com.lastimp.dgh.source.item.tool;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.*;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.neoforge.Common;
-import com.lastimp.dgh.source.core.player.DyingHandler;
+import com.lastimp.dgh.source.core.Utils;
+import com.lastimp.dgh.source.core.bodyPart.Torso;
+import com.lastimp.dgh.source.core.livingEntity.DyingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.source.core.livingEntity.player.PlayerDyingHandler;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -34,45 +35,61 @@ public class SurgerySaw extends AbstractPartlyHealItem {
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
         return HealthCapability.getAndSet(entity, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
+            //必须手术中，牵开皮肤
             if (!body.abnormal(RETRACTED_SKIN)) return false;
-            if (body.abnormal(SAWED_BONES)) return false;
-            if (component == BodyComponents.HEAD) {
-                if (!(entity instanceof Player player)) {
-                    entity.kill();
-                    return true;
+            //不能已经手术截肢
+            if (body.abnormal(SURGICAL_AMPUTATION)) return false;
+            //如果是头，导致死亡
+            if (component == BodyComponents.HEAD) return this.sawHead(entity, source);
+            //已经牵开皮肤、没有骨锯开，则锯开骨头，取消骨钻开
+            if (!body.abnormal(SAWED_BONES)) {
+                if (!(body instanceof AbstractExtremities extremities) || !extremities.abnormal(TRAUMATIC_AMPUTATION)) {
+                    return this.saw(source, body);
+                } else {
+                    return this.cut(source, extremities);
                 }
-                ItemStack head = new ItemStack(Items.PLAYER_HEAD);
-                head.getOrCreateTag().put("SkullOwner", NbtUtils.writeGameProfile(new CompoundTag(), player.getGameProfile()));
-                if (!source.addItem(head)) {
-                    source.drop(head, true, true);
-                }
-                DyingHandler.setPlayerDead(player);
-            } else {
-                body.setConditionValue(SAWED_BONES, BodyCondition.get(SAWED_BONES).maxValue());
-                body.setConditionValue(DRILLED_BONES, BodyCondition.get(DRILLED_BONES).defaultValue());
-                this.saw(h, source, component);
+            } else if (body instanceof AbstractExtremities extremities) {
+                //已经牵开皮肤、有骨锯开
+                return this.cut(source, extremities);
             }
-            return true;
+            return false;
         });
     }
 
-    protected void saw(@NotNull HealthCapability health, ServerPlayer player, BodyComponents component) {
-        int boneNumMax = (component == BodyComponents.TORSO) ? 8 : 2;
-        AbstractVisibleBody body = (AbstractVisibleBody) health.getComponent(component);
-
+    protected boolean saw(ServerPlayer player, AbstractVisibleBody body) {
+        int boneNumMax = (body instanceof Torso) ? 8 : 2;
         float returnFactor = body.getConditionValue(FRACTURE) + body.getConditionValue(BONE_DAMAGE) + body.getConditionValue(BONE_DEATH);
+        if (body instanceof AbstractExtremities)
+            returnFactor += body.getConditionValue(TRAUMATIC_AMPUTATION) + body.getConditionValue(SURGICAL_AMPUTATION);
         int boneReturn = (int) (boneNumMax * (1.0 - Math.min(1.0, returnFactor)));
-        body.setConditionValue(FRACTURE, BodyCondition.get(FRACTURE).minValue());
-        body.setConditionValue(BONE_DAMAGE, BodyCondition.get(BONE_DAMAGE).minValue());
-        body.setConditionValue(BONE_DEATH, BodyCondition.get(BONE_DEATH).minValue());
+
+        body.setConditionValue(SAWED_BONES, BodyCondition.get(SAWED_BONES).maxValue());
+        body.setConditionValue(DRILLED_BONES, BodyCondition.get(DRILLED_BONES).defaultValue());
+        body.setConditionValue(FRACTURE, BodyCondition.get(FRACTURE).defaultValue());
+        body.setConditionValue(BONE_DAMAGE, BodyCondition.get(BONE_DAMAGE).defaultValue());
+        body.setConditionValue(BONE_DEATH, BodyCondition.get(BONE_DEATH).defaultValue());
 
         ResourceLocation boneKey = body.boneCrafted();
         if (boneKey == null) {
-            drop(ModItems.BONE_NATURAL.get(), player, boneReturn);
+            Utils.drop(ModItems.BONE_NATURAL.get(), player, boneReturn);
         } else {
-            drop(BodyCondition.bones.get(boneKey).get(), player, boneReturn);
+            Utils.drop(BodyCondition.bones.get(boneKey).get(), player, boneReturn);
             body.setConditionValue(boneKey, BodyCondition.get(boneKey).defaultValue());
         }
+        return true;
+    }
+
+    protected boolean cut(ServerPlayer player, AbstractExtremities body) {
+        if (body.abnormal(SURGICAL_AMPUTATION)) return false;
+
+        if (!body.abnormal(TRAUMATIC_AMPUTATION)) {
+            Item limb = body instanceof AbstractArm ? ModItems.HUMAN_HAND.get() : ModItems.HUMAN_LEG.get();
+            Utils.drop(limb, player, 1);
+        }
+
+        body.setConditionValue(SURGICAL_AMPUTATION, BodyCondition.get(SURGICAL_AMPUTATION).maxValue());
+        body.setConditionValue(TRAUMATIC_AMPUTATION, BodyCondition.get(TRAUMATIC_AMPUTATION).defaultValue());
+        return true;
     }
 
     public static void sawExcept(ServerPlayer source, AbstractBody body, ResourceLocation exception, int maxAmount) {
@@ -80,20 +97,25 @@ public class SurgerySaw extends AbstractPartlyHealItem {
         int boneReturn = (int) (maxAmount * (1.0 - Math.min(1.0, returnFactor)));
         for (var key : BodyCondition.bones.keySet()) {
             if (body.abnormal(key) && key != exception) {
-                drop(BodyCondition.bones.get(key).get(), source, (int)(boneReturn * body.getConditionValue(key)));
+                Utils.drop(BodyCondition.bones.get(key).get(), source, (int)(boneReturn * body.getConditionValue(key)));
                 body.setConditionValue(key, BodyCondition.get(key).defaultValue());
             }
         }
         if (exception != null) {
-            drop(ModItems.BONE_NATURAL.get(), source, (int)(boneReturn * (1.0f - body.getConditionValue(SAWED_BONES))));
+            Utils.drop(ModItems.BONE_NATURAL.get(), source, (int)(boneReturn * (1.0f - body.getConditionValue(SAWED_BONES))));
             body.setConditionValue(SAWED_BONES, BodyCondition.get(SAWED_BONES).maxValue());
         }
     }
 
-    private static void drop(Item item, ServerPlayer player, int amount) {
-        var stack=  new ItemStack(item, amount);
-        if (!player.addItem(stack)) {
-            player.drop(stack, true, true);
+    private boolean sawHead(LivingEntity entity, ServerPlayer source) {
+        if (!(entity instanceof Player player)) {
+            DyingHandler.setLivingDead(entity);
+        } else {
+            ItemStack head = new ItemStack(Items.PLAYER_HEAD);
+            head.getOrCreateTag().put("SkullOwner", NbtUtils.writeGameProfile(new CompoundTag(), player.getGameProfile()));
+            Utils.drop(head, source);
+            PlayerDyingHandler.setPlayerDead(player);
         }
+        return true;
     }
 }

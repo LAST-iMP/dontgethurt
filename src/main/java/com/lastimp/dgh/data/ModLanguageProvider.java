@@ -58,6 +58,8 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(BodyCondition.ARTERIAL_BLEEDING.toString(), "动脉出血");
         this.add(BodyCondition.CLAMPED_ARTERIES.toString(), "动脉夹闭");
         this.add(BodyCondition.GANGRENE.toString(), "坏疽");
+        this.add(BodyCondition.SURGICAL_AMPUTATION.toString(), "手术性截肢");
+        this.add(BodyCondition.TRAUMATIC_AMPUTATION.toString(), "创伤性截肢");
 
         this.add(BodyCondition.ANALGESIA.toString(), "镇痛");
         this.add(BodyCondition.RESPIRATORY_ARREST.toString(), "呼吸停止");
@@ -146,6 +148,9 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.ANTISEPTIC.get(), "消毒剂");
         this.add(ModItems.AUTOPULSE.get(), "自动心肺复苏器");
         this.add(ModItems.ANTIBIOTICS.get(), "广谱抗生素");
+        this.add(ModItems.LIMB_REF_BEG.get(), "器官储存箱");
+        this.add(ModItems.HUMAN_HAND.get(), "手臂");
+        this.add(ModItems.HUMAN_LEG.get(), "腿");
 
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");

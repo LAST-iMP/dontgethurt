@@ -1,4 +1,4 @@
-package com.lastimp.dgh.source.core.player;
+package com.lastimp.dgh.source.core.livingEntity.player;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.register.ModItems;

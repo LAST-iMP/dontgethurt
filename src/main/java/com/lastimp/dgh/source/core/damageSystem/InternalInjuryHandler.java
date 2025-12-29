@@ -8,6 +8,7 @@ import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
+import net.minecraft.world.entity.LivingEntity;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
@@ -17,17 +18,18 @@ public abstract class InternalInjuryHandler {
         body.injury(INTERNAL_INJURY, damageAmount);
     }
 
-    public static void handleBluntTrauma(AbstractVisibleBody visibleBody, float damageAmount) {
-        handle(visibleBody, damageAmount);
-        float damage = visibleBody.getConditionValue(INTERNAL_INJURY) + visibleBody.getConditionHidden(INTERNAL_INJURY);
-        if (visibleBody instanceof AbstractExtremities extremities)
+    public static void handleBluntTrauma(LivingEntity entity, AbstractVisibleBody body, float damageAmount) {
+        handle(body, damageAmount);
+        float damage = body.getConditionValue(INTERNAL_INJURY) + body.getConditionHidden(INTERNAL_INJURY);
+        if (body instanceof AbstractExtremities extremities)
             FollowInjuryHandler.dislocationHandler(extremities, damage);
-        FollowInjuryHandler.fractionHandler(visibleBody, damage);
-        FollowInjuryHandler.pneumothoraxHandler(visibleBody);
-        FollowInjuryHandler.arterialBleedingHandler(visibleBody);
+        FollowInjuryHandler.fractionHandler(body, damage);
+        FollowInjuryHandler.pneumothoraxHandler(body);
+        FollowInjuryHandler.arterialBleedingHandler(body);
+        FollowInjuryHandler.traumaticAmputationHandler(entity, body, damage, Config.baseAmputationThreshold + 0.2f, Config.baseAmputationMaxProb - Config.baseAmputationThreshold - 0.2f, 0.0f, Config.baseAmputationMaxProb);
     }
 
-    public static void handleExplosion(AbstractVisibleBody body, float damageAmount) {
+    public static void handleExplosion(LivingEntity entity, AbstractVisibleBody body, float damageAmount) {
         handle(body, damageAmount);
         float damage = body.getConditionValue(INTERNAL_INJURY) + body.getConditionHidden(INTERNAL_INJURY);
         if (body instanceof AbstractExtremities extremities)
@@ -35,5 +37,6 @@ public abstract class InternalInjuryHandler {
         FollowInjuryHandler.fractionHandler(body, damage, Config.baseFractureThreshold, 0.9f - Config.baseFractureThreshold, 0.0f, 1.0f, 0);
         FollowInjuryHandler.pneumothoraxHandler(body);
         FollowInjuryHandler.arterialBleedingHandler(body);
+        FollowInjuryHandler.traumaticAmputationHandler(entity, body, damage, Config.baseAmputationThreshold + 0.2f, Config.baseAmputationMaxProb - Config.baseAmputationThreshold - 0.2f, 0.0f, Config.baseAmputationMaxProb);
     }
 }

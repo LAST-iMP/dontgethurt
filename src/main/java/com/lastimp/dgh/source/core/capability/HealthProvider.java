@@ -40,7 +40,7 @@ public class HealthProvider implements ICapabilitySerializable<CompoundTag> {
         availClasses.add(entity);
     }
 
-    public static <T extends LivingEntity> boolean has(LivingEntity entity) {
+    public static boolean has(LivingEntity entity) {
         for (Class<? extends LivingEntity> testClass : availClasses) {
             if (testClass.isInstance(entity)) return true;
         }

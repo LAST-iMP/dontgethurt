@@ -106,10 +106,19 @@ public class Config {
     public static final ForgeConfigSpec.DoubleValue BASE_PNEUMOTHORAX_PROB = BUILDER
             .defineInRange("BASE_FRACTURE_MAX_PROB", 0.05, 0, 1);
 
+    public static final ForgeConfigSpec.DoubleValue BASE_AMPUTATION_THRESHOLD = BUILDER
+            .defineInRange("BASE_AMPUTATION_THRESHOLD", 0.05, 0, 0.7);
+
+    public static final ForgeConfigSpec.DoubleValue BASE_AMPUTATION_MAX_PROB = BUILDER
+            .defineInRange("BASE_AMPUTATION_MAX_PROB", 0.3, 0, 1.0);
+
     public static float fractureArterialProb;
     public static float fractureBloodRatio;
     public static int baseHealingShieldTime;
     public static float basePneumothoraxProb;
+
+    public static float baseAmputationThreshold;
+    public static float baseAmputationMaxProb;
 
     // 构建配置
     public static final ForgeConfigSpec SPEC = BUILDER.pop().build();
@@ -142,6 +151,8 @@ public class Config {
 
         baseHealingShieldTime = BASE_HEALING_SHIELD_TIME.get();
         basePneumothoraxProb = (float) (double) BASE_PNEUMOTHORAX_PROB.get();
+        baseAmputationThreshold = (float) (double) BASE_AMPUTATION_THRESHOLD.get();
+        baseAmputationMaxProb = (float) (double) BASE_AMPUTATION_MAX_PROB.get();
         BodyCondition.init();
     }
 

@@ -8,14 +8,15 @@ import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.network.message.Network;
+import com.lastimp.dgh.source.core.livingEntity.player.PlayerDyingHandler;
 import com.lastimp.dgh.source.core.menu.HealthMenu;
 import com.lastimp.dgh.source.core.menu.menuProvider.HealthCareBagMenuProvider;
 import com.lastimp.dgh.source.core.menu.menuProvider.HealthMenuProvider;
+import com.lastimp.dgh.source.core.menu.menuProvider.LimbRefMenuProvider;
 import com.lastimp.dgh.source.core.menu.menuProvider.SurgeryToolBagMenuProvider;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
-import com.lastimp.dgh.source.core.player.DyingHandler;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,11 +36,11 @@ public class ServerPayloadHandler {
             ServerPlayer sender = context.getSender();
             var target = Utils.getLivingWithHealth(sender.serverLevel(), uuid);
             if (target == null) return;
-            HealthCapability health = HealthCapability.get(target);
 
+            var tag = HealthCapability.get(target).serializeNBT();
             Network.CLIENT_INSTANCE.send(
                     PacketDistributor.PLAYER.with(context::getSender),
-                    MyReadAllConditionData.getInstance(uuid, health, OperationType.valueOf(data.oper()))
+                    MyReadAllConditionData.getInstance(uuid, target.getId(), tag, OperationType.valueOf(data.oper()))
             );
         });
         context.setPacketHandled(true);
@@ -62,9 +63,11 @@ public class ServerPayloadHandler {
                         HealthCareBagMenuProvider.open(player, slot);
                     if (slot.is(ModItems.SURGERY_TOOL_BAG.get()))
                         SurgeryToolBagMenuProvider.open(player, slot);
+                    if (slot.is(ModItems.LIMB_REF_BEG.get()))
+                        LimbRefMenuProvider.open(player, slot);
                     break;
                 case GIVE_UP:
-                    DyingHandler.setPlayerDead(player);
+                    PlayerDyingHandler.setPlayerDead(player);
                     break;
                 case CALL_FOR_HELP:
                     player.getServer().getPlayerList().getPlayers().forEach(p -> {

@@ -3,6 +3,8 @@ package com.lastimp.dgh.source.register;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.item.OperatingBedItem;
+import com.lastimp.dgh.source.item.limbs.HumanHand;
+import com.lastimp.dgh.source.item.limbs.HumanLeg;
 import com.lastimp.dgh.source.item.tool.*;
 import com.lastimp.dgh.source.item.medicine.*;
 import net.minecraft.world.item.*;
@@ -110,6 +112,13 @@ public class ModItems {
     public static final RegistryObject<Item> SURGERY_TOOL_BAG = registerItem(
             "surgery_tool_bag",
             SurgeryToolBag::new,
+            new Item.Properties()
+                    .stacksTo(1)
+    );
+
+    public static final RegistryObject<Item> LIMB_REF_BEG = registerItem(
+            "limb_ref_beg",
+            LimbRefBeg::new,
             new Item.Properties()
                     .stacksTo(1)
     );
@@ -378,6 +387,20 @@ public class ModItems {
             Antibiotics::new,
             new Item.Properties()
                     .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> HUMAN_HAND = registerItem(
+            "human_hand",
+            HumanHand::new,
+            new Item.Properties()
+                    .stacksTo(1)
+    );
+
+    public static final RegistryObject<Item> HUMAN_LEG = registerItem(
+            "human_leg",
+            HumanLeg::new,
+            new Item.Properties()
+                    .stacksTo(1)
     );
 
     public static void register(IEventBus eventBus) {

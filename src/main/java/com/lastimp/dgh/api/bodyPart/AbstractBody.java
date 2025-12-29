@@ -156,7 +156,10 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     public @UnknownNullability CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         for (Map.Entry<ResourceLocation, ConditionState> e : state.entrySet()) {
-            tag.put(e.getKey().toString(), e.getValue().serializeNBT());
+            var key = e.getKey();
+            var state = e.getValue();
+            if (state.isDefault(BodyCondition.get(key))) continue;
+            tag.put(key.toString(), state.serializeNBT());
         }
         return tag;
     }

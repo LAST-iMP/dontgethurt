@@ -49,6 +49,7 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.WOOD_WRENCH.getKey())
                 .add(ModItems.HEALTH_CARE_BAG.getKey())
                 .add(ModItems.SURGERY_TOOL_BAG.getKey())
+                .add(ModItems.LIMB_REF_BEG.getKey())
                 .add(ModItems.SCALPEL.getKey())
                 .add(ModItems.HEMOSTAT.getKey())
                 .add(ModItems.RETRACTOR.getKey())
@@ -75,7 +76,9 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.DRAINAGE.getKey())
                 .add(ModItems.OXYGEN_MASK.getKey())
                 .add(ModItems.ANTISEPTIC_SPRAYER.getKey())
-                .add(ModItems.AUTOPULSE.getKey());
+                .add(ModItems.AUTOPULSE.getKey())
+                .add(ModItems.HUMAN_HAND.getKey())
+                .add(ModItems.HUMAN_LEG.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_BASIC)
                 .add(SHEARS)
@@ -111,15 +114,22 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.BONE_NETHERITE.getKey())
                 .add(ModItems.MEDICAL_STENT.getKey())
                 .add(ModItems.DRAINAGE.getKey())
-                .add(ModItems.OXYGEN_MASK.getKey());
+                .add(ModItems.OXYGEN_MASK.getKey())
+                .add(ModItems.HUMAN_HAND.getKey())
+                .add(ModItems.HUMAN_LEG.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_SHEARS)
                 .add(SHEARS)
                 .add(ModItems.SCALPEL.getKey());
 
+        this.tag(ModTags.MEDICAL_LIMBS)
+                .add(ModItems.HUMAN_HAND.getKey())
+                .add(ModItems.HUMAN_LEG.getKey());
+
         this.tag(ModTags.MEDICAL_TOOLS_BAGS)
                 .add(ModItems.HEALTH_CARE_BAG.getKey())
-                .add(ModItems.SURGERY_TOOL_BAG.getKey());
+                .add(ModItems.SURGERY_TOOL_BAG.getKey())
+                .add(ModItems.LIMB_REF_BEG.getKey());
 
         this.tag(ItemTags.BEDS)
                 .add(ModItems.OPERATING_BED_BLOCK_ITEM.getKey());

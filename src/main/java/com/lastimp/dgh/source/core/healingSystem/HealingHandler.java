@@ -20,11 +20,11 @@ import oshi.util.tuples.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.BRAIN_DAMAGE;
 import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
-import static com.lastimp.dgh.api.tags.ModTags.MEDICAL_TOOLS_SHEARS;
 
 public class HealingHandler {
 
@@ -48,8 +48,13 @@ public class HealingHandler {
             success = item.heal(source, target, component);
         }
 
-        if (success)
+        if (success) {
             source.getCooldowns().addCooldown(healingItem, 10);
+            HealthCapability.getAndSet(target, h -> {
+                h.setLastHealer(source.getUUID());
+                return true;
+            });
+        }
 
         if (success && itemStack.isDamageableItem()) {
             itemStack.hurtAndBreak(1, source, (player) -> {});

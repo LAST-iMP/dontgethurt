@@ -242,7 +242,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
             GuiOpenWrapper.MINECRAFT.get().setScreen(null);
         } else {
             Network.SERVER_INSTANCE.sendToServer(MyReadAllConditionData.getInstance(
-                    this.menu.targetEntity, null, HEALTH_SCANN
+                    this.menu.targetEntity, 0, null, HEALTH_SCANN
             ));
         }
 
@@ -272,7 +272,10 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         var cooldowns = player.getCooldowns();
         var oxygenMask = this.menu.getSlot(45).getItem().getItem();
         if (!cooldowns.isOnCooldown(oxygenMask))
-            cooldowns.addCooldown(oxygenMask, HealthScreen.healthData.autoPulseCoolDown());
+            cooldowns.addCooldown(oxygenMask, HealthScreen.healthData.oxygenMaskCoolDown());
+        var autopulse = this.menu.getSlot(46).getItem().getItem();
+        if (!cooldowns.isOnCooldown(autopulse))
+            cooldowns.addCooldown(autopulse, HealthScreen.healthData.autoPulseCoolDown());
     }
 
     public void setHealthData(HealthCapability healthData) {

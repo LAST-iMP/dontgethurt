@@ -55,6 +55,30 @@
     },
     {
       "type": "spotlight",
+      "title": "手术工具包",
+      "item": "dgh:surgery_tool_bag",
+      "scale": 1.2,
+      "text": "装满你的危险玩意儿。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:surgery_tool_bag"
+    },
+    {
+      "type": "spotlight",
+      "title": "器官储存箱",
+      "item": "dgh:limb_ref_beg",
+      "scale": 1.2,
+      "text": "装满你的柔软玩意儿。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:limb_ref_beg"
+    },
+    {
+      "type": "spotlight",
       "title": "医疗床",
       "item": "dgh:operating_bed",
       "scale": 1.2,
@@ -112,6 +136,18 @@
     {
       "type": "crafting",
       "recipe": "dgh:surgical_drill"
+    },
+    {
+      "type": "spotlight",
+      "title": "手术锯",
+      "item": "dgh:surgery_saw",
+      "scale": 1.2,
+      "text": "钻开骨头、锯开肢体。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:surgery_saw"
     },
     {
       "type": "spotlight",

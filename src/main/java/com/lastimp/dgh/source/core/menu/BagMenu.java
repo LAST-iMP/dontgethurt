@@ -47,6 +47,16 @@ public class BagMenu extends AbstractContainerMenu {
         }
     }
 
+    public static class LimbRefBag extends BagMenu {
+        public LimbRefBag(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
+            this(pContainerId, inv, buf.readItem());
+        }
+
+        public LimbRefBag(int pContainerId, Inventory inv, ItemStack bagStack) {
+            super(ModMenus.LIMB_REF_BAG_MENU.get(), pContainerId, inv, bagStack);
+        }
+    }
+
     @Override
     public void removed(@NotNull Player player) {
         var bagTag = this.bagStack.getOrCreateTag();

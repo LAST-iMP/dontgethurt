@@ -6,6 +6,7 @@
     "dgh:wood_wrench",
     "dgh:health_care_bag",
     "dgh:surgery_tool_bag",
+    "dgh:limb_ref_beg",
     "dgh:scalpel",
     "dgh:hemostat",
     "dgh:retractor",
@@ -33,6 +34,8 @@
     "dgh:oxygen_mask",
     "dgh:antiseptic_sprayer",
     "dgh:autopulse",
+    "dgh:human_hand",
+    "dgh:human_leg",
     {
       "id": "tfc:metal/shears/bismuth_bronze",
       "required": false

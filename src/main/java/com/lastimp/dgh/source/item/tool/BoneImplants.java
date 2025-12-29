@@ -29,6 +29,8 @@ public class BoneImplants extends AbstractPartlyHealItem {
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
         return HealthCapability.getAndSet(entity, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
+            if (body.abnormal(TRAUMATIC_AMPUTATION) || body.abnormal(SURGICAL_AMPUTATION)) return false;
+
             if (body.abnormal(DRILLED_BONES) && body.abnormal(FRACTURE)) {
                 if (body.boneCrafted() != boneType) return false;
                 body.healing(FRACTURE, -BodyCondition.get(FRACTURE).maxValue());

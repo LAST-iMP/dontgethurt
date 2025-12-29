@@ -423,6 +423,16 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(Items.SLIME_BALL, 2)
                 .unlockedBy("has_slime_ball", has(Items.SLIME_BALL))
                 .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.LIMB_REF_BEG.get(), 1)
+                .pattern("igi")
+                .pattern("gbg")
+                .pattern("iri")
+                .define('i', Items.IRON_INGOT)
+                .define('g', Items.GLASS)
+                .define('b', Items.BLUE_ICE)
+                .define('r', Items.REDSTONE)
+                .unlockedBy("has_iron", has(Items.IRON_INGOT))
+                .save(recipeOutput);
 
         var book = PatchouliAPI.get().getBookStack(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "medical_guide"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, book.getItem())

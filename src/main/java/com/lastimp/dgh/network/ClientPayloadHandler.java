@@ -9,6 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ClientPayloadHandler {
@@ -16,12 +17,15 @@ public class ClientPayloadHandler {
     public static void handleReadAllConditionData(final MyReadAllConditionData data, final Supplier<NetworkEvent.Context> ctx) {
         var context = ctx.get();
         context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            HealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag());
             OperationType operation = OperationType.valueOf(data.oper());
             if (operation == OperationType.HEALTH_SCANN && ClientAccessor.healthScreen() != null) {
+                HealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag());
                 ClientAccessor.healthScreen().setHealthData(health);
             } else if (operation == OperationType.SYN) {
-                ClientAccessor.setHealth(health);
+                var entity = ClientAccessor.getLiving(data.entityID());
+                if (entity != null && HealthCapability.has(entity)) {
+                    Objects.requireNonNull(HealthCapability.get(entity)).lightDeserializeNBT(data.tag());
+                }
             }
         }));
         context.setPacketHandled(true);

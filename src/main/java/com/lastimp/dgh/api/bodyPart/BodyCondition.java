@@ -192,6 +192,14 @@ public class BodyCondition {
             (name) -> create(name)
                     .setHealing(1.0f / Config.base_self_healing_time, 0).isInjury().eyeVisible().build()
     );
+    public static final ResourceLocation SURGICAL_AMPUTATION = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "surgical_amputation"),
+            (name) -> create(name)
+                    .setHealing(0, 0).isSurgery().eyeVisible().build()
+    );
+    public static final ResourceLocation TRAUMATIC_AMPUTATION = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "traumatic_amputation"),
+            (name) -> create(name)
+                    .setHealing(0, 0).isInjury().eyeVisible().build()
+    );
     //躯干
     public static final ResourceLocation ANALGESIA = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "analgesia"),
             (name) -> create(name)
@@ -480,7 +488,9 @@ public class BodyCondition {
         AbstractExtremities.addCondition(List.of(
                 DISLOCATION,
                 ARTERIAL_BLEEDING,
-                GANGRENE
+                GANGRENE,
+                SURGICAL_AMPUTATION,
+                TRAUMATIC_AMPUTATION
         ));
 
         Head.addCondition(List.of(
