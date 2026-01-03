@@ -7,6 +7,7 @@
     "dgh:oxygen_mask",
     "dgh:antiseptic_sprayer",
     "dgh:autopulse",
+    "dgh:stasis_bag",
     {
       "id": "tfc:metal/shears/bismuth_bronze",
       "required": false

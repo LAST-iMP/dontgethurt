@@ -26,7 +26,7 @@ public class HealthConditionWidget extends AbstractWidget {
     }
 
     public void setSeverity(float severity) {
-        this.severity = Mth.clamp(severity, 0f, 1f);
+        this.severity = Mth.clamp(severity, 0f, 2f);
     }
 
     @Override

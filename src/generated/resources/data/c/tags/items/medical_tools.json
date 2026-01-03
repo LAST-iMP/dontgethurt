@@ -36,6 +36,7 @@
     "dgh:autopulse",
     "dgh:human_hand",
     "dgh:human_leg",
+    "dgh:stasis_bag",
     {
       "id": "tfc:metal/shears/bismuth_bronze",
       "required": false

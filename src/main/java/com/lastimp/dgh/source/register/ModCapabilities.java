@@ -1,6 +1,7 @@
 package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.capability.HealthProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -26,11 +27,11 @@ public class ModCapabilities {
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
-            event.addCapability(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "health"), new HealthProvider());
+            event.addCapability(Common.ResourceLocation(DontGetHurt.MODID, "health"), new HealthProvider());
         }
         HealthProvider.add(Player.class);
         if (event.getObject() instanceof Villager) {
-            event.addCapability(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "health"), new HealthProvider());
+            event.addCapability(Common.ResourceLocation(DontGetHurt.MODID, "health"), new HealthProvider());
         }
         HealthProvider.add(Villager.class);
     }

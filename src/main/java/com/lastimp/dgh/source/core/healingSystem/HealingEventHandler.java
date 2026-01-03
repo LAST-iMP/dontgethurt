@@ -53,7 +53,7 @@ public class HealingEventHandler {
         float maxHealth = getHealthWithOuterHealing(health, entity);
         if (entity.isDeadOrDying()) {
             DyingHandler.setLivingDead(entity);
-        } else if (health.getComponent(BodyComponents.HEAD).abnormal(COMA) && maxHealth > 0) {
+        } else if (health.isDown() && maxHealth > 0) {
             entity.setHealth(0.01f);
         } else if (maxHealth > 0) {
             if ((int)maxHealth != (int)entity.getHealth())
@@ -71,7 +71,7 @@ public class HealingEventHandler {
             PlayerDyingHandler.setPlayerDead(player);
         } else if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative()) {
             player.setHealth(player.getMaxHealth());
-        } else if (health.getComponent(BodyComponents.HEAD).abnormal(COMA) && maxHealth > 0) {
+        } else if (health.isDown() && maxHealth > 0) {
             player.setHealth(0.01f);
         } else if (maxHealth > 0) {
             if ((int)maxHealth != (int)player.getHealth())

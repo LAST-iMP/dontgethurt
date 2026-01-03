@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_coal": {
+    "has_iron": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:charcoal"
+              "minecraft:iron_ingot"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "dgh:antiseptic"
+        "recipe": "dgh:limb_ref_beg"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_coal",
+      "has_iron",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "dgh:antiseptic"
+      "dgh:limb_ref_beg"
     ]
   },
   "sends_telemetry_event": false

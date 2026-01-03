@@ -2,6 +2,7 @@ package com.lastimp.dgh.compact.touhoulittlemaid;
 
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.capability.HealthProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -16,7 +17,7 @@ public class ModCapabilities {
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (!ModList.get().isLoaded("touhou_little_maid")) return;
         if (event.getObject() instanceof EntityMaid) {
-            event.addCapability(ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "health"), new HealthProvider());
+            event.addCapability(Common.ResourceLocation(DontGetHurt.MODID, "health"), new HealthProvider());
         }
         HealthProvider.add(EntityMaid.class);
     }

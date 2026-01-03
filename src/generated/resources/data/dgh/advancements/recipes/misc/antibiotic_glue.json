@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_coal": {
+    "has_magma_cream": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:charcoal"
+              "minecraft:magma_cream"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "dgh:antiseptic"
+        "recipe": "dgh:antibiotic_glue"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_coal",
+      "has_magma_cream",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "dgh:antiseptic"
+      "dgh:antibiotic_glue"
     ]
   },
   "sends_telemetry_event": false

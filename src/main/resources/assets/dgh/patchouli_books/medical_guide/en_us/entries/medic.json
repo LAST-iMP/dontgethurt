@@ -13,7 +13,7 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)部位指定$(li2)绷带$(li2)缝合线$(li2)石膏$(li2)医用支架$(li2)止血带$(li2)气胸针$(li2)引流管$(li2)抗生素软膏$(br)$(li)直接使用$(li2)(空)血包$(li2)吗啡$(li2)烯丙羟吗啡酮$(li2)肾上腺素$(li2)广谱抗生素$(li2)战斗兴奋剂$(br)"
+      "text": "$(li)部位指定$(li2)绷带$(li2)可塑人造皮肤$(li2)缝合线$(li2)石膏$(li2)医用支架$(li2)止血带$(li2)气胸针$(li2)引流管$(li2)抗生素软膏$(li2)抗生素凝胶$(br)$(li)直接使用$(li2)(空)血包$(li2)吗啡$(li2)烯丙羟吗啡酮$(li2)肾上腺素$(li2)广谱抗生素$(li2)战斗兴奋剂$(br)"
     },
     {
       "type": "spotlight",
@@ -26,6 +26,18 @@
     {
       "type": "crafting",
       "recipe": "dgh:bandage"
+    },
+    {
+      "type": "spotlight",
+      "title": "可塑人造皮肤",
+      "item": "dgh:bandage",
+      "scale": 1.2,
+      "text": "高级绷带$(br)$(li)效果$(li2)阻止出血(内伤无效)$(li2)手术时治疗烧伤$(li)负面效果$(li2)变脏后增加内伤$(li2)降低移动速度$(li)主治$(li2)烧伤$(li)副治$(li2)开放伤、脱臼、骨折",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:plastic_skin"
     },
     {
       "type": "spotlight",
@@ -110,6 +122,18 @@
     {
       "type": "crafting",
       "recipe": "dgh:antibiotic_ointment"
+    },
+    {
+      "type": "spotlight",
+      "title": "抗生素凝胶",
+      "item": "dgh:antibiotic_glue",
+      "scale": 1.2,
+      "text": "烧伤特效药。$(br)$(li)效果$(li2)降低感染$(li2)治疗烧伤$(li)负面效果$(li2)无$(br)$(li)主治$(li2)烧伤",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:antibiotic_glue"
     },
     {
       "type": "spotlight",

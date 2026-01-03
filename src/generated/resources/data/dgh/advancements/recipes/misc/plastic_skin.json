@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_coal": {
+    "has_bandage": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:charcoal"
+              "dgh:bandage"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "dgh:antiseptic"
+        "recipe": "dgh:plastic_skin"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_coal",
+      "has_bandage",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "dgh:antiseptic"
+      "dgh:plastic_skin"
     ]
   },
   "sends_telemetry_event": false

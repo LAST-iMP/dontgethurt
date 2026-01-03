@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_coal": {
+    "has_ice": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:charcoal"
+              "minecraft:blue_ice"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "dgh:antiseptic"
+        "recipe": "dgh:stasis_bag"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_coal",
+      "has_ice",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "dgh:antiseptic"
+      "dgh:stasis_bag"
     ]
   },
   "sends_telemetry_event": false

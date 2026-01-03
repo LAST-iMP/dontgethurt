@@ -6,10 +6,10 @@
       "item": "dgh:antibiotics"
     },
     {
-      "item": "minecraft:slime_ball"
+      "item": "minecraft:magma_cream"
     }
   ],
   "result": {
-    "item": "dgh:antibiotic_ointment"
+    "item": "dgh:antibiotic_glue"
   }
 }

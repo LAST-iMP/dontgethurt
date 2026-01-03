@@ -40,7 +40,7 @@ public class HealingHandler {
         }
 
         if (!(itemStack.getItem() instanceof AbstractHealingItem healingItem)) return;
-        if (!healingItem.available(itemStack)) return;
+        if (!healingItem.available(target, itemStack)) return;
 
         if (healingItem instanceof AbstractDirectHealItems item) {
             success = item.heal(source, target);

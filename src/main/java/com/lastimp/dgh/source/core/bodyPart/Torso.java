@@ -207,6 +207,7 @@ public class Torso extends AbstractVisibleBody {
     }
 
     public void setHeartRateLevel(float level) {
+        level = Math.min(Math.max(0f, level), 3f);
         if (level > 2) {
             this.setConditionValue(HEARTRATE_STOP, level - 2);
             this.setConditionValue(HEARTRATE_IRREGULAR, BodyCondition.get(HEARTRATE_IRREGULAR).minValue());

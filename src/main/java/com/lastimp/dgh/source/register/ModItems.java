@@ -403,6 +403,29 @@ public class ModItems {
                     .stacksTo(1)
     );
 
+    public static final RegistryObject<Item> PLASTIC_SKIN = registerItem(
+            "plastic_skin",
+            PlasticSkin::new,
+            new Item.Properties()
+                    .stacksTo(64)
+    );
+
+    public static final RegistryObject<Item> ANTIBIOTIC_GLUE = registerItem(
+            "antibiotic_glue",
+            AntibioticGlue::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(4)
+    );
+
+    public static final RegistryObject<Item> STASIS_BAG = registerItem(
+            "stasis_bag",
+            StasisBag::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(400)
+    );
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

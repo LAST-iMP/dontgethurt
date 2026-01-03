@@ -45,6 +45,9 @@ public class DyingHandler {
     }
 
     public static void setLivingDead(LivingEntity entity) {
+        if (entity instanceof Mob mob) {
+            if (mob.isNoAi()) mob.setNoAi(false);
+        }
         entity.hurt(new DamageSource(getKillerDamageType(entity)),entity.getMaxHealth() * 1000);
     }
 

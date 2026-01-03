@@ -2,6 +2,7 @@
 package com.lastimp.dgh.network.message;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.ServerPayloadHandler;
 import net.minecraft.resources.ResourceLocation;
@@ -24,14 +25,14 @@ public class Network {
 
     public static void registerMessage() {
         SERVER_INSTANCE = NetworkRegistry.newSimpleChannel(
-                ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "server_networking"),
+                Common.ResourceLocation(DontGetHurt.MODID, "server_networking"),
                 () -> "1.0",
                 (s) -> true,
                 (s) -> true
         );
 
         CLIENT_INSTANCE = NetworkRegistry.newSimpleChannel(
-                ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "client_networking"),
+                Common.ResourceLocation(DontGetHurt.MODID, "client_networking"),
                 () -> "2.0",
                 (s) -> true,
                 (s) -> true
