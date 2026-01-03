@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": {
+      "item": "dgh:bandage"
+    },
+    "f": {
+      "item": "minecraft:blaze_powder"
+    },
+    "i": {
+      "item": "dgh:antibiotic_ointment"
+    }
+  },
+  "pattern": [
+    "bbb",
+    "fif",
+    "bbb"
+  ],
+  "result": {
+    "count": 6,
+    "id": "dgh:plastic_skin"
+  }
+}

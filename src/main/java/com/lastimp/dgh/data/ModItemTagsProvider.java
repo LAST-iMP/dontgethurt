@@ -38,7 +38,9 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.ADRENALINE.getKey())
                 .add(ModItems.ANTISEPTIC.getKey())
                 .add(ModItems.ANTIBIOTICS.getKey())
-                .add(ModItems.ANTIBIOTIC_OINTMENT.getKey());
+                .add(ModItems.ANTIBIOTIC_OINTMENT.getKey())
+                .add(ModItems.PLASTIC_SKIN.getKey())
+                .add(ModItems.ANTIBIOTIC_GLUE.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS)
                 .add(SHEARS)
@@ -76,7 +78,8 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.ANTISEPTIC_SPRAYER.getKey())
                 .add(ModItems.AUTOPULSE.getKey())
                 .add(ModItems.HUMAN_HAND.getKey())
-                .add(ModItems.HUMAN_LEG.getKey());
+                .add(ModItems.HUMAN_LEG.getKey())
+                .add(ModItems.STASIS_BAG.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_BASIC)
                 .add(SHEARS)
@@ -85,7 +88,8 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.WOOD_WRENCH.getKey())
                 .add(ModItems.OXYGEN_MASK.getKey())
                 .add(ModItems.ANTISEPTIC_SPRAYER.getKey())
-                .add(ModItems.AUTOPULSE.getKey());
+                .add(ModItems.AUTOPULSE.getKey())
+                .add(ModItems.STASIS_BAG.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_SURGERY)
                 .add(ModItems.SCALPEL.getKey())
@@ -135,7 +139,8 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
         this.tag(ModTags.OXYGEN_SUPPLIERS)
                 .add(ModItems.OXYGEN_MASK.getKey());
         this.tag(ModTags.AUTOPULSE)
-                .add(ModItems.AUTOPULSE.getKey());
+                .add(ModItems.AUTOPULSE.getKey())
+                .add(ModItems.STASIS_BAG.getKey());
 
         //tfc
         this.tag(ModTags.MEDICAL_TOOLS)

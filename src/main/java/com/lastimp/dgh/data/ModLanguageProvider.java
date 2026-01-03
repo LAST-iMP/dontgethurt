@@ -147,6 +147,9 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.LIMB_REF_BEG.get(), "器官储存箱");
         this.add(ModItems.HUMAN_HAND.get(), "手臂");
         this.add(ModItems.HUMAN_LEG.get(), "腿");
+        this.add(ModItems.PLASTIC_SKIN.get(), "可塑人造皮肤");
+        this.add(ModItems.ANTIBIOTIC_GLUE.get(), "抗生素凝胶");
+        this.add(ModItems.STASIS_BAG.get(), "停滞袋");
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");
         this.add(ModEffects.INTENSE_PAIN_EFFECT.get(), "剧痛");

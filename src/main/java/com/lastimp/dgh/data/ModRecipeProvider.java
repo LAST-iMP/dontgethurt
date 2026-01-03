@@ -384,8 +384,8 @@ public class ModRecipeProvider extends RecipeProvider {
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.ANTISEPTIC.get(), 2)
                 .requires(Items.GLASS_BOTTLE, 2)
                 .requires(Items.WATER_BUCKET, 1)
-                .requires(Items.BLAZE_POWDER, 1)
-                .unlockedBy("has_blaze", has(Items.BLAZE_POWDER))
+                .requires(Items.CHARCOAL, 1)
+                .unlockedBy("has_coal", has(Items.CHARCOAL))
                 .save(recipeOutput);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.ANTISEPTIC_SPRAYER.get(), 1)
                 .pattern(" r ")
@@ -411,7 +411,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(recipeOutput);
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.ANTIBIOTIC_OINTMENT.get(), 1)
                 .requires(ModItems.ANTIBIOTICS, 1)
-                .requires(Items.SLIME_BALL, 2)
+                .requires(Items.SLIME_BALL, 1)
                 .unlockedBy("has_slime_ball", has(Items.SLIME_BALL))
                 .save(recipeOutput);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.LIMB_REF_BEG.get(), 1)
@@ -423,6 +423,31 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('b', Items.BLUE_ICE)
                 .define('r', Items.REDSTONE)
                 .unlockedBy("has_iron", has(Items.IRON_INGOT))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.PLASTIC_SKIN.get(), 6)
+                .pattern("bbb")
+                .pattern("fif")
+                .pattern("bbb")
+                .define('b', ModItems.BANDAGE.get())
+                .define('i', ModItems.ANTIBIOTIC_OINTMENT.get())
+                .define('f', Items.BLAZE_POWDER)
+                .unlockedBy("has_bandage", has(ModItems.BANDAGE.get()))
+                .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.ANTIBIOTIC_GLUE.get(), 1)
+                .requires(ModItems.ANTIBIOTICS.get(), 1)
+                .requires(Items.MAGMA_CREAM, 1)
+                .unlockedBy("has_magma_cream", has(Items.MAGMA_CREAM))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.STASIS_BAG.get())
+                .pattern("IGI")
+                .pattern("LSL")
+                .pattern("IRI")
+                .define('I', Items.BLUE_ICE)
+                .define('G', Items.GHAST_TEAR)
+                .define('L', Items.LEATHER)
+                .define('S', Items.SOUL_LANTERN)
+                .define('R', Items.REDSTONE)
+                .unlockedBy("has_ice", has(Items.BLUE_ICE))
                 .save(recipeOutput);
 
         var book = PatchouliAPI.get().getBookStack(Common.ResourceLocation(DontGetHurt.MODID, "medical_guide"));

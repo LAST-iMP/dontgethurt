@@ -6,6 +6,7 @@ import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.INFECTION;
@@ -25,5 +26,19 @@ public class AntibioticOintment extends AbstractPartlyHealItem {
             body.healing(INFECTION, -0.6f);
             return true;
         });
+    }
+
+    @Override
+    public boolean hasCraftingRemainingItem(ItemStack stack) {
+        return stack.getDamageValue() < stack.getMaxDamage() - 1;
+    }
+
+    @Override
+    public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
+        var remaining = itemStack.copy();
+        remaining.setDamageValue(itemStack.getDamageValue() + 1);
+        return remaining.getDamageValue() >= remaining.getMaxDamage()
+                ? ItemStack.EMPTY
+                : remaining;
     }
 }

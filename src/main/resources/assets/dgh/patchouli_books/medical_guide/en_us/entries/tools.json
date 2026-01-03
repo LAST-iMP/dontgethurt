@@ -190,6 +190,18 @@
     },
     {
       "type": "spotlight",
+      "title": "停滞袋",
+      "item": "dgh:stasis_bag",
+      "scale": 1.2,
+      "text": "把人冻起来。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:stasis_bag"
+    },
+    {
+      "type": "spotlight",
       "title": "骨骼植入物",
       "item": "dgh:bone_implants",
       "scale": 1.2,

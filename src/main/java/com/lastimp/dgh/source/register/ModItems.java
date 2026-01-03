@@ -394,6 +394,29 @@ public class ModItems {
                     .stacksTo(1)
     );
 
+    public static final DeferredItem<PlasticSkin> PLASTIC_SKIN = registerItem(
+            "plastic_skin",
+            PlasticSkin::new,
+            new Item.Properties()
+                    .stacksTo(64)
+    );
+
+    public static final DeferredItem<AntibioticGlue> ANTIBIOTIC_GLUE = registerItem(
+            "antibiotic_glue",
+            AntibioticGlue::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(4)
+    );
+
+    public static final DeferredItem<StasisBag> STASIS_BAG = registerItem(
+            "stasis_bag",
+            StasisBag::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(400)
+    );
+
     private static <T extends Item> DeferredItem<T> registerItem(String name, Function<Item.Properties, ? extends T> func, Item.Properties properties) {
         DeferredItem<T> item = ITEMS.registerItem(name, func, properties);
         ITEMS_SET.add(item);

@@ -28,10 +28,10 @@ public class AntisepticSprayer extends AbstractPartlyHealItem {
     }
 
     @Override
-    public boolean available(ItemStack stack) {
+    public boolean available(LivingEntity target, ItemStack stack) {
         if (stack.getDamageValue() >= stack.getMaxDamage() - 1) {
             return false;
         }
-        return super.available(stack);
+        return super.available(target, stack);
     }
 }

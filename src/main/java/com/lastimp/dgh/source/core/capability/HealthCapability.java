@@ -10,6 +10,7 @@ import com.lastimp.dgh.source.core.menu.component.DynamicItemHandler;
 import com.lastimp.dgh.source.register.ModCapabilities;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.*;
+import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -82,7 +83,8 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     public HealthCapability update(LivingEntity entity) {
         this.updateALLEquipments(entity);
-        this.body.update(this, entity);
+        if (!this.autoPulse.getStackInSlot(0).is(ModItems.STASIS_BAG.get()))
+            this.body.update(this, entity);
         this.updateLabels(entity);
         return this;
     }
@@ -210,9 +212,15 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
                 this.getComponent(RIGHT_LEG).abnormal(INTENSE_PAIN);
     }
 
+    public boolean isDown() {
+        if (this.getComponent(HEAD).abnormal(COMA)) return true;
+        if (this.autoPulse.getStackInSlot(0).is(ModItems.STASIS_BAG.get())) return true;
+        return false;
+    }
+
     public static boolean isDying(LivingEntity entity) {
         var health = HealthCapability.get(entity);
-        if (health != null && health.getComponent(HEAD).abnormal(COMA)) return true;
+        if (health == null) return false;
         return entity.getHealth() < 0.05 && !entity.isDeadOrDying();
     }
 
