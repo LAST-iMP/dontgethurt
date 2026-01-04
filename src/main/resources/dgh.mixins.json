@@ -3,6 +3,7 @@
   "package": "com.lastimp.dgh.mixin",
   "refmap": "dgh.refmap.json",
   "mixins": [
+    "EntityMixin"
   ],
   "client": [
     "client.LivingEntityRendererMixin",

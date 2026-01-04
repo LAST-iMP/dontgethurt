@@ -8,7 +8,6 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.COMA;
@@ -34,14 +33,6 @@ public class PulseEffect extends MobEffect {
         return p_19455_ % 10 == 0;
     }
 
-    @Override
-    public void removeAttributeModifiers(LivingEntity livingEntity, AttributeMap attributeMap, int amplifier) {
-        super.removeAttributeModifiers(livingEntity, attributeMap, amplifier);
-        if (livingEntity instanceof Mob mob) {
-            mob.setNoAi(false);
-        }
-    }
-
     private void apply(LivingEntity livingEntity) {
         if (BlackList.isEntityBlacklisted(BlackList.PULSE_EFFECT, livingEntity.getType())) return;
         if (HealthCapability.has(livingEntity)) {
@@ -49,10 +40,6 @@ public class PulseEffect extends MobEffect {
                 Head head = (Head) h.getComponent(BodyComponents.HEAD);
                 head.injury(COMA, BodyCondition.get(COMA).healingSpeed() * 1.5f);
             });
-        } else if (livingEntity instanceof Mob mob) {
-            mob.setNoAi(true);
-            mob.targetSelector.removeAllGoals(e -> true);
-            mob.goalSelector.removeAllGoals(e -> true);
         }
     }
 }
