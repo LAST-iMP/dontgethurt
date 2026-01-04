@@ -1,13 +1,8 @@
 package com.lastimp.dgh.source.core.damageSystem;
 
-import com.lastimp.dgh.Config;
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
+import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
-import com.lastimp.dgh.source.core.Utils;
-import com.lastimp.dgh.source.core.bodyPart.Head;
-import com.lastimp.dgh.source.core.bodyPart.Torso;
 import net.minecraft.world.entity.LivingEntity;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;

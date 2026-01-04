@@ -4,6 +4,7 @@ package com.lastimp.dgh.source.client.gui.screen;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.neoforge.Common;
+import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.client.ClientAccessor;
 import com.lastimp.dgh.source.client.eventHandler.ForgeClientEventHandler;
@@ -21,6 +22,7 @@ import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.register.ModSounds;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
@@ -72,6 +74,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         super.init();
 
         // 清理旧的
+        this.clearWidgets();
         componentWidgets.clear();
         this.addHealthWidget(31, 6, 34, 32, HEAD, SPRITES_HEAD, SPRITES_HEAD_LIGHT);
         this.addHealthWidget(32,40, 32, 39, TORSO, SPRITES_TORSO, SPRITES_TORSO_LIGHT);
@@ -84,6 +87,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         for (var key : HealthScanner.healthScannerConditions()) {
             addConditionWidget(BodyCondition.get(key));
         }
+        this.addHandPulseWidget(210, 166, 17, 16);
     }
 
     private void addHealthWidget(int x, int y, int width, int height, BodyComponents idx, ResourceLocation resource, ResourceLocation resourceLighted) {
@@ -105,6 +109,15 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         );
         conditionWidgets.put(Common.ResourceBySeperator(condition.name(), ':'), w);
         this.addRenderableWidget(w);
+    }
+
+    private void addHandPulseWidget(int x, int y, int width, int height) {
+        var button = Button.builder(Component.empty(), (b) -> {
+            Network.SERVER_INSTANCE.sendToServer(MyHealingItemUseData.getInstance(
+                    this.menu.targetEntity, MyHealingItemUseData.HAND_PULSE, TORSO
+            ));
+        }).bounds(this.leftPos + x, this.topPos + y, width, height).build();
+        this.addWidget(button);
     }
 
     @Override

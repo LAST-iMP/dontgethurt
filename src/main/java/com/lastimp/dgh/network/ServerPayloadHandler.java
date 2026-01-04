@@ -88,14 +88,19 @@ public class ServerPayloadHandler {
         var context = ctx.get();
         context.enqueueWork(() -> {
             ServerPlayer sourcePlayer = ctx.get().getSender();
-            if (!(sourcePlayer.containerMenu instanceof HealthMenu healthMenu)) return;
+            if (sourcePlayer == null || !(sourcePlayer.containerMenu instanceof HealthMenu healthMenu)) return;
+            var target = Utils.getLivingWithHealth(ctx.get().getSender().serverLevel(), new UUID(data.id_most(), data.id_least()));
+            if (target == null) return;
+
+            if (data.slotNum() == MyHealingItemUseData.HAND_PULSE) {
+                HealthCapability.handPulse(target);
+                return;
+            }
+
             ItemStack stack = healthMenu.getStackBySlotNum(data.slotNum());
             if (stack.is(ModTags.MEDICAL_TOOLS_BAGS)) {
                 healthMenu.openBag(stack);
             } else {
-                UUID targetID = new UUID(data.id_most(), data.id_least());
-                var target = Utils.getLivingWithHealth(ctx.get().getSender().serverLevel(), targetID);
-                if (target == null) return;
                 BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
                 HealingHandler.useItemOn(stack, sourcePlayer, target, component);
                 healthMenu.getSlot(data.slotNum()).setByPlayer(stack);

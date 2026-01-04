@@ -1,6 +1,6 @@
 package com.lastimp.dgh.api.bodyPart;
 
-import com.lastimp.dgh.Config;
+import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.bodyPart.Blood;

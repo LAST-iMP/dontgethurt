@@ -169,8 +169,10 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModEffects.FEVER_EFFECT.get(), "发烧");
         this.add(ModEffects.ADRENALINE_EFFECT.get(), "肾上腺素");
         this.add(ModEffects.COMBAT_STIMULANT_EFFECT.get(), "战斗兴奋剂");
+        this.add(ModEffects.ANALGESIA_POISON_EFFECT.get(), "眩晕毒剂中毒");
 
         this.addPotion(ModPotions.COMBAT_STIMULANT_POTION, "战斗兴奋剂");
+        this.addPotion(ModPotions.ANALGESIA_POISON_POTION, "眩晕毒剂");
 
         this.add("death.attack."+OPEN_WOUND_DAMAGE.location(), "%1$s 的身体被撕碎了");
         this.add("death.attack."+INTERNAL_INJURY_DAMAGE.location(), "%1$s 体内一塌糊涂");

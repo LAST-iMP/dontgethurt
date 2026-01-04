@@ -24,6 +24,10 @@ public class ModPotions {
             "combat_stimulant", () -> new Potion(new MobEffectInstance(ModEffects.COMBAT_STIMULANT_EFFECT.get(), 20 * 75))
     );
 
+    public static final RegistryObject<Potion> ANALGESIA_POISON_POTION = register(
+            "analgesia_poison", () -> new Potion(new MobEffectInstance(ModEffects.ANALGESIA_POISON_EFFECT.get(), 20 * 60))
+    );
+
     private static RegistryObject<Potion> register(String name, Supplier<Potion> sup) {
         var holder = MOD_POTIONS.register(name, sup);
         POTIONS.put(holder, name);

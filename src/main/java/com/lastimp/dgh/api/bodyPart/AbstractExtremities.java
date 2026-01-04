@@ -1,7 +1,7 @@
 
 package com.lastimp.dgh.api.bodyPart;
 
-import com.lastimp.dgh.Config;
+import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;

@@ -3,10 +3,12 @@ package com.lastimp.dgh.source.core.capability;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.healingItems.AbstractHealingEquipment;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.network.message.Network;
+import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.menu.component.DynamicItemHandler;
 import com.lastimp.dgh.source.register.ModCapabilities;
 import com.lastimp.dgh.api.enums.BodyComponents;
@@ -18,11 +20,13 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.COMA;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_PRESSURE;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.OXYGEN;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.INTENSE_PAIN;
 import static com.lastimp.dgh.api.enums.OperationType.SYN;
 
 public class HealthCapability implements INBTSerializable<CompoundTag> {
@@ -70,13 +74,26 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         return function.apply(health);
     }
 
+    public static void getAndSet(LivingEntity entity, Consumer<HealthCapability> function) {
+        HealthCapability health = HealthCapability.get(entity);
+        function.accept(health);
+    }
+
+    public static void handPulse(LivingEntity entity) {
+        if (has(entity)) {
+            HealthCapability.getAndSet(entity, h -> {
+                h.handPulse();
+            });
+        }
+    }
+
     public AbstractBody getComponent(BodyComponents component) {
         return this.body.getComponent(component);
     }
 
     public HealthCapability update(LivingEntity entity) {
         this.updateALLEquipments(entity);
-        if (!this.autoPulse.getStackInSlot(0).is(ModItems.STASIS_BAG.get()))
+        if (!this.isFrozen())
             this.body.update(this, entity);
         this.updateLabels(entity);
         return this;
@@ -145,6 +162,18 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.isDirty = false;
     }
 
+    public void handPulse() {
+        if (this.autoPulseCoolDown() > 0) return;
+        if (this.isFrozen()) return;
+
+        this.autoPulseCoolDown = 20;
+        var blood = this.getComponent(BodyComponents.BLOOD);
+        Torso torso = (Torso) this.getComponent(BodyComponents.TORSO);
+        blood.healing(OXYGEN, -BodyCondition.get(OXYGEN).healingSpeed());
+        blood.healing(BLOOD_PRESSURE, Utils.randomBetween(0.01f, 0.1f));
+        torso.addHeartRate(-Utils.randomBetween(0.01f, 0.1f));
+    }
+
     public CompoundTag lightSerializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.putInt("armBreak", this.armBreak);
@@ -208,8 +237,8 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     }
 
     public boolean isDown() {
-        if (this.getComponent(HEAD).abnormal(COMA)) return true;
-        if (this.autoPulse.getStackInSlot(0).is(ModItems.STASIS_BAG.get())) return true;
+        if (this.getComponent(HEAD).getConditionValue(COMA) > 0.5f) return true;
+        if (this.isFrozen()) return true;
         return false;
     }
 
@@ -301,5 +330,9 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     public UUID lastHealer() {
         return lastHealer;
+    }
+
+    public boolean isFrozen() {
+        return this.autoPulse.getStackInSlot(0).is(ModItems.STASIS_BAG.get());
     }
 }

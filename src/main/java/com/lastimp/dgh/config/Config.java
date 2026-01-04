@@ -1,6 +1,7 @@
 
-package com.lastimp.dgh;
+package com.lastimp.dgh.config;
 
+import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

@@ -472,6 +472,7 @@ public class ModRecipeProvider extends RecipeProvider {
     public static void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             registerBasicBrewingRecipe(Potions.STRONG_REGENERATION, new ItemStack(ModItems.MORPHINE.get()), ModPotions.COMBAT_STIMULANT_POTION.get());
+            registerBasicBrewingRecipe(Potions.STRONG_HARMING, new ItemStack(ModItems.MORPHINE.get()), ModPotions.ANALGESIA_POISON_POTION.get());
         });
     }
 

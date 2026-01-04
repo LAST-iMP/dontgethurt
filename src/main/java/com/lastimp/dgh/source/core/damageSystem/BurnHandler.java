@@ -1,6 +1,6 @@
 package com.lastimp.dgh.source.core.damageSystem;
 
-import com.lastimp.dgh.Config;
+import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.source.core.capability.HealthCapability;

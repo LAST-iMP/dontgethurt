@@ -6,6 +6,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import java.util.UUID;
 
 public class MyHealingItemUseData {
+    public static final int HAND_PULSE = -255;
     private long id_most;
     private long id_least;
     private int slotNum;

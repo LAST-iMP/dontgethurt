@@ -1,6 +1,8 @@
 
 package com.lastimp.dgh;
 
+import com.lastimp.dgh.config.BlackList;
+import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.register.*;
 import net.minecraftforge.common.MinecraftForge;
@@ -63,6 +65,7 @@ public class DontGetHurt
     {
         LOGGER.info("HELLO FROM COMMON SETUP");
         Network.registerMessage();
+        event.enqueueWork(BlackList::loadExternalBlacklist);
     }
 
     @SubscribeEvent

@@ -6,6 +6,7 @@ import com.lastimp.dgh.source.buffs.buff.AdrenalineEffect;
 import com.lastimp.dgh.source.buffs.buff.CureEffect;
 import com.lastimp.dgh.source.buffs.buff.KeepLivingEffect;
 import com.lastimp.dgh.source.buffs.debuff.IntensePainEffect;
+import com.lastimp.dgh.source.buffs.debuff.PulseEffect;
 import com.lastimp.dgh.source.buffs.debuff.StaggerEffect;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
@@ -66,6 +67,10 @@ public class ModEffects {
 
     public static final RegistryObject<MobEffect> COMBAT_STIMULANT_EFFECT = MOB_EFFECTS.register(
             "combat_stimulant_effect", () -> new SymptomsEffect(0xFF00FF00)
+    );
+
+    public static final RegistryObject<MobEffect> ANALGESIA_POISON_EFFECT = MOB_EFFECTS.register(
+            "analgesia_poison_effect", () -> new PulseEffect(0xFFFFBE4F)
     );
 
     public static void register(IEventBus eventBus) {
