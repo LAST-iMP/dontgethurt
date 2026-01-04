@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "dgh.refmap.json",
   "mixins": [
+    "EntityMixin"
   ],
   "client": [
     "client.LivingEntityRendererMixin",

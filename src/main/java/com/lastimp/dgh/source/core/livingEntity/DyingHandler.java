@@ -8,7 +8,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -36,22 +35,13 @@ public class DyingHandler {
                 if (livingEntity.isSleeping()) livingEntity.stopSleeping();
                 livingEntity.stopUsingItem();
                 livingEntity.setPose(Pose.SWIMMING);
-                if (livingEntity instanceof Mob mob) {
-                    mob.setNoAi(true);
-                }
             } else {
                 livingEntity.setPose(Pose.STANDING);
-                if (livingEntity instanceof Mob mob) {
-                    mob.setNoAi(false);
-                }
             }
         }
     }
 
     public static void setLivingDead(LivingEntity entity) {
-        if (entity instanceof Mob mob) {
-            if (mob.isNoAi()) mob.setNoAi(false);
-        }
         entity.hurt(new DamageSource(getKillerDamageType(entity)),entity.getMaxHealth() * 1000);
     }
 

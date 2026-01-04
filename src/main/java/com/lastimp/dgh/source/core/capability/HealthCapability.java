@@ -12,11 +12,11 @@ import com.lastimp.dgh.source.core.menu.component.DynamicItemHandler;
 import com.lastimp.dgh.source.register.ModCapabilities;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.*;
+import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -248,8 +248,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     }
 
     public static boolean isDying(LivingEntity entity) {
-        var health = HealthCapability.get(entity);
-        if (health == null) return false;
+        if (!HealthCapability.has(entity) && entity.hasEffect(ModEffects.ANALGESIA_POISON_EFFECT)) return true;
         return entity.getHealth() < 0.05 && !entity.isDeadOrDying();
     }
 
