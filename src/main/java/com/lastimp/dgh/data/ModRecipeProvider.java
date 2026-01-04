@@ -461,13 +461,7 @@ public class ModRecipeProvider extends RecipeProvider {
     @SubscribeEvent // on the game event bus
     public static void registerBrewingRecipes(RegisterBrewingRecipesEvent event) {
         PotionBrewing.Builder builder = event.getBuilder();
-        builder.addMix(
-                // The initial potion to apply to
-                Potions.STRONG_REGENERATION,
-                // The brewing ingredient. This is the item at the top of the brewing stand.
-                ModItems.MORPHINE.asItem(),
-                // The resulting potion
-                ModPotions.COMBAT_STIMULANT_POTION
-        );
+        builder.addMix(Potions.STRONG_REGENERATION, ModItems.MORPHINE.asItem(), ModPotions.COMBAT_STIMULANT_POTION);
+        builder.addMix(Potions.STRONG_HARMING, ModItems.MORPHINE.asItem(), ModPotions.ANALGESIA_POISON_POTION);
     }
 }

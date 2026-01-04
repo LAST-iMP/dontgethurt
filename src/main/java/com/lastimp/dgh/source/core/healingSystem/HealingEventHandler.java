@@ -1,9 +1,8 @@
 
 package com.lastimp.dgh.source.core.healingSystem;
 
-import com.lastimp.dgh.Config;
+import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.livingEntity.DyingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.livingEntity.player.PlayerDyingHandler;
@@ -25,8 +24,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
-
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.COMA;
 
 
 @EventBusSubscriber(modid = DontGetHurt.MODID)

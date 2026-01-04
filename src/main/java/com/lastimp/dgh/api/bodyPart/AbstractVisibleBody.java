@@ -1,7 +1,7 @@
 
 package com.lastimp.dgh.api.bodyPart;
 
-import com.lastimp.dgh.Config;
+import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.Utils;

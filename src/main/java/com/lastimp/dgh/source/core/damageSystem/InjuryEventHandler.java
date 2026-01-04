@@ -1,7 +1,7 @@
 
 package com.lastimp.dgh.source.core.damageSystem;
 
-import com.lastimp.dgh.Config;
+import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
@@ -61,6 +61,8 @@ public class InjuryEventHandler {
 
         if (source.is(DamageTypeTags.IS_FALL)) {
             handleFalling(damageAmount, livingEntity, event);
+        } else if (source.is(DamageTypes.HOT_FLOOR)) {
+            handleHotFloor(damageAmount, livingEntity, event);
         } else if (source.is(DamageTypeTags.IS_FIRE)) {
             handleBurning(damageAmount, livingEntity, event);
         } else if (source.is(DamageTypeTags.IS_DROWNING)) {
@@ -83,7 +85,17 @@ public class InjuryEventHandler {
                 var leg = h.getComponent(LEGS.get(i));
                 InternalInjuryHandler.handleBluntTrauma(entity, (AbstractVisibleBody) leg, damageAmount * weight[i]);
             }
-            return h;
+        });
+        event.setNewDamage(0f);
+    }
+
+    public static void handleHotFloor(float damageAmount, LivingEntity entity, LivingDamageEvent.Pre event) {
+        HealthCapability.getAndSet(entity, h -> {
+            float[] weight = Utils.getRandom(1, 1);
+            for (int i = 0; i < LEGS.size(); i++) {
+                var leg = h.getComponent(LEGS.get(i));
+                BurnHandler.handle(h, leg, damageAmount * weight[i]);
+            }
         });
         event.setNewDamage(0f);
     }
@@ -93,7 +105,6 @@ public class InjuryEventHandler {
             BodyComponents randomComponent = BodyComponents.random();
 
             BurnHandler.handle(h, h.getComponent(randomComponent), damageAmount);
-            return h;
         });
         event.setNewDamage(0f);
     }
@@ -102,7 +113,6 @@ public class InjuryEventHandler {
         HealthCapability.getAndSet(entity, h -> {
             Blood blood = (Blood) h.getComponent(BLOOD);
             blood.injury(OXYGEN, BodyCondition.get(OXYGEN).healingSpeed() * DELTA);
-            return h;
         });
         event.setNewDamage(0f);
     }
@@ -115,7 +125,6 @@ public class InjuryEventHandler {
                 OpenWoundHandler.handleExplosion(entity, (AbstractVisibleBody) body, 0.5f * damageAmount * weight[i]);
                 InternalInjuryHandler.handleExplosion(entity, (AbstractVisibleBody) body, 0.5f * damageAmount * weight[i]);
             }
-            return h;
         });
         event.setNewDamage(0f);
     }
@@ -124,7 +133,6 @@ public class InjuryEventHandler {
         HealthCapability.getAndSet(entity, h -> {
             var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(1,1.5f,1.5f,1.5f,1.2f,1.2f)));
             OpenWoundHandler.handleEntityAttack(entity, (AbstractVisibleBody) body, damageAmount);
-            return h;
         });
         event.setNewDamage(0f);
     }
@@ -138,7 +146,6 @@ public class InjuryEventHandler {
         HealthCapability.getAndSet(entity, h -> {
             var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(1,1.5f,1.5f,1.5f,1.2f,1.2f)));
             InternalInjuryHandler.handleBluntTrauma(entity, (AbstractVisibleBody) body, damageAmount);
-            return h;
         });
         event.setNewDamage(0f);
     }

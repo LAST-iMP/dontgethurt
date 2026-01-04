@@ -12,6 +12,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import java.util.UUID;
 
 public record MyHealingItemUseData (long id_most, long id_least, int slotNum, String component) implements CustomPacketPayload {
+    public static final int HAND_PULSE = -255;
     public static final Type<MyHealingItemUseData> TYPE = new Type<>(Common.ResourceLocation(DontGetHurt.MODID, "my_healing_item_use_data"));
 
     public static final StreamCodec<ByteBuf, MyHealingItemUseData> STREAM_CODEC = StreamCodec.composite(

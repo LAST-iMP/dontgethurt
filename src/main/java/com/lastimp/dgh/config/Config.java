@@ -1,9 +1,8 @@
 
-package com.lastimp.dgh;
+package com.lastimp.dgh.config;
 
+import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;

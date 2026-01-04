@@ -1,7 +1,10 @@
 
 package com.lastimp.dgh;
 
+import com.lastimp.dgh.config.BlackList;
+import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.source.register.*;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -34,6 +37,8 @@ public class DontGetHurt
         ModSounds.register(modEventBus);
         ModCreativeModTabs.register(modEventBus);
 
+        modEventBus.addListener(this::commonSetup);
+
         NeoForge.EVENT_BUS.register(this);
     }
 
@@ -43,5 +48,12 @@ public class DontGetHurt
     {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
+    }
+
+
+    private void commonSetup(final FMLCommonSetupEvent event)
+    {
+        LOGGER.info("HELLO FROM COMMON SETUP");
+        event.enqueueWork(BlackList::loadExternalBlacklist);
     }
 }
