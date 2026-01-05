@@ -2,13 +2,13 @@ package com.lastimp.dgh.source.core.livingEntity;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.tags.ModDamageType;
+import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,14 +30,14 @@ public class DyingHandler {
             if (HealthCapability.isDying(livingEntity)) {
                 if (livingEntity.isSleeping()) livingEntity.stopSleeping();
                 livingEntity.stopUsingItem();
-                livingEntity.setPose(Pose.SWIMMING);
-            } else {
-                livingEntity.setPose(Pose.STANDING);
             }
         }
     }
 
     public static void setLivingDead(LivingEntity entity) {
+        var health = HealthCapability.get(entity);
+        if (!health.oxygenMask().getStackInSlot(0).isEmpty()) Utils.drop(health.oxygenMask().getStackInSlot(0), entity);
+        if (!health.autoPulse().getStackInSlot(0).isEmpty()) Utils.drop(health.autoPulse().getStackInSlot(0), entity);
         entity.hurt(new DamageSource(getKillerDamageType(entity)),entity.getMaxHealth() * 1000);
     }
 

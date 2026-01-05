@@ -154,6 +154,8 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.PLASTIC_SKIN.get(), "可塑人造皮肤");
         this.add(ModItems.ANTIBIOTIC_GLUE.get(), "抗生素凝胶");
         this.add(ModItems.STASIS_BAG.get(), "停滞袋");
+        this.add(ModItems.WALKING_STICK.get(), "木拐");
+        this.add(ModItems.STRETCHER.get(), "木担架");
 
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");

@@ -2,8 +2,10 @@ package com.lastimp.dgh.source.client.eventHandler;
 
 import com.lastimp.dgh.source.client.renderer.OperatingBedRenderer;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
+import com.lastimp.dgh.source.client.renderer.StretcherRenderer;
 import com.lastimp.dgh.source.register.ModBlocks;
 import com.lastimp.dgh.source.client.renderer.MyModelLayers;
+import com.lastimp.dgh.source.register.ModEntities;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -23,6 +25,7 @@ public class ModClientEventHandler {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlocks.OPERATING_BED_ENTITY.get(), OperatingBedRenderer::new);
+        event.registerEntityRenderer(ModEntities.STRETCHER.get(), StretcherRenderer::new);
     }
 
     @SubscribeEvent

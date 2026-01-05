@@ -426,6 +426,20 @@ public class ModItems {
                     .durability(400)
     );
 
+    public static final RegistryObject<Item> WALKING_STICK = registerItem(
+            "walking_stick",
+            Item::new,
+            new Item.Properties()
+                    .stacksTo(2)
+    );
+
+    public static final RegistryObject<Item> STRETCHER = registerItem(
+            "stretcher",
+            StretcherItem::new,
+            new Item.Properties()
+                    .stacksTo(1)
+    );
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

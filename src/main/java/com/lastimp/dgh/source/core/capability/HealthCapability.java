@@ -17,6 +17,7 @@ import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -131,6 +132,12 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         var newArmBreak = (AbstractExtremities.available(this, LEFT_ARM) ? 0 : 1) + (AbstractExtremities.available(this, RIGHT_ARM) ? 0 : 1);
         this.armBreak = updateIfDirty(newArmBreak, this.armBreak);
         this.slowDown = this.body.slowDownLevel(this);
+        if (entity instanceof Player player) {
+            if (player.getMainHandItem().is(ModItems.WALKING_STICK.get()))
+                this.slowDown = Math.max(0, this.slowDown - 3);
+            if (player.getOffhandItem().is(ModItems.WALKING_STICK.get()))
+                this.slowDown = Math.max(0, this.slowDown - 3);
+        }
         this.vitality = 1.0f - this.body.updateVitalityLost(this, entity);
         this.vitality = (this.vitality > 0.999f) ? 1.0f : this.vitality;
         this.almostDead = Math.min(this.almostDead, this.vitality);

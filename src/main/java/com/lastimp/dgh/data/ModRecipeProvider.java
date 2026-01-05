@@ -240,8 +240,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('c', ModItems.MORPHINE.get())
                 .unlockedBy("has_bad", has(ItemTags.BEDS))
                 .save(recipeOutput);
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.BONE_NATURAL.get(), 1)
-                .requires(Items.BONE, 1)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.BONE_NATURAL.get(), 2)
+                .requires(Items.BONE, 2)
                 .unlockedBy("has_bone", has(Items.BONE))
                 .save(recipeOutput);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.BONE_WOOD.get(), 1)
@@ -457,6 +457,21 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('S', Items.SOUL_LANTERN)
                 .define('R', Items.REDSTONE)
                 .unlockedBy("has_ice", has(Items.BLUE_ICE))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.WALKING_STICK.get())
+                .pattern("iii")
+                .pattern("i i")
+                .pattern("i i")
+                .define('i', Items.STICK)
+                .unlockedBy("has_stick", has(Items.STICK))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.STRETCHER.get())
+                .pattern("   ")
+                .pattern(" ii")
+                .pattern("www")
+                .define('i', Items.STICK)
+                .define('w', ItemTags.PLANKS)
+                .unlockedBy("has_stick", has(Items.STICK))
                 .save(recipeOutput);
 
 

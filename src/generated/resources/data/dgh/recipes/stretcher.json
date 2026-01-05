@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "i": {
+      "item": "minecraft:stick"
+    },
+    "w": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "pattern": [
+    "   ",
+    " ii",
+    "www"
+  ],
+  "result": {
+    "item": "dgh:stretcher"
+  },
+  "show_notification": true
+}
