@@ -138,7 +138,7 @@ public class Torso extends AbstractVisibleBody {
         if (this.abnormalOnlyHidden(SAWED_BONES) ||
                 head.abnormal(CLAMPED_ARTERIES) ||
                 blood.getConditionValue(OXYGEN) > 0.7 ||
-                head.getConditionValue(SURGERY_INCISION) > 0.3 ||
+                head.getConditionValue(TRAUMATIC_SHOCK) > 0.3 ||
                 head.getConditionValue(BRAIN_DAMAGE) > 1 ||
                 blood.getConditionValue(OPIATE_OVERDOSE) > 0.5
         ) {

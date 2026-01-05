@@ -119,6 +119,7 @@ public class BagMenu extends AbstractContainerMenu {
                     } else if (itemstack.getCount() < k) {
                         stack.shrink(k - itemstack.getCount());
                         itemstack.setCount(k);
+                        slot.setByPlayer(itemstack);
                         slot.setChanged();
                         flag = true;
                     }
