@@ -36,6 +36,7 @@ public class DontGetHurt
         ModPotions.register(modEventBus);
         ModSounds.register(modEventBus);
         ModCreativeModTabs.register(modEventBus);
+        ModEntities.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 

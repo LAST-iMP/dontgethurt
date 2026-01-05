@@ -417,6 +417,20 @@ public class ModItems {
                     .durability(400)
     );
 
+    public static final DeferredItem<Item> WALKING_STICK = registerItem(
+            "walking_stick",
+            Item::new,
+            new Item.Properties()
+                    .stacksTo(2)
+    );
+
+    public static final DeferredItem<StretcherItem> STRETCHER = registerItem(
+            "stretcher",
+            StretcherItem::new,
+            new Item.Properties()
+                    .stacksTo(1)
+    );
+
     private static <T extends Item> DeferredItem<T> registerItem(String name, Function<Item.Properties, ? extends T> func, Item.Properties properties) {
         DeferredItem<T> item = ITEMS.registerItem(name, func, properties);
         ITEMS_SET.add(item);

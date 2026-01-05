@@ -3,8 +3,10 @@ package com.lastimp.dgh.source.client.eventHandler;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.client.renderer.OperatingBedRenderer;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
+import com.lastimp.dgh.source.client.renderer.StretcherRenderer;
 import com.lastimp.dgh.source.register.ModBlocks;
 import com.lastimp.dgh.source.client.renderer.MyModelLayers;
+import com.lastimp.dgh.source.register.ModEntities;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -24,6 +26,7 @@ public class ModClientEventHandler {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlocks.OPERATING_BED_ENTITY.get(), OperatingBedRenderer::new);
+        event.registerEntityRenderer(ModEntities.STRETCHER.get(), StretcherRenderer::new);
     }
 
     @SubscribeEvent

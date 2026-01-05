@@ -18,8 +18,8 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity>{
     @Inject(method = "setupRotations", at = @At("HEAD"), cancellable = true)
     private void onSetupRotations(T entity, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale, CallbackInfo ci) {
         if (HealthCapability.has(entity) && HealthCapability.isDying(entity)) {
-            if (!(entity instanceof Player))
-                poseStack.mulPose(Axis.XP.rotationDegrees(90.0F)); // 横躺
+            poseStack.mulPose(Axis.YP.rotationDegrees(180F - yBodyRot));
+            poseStack.mulPose(Axis.XP.rotationDegrees(90.0F)); // 横躺
             poseStack.translate(0, -0.7, 0); // 位置调整
             ci.cancel();
         }

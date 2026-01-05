@@ -4,10 +4,13 @@
   "ingredients": [
     {
       "item": "minecraft:bone"
+    },
+    {
+      "item": "minecraft:bone"
     }
   ],
   "result": {
-    "count": 1,
+    "count": 2,
     "id": "dgh:bone_natural"
   }
 }
