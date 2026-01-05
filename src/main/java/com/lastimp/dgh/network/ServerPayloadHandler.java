@@ -8,7 +8,6 @@ import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
-import com.lastimp.dgh.source.client.ClientAccessor;
 import com.lastimp.dgh.source.core.livingEntity.player.PlayerDyingHandler;
 import com.lastimp.dgh.source.core.menu.HealthMenu;
 import com.lastimp.dgh.source.core.Utils;
@@ -36,7 +35,7 @@ public class ServerPayloadHandler {
             var target = Utils.getLivingWithHealth(sender.serverLevel(), uuid);
             if (target == null) return;
 
-            var tag = HealthCapability.get(target).serializeNBT(ClientAccessor.registryAccess());
+            var tag = HealthCapability.get(target).serializeNBT(sender.registryAccess());
             PacketDistributor.sendToPlayer(
                     (ServerPlayer) context.player(),
                     MyReadAllConditionData.getInstance(uuid, target.getId(), tag, OperationType.valueOf(data.oper()))
