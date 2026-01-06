@@ -75,6 +75,10 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         entity.setData(ModCapabilities.HEALTH, capability);
     }
 
+    public static void reset(LivingEntity entity) {
+        if (has(entity)) set(entity, new HealthCapability());
+    }
+
     public static <T> T getAndSet(LivingEntity entity, Function<HealthCapability, T> function) {
         HealthCapability health = HealthCapability.get(entity);
         T result = function.apply(health);

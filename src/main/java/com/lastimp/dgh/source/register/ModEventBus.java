@@ -1,15 +1,13 @@
 package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.config.HealthLivingEntityList;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.ServerPayloadHandler;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.core.capability.HealthProvider;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -22,18 +20,13 @@ public class ModEventBus {
 
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerEntity(
-                ModCapabilities.HEALTH_HANDLER,
-                EntityType.PLAYER,
-                new HealthProvider()
-        );
-        HealthProvider.add(Player.class);
-        event.registerEntity(
-                ModCapabilities.HEALTH_HANDLER,
-                EntityType.VILLAGER,
-                new HealthProvider()
-        );
-        HealthProvider.add(Villager.class);
+        for (var entity : HealthLivingEntityList.getList()) {
+            event.registerEntity(
+                    ModCapabilities.HEALTH_HANDLER,
+                    entity,
+                    new HealthProvider()
+            );
+        }
     }
 
     @SubscribeEvent

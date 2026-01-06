@@ -4,7 +4,6 @@ import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
@@ -17,7 +16,7 @@ public class StretcherEntity extends Entity {
     public static final EntityType<StretcherEntity> TYPE;
     public static final float SIZE_HEIGHT = 0.25f;
     public static final float SIZE_LENGTH = 1.5f;
-    private ServerPlayer controller;
+    private LivingEntity controller;
 
 
     public StretcherEntity(EntityType<?> type, Level level) {
@@ -78,7 +77,11 @@ public class StretcherEntity extends Entity {
     public void tick() {
         super.tick();
         if (controller != null) {
-            this.driveByPlayer();
+            if (controller.isDeadOrDying()) {
+                controller = null;
+            } else {
+                this.driveByPlayer();
+            }
         }
         if (!this.onGround()) {
             this.addDeltaMovement(new Vec3(0, -0.08, 0));
@@ -97,8 +100,8 @@ public class StretcherEntity extends Entity {
         float power = (float) Math.min(0.3, distance * 0.1);
         if (distance > targetDistance) {
             this.addDeltaMovement(direction.reverse().multiply(power, 0, power));
-            if (playerPos.y() > entityPos.y()) {
-                this.addDeltaMovement(new Vec3(0, 0.1, 0));
+            if (playerPos.y() > entityPos.y() && distance > targetDistance * 1.5) {
+                this.setPos(entityPos.x(), playerPos.y() + 0.1, entityPos.z());
             }
         }
 
@@ -114,16 +117,16 @@ public class StretcherEntity extends Entity {
         }
     }
 
+    public void setController(@Nullable LivingEntity livingEntity) {
+        this.controller = livingEntity;
+    }
+
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (this.level().isClientSide) return InteractionResult.SUCCESS;
 
         if (player.isShiftKeyDown()) {
-            if (this.controller != null) {
-                this.controller = null;
-            } else {
-                this.controller = (ServerPlayer) player;
-            }
+            this.setController(this.controller == null ? player : null);
         } else {
             LivingEntity patient = getPatient();
             if (patient != null) {

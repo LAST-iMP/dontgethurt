@@ -42,7 +42,8 @@ public class DyingHandler {
         var health = HealthCapability.get(entity);
         if (!health.oxygenMask().getStackInSlot(0).isEmpty()) Utils.drop(health.oxygenMask().getStackInSlot(0), entity);
         if (!health.autoPulse().getStackInSlot(0).isEmpty()) Utils.drop(health.autoPulse().getStackInSlot(0), entity);
-        entity.hurt(new DamageSource(getKillerDamageType(entity)),entity.getMaxHealth() * 1000);
+        entity.hurt(new DamageSource(getKillerDamageType(entity)),entity.getMaxHealth() * 10000);
+        HealthCapability.reset(entity);
     }
 
     public static Holder<DamageType> getKillerDamageType(LivingEntity entity) {

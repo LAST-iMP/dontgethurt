@@ -3,7 +3,10 @@ package com.lastimp.dgh;
 
 import com.lastimp.dgh.config.BlackList;
 import com.lastimp.dgh.config.Config;
+import com.lastimp.dgh.config.HealthLivingEntityList;
 import com.lastimp.dgh.source.register.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.GameRules;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.slf4j.Logger;
 
@@ -43,18 +46,25 @@ public class DontGetHurt
         NeoForge.EVENT_BUS.register(this);
     }
 
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
-        // Do something when the server starts
         LOGGER.info("HELLO from server starting");
+        MinecraftServer server = event.getServer();
+        server.getAllLevels().forEach(level -> {
+            GameRules gameRules = level.getGameRules();
+            gameRules.getRule(GameRules.RULE_NATURAL_REGENERATION).set(false, server);
+        });
+        HealthLivingEntityList.loadWhiteLists(server.getResourceManager());
     }
 
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
         LOGGER.info("HELLO FROM COMMON SETUP");
-        event.enqueueWork(BlackList::loadExternalBlacklist);
+        event.enqueueWork(() -> {
+            BlackList.loadExternalBlacklist();
+            HealthLivingEntityList.loadExternalWhitelist();
+        });
     }
 }

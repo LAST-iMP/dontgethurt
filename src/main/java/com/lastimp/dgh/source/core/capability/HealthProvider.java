@@ -1,19 +1,16 @@
 
 package com.lastimp.dgh.source.core.capability;
 
+import com.lastimp.dgh.config.HealthLivingEntityList;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Set;
-
-public class HealthProvider implements ICapabilityProvider<LivingEntity, Void, HealthCapability>, INBTSerializable<CompoundTag> {
+public class HealthProvider implements ICapabilityProvider<Entity, Void, HealthCapability>, INBTSerializable<CompoundTag> {
     private final HealthCapability impl = new HealthCapability();
-    private static final Set<Class<? extends LivingEntity>> availClasses = new HashSet<>();
 
     @Override
     public CompoundTag serializeNBT(HolderLookup.Provider provider) {
@@ -26,18 +23,12 @@ public class HealthProvider implements ICapabilityProvider<LivingEntity, Void, H
     }
 
     @Override
-    public @Nullable HealthCapability getCapability(LivingEntity o, Void unused) {
-        return this.impl;
+    public @Nullable HealthCapability getCapability(Entity o, Void unused) {
+        if (has(o)) return this.impl;
+        return null;
     }
 
-    public static <T extends LivingEntity> void add(Class<T> entity) {
-        availClasses.add(entity);
-    }
-
-    public static boolean has(LivingEntity entity) {
-        for (Class<? extends LivingEntity> testClass : availClasses) {
-            if (testClass.isInstance(entity)) return true;
-        }
-        return false;
+    public static boolean has(Entity entity) {
+        return HealthLivingEntityList.isEntityWhitelisted(entity.getType());
     }
 }
