@@ -18,22 +18,30 @@ public class StretcherItem extends AbstractHealingItem {
 
     @Override
     public @NotNull InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
-        if (!player.level().isClientSide && hand == InteractionHand.MAIN_HAND && HealthCapability.isDying(target)) {
+        if (hand == InteractionHand.MAIN_HAND) {
+            return this.interactLivingEntity(stack, player, target);
+        }
+        return InteractionResult.PASS;
+    }
+
+    public InteractionResult interactLivingEntity(ItemStack stack, LivingEntity source, LivingEntity target) {
+        if (!source.level().isClientSide && HealthCapability.isDying(target)) {
             StretcherEntity stretcher = new StretcherEntity(
                     ModEntities.STRETCHER.get(),
-                    player.level()
+                    source.level()
             );
             stretcher.moveTo(
                     target.position().x,
                     target.position().y + 0.1,
                     target.position().z,
-                    player.getYRot(),
+                    source.getYRot(),
                     0
             );
             target.startRiding(stretcher, true);
-            player.level().addFreshEntity(stretcher);
-            player.getItemInHand(hand).shrink(1);
+            source.level().addFreshEntity(stretcher);
+            stack.shrink(1);
+            return InteractionResult.SUCCESS;
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.FAIL;
     }
 }

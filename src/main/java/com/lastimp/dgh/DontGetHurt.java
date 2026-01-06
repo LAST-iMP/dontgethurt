@@ -3,8 +3,11 @@ package com.lastimp.dgh;
 
 import com.lastimp.dgh.config.BlackList;
 import com.lastimp.dgh.config.Config;
+import com.lastimp.dgh.config.HealthLivingEntityList;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.register.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.GameRules;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -62,17 +65,25 @@ public class DontGetHurt
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    @SubscribeEvent
+    public void onServerStarting(ServerStartingEvent event)
+    {
+        LOGGER.info("HELLO from server starting");
+        MinecraftServer server = event.getServer();
+        server.getAllLevels().forEach(level -> {
+            GameRules gameRules = level.getGameRules();
+            gameRules.getRule(GameRules.RULE_NATURAL_REGENERATION).set(false, server);
+        });
+        HealthLivingEntityList.loadWhiteLists(server.getResourceManager());
+    }
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
         LOGGER.info("HELLO FROM COMMON SETUP");
         Network.registerMessage();
-        event.enqueueWork(BlackList::loadExternalBlacklist);
-    }
-
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event)
-    {
-        LOGGER.info("HELLO from server starting");
+        event.enqueueWork(() -> {
+            BlackList.loadExternalBlacklist();
+            HealthLivingEntityList.loadExternalWhitelist();
+        });
     }
 }

@@ -21,11 +21,6 @@ public class PlayerEventBus {
         if (event.getEntity().level().isClientSide) return;
         var player = event.getEntity();
 
-        GameRules rules = event.getEntity().level().getGameRules();
-        if(player.level().getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION)) {
-            rules.getRule(GameRules.RULE_NATURAL_REGENERATION).set(false, event.getEntity().level().getServer());
-        }
-
         var data = player.getPersistentData();
         var persistedTag = data.getCompound(Player.PERSISTED_NBT_TAG);
         var key = "dgh_new_player";

@@ -81,6 +81,10 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         function.accept(health);
     }
 
+    public static void reset(LivingEntity entity) {
+        if (has(entity)) get(entity).deserializeNBT(EMPTY.serializeNBT());
+    }
+
     public static void handPulse(LivingEntity entity) {
         if (has(entity)) {
             HealthCapability.getAndSet(entity, h -> {
