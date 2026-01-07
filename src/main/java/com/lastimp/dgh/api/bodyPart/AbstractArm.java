@@ -65,6 +65,7 @@ public abstract class AbstractArm extends AbstractExtremities{
     @SubscribeEvent
     public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         Player player = event.getEntity();
+        if (!HealthCapability.has(player)) return;
         var health = HealthCapability.get(player);
         var left_arm = health.getComponent(BodyComponents.LEFT_ARM);
         var right_arm = health.getComponent(BodyComponents.RIGHT_ARM);

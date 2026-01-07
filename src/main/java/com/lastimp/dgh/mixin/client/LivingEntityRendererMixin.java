@@ -16,6 +16,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity>{
     @Inject(method = "setupRotations", at = @At("HEAD"), cancellable = true)
     private void onSetupRotations(T entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks, CallbackInfo ci) {
         if (HealthCapability.has(entity) && HealthCapability.isDying(entity)) {
+            if (entity instanceof Player player && player.getVehicle() != null) return;
             poseStack.mulPose(Axis.YP.rotationDegrees(180F - rotationYaw));
             poseStack.mulPose(Axis.XP.rotationDegrees(90.0F)); // 横躺
             poseStack.translate(0, -0.7, 0); // 位置调整

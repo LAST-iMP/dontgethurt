@@ -38,7 +38,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
             //必须手术中，牵开皮肤
             if (!body.abnormal(RETRACTED_SKIN)) return false;
             //不能已经手术截肢
-            if (body.abnormal(SURGICAL_AMPUTATION)) return false;
+            if (body instanceof AbstractExtremities extremities && extremities.abnormal(SURGICAL_AMPUTATION)) return false;
             //如果是头，导致死亡
             if (component == BodyComponents.HEAD) return this.sawHead(entity, source);
             //已经牵开皮肤、没有骨锯开，则锯开骨头，取消骨钻开
