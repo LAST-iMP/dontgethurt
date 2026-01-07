@@ -123,6 +123,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     public int slowDownLevel(HealthCapability health) {
         int slowDown = (this.isBandaged() || isBadBandaged()) ? 1 : 0;
         slowDown += this.abnormal(PLASTER_CAST)? 2 : 0;
+        if (this.abnormal(SURGERY_INCISION)) slowDown += 20;
         return slowDown;
     }
 

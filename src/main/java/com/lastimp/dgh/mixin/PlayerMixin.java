@@ -14,6 +14,7 @@ public class PlayerMixin {
     private void incapacitatedUpdatePlayerPose(CallbackInfo ci){
         Player player = (Player)(Object)this;
         if (HealthCapability.has(player) && HealthCapability.isDying(player)) {
+            if (player.getVehicle() != null) return;
             ci.cancel();
         }
     }

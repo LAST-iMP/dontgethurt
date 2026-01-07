@@ -186,6 +186,9 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add("death.attack."+BLEED_DAMAGE.location()+".player", "%1$s 失血过多");
         this.add("death.attack."+SURGERY_DAMAGE.location()+".player", "%1$s 死于手术事故");
         this.add("death.attack."+CANT_BREATH_DAMAGE.location()+".player", "%1$s 无法呼吸");
+
+        this.add("task.dgh.bring_to_bed", "救回医疗床");
+        this.add("task.dgh.bring_to_bed.desc", "把倒下的主人救回医疗床");
     }
 
     private void addPotion(DeferredHolder<Potion, Potion> potion, String translation) {

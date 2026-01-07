@@ -1,5 +1,6 @@
 package com.lastimp.dgh.source.item.tool;
 
+import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
@@ -23,7 +24,8 @@ public class SurgicalDrill extends AbstractPartlyHealItem {
             if (!body.abnormal(RETRACTED_SKIN)) return false;
             if (body.abnormal(DRILLED_BONES)) return false;
             if (body.abnormal(SAWED_BONES)) return false;
-            if (body.abnormal(TRAUMATIC_AMPUTATION) || body.abnormal(SURGICAL_AMPUTATION)) return false;
+            if (body instanceof AbstractExtremities extremities)
+                if (extremities.abnormal(TRAUMATIC_AMPUTATION) || extremities.abnormal(SURGICAL_AMPUTATION)) return false;
 
             body.setConditionValue(DRILLED_BONES, BodyCondition.get(DRILLED_BONES).maxValue());
             return true;

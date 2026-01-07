@@ -1,5 +1,6 @@
 package com.lastimp.dgh.source.item.tool;
 
+import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
@@ -40,7 +41,9 @@ public class SurgeryBones extends AbstractPartlyHealItem {
         return HealthCapability.getAndSet(entity, (h) -> {
             var body = h.getComponent(component);
             if (!body.abnormal(SAWED_BONES)) return false;
-            if (body.abnormal(TRAUMATIC_AMPUTATION) || body.abnormal(SURGICAL_AMPUTATION)) return false;
+            if (body instanceof AbstractExtremities extremities) {
+                if (extremities.abnormal(TRAUMATIC_AMPUTATION) || extremities.abnormal(SURGICAL_AMPUTATION)) return false;
+            }
 
             int boneNumMax = (component == BodyComponents.TORSO) ? 8 : 2;
             if (this.boneType == null)
