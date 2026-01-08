@@ -63,7 +63,7 @@ public class TaskBringToBed implements IMaidTask {
     private MaidWalkToLivingEntityTask createWalkToLivingEntityTask() {
         return new MaidWalkToLivingEntityTask(
                 0.6f, 1.5f,
-                (maid) -> (HealthCapability.isDying(maid.getOwner())),
+                (maid) -> (maid.getOwner() != null && HealthCapability.isDying(maid.getOwner())),
                 (maid, livingEntity) -> livingEntity.is(maid.getOwner()) && livingEntity.getVehicle() == null,
                 this::startCarry
         );

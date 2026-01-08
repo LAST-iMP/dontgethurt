@@ -26,6 +26,7 @@
     "dgh:drainage",
     "dgh:oxygen_mask",
     "dgh:human_hand",
-    "dgh:human_leg"
+    "dgh:human_leg",
+    "dgh:suture"
   ]
 }

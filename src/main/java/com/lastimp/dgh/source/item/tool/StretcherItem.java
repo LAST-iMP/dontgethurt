@@ -25,7 +25,7 @@ public class StretcherItem extends AbstractHealingItem {
     }
 
     public InteractionResult interactLivingEntity(ItemStack stack, LivingEntity source, LivingEntity target) {
-        if (!source.level().isClientSide && HealthCapability.isDying(target)) {
+        if (!source.level().isClientSide) {
             StretcherEntity stretcher = new StretcherEntity(
                     ModEntities.STRETCHER.get(),
                     source.level()

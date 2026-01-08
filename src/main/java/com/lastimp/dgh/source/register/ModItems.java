@@ -440,6 +440,13 @@ public class ModItems {
                     .stacksTo(1)
     );
 
+    public static final RegistryObject<Item> MANNITOL = registerItem(
+            "mannitol",
+            Mannitol::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

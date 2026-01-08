@@ -42,7 +42,8 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.ANTIBIOTICS.getKey())
                 .add(ModItems.ANTIBIOTIC_OINTMENT.getKey())
                 .add(ModItems.PLASTIC_SKIN.getKey())
-                .add(ModItems.ANTIBIOTIC_GLUE.getKey());
+                .add(ModItems.ANTIBIOTIC_GLUE.getKey())
+                .add(ModItems.MANNITOL.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS)
                 .add(SHEARS)
@@ -120,7 +121,8 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.DRAINAGE.getKey())
                 .add(ModItems.OXYGEN_MASK.getKey())
                 .add(ModItems.HUMAN_HAND.getKey())
-                .add(ModItems.HUMAN_LEG.getKey());
+                .add(ModItems.HUMAN_LEG.getKey())
+                .add(ModItems.SUTURE.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_SHEARS)
                 .add(SHEARS)
