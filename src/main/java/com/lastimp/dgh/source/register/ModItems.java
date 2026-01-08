@@ -348,6 +348,7 @@ public class ModItems {
             new Item.Properties()
                     .stacksTo(1)
                     .durability(4)
+                    .setNoRepair()
     );
 
     public static final DeferredItem<AntisepticSprayer> ANTISEPTIC_SPRAYER = registerItem(
