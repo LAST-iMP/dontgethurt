@@ -122,9 +122,6 @@ public class Config {
             .comment("动脉出血-失血速度")
             .defineInRange("FRACTURE_ARTERIAL_PROB", 0.015, 0, 1.0);
 
-//    public static final ForgeConfigSpec.IntValue BASE_HEALING_SHIELD_TIME = BUILDER
-//            .defineInRange("BASE_HEALING_SHIELD_TIME", 100, 0, 10000);
-
     public static final ModConfigSpec.DoubleValue BASE_PNEUMOTHORAX_PROB = BUILDER
             .comment("气胸概率")
             .defineInRange("BASE_PNEUMOTHORAX_PROB", 0.05, 0, 1);
@@ -137,13 +134,23 @@ public class Config {
             .comment("截肢最大概率")
             .defineInRange("BASE_AMPUTATION_MAX_PROB", 0.3, 0, 1.0);
 
+    public static final ModConfigSpec.BooleanValue ALLOW_DOWN = BUILDER
+            .comment("允许濒死倒地")
+            .define("ALLOW_DOWN", true);
+
+    public static final ModConfigSpec.BooleanValue DOWN_DAMAGE_RESISTANCE = BUILDER
+            .comment("允许濒死倒地减伤")
+            .define("DOWN_DAMAGE_RESISTANCE", true);
+
     public static float fractureArterialProb;
     public static float fractureBloodRatio;
-    //    public static int baseHealingShieldTime;
     public static float basePneumothoraxProb;
 
     public static float baseAmputationThreshold;
     public static float baseAmputationMaxProb;
+
+    public static boolean allow_down;
+    public static boolean down_damage_resistance;
 
     // 构建配置
     public static final ModConfigSpec SPEC = BUILDER.pop().build();
@@ -174,10 +181,12 @@ public class Config {
         fractureArterialProb = (float) FRACTURE_ARTERIAL_PROB.getAsDouble();
         fractureBloodRatio = (float) FRACTURE_BLOOD_RATIO.getAsDouble();
 
-//        baseHealingShieldTime = BASE_HEALING_SHIELD_TIME.getAsInt();
         basePneumothoraxProb = (float) BASE_PNEUMOTHORAX_PROB.getAsDouble();
         baseAmputationThreshold = (float) BASE_AMPUTATION_THRESHOLD.getAsDouble();
         baseAmputationMaxProb = (float) BASE_AMPUTATION_MAX_PROB.getAsDouble();
+
+        allow_down = ALLOW_DOWN.get();
+        down_damage_resistance = DOWN_DAMAGE_RESISTANCE.get();
         BodyCondition.init();
     }
 

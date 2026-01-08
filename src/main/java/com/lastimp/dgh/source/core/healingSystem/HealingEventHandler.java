@@ -55,7 +55,7 @@ public class HealingEventHandler {
         } else if (maxHealth > 0) {
             if ((int)maxHealth != (int)entity.getHealth())
                 entity.setHealth(maxHealth);
-        } else if (maxHealth > -entity.getMaxHealth()) {
+        } else if (maxHealth > -entity.getMaxHealth() && Config.allow_down) {
             entity.setHealth(0.01f);
         } else {
             DyingHandler.setLivingDead(entity);
@@ -73,7 +73,7 @@ public class HealingEventHandler {
         } else if (maxHealth > 0) {
             if ((int)maxHealth != (int)player.getHealth())
                 player.setHealth(maxHealth);
-        } else if (maxHealth > -player.getMaxHealth() && player.getServer().getPlayerList().getPlayers().size() > 1) {
+        } else if (maxHealth > -player.getMaxHealth() && player.getServer().getPlayerList().getPlayers().size() > 1 && Config.allow_down) {
             player.setHealth(0.01f);
         } else {
             PlayerDyingHandler.setPlayerDead(player);

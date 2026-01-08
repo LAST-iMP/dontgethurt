@@ -57,7 +57,7 @@ public class InjuryEventHandler {
         }
 
         damageAmount /= livingEntity.getMaxHealth() * Config.body_life_factor;
-        damageAmount /= HealthCapability.isDying(livingEntity)? 10f : 1f;
+        damageAmount /= HealthCapability.isDying(livingEntity) && Config.down_damage_resistance ? 10f : 1f;
 
         if (source.is(DamageTypeTags.IS_FALL)) {
             handleFalling(damageAmount, livingEntity, event);
@@ -73,6 +73,8 @@ public class InjuryEventHandler {
             handleEntityAttack(damageAmount, livingEntity, event);
         } else if (source.is(DamageTypes.INDIRECT_MAGIC) || source.is(DamageTypes.MAGIC)) {
             handleMagicDamage(damageAmount, livingEntity, event);
+        } else if (source.is(DamageTypes.STARVE)) {
+            handleStarveDamage(damageAmount, livingEntity, event);
         } else if (!source.is(DamageTypes.GENERIC_KILL)) {
             handleDefaultDamage(damageAmount, livingEntity, event);
         }
@@ -139,6 +141,14 @@ public class InjuryEventHandler {
 
     public static void handleMagicDamage(float damageAmount, LivingEntity entity, LivingDamageEvent.Pre event) {
         handleDefaultDamage(damageAmount, entity, event);
+        event.setNewDamage(0f);
+    }
+
+    public static void handleStarveDamage(float damageAmount, LivingEntity entity, LivingDamageEvent.Pre event) {
+        HealthCapability.getAndSet(entity, h -> {
+            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(1,1.5f,1.5f,1.5f,1.2f,1.2f)));
+            InternalInjuryHandler.handle((AbstractVisibleBody) body, damageAmount);
+        });
         event.setNewDamage(0f);
     }
 

@@ -8,6 +8,7 @@ import com.lastimp.dgh.source.register.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.GameRules;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -52,11 +53,16 @@ public class DontGetHurt
     {
         LOGGER.info("HELLO from server starting");
         MinecraftServer server = event.getServer();
+        HealthLivingEntityList.loadWhiteLists(server.getResourceManager());
+    }
+
+    @SubscribeEvent
+    public void onServerStarted(ServerStartedEvent event) {
+        MinecraftServer server = event.getServer();
         server.getAllLevels().forEach(level -> {
             GameRules gameRules = level.getGameRules();
             gameRules.getRule(GameRules.RULE_NATURAL_REGENERATION).set(false, server);
         });
-        HealthLivingEntityList.loadWhiteLists(server.getResourceManager());
     }
 
 

@@ -8,8 +8,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
@@ -40,10 +42,22 @@ public class DyingHandler {
 
     public static void setLivingDead(LivingEntity entity) {
         var health = HealthCapability.get(entity);
-        if (!health.oxygenMask().getStackInSlot(0).isEmpty()) Utils.drop(health.oxygenMask().getStackInSlot(0), entity);
-        if (!health.autoPulse().getStackInSlot(0).isEmpty()) Utils.drop(health.autoPulse().getStackInSlot(0), entity);
-        entity.hurt(new DamageSource(getKillerDamageType(entity)),entity.getMaxHealth() * 10000);
-        HealthCapability.reset(entity);
+        if (!health.oxygenMask().getStackInSlot(0).isEmpty()) {
+            Utils.drop(health.oxygenMask().getStackInSlot(0), entity);
+            health.oxygenMask().setStackInSlot(0, ItemStack.EMPTY);
+        }
+        if (!health.autoPulse().getStackInSlot(0).isEmpty()) {
+            Utils.drop(health.autoPulse().getStackInSlot(0), entity);
+            health.autoPulse().setStackInSlot(0, ItemStack.EMPTY);
+        }
+        Entity source = null;
+        Entity directSource = null;
+        var lastDamageSource = entity.getLastDamageSource();
+        if (lastDamageSource != null) {
+            source = lastDamageSource.getEntity();
+            directSource = lastDamageSource.getDirectEntity();
+        }
+        entity.hurt(new DamageSource(getKillerDamageType(entity), source, directSource),entity.getMaxHealth() * 10000);
     }
 
     public static Holder<DamageType> getKillerDamageType(LivingEntity entity) {
