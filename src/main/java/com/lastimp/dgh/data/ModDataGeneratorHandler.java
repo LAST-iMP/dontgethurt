@@ -67,5 +67,12 @@ public class ModDataGeneratorHandler {
                 event.includeClient(),
                 (DataProvider.Factory<ModSoundsProvider>) output -> new ModSoundsProvider(output, DontGetHurt.MODID, efh)
         );
+
+        event.getGenerator().addProvider(
+                event.includeServer(),
+                (DataProvider.Factory<ModPoiTypeTagsProvider>) output -> new ModPoiTypeTagsProvider(
+                        output, lp, DontGetHurt.MODID, efh
+                )
+        );
     }
 }

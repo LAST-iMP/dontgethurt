@@ -40,6 +40,7 @@ public class DontGetHurt
         ModSounds.register(modEventBus);
         ModCreativeModTabs.register(modEventBus);
         ModEntities.register(modEventBus);
+        ModVillagers.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 

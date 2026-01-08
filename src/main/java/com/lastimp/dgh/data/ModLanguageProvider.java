@@ -152,6 +152,7 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.STASIS_BAG.get(), "停滞袋");
         this.add(ModItems.WALKING_STICK.get(), "木拐");
         this.add(ModItems.STRETCHER.get(), "木担架");
+        this.add(ModItems.MANNITOL.get(), "甘露醇");
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");
         this.add(ModEffects.INTENSE_PAIN_EFFECT.get(), "剧痛");
@@ -186,6 +187,8 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add("death.attack."+BLEED_DAMAGE.location()+".player", "%1$s 失血过多");
         this.add("death.attack."+SURGERY_DAMAGE.location()+".player", "%1$s 死于手术事故");
         this.add("death.attack."+CANT_BREATH_DAMAGE.location()+".player", "%1$s 无法呼吸");
+
+        this.add("entity.minecraft.villager.dgh.doctor", "医生");
 
         this.add("task.dgh.bring_to_bed", "救回医疗床");
         this.add("task.dgh.bring_to_bed.desc", "把倒下的主人救回医疗床");
