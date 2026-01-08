@@ -141,6 +141,7 @@ mixin {
     add sourceSets.main, 'dgh.refmap.json'
     config 'dgh.mixins.json'
     config 'dgh.TaZC.mixins.json'
+    config 'dgh.touhoulittlemaid.mixins.json'
 }
 
 dependencies {
