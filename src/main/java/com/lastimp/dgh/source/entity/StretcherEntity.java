@@ -3,6 +3,7 @@ package com.lastimp.dgh.source.entity;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,13 +79,7 @@ public class StretcherEntity extends VehicleEntity {
     @Override
     public void tick() {
         super.tick();
-        if (controller != null) {
-            if (controller.isDeadOrDying()) {
-                controller = null;
-            } else {
-                this.driveByPlayer();
-            }
-        }
+        this.drive();
         if (!this.onGround()) {
             this.addDeltaMovement(new Vec3(0, -0.08, 0));
         }
@@ -91,7 +87,25 @@ public class StretcherEntity extends VehicleEntity {
         this.setDeltaMovement(this.getDeltaMovement().scale(0.85));
     }
 
-    private void driveByPlayer() {
+    private void drive() {
+        if (this.controller == null) return;
+        if (this.controller.isDeadOrDying()) {
+            this.controller = null;
+            return;
+        }
+
+        if (this.controller.level() != this.level()) {
+            this.changeDimension(new DimensionTransition(
+                    (ServerLevel) this.controller.level(),
+                    this.controller.getPosition(1),
+                    this.getDeltaMovement(),
+                    this.getYRot(),
+                    this.getXRot(),
+                    DimensionTransition.PLAY_PORTAL_SOUND
+            ));
+            return;
+        }
+
         Vec3 playerPos = controller.getPosition(1);
         Vec3 entityPos = this.getPosition(1);
         double distance = playerPos.distanceTo(entityPos);
@@ -103,8 +117,8 @@ public class StretcherEntity extends VehicleEntity {
             this.setPos(playerPos);
         } else if (distance > targetDistance) {
             this.addDeltaMovement(direction.reverse().multiply(power, 0, power));
-            if (playerPos.y() > entityPos.y() && distance > targetDistance * 1.5) {
-                this.setPos(entityPos.x(), playerPos.y() + 0.1, entityPos.z());
+            if (playerPos.y() > entityPos.y() && distance > targetDistance * 2) {
+                this.teleportTo(entityPos.x(), playerPos.y() + 0.1, entityPos.z());
             }
         }
 
@@ -117,6 +131,7 @@ public class StretcherEntity extends VehicleEntity {
             patient.yRotO = patient.getYRot();
             patient.setYBodyRot(-yRot);
             patient.yBodyRotO = patient.yBodyRot;
+            patient.resetFallDistance();
         }
     }
 

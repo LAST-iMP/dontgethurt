@@ -9,7 +9,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public class AdrenalineEffect extends MobEffect {
-    public static String ID = "D213A07B-BF85-48AA-8BC6-8CEC710006C1";
     public AdrenalineEffect(int color) {
         super(MobEffectCategory.BENEFICIAL, color);
     }
@@ -18,7 +17,7 @@ public class AdrenalineEffect extends MobEffect {
     public void onEffectStarted(LivingEntity livingEntity, int amplifier) {
         this.addAttributeModifier(
                 Attributes.ATTACK_DAMAGE,
-                Common.ResourceLocation(DontGetHurt.MODID, ID),
+                Common.ResourceLocation(DontGetHurt.MODID, "adrenaline_effect"),
                 0.2f,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );

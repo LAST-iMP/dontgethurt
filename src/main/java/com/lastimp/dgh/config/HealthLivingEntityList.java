@@ -70,6 +70,11 @@ public class HealthLivingEntityList {
         parseHealthWhitelist(root);
     }
 
+    public static void load(String json) {
+        JsonArray root = HealthLivingEntityList.GSON.fromJson(json, JsonArray.class);
+        HealthLivingEntityList.parseHealthWhitelist(root);
+    }
+
     private static void parseHealthWhitelist(JsonArray root) {
         root.forEach(jsonElement -> {
             String entityId = jsonElement.getAsString();

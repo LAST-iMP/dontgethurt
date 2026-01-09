@@ -7,6 +7,7 @@ import com.lastimp.dgh.network.ServerPayloadHandler;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
+import com.lastimp.dgh.network.message.MyServerConfigSynData;
 import com.lastimp.dgh.source.core.capability.HealthProvider;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -49,6 +50,11 @@ public class ModEventBus {
                 MyKeyPressedData.TYPE,
                 MyKeyPressedData.STREAM_CODEC,
                 ServerPayloadHandler::handleClientPress
+        );
+        registrar.playToClient(
+                MyServerConfigSynData.TYPE,
+                MyServerConfigSynData.STREAM_CODEC,
+                ClientPayloadHandler::handleServerConfigSYNData
         );
     }
 }

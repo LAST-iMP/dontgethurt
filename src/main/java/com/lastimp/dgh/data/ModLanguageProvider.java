@@ -190,8 +190,8 @@ public class ModLanguageProvider extends LanguageProvider {
 
         this.add("entity.minecraft.villager.dgh.doctor", "医生");
 
-        this.add("task.dgh.bring_to_bed", "救回医疗床");
-        this.add("task.dgh.bring_to_bed.desc", "把倒下的主人救回医疗床");
+        this.add("task.dgh.bring_to_bed", "猫车");
+        this.add("task.dgh.bring_to_bed.desc", "把倒下的主人救回出生点");
     }
 
     private void addPotion(DeferredHolder<Potion, Potion> potion, String translation) {

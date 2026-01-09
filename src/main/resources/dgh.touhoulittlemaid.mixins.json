@@ -3,7 +3,8 @@
   "package": "com.lastimp.dgh.compact.touhoulittlemaid.mixin",
   "refmap": "dgh.refmap.json",
   "mixins": [
-    "EntityMaidMixin"
+    "EntityMaidMixin",
+    "MaidHealSelfTaskMixin"
   ],
   "client": [
   ],

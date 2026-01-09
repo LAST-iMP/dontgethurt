@@ -2,7 +2,9 @@
 package com.lastimp.dgh.network;
 
 import com.lastimp.dgh.api.enums.OperationType;
+import com.lastimp.dgh.config.HealthLivingEntityList;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
+import com.lastimp.dgh.network.message.MyServerConfigSynData;
 import com.lastimp.dgh.source.client.ClientAccessor;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.network.chat.Component;
@@ -24,6 +26,14 @@ public class ClientPayloadHandler {
                 }
             }
         })
+        .exceptionally(e -> {
+            context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
+            return null;
+        });
+    }
+
+    public static void handleServerConfigSYNData(final MyServerConfigSynData data, final IPayloadContext context) {
+        context.enqueueWork(() -> HealthLivingEntityList.load(data.healthWhiteList()))
         .exceptionally(e -> {
             context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
             return null;
