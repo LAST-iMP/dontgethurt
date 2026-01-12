@@ -17,18 +17,18 @@ public class PlasticSkin extends Bandages {
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
         if (super.healOn(source, entity, component)) {
-            return HealthCapability.getAndSet(entity, h -> {
+            return HealthCapability.getAndApply(entity, h -> {
                 AbstractBody body = h.getComponent(component);
                 body.healing(BANDAGED, 0.5f);
                 return true;
-            });
+            }, false);
         } else {
-            return HealthCapability.getAndSet(entity, h -> {
+            return HealthCapability.getAndApply(entity, h -> {
                 AbstractBody body = h.getComponent(component);
                 if (!body.abnormal(SURGERY_INCISION)) return false;
                 body.healing(BURN, -0.25f);
                 return true;
-            });
+            }, false);
         }
     }
 }

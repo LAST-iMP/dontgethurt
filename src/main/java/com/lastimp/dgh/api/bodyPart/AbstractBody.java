@@ -1,12 +1,11 @@
 package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.UnknownNullability;
@@ -16,7 +15,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
@@ -42,6 +40,8 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     public abstract float getVitalityWeight();
 
     public abstract String getShortID();
+
+    public abstract Component getComponent();
 
     public ConditionState getCondition(ResourceLocation key) {
         return state.get(key);
@@ -150,6 +150,15 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     public boolean abnormal(ResourceLocation key) {
         var condition = BodyCondition.get(key);
         return condition.abnormal(this.getConditionValue(key));
+    }
+
+    public boolean abnormal() {
+        for (var key : this.state.keySet()) {
+            var condition = BodyCondition.get(key);
+            if (condition.isInjury() || condition.isPain())
+                if (this.abnormalWithHidden(key)) return true;
+        }
+        return false;
     }
 
     @Override

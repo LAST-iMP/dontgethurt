@@ -36,7 +36,7 @@ public class PulseEffect extends MobEffect {
     private void apply(LivingEntity livingEntity) {
         if (BlackList.isEntityBlacklisted(BlackList.PULSE_EFFECT, livingEntity.getType())) return;
         if (HealthCapability.has(livingEntity)) {
-            HealthCapability.getAndSet(livingEntity, h -> {
+            HealthCapability.getAndApply(livingEntity, h -> {
                 Head head = (Head) h.getComponent(BodyComponents.HEAD);
                 head.injury(COMA, BodyCondition.get(COMA).healingSpeed() * 1.5f);
             });

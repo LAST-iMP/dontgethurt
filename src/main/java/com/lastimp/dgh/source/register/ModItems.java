@@ -8,7 +8,6 @@ import com.lastimp.dgh.source.item.limbs.HumanLeg;
 import com.lastimp.dgh.source.item.tool.*;
 import com.lastimp.dgh.source.item.medicine.*;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;

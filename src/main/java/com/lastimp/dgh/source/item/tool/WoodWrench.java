@@ -20,7 +20,7 @@ public class WoodWrench extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, health -> {
+        return HealthCapability.getAndApply(entity, health -> {
             AbstractExtremities body = (AbstractExtremities) health.getComponent(component);
 
             body.injury(INTERNAL_INJURY, 0.05f);
@@ -28,7 +28,7 @@ public class WoodWrench extends AbstractPartlyHealItem {
                 return true;
             body.healing(DISLOCATION, -BodyCondition.get(DISLOCATION).maxValue());
             return true;
-        });
+        }, false);
     }
 
     @Override

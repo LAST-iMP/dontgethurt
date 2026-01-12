@@ -21,7 +21,7 @@ public class Morphine extends AbstractDirectHealItems {
 
     @Override
     public boolean heal(@NotNull ServerPlayer source, @NotNull LivingEntity entity) {
-        return HealthCapability.getAndSet(entity, h -> {
+        return HealthCapability.getAndApply(entity, h -> {
             Torso torso = (Torso) h.getComponent(TORSO);
             Head head = (Head) h.getComponent(HEAD);
             Blood blood = (Blood) h.getComponent(BLOOD);
@@ -31,7 +31,7 @@ public class Morphine extends AbstractDirectHealItems {
             blood.injury(OPIATE_ADDICTED, 0.1f);
             blood.injury(OPIATE_OVERDOSE, 0.1f);
             return true;
-        });
+        }, false);
     }
 
     @Override

@@ -66,18 +66,19 @@ public abstract class AbstractArm extends AbstractExtremities{
     public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         Player player = event.getEntity();
         if (!HealthCapability.has(player)) return;
-        var health = HealthCapability.get(player);
-        var left_arm = health.getComponent(BodyComponents.LEFT_ARM);
-        var right_arm = health.getComponent(BodyComponents.RIGHT_ARM);
-        int speed_up = 0;
-        if (left_arm.getConditionHidden(BONE_WOOD) > BodyCondition.get(BONE_WOOD).maxValue() - EPS)
-            speed_up++;
-        if (right_arm.getConditionHidden(BONE_WOOD) > BodyCondition.get(BONE_WOOD).maxValue() - EPS)
-            speed_up++;
-        if (speed_up > 0) {
-            float original = event.getOriginalSpeed();
-            float multiplier = 1.0f + (0.1f * speed_up);
-            event.setNewSpeed(original * multiplier);
-        }
+        HealthCapability.getAndApply(player, health -> {
+            var left_arm = health.getComponent(BodyComponents.LEFT_ARM);
+            var right_arm = health.getComponent(BodyComponents.RIGHT_ARM);
+            int speed_up = 0;
+            if (left_arm.getConditionHidden(BONE_WOOD) > BodyCondition.get(BONE_WOOD).maxValue() - EPS)
+                speed_up++;
+            if (right_arm.getConditionHidden(BONE_WOOD) > BodyCondition.get(BONE_WOOD).maxValue() - EPS)
+                speed_up++;
+            if (speed_up > 0) {
+                float original = event.getOriginalSpeed();
+                float multiplier = 1.0f + (0.1f * speed_up);
+                event.setNewSpeed(original * multiplier);
+            }
+        });
     }
 }

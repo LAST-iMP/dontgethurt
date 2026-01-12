@@ -21,7 +21,7 @@ public class BloodPacks extends AbstractDirectHealItems {
 
     @Override
     public boolean heal(@NotNull ServerPlayer source, @NotNull LivingEntity entity) {
-        return HealthCapability.getAndSet(entity, health -> {
+        return HealthCapability.getAndApply(entity, health -> {
             Blood blood = (Blood) health.getComponent(BodyComponents.BLOOD);
             if (!blood.abnormal(BLOOD_LOSS) && !blood.abnormal(BLOOD_PRESSURE)) return false;
 
@@ -33,7 +33,7 @@ public class BloodPacks extends AbstractDirectHealItems {
                 source.drop(stack, true, true);
             }
             return true;
-        });
+        }, false);
     }
 
     @Override

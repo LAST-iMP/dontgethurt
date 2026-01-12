@@ -87,16 +87,17 @@ public abstract class AbstractLeg extends AbstractExtremities{
         var entity = event.getEntity();
         if (!HealthCapability.has(entity)) return;
 
-        var health = HealthCapability.get(entity);
-        var left_leg = health.getComponent(BodyComponents.LEFT_LEG);
-        var right_leg = health.getComponent(BodyComponents.RIGHT_LEG);
-        int safe_distance = 0;
-        if (left_leg.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS)
-            safe_distance++;
-        if (right_leg.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS)
-            safe_distance++;
+        HealthCapability.getAndApply(entity, health -> {
+            var left_leg = health.getComponent(BodyComponents.LEFT_LEG);
+            var right_leg = health.getComponent(BodyComponents.RIGHT_LEG);
+            int safe_distance = 0;
+            if (left_leg.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS)
+                safe_distance++;
+            if (right_leg.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS)
+                safe_distance++;
 
-        float newDist = Math.max(0, event.getDistance() - safe_distance);
-        event.setDistance(newDist);
+            float newDist = Math.max(0, event.getDistance() - safe_distance);
+            event.setDistance(newDist);
+        });
     }
 }

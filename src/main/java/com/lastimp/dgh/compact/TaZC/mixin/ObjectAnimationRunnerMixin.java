@@ -29,16 +29,17 @@ public class ObjectAnimationRunnerMixin {
             at = @At(value = "INVOKE", target = "Ljava/lang/System;nanoTime()J"))
     private long timeScaler(long original) {
         var player = Minecraft.getInstance().player;
-        var reloadState = IGunOperator.fromLivingEntity(player).getSynReloadState();
-        boolean check = reloadState.getStateType() != ReloadState.StateType.NOT_RELOADING;
-        check |= IGunOperator.fromLivingEntity(player).getSynIsBolting();
+        return HealthCapability.getAndApply(player, (health) -> {
+            var reloadState = IGunOperator.fromLivingEntity(player).getSynReloadState();
+            boolean check = reloadState.getStateType() != ReloadState.StateType.NOT_RELOADING;
+            check |= IGunOperator.fromLivingEntity(player).getSynIsBolting();
 
-        var health = HealthCapability.get(player);
-        var scale = check ? 1.0 - 0.4 * health.armBreak() : 1;
+            var scale = check ? 1.0 - 0.4 * health.armBreak() : 1;
 
-        var deltaUnscaled = original - dgh$lastTimeUnscaled;
-        dgh$lastTimeUnscaled += deltaUnscaled;
-        dgh$lastTimeScaled += (long) (deltaUnscaled * scale);
-        return dgh$lastTimeScaled;
+            var deltaUnscaled = original - dgh$lastTimeUnscaled;
+            dgh$lastTimeUnscaled += deltaUnscaled;
+            dgh$lastTimeScaled += (long) (deltaUnscaled * scale);
+            return dgh$lastTimeScaled;
+        }, original);
     }
 }

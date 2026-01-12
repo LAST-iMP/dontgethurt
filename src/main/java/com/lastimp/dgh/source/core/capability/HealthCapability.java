@@ -6,6 +6,7 @@ import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.healingItems.AbstractHealingEquipment;
 import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.core.Utils;
@@ -15,13 +16,21 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.*;
 import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModItems;
+import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -32,7 +41,6 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.OperationType.SYN;
 
 public class HealthCapability implements INBTSerializable<CompoundTag> {
-    private static final HealthCapability EMPTY = new HealthCapability();
     private final WholeBody body = new WholeBody();
     private final DynamicItemHandler oxygenMask = new DynamicItemHandler();
     private final DynamicItemHandler autoPulse = new DynamicItemHandler();
@@ -57,6 +65,9 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     private boolean isDirty = true;
 
+    private final List<InjuryRecord> directInjury = new LinkedList<>();
+    private final List<InjuryRecord> lastDeathDirectInjury = new LinkedList<>();
+
     public HealthCapability() {
         oxygenMask.addAllowed(ModTags.OXYGEN_SUPPLIERS);
         autoPulse.addAllowed(ModTags.AUTOPULSE);
@@ -66,30 +77,21 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         return HealthProvider.has(entity);
     }
 
-    public static HealthCapability get(LivingEntity entity) {
-        if (has(entity)) return entity.getCapability(ModCapabilities.HEALTH, null).orElse(new HealthCapability());
-        else return null;
+    private static LazyOptional<HealthCapability> get(LivingEntity entity) {
+        return entity.getCapability(ModCapabilities.HEALTH, null);
     }
 
-    public static <T> T getAndSet(LivingEntity entity, Function<HealthCapability, T> function) {
-        HealthCapability health = HealthCapability.get(entity);
-        return function.apply(health);
+    public static <T> T getAndApply(LivingEntity entity, Function<HealthCapability, T> function, T orElse) {
+        return HealthCapability.get(entity).map(function::apply).orElse(orElse);
     }
 
-    public static void getAndSet(LivingEntity entity, Consumer<HealthCapability> function) {
-        HealthCapability health = HealthCapability.get(entity);
-        function.accept(health);
-    }
-
-    public static void reset(LivingEntity entity) {
-        if (has(entity)) get(entity).deserializeNBT(EMPTY.serializeNBT());
+    public static void getAndApply(LivingEntity entity, Consumer<HealthCapability> function) {
+        HealthCapability.get(entity).ifPresent(function::accept);
     }
 
     public static void handPulse(LivingEntity entity) {
         if (has(entity)) {
-            HealthCapability.getAndSet(entity, h -> {
-                h.handPulse();
-            });
+            HealthCapability.getAndApply(entity, HealthCapability::handPulse);
         }
     }
 
@@ -154,6 +156,9 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.rightArmVisible = updateIfDirty(AbstractExtremities.visible(this, RIGHT_ARM), this.rightArmVisible);
         this.leftLegVisible = updateIfDirty(AbstractExtremities.visible(this, LEFT_LEG), this.leftLegVisible);
         this.rightLegVisible = updateIfDirty(AbstractExtremities.visible(this, RIGHT_LEG), this.rightLegVisible);
+        if (!this.body.abnormal()) {
+            this.directInjury.clear();
+        }
     }
 
     private <T> T updateIfDirty(T value, T oldValue) {
@@ -186,6 +191,17 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         torso.addHeartRate(-Utils.randomBetween(0.01f, 0.1f));
     }
 
+    public boolean write(ItemStack stack, Component name, Component author) {
+        if (!stack.is(Items.WRITTEN_BOOK)) return false;
+        if (this.lastDeathDirectInjury.isEmpty() && this.directInjury.isEmpty()) return false;
+
+        var recordList = this.lastDeathDirectInjury.isEmpty() ? this.directInjury : this.lastDeathDirectInjury;
+        Component title = Component.literal(name.getString() + (this.lastDeathDirectInjury.isEmpty() ? "的病例" : "的尸检报告"));
+        var bookTag = Common.getBookTag(title, author, recordList);
+        stack.setTag(bookTag);
+        return true;
+    }
+
     public CompoundTag lightSerializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.putInt("armBreak", this.armBreak);
@@ -211,7 +227,16 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         tag.putInt("oxygenMaskCoolDown", this.oxygenMaskCoolDown);
         tag.putInt("autoPulseCoolDown", this.autoPulseCoolDown);
         tag.putUUID("lastHealer", this.lastHealer);
+
+        serializeRecord("directInjury", this.directInjury, tag);
+        serializeRecord("lastDeathDirectInjury", this.lastDeathDirectInjury, tag);
         return tag;
+    }
+
+    public static void serializeRecord(String key, List<InjuryRecord> recordList, CompoundTag tag) {
+        ListTag listTag = new ListTag();
+        recordList.forEach((record) -> listTag.add(listTag.size(), record.serializeNBT()));
+        tag.put(key, listTag);
     }
 
     public void lightDeserializeNBT(CompoundTag nbt) {
@@ -239,6 +264,15 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.autoPulseCoolDown = nbt.getInt("autoPulseCoolDown");
         if (nbt.get("lastHealer") != null)
             this.lastHealer = nbt.getUUID("lastHealer");
+
+        deserializeRecord("directInjury", this.directInjury, nbt);
+        deserializeRecord("lastDeathDirectInjury", this.lastDeathDirectInjury, nbt);
+    }
+
+    public static void deserializeRecord(String key, List<InjuryRecord> recordList, CompoundTag nbt) {
+        ListTag listTag = nbt.getList(key, ListTag.TAG_COMPOUND);
+        recordList.clear();
+        listTag.forEach((tag -> recordList.add(InjuryRecord.phrase((CompoundTag) tag))));
     }
 
     public boolean intensePain() {
@@ -345,5 +379,41 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     public boolean isFrozen() {
         return this.autoPulse.getStackInSlot(0).is(ModItems.STASIS_BAG.get());
+    }
+
+    public void addDirectInjury(Component source, Component body, Component condition, float value) {
+        this.directInjury.add(new InjuryRecord(source.getString(), body.getString(), condition.getString(), value));
+    }
+
+    public void addDirectInjury(Entity source, Component body, Component condition, float value) {
+        this.addDirectInjury(source != null ? source.getName() : Component.literal("环境"), body, condition, value);
+    }
+
+    public void addDirectInjury(Component body, Component condition, float value, int level) {
+        this.directInjury.add(new InjuryRecord("", body.getString(), condition.getString(), value, level));
+    }
+
+    public void addDirectInjury(Component body, Component condition, int level) {
+        this.directInjury.add(new InjuryRecord("", body.getString(), condition.getString(), -1, level));
+    }
+
+    public List<InjuryRecord> directInjury() {
+        return this.directInjury;
+    }
+
+    public void clearDirectInjury() {
+        this.directInjury.clear();
+    }
+
+    public void addToLastDeathDirectInjury(Collection<InjuryRecord> lastDeathDirectInjury) {
+        this.lastDeathDirectInjury.addAll(lastDeathDirectInjury);
+    }
+
+    public List<InjuryRecord> lastDeathDirectInjury() {
+        return lastDeathDirectInjury;
+    }
+
+    public void clearLastDeathDirectInjury() {
+        this.lastDeathDirectInjury.clear();
     }
 }

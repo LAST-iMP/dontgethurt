@@ -20,7 +20,7 @@ public class Tourniquet extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, health -> {
+        return HealthCapability.getAndApply(entity, health -> {
             AbstractBody body = health.getComponent(component);
             if (body.abnormal(CLAMPED_ARTERIES)) return false;
 
@@ -30,7 +30,7 @@ public class Tourniquet extends AbstractPartlyHealItem {
                 entity.setAirSupply(0);
             }
             return true;
-        });
+        }, false);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Tourniquet extends AbstractPartlyHealItem {
     }
 
     public static boolean cut(LivingEntity target, BodyComponents component) {
-        return HealthCapability.getAndSet(target, health -> {
+        return HealthCapability.getAndApply(target, health -> {
             AbstractBody body = health.getComponent(component);
             if (body.abnormal(CLAMPED_ARTERIES)) {
                 body.setConditionValue(CLAMPED_ARTERIES, BodyCondition.get(CLAMPED_ARTERIES).defaultValue());
@@ -51,6 +51,6 @@ public class Tourniquet extends AbstractPartlyHealItem {
                 return false;
             }
             return true;
-        });
+        }, false);
     }
 }

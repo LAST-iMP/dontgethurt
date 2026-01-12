@@ -37,11 +37,10 @@ public class ServerPayloadHandler {
             var target = Utils.getLivingWithHealth(sender.serverLevel(), uuid);
             if (target == null) return;
 
-            var tag = HealthCapability.get(target).serializeNBT();
-            Network.CLIENT_INSTANCE.send(
+            HealthCapability.getAndApply(target, health -> Network.CLIENT_INSTANCE.send(
                     PacketDistributor.PLAYER.with(context::getSender),
-                    MyReadAllConditionData.getInstance(uuid, target.getId(), tag, OperationType.valueOf(data.oper()))
-            );
+                    MyReadAllConditionData.getInstance(uuid, target.getId(), health.serializeNBT(), OperationType.valueOf(data.oper()))
+            ));
         });
         context.setPacketHandled(true);
     }

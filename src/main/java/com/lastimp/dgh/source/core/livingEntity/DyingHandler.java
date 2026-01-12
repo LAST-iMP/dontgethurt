@@ -37,28 +37,29 @@ public class DyingHandler {
     }
 
     public static void setLivingDead(LivingEntity entity) {
-        var health = HealthCapability.get(entity);
-        if (!health.oxygenMask().getStackInSlot(0).isEmpty()) {
-            Utils.drop(health.oxygenMask().getStackInSlot(0), entity);
-            health.oxygenMask().setStackInSlot(0, ItemStack.EMPTY);
-        }
-        if (!health.autoPulse().getStackInSlot(0).isEmpty()) {
-            Utils.drop(health.autoPulse().getStackInSlot(0), entity);
-            health.autoPulse().setStackInSlot(0, ItemStack.EMPTY);
-        }
-        Entity source = null;
-        Entity directSource = null;
-        var lastDamageSource = entity.getLastDamageSource();
-        if (lastDamageSource != null) {
-            source = lastDamageSource.getEntity();
-            directSource = lastDamageSource.getDirectEntity();
-        }
-        entity.hurt(new DamageSource(getKillerDamageType(entity), source, directSource),entity.getMaxHealth() * 10000);
+        HealthCapability.getAndApply(entity, h -> {
+            if (!h.oxygenMask().getStackInSlot(0).isEmpty()) {
+                Utils.drop(h.oxygenMask().getStackInSlot(0), entity);
+                h.oxygenMask().setStackInSlot(0, ItemStack.EMPTY);
+            }
+            if (!h.autoPulse().getStackInSlot(0).isEmpty()) {
+                Utils.drop(h.autoPulse().getStackInSlot(0), entity);
+                h.autoPulse().setStackInSlot(0, ItemStack.EMPTY);
+            }
+
+            Entity source = null;
+            Entity directSource = null;
+            var lastDamageSource = entity.getLastDamageSource();
+            if (lastDamageSource != null) {
+                source = lastDamageSource.getEntity();
+                directSource = lastDamageSource.getDirectEntity();
+            }
+            entity.hurt(new DamageSource(getKillerDamageType(entity, h), source, directSource),entity.getMaxHealth() * 10000);
+        });
     }
 
-    public static Holder<DamageType> getKillerDamageType(LivingEntity entity) {
+    public static Holder<DamageType> getKillerDamageType(LivingEntity entity, HealthCapability health) {
         var damageType = entity.level().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE);
-        var health = HealthCapability.get(entity);
 
         var head = health.getComponent(HEAD);
         if (head.getConditionValue(TRAUMATIC_SHOCK) > 0.4) {

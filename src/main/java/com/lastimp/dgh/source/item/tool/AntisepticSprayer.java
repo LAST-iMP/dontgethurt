@@ -19,12 +19,12 @@ public class AntisepticSprayer extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, h -> {
+        return HealthCapability.getAndApply(entity, h -> {
             var body = h.getComponent(component);
             body.healing(OINTMENT, 0.05f);
             body.healing(INFECTION, -BodyCondition.get(INFECTION).maxValue());
             return true;
-        });
+        }, false);
     }
 
     @Override

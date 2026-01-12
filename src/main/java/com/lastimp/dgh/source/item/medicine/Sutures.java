@@ -26,7 +26,7 @@ public class Sutures extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, health -> {
+        return HealthCapability.getAndApply(entity, health -> {
             AbstractBody body = health.getComponent(component);
 
             boolean success = false;
@@ -55,7 +55,7 @@ public class Sutures extends AbstractPartlyHealItem {
                 }
             }
             return success;
-        });
+        }, false);
     }
 
     public static void addCoverOnHeal(@NotNull ResourceLocation key) {

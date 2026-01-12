@@ -2,7 +2,9 @@
 package com.lastimp.dgh.network;
 
 import com.lastimp.dgh.api.enums.OperationType;
+import com.lastimp.dgh.config.HealthLivingEntityList;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
+import com.lastimp.dgh.network.message.MyServerConfigSynData;
 import com.lastimp.dgh.source.client.ClientAccessor;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraftforge.api.distmarker.Dist;
@@ -24,10 +26,16 @@ public class ClientPayloadHandler {
             } else if (operation == OperationType.SYN) {
                 var entity = ClientAccessor.getLiving(data.entityID());
                 if (entity != null && HealthCapability.has(entity)) {
-                    Objects.requireNonNull(HealthCapability.get(entity)).lightDeserializeNBT(data.tag());
+                    HealthCapability.getAndApply(entity, health -> health.lightDeserializeNBT(data.tag()));
                 }
             }
         }));
+        context.setPacketHandled(true);
+    }
+
+    public static void handleServerConfigSYNData(final MyServerConfigSynData data, final Supplier<NetworkEvent.Context> ctx) {
+        var context = ctx.get();
+        context.enqueueWork(() -> HealthLivingEntityList.loadServerData(data.healthWhiteList()));
         context.setPacketHandled(true);
     }
 }

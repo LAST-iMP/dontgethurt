@@ -9,6 +9,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.register.ModEffects;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -55,6 +56,11 @@ public class Blood extends AbstractBody {
     @Override
     public String getShortID() {
         return "C264AB58-CC16-425E-B12D";
+    }
+
+    @Override
+    public Component getComponent() {
+        return Component.literal("血液");
     }
 
     @Override

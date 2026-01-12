@@ -1,12 +1,12 @@
 package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.config.HealthLivingEntityList;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.capability.HealthProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -26,7 +26,7 @@ public class ModCapabilities {
 
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        if (HealthLivingEntityList.isEntityWhitelisted(event.getObject().getType())) {
+        if (event.getObject() instanceof LivingEntity livingEntity && HealthCapability.has(livingEntity)) {
             event.addCapability(HEALTH_RL, new HealthProvider());
         }
     }

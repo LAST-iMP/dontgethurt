@@ -21,7 +21,7 @@ public class Bandages extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, health -> {
+        return HealthCapability.getAndApply(entity, health -> {
             AbstractBody body = health.getComponent(component);
             float currCondition = body.getConditionValue(BANDAGED);
             if (body.abnormal(SURGERY_INCISION)) return false;
@@ -34,7 +34,7 @@ public class Bandages extends AbstractPartlyHealItem {
             this.coverCondition(body, OPEN_WOUND);
             this.coverCondition(body, FRACTURE);
             return true;
-        });
+        }, false);
     }
 
     protected void coverCondition(AbstractBody body, ResourceLocation condition) {
@@ -43,7 +43,7 @@ public class Bandages extends AbstractPartlyHealItem {
     }
 
     public static boolean cut(LivingEntity target, BodyComponents component) {
-        return HealthCapability.getAndSet(target, health -> {
+        return HealthCapability.getAndApply(target, health -> {
             AbstractBody body = health.getComponent(component);
             if (body.abnormal(BANDAGED)) {
                 body.setConditionValue(BANDAGED, BodyCondition.get(BANDAGED).defaultValue());
@@ -53,6 +53,6 @@ public class Bandages extends AbstractPartlyHealItem {
                 return false;
             }
             return true;
-        });
+        }, false);
     }
 }

@@ -6,6 +6,7 @@ import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -36,6 +37,11 @@ public class Head extends AbstractVisibleBody {
     @Override
     public String getShortID() {
         return "E3CC1481-FF2D-4F65-AFCC";
+    }
+
+    @Override
+    public Component getComponent() {
+        return Component.literal("头部");
     }
 
     @Override

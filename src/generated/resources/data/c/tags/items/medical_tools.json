@@ -1,6 +1,7 @@
 {
   "values": [
     "minecraft:shears",
+    "minecraft:writable_book",
     "dgh:health_scanner",
     "dgh:blood_scanner",
     "dgh:wood_wrench",

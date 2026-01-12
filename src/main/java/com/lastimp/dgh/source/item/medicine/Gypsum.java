@@ -20,7 +20,7 @@ public class Gypsum extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, health -> {
+        return HealthCapability.getAndApply(entity, health -> {
             AbstractExtremities body = (AbstractExtremities) health.getComponent(component);
             if (body.abnormal(PLASTER_CAST)) return false;
             if (!body.isBandaged()) return false;
@@ -28,7 +28,7 @@ public class Gypsum extends AbstractPartlyHealItem {
 
             body.healing(PLASTER_CAST, BodyCondition.get(PLASTER_CAST).maxValue());
             return true;
-        });
+        }, false);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class Gypsum extends AbstractPartlyHealItem {
     public static boolean cut(LivingEntity target, BodyComponents component) {
         if (!((Gypsum)ModItems.GYPSUM.get()).getApplicableComponents().contains(component)) return false;
 
-        return HealthCapability.getAndSet(target, health -> {
+        return HealthCapability.getAndApply(target, health -> {
             AbstractBody body = health.getComponent(component);
             if (body.abnormal(PLASTER_CAST)) {
                 body.setConditionValue(PLASTER_CAST, BodyCondition.get(PLASTER_CAST).defaultValue());
@@ -50,6 +50,6 @@ public class Gypsum extends AbstractPartlyHealItem {
                 return false;
             }
             return true;
-        });
+        }, false);
     }
 }

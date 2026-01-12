@@ -10,6 +10,7 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import com.lastimp.dgh.source.register.ModEffects;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -58,6 +59,11 @@ public class Torso extends AbstractVisibleBody {
     @Override
     public String getShortID() {
         return "D5EB1631-A40A-40DA-B938";
+    }
+
+    @Override
+    public Component getComponent() {
+        return Component.literal("胸口");
     }
 
     @Override

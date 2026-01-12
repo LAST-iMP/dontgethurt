@@ -1,0 +1,13 @@
+{
+  "name": "村民职业-医生",
+  "icon": "minecraft:apple",
+  "category": "dgh:other",
+  "read_by_default": false,
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "text",
+      "text": "新职业提供多种药品的交易选项，工作站为医疗床。"
+    }
+  ]
+}

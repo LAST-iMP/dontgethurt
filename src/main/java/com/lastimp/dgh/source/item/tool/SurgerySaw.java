@@ -33,7 +33,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, (h) -> {
+        return HealthCapability.getAndApply(entity, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             //必须手术中，牵开皮肤
             if (!body.abnormal(RETRACTED_SKIN)) return false;
@@ -53,7 +53,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
                 return this.cut(source, extremities);
             }
             return false;
-        });
+        }, false);
     }
 
     protected boolean saw(ServerPlayer player, AbstractVisibleBody body) {

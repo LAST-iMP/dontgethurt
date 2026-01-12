@@ -10,7 +10,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.GameRules;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartedEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -57,14 +56,6 @@ public class DontGetHurt
     }
 
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event)
-    {
-        LOGGER.info("HELLO from server starting");
-        MinecraftServer server = event.getServer();
-        HealthLivingEntityList.loadWhiteLists(server.getResourceManager());
-    }
-
-    @SubscribeEvent
     public void onServerStarted(ServerStartedEvent event) {
         MinecraftServer server = event.getServer();
         server.getAllLevels().forEach(level -> {
@@ -78,8 +69,9 @@ public class DontGetHurt
         LOGGER.info("HELLO FROM COMMON SETUP");
         Network.registerMessage();
         event.enqueueWork(() -> {
+            HealthLivingEntityList.loadWhiteLists();
             BlackList.loadExternalBlacklist();
-            HealthLivingEntityList.loadExternalWhitelist();
+            HealthLivingEntityList.loadExternallist();
         });
     }
 }

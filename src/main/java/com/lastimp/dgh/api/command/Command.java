@@ -136,10 +136,8 @@ public class Command {
                     () -> Component.literal("已将实体" + livingEntity.getScoreboardName() + "的" + components + BodyCondition.get(condition) + "增加" + value),
                     true
             );
-            HealthCapability.getAndSet(livingEntity, h -> {
-                h.getComponent(components).addConditionValue(condition, value);
-                return 1;
-            });
+            HealthCapability.getAndApply(livingEntity, h ->
+                    h.getComponent(components).addConditionValue(condition, value));
         }
 
         return 1;
@@ -158,10 +156,8 @@ public class Command {
                     () -> Component.literal("已将实体" + livingEntity.getScoreboardName() + "的" + components + BodyCondition.get(condition) + "重置"),
                     true
             );
-            HealthCapability.getAndSet(livingEntity, h -> {
-                h.getComponent(components).setConditionValue(condition, BodyCondition.get(condition).defaultValue());
-                return 1;
-            });
+            HealthCapability.getAndApply(livingEntity, h ->
+                    h.getComponent(components).setConditionValue(condition, BodyCondition.get(condition).defaultValue()));
         }
         return 1;
     }
@@ -178,12 +174,11 @@ public class Command {
                     () -> Component.literal("已将实体" + livingEntity.getScoreboardName() + "的" + components + "重置"),
                     true
             );
-            HealthCapability.getAndSet(livingEntity, h -> {
+            HealthCapability.getAndApply(livingEntity, h -> {
                 var body = h.getComponent(components);
                 for (var condition : body.getBodyConditions()) {
                     body.setConditionValue(condition, BodyCondition.get(condition).defaultValue());
                 }
-                return 1;
             });
         }
         return 1;
@@ -198,11 +193,12 @@ public class Command {
             if (!HealthCapability.has(livingEntity)) continue;
             source.sendSuccess(() -> Component.literal("已将实体" + livingEntity.getScoreboardName() + "重置"), true);
 
-            var oldHealth = HealthCapability.get(livingEntity);
-            var newHealth = new HealthCapability();
-            newHealth.autoPulse().setStackInSlot(0, oldHealth.autoPulse().getStackInSlot(0));
-            newHealth.oxygenMask().setStackInSlot(0, oldHealth.oxygenMask().getStackInSlot(0));
-            oldHealth.deserializeNBT(newHealth.serializeNBT());
+            HealthCapability.getAndApply(livingEntity, oldHealth -> {
+                var newHealth = new HealthCapability();
+                newHealth.autoPulse().setStackInSlot(0, oldHealth.autoPulse().getStackInSlot(0));
+                newHealth.oxygenMask().setStackInSlot(0, oldHealth.oxygenMask().getStackInSlot(0));
+                oldHealth.deserializeNBT(newHealth.serializeNBT());
+            });
         }
         return 1;
     }

@@ -6,6 +6,7 @@ import com.lastimp.dgh.source.register.ModCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +35,8 @@ public class HealthProvider implements ICapabilitySerializable<CompoundTag> {
     }
 
     public static boolean has(Entity entity) {
+        if (entity instanceof Player player)
+            return HealthLivingEntityList.isEntityWhitelisted(player.getType()) && !HealthLivingEntityList.isPlayerBlacklisted(player);
         return HealthLivingEntityList.isEntityWhitelisted(entity.getType());
     }
 }

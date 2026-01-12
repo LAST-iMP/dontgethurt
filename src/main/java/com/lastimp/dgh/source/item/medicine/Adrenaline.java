@@ -22,7 +22,7 @@ public class Adrenaline extends AbstractDirectHealItems {
 
     @Override
     public boolean heal(@NotNull ServerPlayer source, @NotNull LivingEntity entity) {
-        return HealthCapability.getAndSet(entity, h -> {
+        return HealthCapability.getAndApply(entity, h -> {
             Torso torso = (Torso) h.getComponent(TORSO);
             Blood blood = (Blood) h.getComponent(BLOOD);
 
@@ -30,7 +30,7 @@ public class Adrenaline extends AbstractDirectHealItems {
             torso.setHeartRateLevel(torso.getHeartRateLevel() / 2);
             entity.addEffect(new MobEffectInstance(ModEffects.ADRENALINE_EFFECT.get(), 60 * 20));
             return true;
-        });
+        }, false);
     }
 
     @Override

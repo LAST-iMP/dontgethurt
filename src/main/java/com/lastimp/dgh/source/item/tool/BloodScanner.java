@@ -25,7 +25,7 @@ public class BloodScanner extends AbstractHealingItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         if (!level.isClientSide)
-            BloodScanner.scanHealth(player, HealthCapability.get(player), player.getScoreboardName());
+            HealthCapability.getAndApply(player, h -> BloodScanner.scanHealth(player, h, player.getScoreboardName()));
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide);
     }
 
@@ -36,7 +36,7 @@ public class BloodScanner extends AbstractHealingItem {
                 player.sendSystemMessage(Component.translatable(target.getName().getString()).append("的血液很正常"));
             } else {
                 var name = target instanceof Player ? target.getScoreboardName() : target.getName().getString();
-                BloodScanner.scanHealth(player, HealthCapability.get(target), name);
+                HealthCapability.getAndApply(player, h -> BloodScanner.scanHealth(player, h, name));
             }
         }
         return InteractionResult.SUCCESS;
@@ -52,7 +52,7 @@ public class BloodScanner extends AbstractHealingItem {
                     player.sendSystemMessage(Component.translatable(name).append("的血液状态为："));
                 hasAbnormal = true;
                 player.sendSystemMessage(
-                        Component.translatable(condition.toString(), Component.literal(": " + String.format("%.2f", value)))
+                        Component.translatable(condition.toString()).append(Component.literal(": " + String.format("%.2f", value)))
                 );
             }
         }

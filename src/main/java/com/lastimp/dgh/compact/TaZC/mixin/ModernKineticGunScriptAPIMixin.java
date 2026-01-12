@@ -18,26 +18,28 @@ public class ModernKineticGunScriptAPIMixin {
     @Inject(method = "getReloadTime", at = @At("RETURN"), cancellable = true, remap = false)
     public void getReloadTime(CallbackInfoReturnable<Long> cir) {
         if (shooter instanceof Player player) {
-            var health = HealthCapability.get(player);
-            int armBreak = health.armBreak();
-            long newResult = cir.getReturnValue();
-            if (armBreak > 0) {
-                newResult = (long) (newResult * (1 - 0.4 * armBreak));
-            }
-            cir.setReturnValue(newResult);
+            HealthCapability.getAndApply(player, health -> {
+                int armBreak = health.armBreak();
+                long newResult = cir.getReturnValue();
+                if (armBreak > 0) {
+                    newResult = (long) (newResult * (1 - 0.4 * armBreak));
+                }
+                cir.setReturnValue(newResult);
+            });
         }
     }
 
     @Inject(method = "getBoltTime", at = @At("RETURN"), cancellable = true, remap = false)
     public void getBoltTime(CallbackInfoReturnable<Long> cir) {
         if (shooter instanceof Player player) {
-            var health = HealthCapability.get(player);
-            int armBreak = health.armBreak();
-            long newResult = cir.getReturnValue();
-            if (armBreak > 0) {
-                newResult = (long) (newResult * (1 - 0.4 * armBreak));
-            }
-            cir.setReturnValue(newResult);
+            HealthCapability.getAndApply(player, health -> {
+                int armBreak = health.armBreak();
+                long newResult = cir.getReturnValue();
+                if (armBreak > 0) {
+                    newResult = (long) (newResult * (1 - 0.4 * armBreak));
+                }
+                cir.setReturnValue(newResult);
+            });
         }
     }
 }

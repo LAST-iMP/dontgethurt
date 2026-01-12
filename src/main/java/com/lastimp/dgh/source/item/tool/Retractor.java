@@ -19,13 +19,13 @@ public class Retractor extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, (h) -> {
+        return HealthCapability.getAndApply(entity, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             if (!body.abnormal(CLAMPED_BLEEDING)) return false;
             if (body.abnormal(RETRACTED_SKIN)) return false;
 
             body.setConditionValue(RETRACTED_SKIN, BodyCondition.get(RETRACTED_SKIN).maxValue());
             return true;
-        });
+        }, false);
     }
 }

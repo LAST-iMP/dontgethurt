@@ -2,8 +2,12 @@ package com.lastimp.dgh.source.core.livingEntity.player;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
+import com.lastimp.dgh.config.HealthLivingEntityList;
+import com.lastimp.dgh.network.message.MyServerConfigSynData;
+import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -13,6 +17,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerEventBus {
@@ -31,6 +36,10 @@ public class PlayerEventBus {
             persistedTag.putBoolean(key, true);
             data.put(Player.PERSISTED_NBT_TAG, persistedTag);
         }
+        Network.CLIENT_INSTANCE.send(
+                PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+                MyServerConfigSynData.getInstance(HealthLivingEntityList.getWhiteList())
+        );
     }
 
     @SubscribeEvent

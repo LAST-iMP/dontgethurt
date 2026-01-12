@@ -5,9 +5,6 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.ClientPayloadHandler;
 import com.lastimp.dgh.network.ServerPayloadHandler;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -44,6 +41,14 @@ public class Network {
                 MyReadAllConditionData::toBytes,
                 MyReadAllConditionData::new,
                 ClientPayloadHandler::handleReadAllConditionData,
+                Optional.of(NetworkDirection.PLAY_TO_CLIENT)
+        );
+        CLIENT_INSTANCE.registerMessage(
+                nextID(),
+                MyServerConfigSynData.class,
+                MyServerConfigSynData::toBytes,
+                MyServerConfigSynData::new,
+                ClientPayloadHandler::handleServerConfigSYNData,
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT)
         );
         SERVER_INSTANCE.registerMessage(

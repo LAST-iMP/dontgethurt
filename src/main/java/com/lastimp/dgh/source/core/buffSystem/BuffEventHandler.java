@@ -25,14 +25,14 @@ public class BuffEventHandler {
         if (event.getEntity().level().isClientSide) return;
         var entity = event.getEntity();
         if (!HealthCapability.has(entity)) return;
-        HealthCapability health = HealthCapability.get(entity);
-
-        updateStaggerEffects(health, entity);
-        updateArmEffects(health, entity);
-        updateWithdrawEffects(health, entity);
-        updateLivingTimeEffects(health, entity);
-        updateCureEffects(health, entity);
-        updateSymptomsEffects(health, entity);
+        HealthCapability.getAndApply(entity, health -> {
+            updateStaggerEffects(health, entity);
+            updateArmEffects(health, entity);
+            updateWithdrawEffects(health, entity);
+            updateLivingTimeEffects(health, entity);
+            updateCureEffects(health, entity);
+            updateSymptomsEffects(health, entity);
+        });
     }
 
     private static void updateStaggerEffects(HealthCapability health, LivingEntity entity) {

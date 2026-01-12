@@ -427,6 +427,7 @@ public class BodyCondition {
         }
 
         public ConditionBuilder isBlood() {
+            this.instance.isPain = true;
             bloodConditions.add(this.instance.name);
             return this;
         }
