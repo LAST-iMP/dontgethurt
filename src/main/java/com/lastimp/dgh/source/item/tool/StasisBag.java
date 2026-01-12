@@ -28,13 +28,13 @@ public class StasisBag extends AbstractHealingEquipment {
 
     @Override
     public boolean heal(@NotNull LivingEntity entity) {
-        return HealthCapability.getAndSet(entity, h -> {
+        return HealthCapability.getAndApply(entity, h -> {
             Torso torso = (Torso) h.getComponent(BodyComponents.TORSO);
             torso.addHeartRate(3);
             torso.injury(RESPIRATORY_ARREST, BodyCondition.get(RESPIRATORY_ARREST).maxValue());
             entity.setAirSupply(entity.getMaxAirSupply());
             return true;
-        });
+        }, false);
     }
 
     @Override

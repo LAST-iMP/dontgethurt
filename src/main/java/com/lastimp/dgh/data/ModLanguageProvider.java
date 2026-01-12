@@ -71,16 +71,16 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(BodyCondition.BRAIN_DAMAGE.toString(), "脑损伤");
         this.add(BodyCondition.COMA.toString(), "昏迷");
 
-        this.add(BodyCondition.SEPSIS.toString(), "败血症%s");
-        this.add(BodyCondition.HEMOTRANSFUSION.toString(), "输血性休克%s");
-        this.add(BodyCondition.BLOOD_LOSS.toString(), "失血%s");
-        this.add(BodyCondition.BLOOD_PRESSURE.toString(), "血压%s");
-        this.add(BodyCondition.PH_LEVEL.toString(), "酸碱性%s");
-        this.add(BodyCondition.IMMUNITY.toString(), "免疫力%s");
-        this.add(BodyCondition.OPIATE_OVERDOSE.toString(), "阿片中毒%s");
-        this.add(BodyCondition.OPIATE_ADDICTED.toString(), "阿片成瘾%s");
-        this.add(BodyCondition.OXYGEN.toString(), "低血氧%s");
-        this.add(BodyCondition.ANTIBIOTICS.toString(), "广谱抗生素%s");
+        this.add(BodyCondition.SEPSIS.toString(), "败血症");
+        this.add(BodyCondition.HEMOTRANSFUSION.toString(), "输血性休克");
+        this.add(BodyCondition.BLOOD_LOSS.toString(), "失血");
+        this.add(BodyCondition.BLOOD_PRESSURE.toString(), "血压");
+        this.add(BodyCondition.PH_LEVEL.toString(), "酸碱性");
+        this.add(BodyCondition.IMMUNITY.toString(), "免疫力");
+        this.add(BodyCondition.OPIATE_OVERDOSE.toString(), "阿片中毒");
+        this.add(BodyCondition.OPIATE_ADDICTED.toString(), "阿片成瘾");
+        this.add(BodyCondition.OXYGEN.toString(), "低血氧");
+        this.add(BodyCondition.ANTIBIOTICS.toString(), "广谱抗生素");
 
         this.add(BodyCondition.BONE_WOOD.toString(), "木骨植入");
         this.add(BodyCondition.BONE_STONE.toString(), "石骨植入");

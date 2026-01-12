@@ -12,12 +12,6 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import java.util.function.Supplier;
 
 public class ModCapabilities {
-    public static final EntityCapability<HealthCapability, Void> HEALTH_HANDLER =
-            EntityCapability.createVoid(
-                    Common.ResourceLocation(DontGetHurt.MODID, "health_handler"),
-                    HealthCapability.class
-            );
-
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
             DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, DontGetHurt.MODID);
 

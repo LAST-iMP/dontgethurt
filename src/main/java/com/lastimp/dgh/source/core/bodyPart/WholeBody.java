@@ -7,6 +7,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -60,6 +61,18 @@ public class WholeBody extends AbstractBody {
     @Override
     public String getShortID() {
         return "whole_body";
+    }
+
+    @Override
+    public Component getComponent() {
+        return Component.literal("全身");
+    }
+
+    public boolean abnormal() {
+        for (var key : this.components.values()) {
+            if (key.abnormal()) return true;
+        }
+        return false;
     }
 
     @Override

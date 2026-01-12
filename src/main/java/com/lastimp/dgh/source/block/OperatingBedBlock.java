@@ -42,10 +42,7 @@ public class OperatingBedBlock extends BedBlock {
         for (var entity : entities) {
             if (!(EntitySelector.LIVING_ENTITY_STILL_ALIVE.test(entity))) continue;
             if (entity.distanceToSqr(pos.getCenter()) > 4.0f) continue;
-            HealthCapability.getAndSet(entity, h -> {
-                h.setNearBedTick(40);
-                return h;
-            });
+            HealthCapability.getAndApply(entity, h -> h.setNearBedTick(40));
         }
         level.scheduleTick(pos, this, 20);
     }

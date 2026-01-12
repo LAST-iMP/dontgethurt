@@ -1,0 +1,33 @@
+{
+  "name": "妙妙工具",
+  "icon": "minecraft:book",
+  "category": "dgh:other",
+  "read_by_default": false,
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "spotlight",
+      "title": "担架",
+      "item": "dgh:stretcher",
+      "scale": 1.2,
+      "text": "担架！它能够通过右键生物进行装车，然后通过shift+右键将其抬走！",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:stretcher"
+    },
+    {
+      "type": "spotlight",
+      "title": "体检报告",
+      "item": "minecraft:writable_book",
+      "scale": 1.2,
+      "text": "在健康界面使用书与笔，获得生物的病例。玩家死亡后第一次获得的病例为尸检报告。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:writable_book"
+    }
+  ]
+}

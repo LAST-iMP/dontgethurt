@@ -5,6 +5,7 @@ import com.lastimp.dgh.config.HealthLivingEntityList;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +30,8 @@ public class HealthProvider implements ICapabilityProvider<Entity, Void, HealthC
     }
 
     public static boolean has(Entity entity) {
+        if (entity instanceof Player player)
+            return HealthLivingEntityList.isEntityWhitelisted(player.getType()) && !HealthLivingEntityList.isPlayerBlacklisted(player);
         return HealthLivingEntityList.isEntityWhitelisted(entity.getType());
     }
 }

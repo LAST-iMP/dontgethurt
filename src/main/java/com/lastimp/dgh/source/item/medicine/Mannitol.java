@@ -19,12 +19,12 @@ public class Mannitol extends AbstractDirectHealItems {
 
     @Override
     public boolean heal(@NotNull ServerPlayer source, @NotNull LivingEntity entity) {
-        return HealthCapability.getAndSet(entity, h -> {
+        return HealthCapability.getAndApply(entity, h -> {
             Head head = (Head) h.getComponent(HEAD);
 
             head.healing(BRAIN_DAMAGE, -1f);
             return true;
-        });
+        }, false);
     }
 
     @Override

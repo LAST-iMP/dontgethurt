@@ -30,7 +30,7 @@ public class BoneImplants extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, (h) -> {
+        return HealthCapability.getAndApply(entity, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             if (body instanceof AbstractExtremities extremities) {
                 if (extremities.abnormal(TRAUMATIC_AMPUTATION) || extremities.abnormal(SURGICAL_AMPUTATION)) return false;
@@ -44,6 +44,6 @@ public class BoneImplants extends AbstractPartlyHealItem {
                 return true;
             }
             return false;
-        });
+        }, false);
     }
 }

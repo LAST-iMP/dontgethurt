@@ -24,7 +24,7 @@ public class Scalpel extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, (h) -> {
+        return HealthCapability.getAndApply(entity, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             if (body.abnormal(SURGERY_INCISION)) return false;
 
@@ -35,7 +35,7 @@ public class Scalpel extends AbstractPartlyHealItem {
                 body.setConditionHidden(key, BodyCondition.get(key).defaultValue());
             }
             return true;
-        });
+        }, false);
     }
 
     public static void addDiscoverOnHeal(@NotNull ResourceLocation key) {

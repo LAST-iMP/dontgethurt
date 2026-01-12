@@ -22,7 +22,7 @@ public class ClientPayloadHandler {
             } else if (operation == OperationType.SYN) {
                 var entity = ClientAccessor.getLiving(data.entityID());
                 if (entity != null && HealthCapability.has(entity)) {
-                    Objects.requireNonNull(HealthCapability.get(entity)).lightDeserializeNBT(data.tag());
+                    HealthCapability.getAndApply(entity, health -> health.lightDeserializeNBT(data.tag()));
                 }
             }
         })
@@ -33,7 +33,7 @@ public class ClientPayloadHandler {
     }
 
     public static void handleServerConfigSYNData(final MyServerConfigSynData data, final IPayloadContext context) {
-        context.enqueueWork(() -> HealthLivingEntityList.load(data.healthWhiteList()))
+        context.enqueueWork(() -> HealthLivingEntityList.loadServerData(data.healthWhiteList()))
         .exceptionally(e -> {
             context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
             return null;

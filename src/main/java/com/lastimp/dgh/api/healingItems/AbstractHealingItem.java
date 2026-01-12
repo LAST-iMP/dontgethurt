@@ -13,7 +13,6 @@ public abstract class AbstractHealingItem extends Item {
 
     public boolean available(LivingEntity target, ItemStack stack) {
         if (this instanceof AbstractHealingEquipment) return true;
-        var health = HealthCapability.get(target);
-        return health != null && !health.isFrozen();
+        return HealthCapability.getAndApply(target, health -> !health.isFrozen(), false);
     }
 }

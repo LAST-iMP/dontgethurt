@@ -13,6 +13,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,7 +35,7 @@ public class HealingEventHandler {
         if (!(event.getEntity() instanceof LivingEntity livingEntity)) return;
         if (!HealthCapability.has(livingEntity)) return;
 
-        HealthCapability.getAndSet(livingEntity, h -> {
+        HealthCapability.getAndApply(livingEntity, h -> {
             h = h.update(livingEntity);
             if (!(livingEntity instanceof ServerPlayer player)) {
                 updateLivingHealth(h, livingEntity);
@@ -42,7 +43,6 @@ public class HealingEventHandler {
                 updatePlayerHealth(h, player);
             }
             h.SYNIfDirty(livingEntity);
-            return h;
         });
     }
 
@@ -55,7 +55,7 @@ public class HealingEventHandler {
         } else if (maxHealth > 0) {
             if ((int)maxHealth != (int)entity.getHealth())
                 entity.setHealth(maxHealth);
-        } else if (maxHealth > -entity.getMaxHealth() && Config.allow_down) {
+        } else if (canLieDown(maxHealth, entity)) {
             entity.setHealth(0.01f);
         } else {
             DyingHandler.setLivingDead(entity);
@@ -73,7 +73,7 @@ public class HealingEventHandler {
         } else if (maxHealth > 0) {
             if ((int)maxHealth != (int)player.getHealth())
                 player.setHealth(maxHealth);
-        } else if (maxHealth > -player.getMaxHealth() && player.getServer().getPlayerList().getPlayers().size() > 1 && Config.allow_down) {
+        } else if (canLieDown(maxHealth, player) && player.getServer().getPlayerList().getPlayers().size() > 1) {
             player.setHealth(0.01f);
         } else {
             PlayerDyingHandler.setPlayerDead(player);
@@ -83,6 +83,14 @@ public class HealingEventHandler {
     private static float getHealthWithOuterHealing(HealthCapability health, LivingEntity entity) {
         float maxHealth = entity.getMaxHealth() * health.vitality() + health.outerHealing();
         return Math.min(maxHealth, entity.getMaxHealth());
+    }
+
+    private static boolean canLieDown(float maxHealth, LivingEntity entity) {
+        var lastDamageSource = entity.getLastDamageSource();
+        if (lastDamageSource != null) {
+            if (lastDamageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || lastDamageSource.is(DamageTypes.OUTSIDE_BORDER)) return false;
+        }
+        return maxHealth > -entity.getMaxHealth() && Config.allow_down;
     }
 
     @SubscribeEvent
@@ -95,10 +103,9 @@ public class HealingEventHandler {
         if (Config.tradition_healing) {
             HealingHandler.handleValindaHealing(entity, amount / (entity.getMaxHealth() * Config.body_life_factor));
         } else {
-            HealthCapability.getAndSet(entity, (h) -> {
-                h.setOuterHealing(Mth.clamp(h.outerHealing() + amount, 0, entity.getMaxHealth()));
-                return h;
-            });
+            HealthCapability.getAndApply(entity, h ->
+                    h.setOuterHealing(Mth.clamp(h.outerHealing() + amount, 0, entity.getMaxHealth()))
+            );
         }
     }
 

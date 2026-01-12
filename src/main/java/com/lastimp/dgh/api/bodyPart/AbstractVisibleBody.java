@@ -202,7 +202,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     private void handleInjuryInfection(ResourceLocation condition) {
         ConditionState state = this.getCondition(condition);
         if (isBadBandaged()) {
-            this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * DELTA * 3 * state.getTotalValue());
+            this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * DELTA * 4 * state.getTotalValue());
         } else if (!isBandaged()) {
             this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * DELTA * state.getTotalValue());
         }
@@ -210,8 +210,10 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void handleInfection() {
         if (this.abnormal(OINTMENT))
-            this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * 2 * DELTA);
+            this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * 3 * DELTA);
         else if (this.isBandaged())
+            this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * 2 * DELTA);
+        else if (!this.isBadBandaged())
             this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * DELTA);
     }
 

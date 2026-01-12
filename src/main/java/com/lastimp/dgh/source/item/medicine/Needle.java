@@ -19,12 +19,12 @@ public class Needle extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, health -> {
+        return HealthCapability.getAndApply(entity, health -> {
             AbstractBody body = health.getComponent(component);
             if (!body.abnormal(PNEUMOTHORAX)) return false;
             body.setConditionValue(PNEUMOTHORAX_NEEDLE, BodyCondition.get(PNEUMOTHORAX_NEEDLE).maxValue());
             return true;
-        });
+        }, false);
     }
 
     @Override

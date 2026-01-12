@@ -18,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModItemTagsProvider extends TagsProvider<Item> {
     public static final ResourceKey<Item> SHEARS = ResourceKey.create(Registries.ITEM, Common.ResourceLocation("minecraft", "shears"));
+    public static final ResourceKey<Item> WRITABLE_BOOK = ResourceKey.create(Registries.ITEM, Common.ResourceLocation("minecraft", "writable_book"));
 
     protected ModItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, Registries.ITEM, lookupProvider, modId, existingFileHelper);
@@ -45,6 +46,7 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
 
         this.tag(ModTags.MEDICAL_TOOLS)
                 .add(SHEARS)
+                .add(WRITABLE_BOOK)
                 .add(ModItems.HEALTH_SCANNER.getKey())
                 .add(ModItems.BLOOD_SCANNER.getKey())
                 .add(ModItems.WOOD_WRENCH.getKey())

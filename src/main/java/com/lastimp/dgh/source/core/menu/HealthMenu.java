@@ -38,7 +38,9 @@ public class HealthMenu extends AbstractContainerMenu {
         layoutPlayerInventorySlots(inv);
         if (inv.player.level() instanceof ServerLevel serverLevel) {
             var entity = Utils.getLivingWithHealth(serverLevel, targetEntity);
-            if (entity != null) this.setEquipments(HealthCapability.get(entity));
+            if (entity != null) {
+                HealthCapability.getAndApply(entity, this::setEquipments);
+            }
         }
     }
 

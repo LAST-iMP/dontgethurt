@@ -2,11 +2,17 @@
 package com.lastimp.dgh.source.core.bodyPart;
 
 import com.lastimp.dgh.api.bodyPart.AbstractLeg;
+import net.minecraft.network.chat.Component;
 
 public class RightLeg extends AbstractLeg {
 
     @Override
     public String getShortID() {
         return "right_leg";
+    }
+
+    @Override
+    public Component getComponent() {
+        return Component.literal("右腿");
     }
 }

@@ -19,7 +19,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 @Mod(DontGetHurt.MODID)
 public class DontGetHurt
@@ -49,14 +48,6 @@ public class DontGetHurt
     }
 
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event)
-    {
-        LOGGER.info("HELLO from server starting");
-        MinecraftServer server = event.getServer();
-        HealthLivingEntityList.loadWhiteLists(server.getResourceManager());
-    }
-
-    @SubscribeEvent
     public void onServerStarted(ServerStartedEvent event) {
         MinecraftServer server = event.getServer();
         server.getAllLevels().forEach(level -> {
@@ -70,8 +61,9 @@ public class DontGetHurt
     {
         LOGGER.info("HELLO FROM COMMON SETUP");
         event.enqueueWork(() -> {
+            HealthLivingEntityList.loadWhiteLists();
             BlackList.loadExternalBlacklist();
-            HealthLivingEntityList.loadExternalWhitelist();
+            HealthLivingEntityList.loadExternallist();
         });
     }
 }

@@ -19,7 +19,7 @@ public class SurgicalDrill extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, (h) -> {
+        return HealthCapability.getAndApply(entity, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             if (!body.abnormal(RETRACTED_SKIN)) return false;
             if (body.abnormal(DRILLED_BONES)) return false;
@@ -29,6 +29,6 @@ public class SurgicalDrill extends AbstractPartlyHealItem {
 
             body.setConditionValue(DRILLED_BONES, BodyCondition.get(DRILLED_BONES).maxValue());
             return true;
-        });
+        }, false);
     }
 }

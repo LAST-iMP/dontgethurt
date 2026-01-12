@@ -35,11 +35,10 @@ public class ServerPayloadHandler {
             var target = Utils.getLivingWithHealth(sender.serverLevel(), uuid);
             if (target == null) return;
 
-            var tag = HealthCapability.get(target).serializeNBT(sender.registryAccess());
-            PacketDistributor.sendToPlayer(
+            HealthCapability.getAndApply(target, health -> PacketDistributor.sendToPlayer(
                     (ServerPlayer) context.player(),
-                    MyReadAllConditionData.getInstance(uuid, target.getId(), tag, OperationType.valueOf(data.oper()))
-            );
+                    MyReadAllConditionData.getInstance(uuid, target.getId(), health.serializeNBT(sender.registryAccess()), OperationType.valueOf(data.oper()))
+            ));
         })
         .exceptionally(e -> {
             context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));

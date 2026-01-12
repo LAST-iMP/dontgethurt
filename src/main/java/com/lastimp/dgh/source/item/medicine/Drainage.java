@@ -19,13 +19,13 @@ public class Drainage extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, health -> {
+        return HealthCapability.getAndApply(entity, health -> {
             AbstractBody body = health.getComponent(component);
             if (!body.abnormal(RETRACTED_SKIN) || !body.abnormal(PNEUMOTHORAX)) return false;
             body.setConditionValue(PNEUMOTHORAX, BodyCondition.get(PNEUMOTHORAX).minValue());
             body.setConditionValue(PNEUMOTHORAX_NEEDLE, BodyCondition.get(PNEUMOTHORAX_NEEDLE).minValue());
             return true;
-        });
+        }, false);
     }
 
     @Override

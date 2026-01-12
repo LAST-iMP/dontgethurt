@@ -19,13 +19,13 @@ public class AntibioticOintment extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, h -> {
+        return HealthCapability.getAndApply(entity, h -> {
             var body = h.getComponent(component);
             if (body.getConditionValue(OINTMENT) > 0.8f) return false;
             body.healing(OINTMENT, BodyCondition.get(OINTMENT).maxValue());
             body.healing(INFECTION, -0.6f);
             return true;
-        });
+        }, false);
     }
 
     @Override

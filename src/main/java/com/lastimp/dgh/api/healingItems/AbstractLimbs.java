@@ -18,14 +18,14 @@ public abstract class AbstractLimbs extends AbstractPartlyHealItem {
 
     @Override
     protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return HealthCapability.getAndSet(entity, h -> {
+        return HealthCapability.getAndApply(entity, h -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             if (!body.abnormal(SURGICAL_AMPUTATION)) return false;
             if (!body.abnormal(RETRACTED_SKIN)) return false;
             body.healing(SURGICAL_AMPUTATION, -BodyCondition.get(SURGICAL_AMPUTATION).maxValue());
             this.addLimb(h, body);
             return true;
-        });
+        }, false);
     }
 
     protected abstract void addLimb(@NotNull HealthCapability health, @NotNull AbstractVisibleBody body);
