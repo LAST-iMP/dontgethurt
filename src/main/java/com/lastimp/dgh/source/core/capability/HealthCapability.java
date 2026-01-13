@@ -290,7 +290,9 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         return  this.getComponent(LEFT_ARM).abnormal(INTENSE_PAIN) ||
                 this.getComponent(RIGHT_ARM).abnormal(INTENSE_PAIN) ||
                 this.getComponent(LEFT_LEG).abnormal(INTENSE_PAIN) ||
-                this.getComponent(RIGHT_LEG).abnormal(INTENSE_PAIN);
+                this.getComponent(RIGHT_LEG).abnormal(INTENSE_PAIN) ||
+                this.getComponent(HEAD).abnormal(INTENSE_PAIN) ||
+                this.getComponent(TORSO).abnormal(INTENSE_PAIN);
     }
 
     public boolean isDown() {

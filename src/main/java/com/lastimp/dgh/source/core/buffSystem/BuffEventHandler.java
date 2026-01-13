@@ -108,16 +108,15 @@ public class BuffEventHandler {
             entity.addEffect(new MobEffectInstance(ModEffects.PALE_SKIN_EFFECT, 99));
         if (blood.getConditionValue(OXYGEN) > 0.2f || torso.abnormal(RESPIRATORY_ARREST) || torso.getConditionValue(PNEUMOTHORAX) > 0.4)
             entity.addEffect(new MobEffectInstance(ModEffects.HARD_BREATH_EFFECT, 99));
-        if (blood.getConditionValue(OXYGEN) > 0.5f || blood.getConditionValue(SEPSIS) > 0.4 || blood.getConditionValue(BLOOD_PRESSURE) < 0.6)
-            entity.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 99));
-        if (blood.getConditionValue(BLOOD_PRESSURE) < 0.3f)
-            entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 99));
-
-        var bloodLoss = blood.getConditionValue(BLOOD_LOSS);
-        if (bloodLoss > 0.6f)
-            entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 99,
-                    (int) ((bloodLoss - 0.6f) / 0.2f)
-            ));
+        if (!torso.abnormal(ANALGESIA)) {
+            if (blood.getConditionValue(OXYGEN) > 0.5f || blood.getConditionValue(SEPSIS) > 0.4 || blood.getConditionValue(BLOOD_PRESSURE) < 0.6)
+                entity.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 99));
+            if (blood.getConditionValue(BLOOD_PRESSURE) < 0.3f)
+                entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 99));
+            var bloodLoss = blood.getConditionValue(BLOOD_LOSS);
+            if (bloodLoss > 0.6f)
+                entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 99, (int) ((bloodLoss - 0.6f) / 0.2f)));
+        }
         if (torso.abnormal(HEARTRATE_INCREASE))
             entity.addEffect(new MobEffectInstance(ModEffects.INCREASED_HEARTRATE_EFFECT, 99));
         if (health.isInfected())
