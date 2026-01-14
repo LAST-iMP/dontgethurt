@@ -73,7 +73,7 @@ public class HealingEventHandler {
         } else if (maxHealth > 0) {
             if ((int)maxHealth != (int)player.getHealth())
                 player.setHealth(maxHealth);
-        } else if (canLieDown(maxHealth, player) && player.getServer().getPlayerList().getPlayers().size() > 1) {
+        } else if (canLieDown(maxHealth, player)) {
             player.setHealth(0.01f);
         } else {
             PlayerDyingHandler.setPlayerDead(player);
