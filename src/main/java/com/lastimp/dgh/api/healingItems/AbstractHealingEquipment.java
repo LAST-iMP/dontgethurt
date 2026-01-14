@@ -10,7 +10,7 @@ public abstract class AbstractHealingEquipment extends AbstractDirectHealItems{
     }
 
     @Override
-    public boolean heal(@NotNull ServerPlayer source, @NotNull LivingEntity entity) {
+    public boolean heal(@NotNull LivingEntity source, @NotNull LivingEntity entity) {
         return this.heal(entity);
     }
 

@@ -6,6 +6,7 @@ import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.Utils;
+import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
@@ -54,16 +55,16 @@ public abstract class FollowInjuryHandler {
     }
 
     public static void arterialBleedingByFractionHandler(AbstractVisibleBody body, HealthCapability health) {
-        if (body instanceof AbstractExtremities extremities && Mth.randomBetween(Utils.randomSource, 0f, 1.0f) < Config.fractureArterialProb) {
-            extremities.injury(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).maxValue());
+        if ((body instanceof AbstractExtremities || body instanceof Head) && Mth.randomBetween(Utils.randomSource, 0f, 1.0f) < Config.fractureArterialProb) {
+            body.injury(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).maxValue());
             health.addDirectInjury(body.getComponent(), BodyCondition.get(ARTERIAL_BLEEDING).getComponent(),  1);
         }
     }
 
     public static void arterialBleedingHandler(AbstractVisibleBody body, HealthCapability health) {
         float bleed = body.getConditionValue(BLEED);
-        if (body instanceof AbstractExtremities extremities && bleed > 0.8) {
-            extremities.injury(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).maxValue());
+        if ((body instanceof AbstractExtremities || body instanceof Head) && bleed > 0.8) {
+            body.injury(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).maxValue());
             health.addDirectInjury(body.getComponent(), BodyCondition.get(ARTERIAL_BLEEDING).getComponent(), 1, 1);
         } else if (body instanceof Torso torso && bleed > 0.8) {
             torso.injury(AORTIC_RUPTURE, BodyCondition.get(AORTIC_RUPTURE).maxValue());
@@ -88,6 +89,8 @@ public abstract class FollowInjuryHandler {
         if (Utils.randomCheck(damageAmount, threshold, factor, p_min, p_max)) {
             body.injury(TRAUMATIC_AMPUTATION, BodyCondition.get(TRAUMATIC_AMPUTATION).maxValue());
             body.injury(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).maxValue());
+            body.injury(DISLOCATION, -BodyCondition.get(DISLOCATION).maxValue());
+            body.injury(FRACTURE, -BodyCondition.get(FRACTURE).maxValue());
             Item limb = body instanceof AbstractArm ? ModItems.HUMAN_HAND.get() : ModItems.HUMAN_LEG.get();
             Utils.drop(limb, entity, 1);
             health.addDirectInjury(body.getComponent(), BodyCondition.get(TRAUMATIC_AMPUTATION).getComponent(), 1);

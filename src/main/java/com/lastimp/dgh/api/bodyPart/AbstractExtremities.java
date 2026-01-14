@@ -79,7 +79,6 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
     public AbstractBody update(HealthCapability health, LivingEntity entity) {
         super.update(health, entity);
         this.handleDislocation(health);
-        this.handleArterialBleeding(health);
         this.handleGangrene(health);
         return this;
     }
@@ -90,13 +89,6 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
         Torso torso = (Torso) health.getComponent(TORSO);
         if (!torso.abnormal(ANALGESIA) && !this.isBandaged() && !this.isBadBandaged()) {
             this.setConditionValue(INTENSE_PAIN, BodyCondition.get(INTENSE_PAIN).maxValue());
-        }
-    }
-
-    private void handleArterialBleeding(HealthCapability health) {
-        if (this.abnormal(ARTERIAL_BLEEDING) && !this.abnormal(CLAMPED_ARTERIES)) {
-            var blood = health.getComponent(BLOOD);
-            blood.injury(BLOOD_LOSS, Config.fractureBloodRatio * DELTA);
         }
     }
 

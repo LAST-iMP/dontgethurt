@@ -15,7 +15,7 @@ public class Antibiotics extends AbstractDirectHealItems {
     }
 
     @Override
-    public boolean heal(@NotNull ServerPlayer source, @NotNull LivingEntity entity) {
+    public boolean heal(@NotNull LivingEntity source, @NotNull LivingEntity entity) {
         return HealthCapability.getAndApply(entity, h -> {
             var blood = h.getComponent(BodyComponents.BLOOD);
             blood.healing(ANTIBIOTICS, 0.5f);

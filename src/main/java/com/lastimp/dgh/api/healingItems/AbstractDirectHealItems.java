@@ -12,13 +12,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractDirectHealItems extends AbstractHealingItem{
     public AbstractDirectHealItems(Properties properties) {
         super(properties);
     }
 
-    public abstract boolean heal(@NotNull ServerPlayer source, @NotNull LivingEntity entity);
+
+    public boolean heal(@NotNull LivingEntity source, @NotNull LivingEntity entity, @Nullable BodyComponents component) {
+        return this.heal(source, entity);
+    }
+
+    public abstract boolean heal(@NotNull LivingEntity source, @NotNull LivingEntity entity);
 
     protected abstract BodyComponents getAvaComponent();
 

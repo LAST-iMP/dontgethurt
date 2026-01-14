@@ -3,9 +3,9 @@ package com.lastimp.dgh.source.core.healingSystem;
 
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.core.livingEntity.DyingHandler;
+import com.lastimp.dgh.source.core.dyingSystem.DyingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import com.lastimp.dgh.source.core.livingEntity.player.PlayerDyingHandler;
+import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;

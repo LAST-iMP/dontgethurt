@@ -16,11 +16,10 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.*;
 import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModItems;
-import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -54,6 +53,8 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     private boolean isInfected = false;
     private int oxygenMaskCoolDown = 0;
     private int autoPulseCoolDown = 0;
+    private boolean abnormal = true;
+    public LivingEntity currentHealer = null;
 
     private int armBreak = 0;
     private boolean leftArmVisible = true;
@@ -97,6 +98,26 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     public AbstractBody getComponent(BodyComponents component) {
         return this.body.getComponent(component);
+    }
+
+    public BodyComponents findFor(ResourceLocation condition) {
+        for (var component : VISIBLE_BODIES) {
+            if (this.getComponent(component).abnormal(condition))
+                return component;
+        }
+        if (this.getComponent(BLOOD).abnormal(condition))
+            return BLOOD;
+        return null;
+    }
+
+    public BodyComponents findForHidden(ResourceLocation condition) {
+        for (var component : VISIBLE_BODIES) {
+            if (this.getComponent(component).abnormalWithHidden(condition))
+                return component;
+        }
+        if (this.getComponent(BLOOD).abnormalWithHidden(condition))
+            return BLOOD;
+        return null;
     }
 
     public HealthCapability update(LivingEntity entity) {
@@ -156,8 +177,10 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.rightArmVisible = updateIfDirty(AbstractExtremities.visible(this, RIGHT_ARM), this.rightArmVisible);
         this.leftLegVisible = updateIfDirty(AbstractExtremities.visible(this, LEFT_LEG), this.leftLegVisible);
         this.rightLegVisible = updateIfDirty(AbstractExtremities.visible(this, RIGHT_LEG), this.rightLegVisible);
-        if (!this.body.abnormal()) {
+        this.abnormal = this.body.abnormal();
+        if (!this.abnormal) {
             this.directInjury.clear();
+            this.currentHealer = null;
         }
     }
 
@@ -417,5 +440,9 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     public void clearLastDeathDirectInjury() {
         this.lastDeathDirectInjury.clear();
+    }
+
+    public boolean abnormal() {
+        return abnormal;
     }
 }

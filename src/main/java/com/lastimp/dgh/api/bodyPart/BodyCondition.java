@@ -122,6 +122,10 @@ public class BodyCondition {
             (name) -> create(name)
                     .setHealing(0, 0).isPain().build()
     );
+    public static final ResourceLocation ARTERIAL_BLEEDING = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "arterial_bleeding"),
+            (name) -> create(name)
+                    .setHealing(0, 0).isInjury().eyeVisible().build()
+    );
     //手术
     public static final ResourceLocation SURGERY_INCISION = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "scalpel"),
             (name) -> create(name)
@@ -179,10 +183,6 @@ public class BodyCondition {
     public static final ResourceLocation PLASTER_CAST = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "plaster_cast"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isComfort().eyeVisible().build()
-    );
-    public static final ResourceLocation ARTERIAL_BLEEDING = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "arterial_bleeding"),
-            (name) -> create(name)
-                    .setHealing(0, 0).isInjury().eyeVisible().build()
     );
     public static final ResourceLocation CLAMPED_ARTERIES = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "clamped_arteries"),
             (name) -> create(name)
@@ -456,6 +456,8 @@ public class BodyCondition {
                 DRILLED_BONES,
                 SAWED_BONES,
 
+                ARTERIAL_BLEEDING,
+
                 BURN,
                 INTERNAL_INJURY,
                 OPEN_WOUND,
@@ -488,7 +490,6 @@ public class BodyCondition {
 
         AbstractExtremities.addCondition(List.of(
                 DISLOCATION,
-                ARTERIAL_BLEEDING,
                 GANGRENE,
                 SURGICAL_AMPUTATION,
                 TRAUMATIC_AMPUTATION

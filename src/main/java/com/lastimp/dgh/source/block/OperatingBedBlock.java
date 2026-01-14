@@ -25,6 +25,7 @@ import java.util.List;
 
 public class OperatingBedBlock extends BedBlock {
     protected static final VoxelShape BASE = Block.box(0.0F, 5.0F, 0.0F, 16.0F, 9.0F, 16.0F);
+    public static final float AVA_DISTANCE = 2.0f;
 
     public OperatingBedBlock(Properties properties) {
         super(DyeColor.RED, properties);
@@ -42,7 +43,7 @@ public class OperatingBedBlock extends BedBlock {
         var entities = Utils.getLivingWithHealth(level, pos.getCenter(), 10);
         for (var entity : entities) {
             if (!EntitySelector.LIVING_ENTITY_STILL_ALIVE.test(entity)) continue;
-            if (entity.distanceToSqr(pos.getCenter()) > 4.0f) continue;
+            if (entity.distanceToSqr(pos.getCenter()) > AVA_DISTANCE * AVA_DISTANCE) continue;
             HealthCapability.getAndApply(entity, h -> h.setNearBedTick(40));
         }
         level.scheduleTick(pos, this, 20);

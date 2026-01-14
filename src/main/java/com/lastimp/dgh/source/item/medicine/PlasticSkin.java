@@ -3,7 +3,6 @@ package com.lastimp.dgh.source.item.medicine;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +14,7 @@ public class PlasticSkin extends Bandages {
     }
 
     @Override
-    protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
+    protected boolean healOn(@NotNull LivingEntity source, @NotNull LivingEntity entity, BodyComponents component) {
         if (super.healOn(source, entity, component)) {
             return HealthCapability.getAndApply(entity, h -> {
                 AbstractBody body = h.getComponent(component);

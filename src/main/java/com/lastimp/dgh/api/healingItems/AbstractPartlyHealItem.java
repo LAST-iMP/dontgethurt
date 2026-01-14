@@ -15,13 +15,13 @@ public abstract class AbstractPartlyHealItem extends AbstractHealingItem{
         initComponents();
     }
 
-    public boolean heal(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
+    public boolean heal(@NotNull LivingEntity source, @NotNull LivingEntity entity, BodyComponents component) {
         if (component == null) return false;
         if (!this.getApplicableComponents().contains(component)) return false;
         return this.healOn(source, entity, component);
     }
 
-    protected abstract boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component);
+    protected abstract boolean healOn(@NotNull LivingEntity source, @NotNull LivingEntity entity, BodyComponents component);
 
     public HashSet<BodyComponents> getApplicableComponents() {
         return applicableComponents;

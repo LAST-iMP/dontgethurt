@@ -2,7 +2,6 @@ package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
-import com.lastimp.dgh.source.item.OperatingBedItem;
 import com.lastimp.dgh.source.item.limbs.HumanHand;
 import com.lastimp.dgh.source.item.limbs.HumanLeg;
 import com.lastimp.dgh.source.item.tool.*;
@@ -29,7 +28,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> OPERATING_BED_BLOCK_ITEM = registerItem(
             "operating_bed",
-            () -> new OperatingBedItem(
+            () -> new BedItem(
                     OPERATING_BED_BLOCK.get(),
                     new Item.Properties()
                             .stacksTo(1)

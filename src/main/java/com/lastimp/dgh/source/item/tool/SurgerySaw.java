@@ -7,9 +7,9 @@ import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
-import com.lastimp.dgh.source.core.livingEntity.DyingHandler;
+import com.lastimp.dgh.source.core.dyingSystem.DyingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import com.lastimp.dgh.source.core.livingEntity.player.PlayerDyingHandler;
+import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -32,7 +32,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
     }
 
     @Override
-    protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
+    protected boolean healOn(@NotNull LivingEntity source, @NotNull LivingEntity entity, BodyComponents component) {
         return HealthCapability.getAndApply(entity, (h) -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             //必须手术中，牵开皮肤
@@ -40,7 +40,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
             //不能已经手术截肢
             if (body instanceof AbstractExtremities extremities && extremities.abnormal(SURGICAL_AMPUTATION)) return false;
             //如果是头，导致死亡
-            if (component == BodyComponents.HEAD) return this.sawHead(entity, source);
+            if (component == BodyComponents.HEAD) return this.sawHead(source, entity);
             //已经牵开皮肤、没有骨锯开，则锯开骨头，取消骨钻开
             if (!body.abnormal(SAWED_BONES)) {
                 if (!(body instanceof AbstractExtremities extremities) || !extremities.abnormal(TRAUMATIC_AMPUTATION)) {
@@ -56,7 +56,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
         }, false);
     }
 
-    protected boolean saw(ServerPlayer player, AbstractVisibleBody body) {
+    protected boolean saw(LivingEntity player, AbstractVisibleBody body) {
         int boneNumMax = (body instanceof Torso) ? 8 : 2;
         float returnFactor = body.getConditionValue(FRACTURE) + body.getConditionValue(BONE_DAMAGE) + body.getConditionValue(BONE_DEATH);
         if (body instanceof AbstractExtremities)
@@ -79,7 +79,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
         return true;
     }
 
-    protected boolean cut(ServerPlayer player, AbstractExtremities body) {
+    protected boolean cut(LivingEntity player, AbstractExtremities body) {
         if (body.abnormal(SURGICAL_AMPUTATION)) return false;
 
         if (!body.abnormal(TRAUMATIC_AMPUTATION)) {
@@ -92,7 +92,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
         return true;
     }
 
-    public static void sawExcept(ServerPlayer source, AbstractBody body, ResourceLocation exception, int maxAmount) {
+    public static void sawExcept(LivingEntity source, AbstractBody body, ResourceLocation exception, int maxAmount) {
         float returnFactor = body.getConditionValue(FRACTURE) + body.getConditionValue(BONE_DAMAGE) + body.getConditionValue(BONE_DEATH);
         int boneReturn = (int) (maxAmount * (1.0 - Math.min(1.0, returnFactor)));
         for (var key : BodyCondition.bones.keySet()) {
@@ -107,7 +107,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
         }
     }
 
-    private boolean sawHead(LivingEntity entity, ServerPlayer source) {
+    private boolean sawHead(LivingEntity source, LivingEntity entity) {
         if (!(entity instanceof Player player)) {
             DyingHandler.setLivingDead(entity);
         } else {

@@ -2,11 +2,12 @@ package com.lastimp.dgh.source.item.medicine;
 
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
+import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +21,7 @@ public class BloodPacks extends AbstractDirectHealItems {
     }
 
     @Override
-    public boolean heal(@NotNull ServerPlayer source, @NotNull LivingEntity entity) {
+    public boolean heal(@NotNull LivingEntity source, @NotNull LivingEntity entity) {
         return HealthCapability.getAndApply(entity, health -> {
             Blood blood = (Blood) health.getComponent(BodyComponents.BLOOD);
             if (!blood.abnormal(BLOOD_LOSS) && !blood.abnormal(BLOOD_PRESSURE)) return false;
@@ -28,9 +29,8 @@ public class BloodPacks extends AbstractDirectHealItems {
             blood.healing(BLOOD_LOSS, -0.25f);
             blood.healing(BLOOD_PRESSURE, 0.25f);
 
-            ItemStack stack = new ItemStack(ModItems.BLOOD_PACK_EMPTY.get());
-            if (!source.addItem(stack)) {
-                source.drop(stack, true, true);
+            if (source instanceof Player player) {
+                Utils.drop(new ItemStack(ModItems.BLOOD_PACK_EMPTY.get()), player);
             }
             return true;
         }, false);

@@ -136,18 +136,17 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     }
 
     public boolean abnormalWithHidden(ResourceLocation key) {
-        var state = this.getCondition(key);
-        var condition = BodyCondition.get(key);
-        return condition.abnormal(state.getValue()) || condition.abnormal(state.getHiddenValue());
+        return this.abnormal(key) || this.abnormalOnlyHidden(key);
     }
 
     public boolean abnormalOnlyHidden(ResourceLocation key) {
-        var state = this.getCondition(key);
+        if (!this.getBodyConditions().contains(key)) return false;
         var condition = BodyCondition.get(key);
-        return condition.abnormal(state.getHiddenValue());
+        return condition.abnormal(this.getCondition(key).getHiddenValue());
     }
 
     public boolean abnormal(ResourceLocation key) {
+        if (!this.getBodyConditions().contains(key)) return false;
         var condition = BodyCondition.get(key);
         return condition.abnormal(this.getConditionValue(key));
     }

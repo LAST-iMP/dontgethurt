@@ -1,4 +1,4 @@
-package com.lastimp.dgh.source.core.livingEntity.player;
+package com.lastimp.dgh.source.entity.player;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;

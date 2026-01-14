@@ -8,7 +8,7 @@ import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.network.message.Network;
-import com.lastimp.dgh.source.core.livingEntity.player.PlayerDyingHandler;
+import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
 import com.lastimp.dgh.source.core.menu.HealthMenu;
 import com.lastimp.dgh.source.core.menu.menuProvider.HealthCareBagMenuProvider;
 import com.lastimp.dgh.source.core.menu.menuProvider.HealthMenuProvider;
