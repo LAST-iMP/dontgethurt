@@ -32,7 +32,7 @@ public abstract class InternalInjuryHandler {
         handle(source, health, body, damageAmount);
         float damage = body.getConditionValue(INTERNAL_INJURY) + body.getConditionHidden(INTERNAL_INJURY);
         if (body instanceof AbstractExtremities extremities)
-            FollowInjuryHandler.dislocationHandler(extremities, health, damage, 0, 1, 0.35f, 0.36f, 0);
+            FollowInjuryHandler.dislocationHandler(extremities, health, damage, Config.baseDislocationThreshold, 1, 0.15f, 0.36f, 0);
         FollowInjuryHandler.fractionHandler(body, health, damage, Config.baseFractureThreshold, 0.9f - Config.baseFractureThreshold, 0.0f, 1.0f, 0);
         FollowInjuryHandler.pneumothoraxHandler(body, health);
         FollowInjuryHandler.arterialBleedingHandler(body, health);

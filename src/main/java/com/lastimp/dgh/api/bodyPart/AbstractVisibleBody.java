@@ -62,6 +62,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         handleBurning(entity);
         handleInternalInjury(entity);
         handleOpenWound(entity);
+        handlePassThrough(entity);
         handleInfection();
         handleFracture(health);
         handleSurgery(health);
@@ -85,8 +86,9 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         float lost = 0;
         var burn = this.getCondition(BURN);
         var open_wound = this.getCondition(OPEN_WOUND);
+        var pass_through = this.getCondition(PASS_THROUGH);
         var internal_injury = this.getCondition(INTERNAL_INJURY);
-        lost += (burn.getTotalValue() + open_wound.getTotalValue() + internal_injury.getValue()) * this.getVitalityWeight();
+        lost += (burn.getTotalValue() + open_wound.getTotalValue() + internal_injury.getValue() + pass_through.getValue()) * this.getVitalityWeight();
         return lost;
     }
 
@@ -107,7 +109,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     private void handleResist(ResourceLocation key, float heal) {
         if (key == BURN) {
             this.addConditionValue(BURN_RES, heal);
-        } else if (key == OPEN_WOUND) {
+        } else if (key == OPEN_WOUND || key == PASS_THROUGH) {
             this.addConditionValue(OPEN_WOUND_RES, heal);
         } else if (key == INTERNAL_INJURY) {
             this.addConditionValue(INTERNAL_RES, heal);
@@ -126,7 +128,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         if (isBandaged()) {
             var bandage = BodyCondition.get(BANDAGED);
             var factor = 0.25f;
-            factor = this.abnormalWithHidden(OPEN_WOUND) ? 1 : factor;
+            factor = this.abnormalWithHidden(OPEN_WOUND) || this.abnormalWithHidden(PASS_THROUGH) ? 1 : factor;
             factor = this.abnormalWithHidden(BURN) ? 2 : factor;
             this.addConditionValue(BANDAGED, - bandage.healingSpeed() * DELTA * factor);
             if (!isBandaged()) {
@@ -164,6 +166,18 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
         if (isBandaged()) return;
         this.nextTickBleed += this.getCondition(OPEN_WOUND).getValue() * Config.open_wound_bleed_ratio;
+    }
+
+    private void handlePassThrough(LivingEntity entity) {
+        if (!this.abnormalWithHidden(PASS_THROUGH)) return;
+        this.handleBandageAcc(PASS_THROUGH, Config.bandage_acc);
+        this.handleCover(PASS_THROUGH);
+        this.handleFoodAcc(entity, PASS_THROUGH, 1.0f);
+        this.handleInjuryInfection(PASS_THROUGH);
+        this.handleCombatStimulant(entity, PASS_THROUGH);
+
+        if (isBandaged()) return;
+        this.nextTickBleed += this.getCondition(PASS_THROUGH).getValue() * Config.open_wound_bleed_ratio * 1.5f;
     }
 
     private void handleBandageAcc(ResourceLocation condition, float acc) {

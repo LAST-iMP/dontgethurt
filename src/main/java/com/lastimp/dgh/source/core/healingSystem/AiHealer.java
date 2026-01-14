@@ -24,7 +24,7 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public abstract class AiHealer {
-    public static final int STEP_TIME = 20;
+    public static final int STEP_TIME = 40;
 
     public static int doHealing(final LivingEntity source, final LivingEntity target, final HealthCapability h, final int level) {
         Blood blood = (Blood) h.getComponent(BodyComponents.BLOOD);
@@ -85,6 +85,14 @@ public abstract class AiHealer {
                 return doUseItem(component, source, target, ModItems.BANDAGE.get(), STEP_TIME);
             }
         }
+        if ((component = h.findFor(PASS_THROUGH)) != null && h.getComponent(component) instanceof AbstractVisibleBody visibleBody) {
+            //治疗贯穿伤
+            if (level >= 2) {
+                return doUseItem(component, source, target, ModItems.SUTURE.get(), STEP_TIME);
+            } else if (level >= 1 && !visibleBody.abnormal(SURGERY_INCISION)) {
+                return doUseItem(component, source, target, ModItems.BANDAGE.get(), STEP_TIME);
+            }
+        }
         if (torso.abnormal(PNEUMOTHORAX)) {
             //治疗气胸
             if (level >= 4) {
@@ -98,6 +106,13 @@ public abstract class AiHealer {
             if (torso.abnormal(HEARTRATE_STOP) && !target.hasEffect(ModEffects.ADRENALINE_EFFECT.get())) {
                 //治疗心脏骤停
                 return doUseItem(TORSO, source, target, ModItems.ADRENALINE.get(), STEP_TIME);
+            }
+        }
+        if (level >= 4) {
+            if ((component = h.findFor(FOREIGN_OBJECT)) != null && h.getComponent(component) instanceof AbstractVisibleBody visibleBody) {
+                //治疗体内异物
+                if (!visibleBody.abnormal(RETRACTED_SKIN)) return doSurgery(source, target, component, visibleBody);
+                else return doUseItem(component, source, target, ModItems.TWEEZER.get(), STEP_TIME);
             }
         }
         if (level >= 2) {
@@ -131,7 +146,7 @@ public abstract class AiHealer {
                 else return doBoneReplace(source, target, component, visibleBody);
             } else if (level >= 2 && visibleBody instanceof AbstractExtremities extremities) {
                 if (!extremities.isBandaged()) return doUseItem(component, source, target, ModItems.BANDAGE.get(), STEP_TIME);
-                else doUseItem(component, source, target, ModItems.GYPSUM.get(), STEP_TIME);
+                else return doUseItem(component, source, target, ModItems.GYPSUM.get(), STEP_TIME);
             }
         }
         if ((component = h.findFor(DISLOCATION)) != null && h.getComponent(component) instanceof AbstractExtremities) {

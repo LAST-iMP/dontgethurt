@@ -90,6 +90,10 @@ public class DyingHandler {
                 right_arm.getConditionValue(OPEN_WOUND) + right_leg.getConditionValue(OPEN_WOUND) +
                 left_arm.getConditionHidden(OPEN_WOUND) + left_leg.getConditionHidden(OPEN_WOUND) +
                 right_arm.getConditionHidden(OPEN_WOUND) + right_leg.getConditionHidden(OPEN_WOUND);
+        open_wound += left_arm.getConditionValue(PASS_THROUGH) + left_leg.getConditionValue(PASS_THROUGH) +
+                right_arm.getConditionValue(PASS_THROUGH) + right_leg.getConditionValue(PASS_THROUGH) +
+                left_arm.getConditionHidden(PASS_THROUGH) + left_leg.getConditionHidden(PASS_THROUGH) +
+                right_arm.getConditionHidden(PASS_THROUGH) + right_leg.getConditionHidden(PASS_THROUGH);
         float burn = left_arm.getConditionValue(BURN) + left_leg.getConditionValue(BURN) +
                 right_arm.getConditionValue(BURN) + right_leg.getConditionValue(BURN) +
                 left_arm.getConditionHidden(BURN) + left_leg.getConditionHidden(BURN) +

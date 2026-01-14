@@ -33,6 +33,10 @@ public class Sutures extends AbstractPartlyHealItem {
                 body.healing(OPEN_WOUND, -0.2f);
                 success = true;
             }
+            if (body.abnormal(PASS_THROUGH)) {
+                body.healing(PASS_THROUGH, -0.2f);
+                success = true;
+            }
             if (body.abnormal(SURGERY_INCISION)) {
                 body.setConditionValue(SURGERY_INCISION, BodyCondition.get(SURGERY_INCISION).defaultValue());
                 body.setConditionValue(CLAMPED_BLEEDING, BodyCondition.get(CLAMPED_BLEEDING).defaultValue());

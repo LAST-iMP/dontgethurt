@@ -31,6 +31,7 @@ public class Bandages extends AbstractPartlyHealItem {
 
             this.coverCondition(body, BURN);
             this.coverCondition(body, OPEN_WOUND);
+            this.coverCondition(body, PASS_THROUGH);
             this.coverCondition(body, FRACTURE);
             return true;
         }, false);

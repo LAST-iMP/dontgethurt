@@ -68,6 +68,12 @@ public class BodyCondition {
                     .setValues(0.0f, 0.0f, 2.0f)
                     .isInjury().eyeVisible().build()
     );
+    public static final ResourceLocation PASS_THROUGH = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "pass_through"),
+            (name) -> create(name)
+                    .setHealing(1.0f / Config.base_self_healing_time, 0.25f)
+                    .setValues(0.0f, 0.0f, 2.0f)
+                    .isInjury().eyeVisible().build()
+    );
     public static final ResourceLocation BLEED = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bleeding"),
             (name) -> create(name)
                     .setHealing(0.0f, 0.0f).isInjury().eyeVisible().build()
@@ -461,6 +467,7 @@ public class BodyCondition {
                 BURN,
                 INTERNAL_INJURY,
                 OPEN_WOUND,
+                PASS_THROUGH,
                 BLEED,
                 INFECTION,
                 FOREIGN_OBJECT,

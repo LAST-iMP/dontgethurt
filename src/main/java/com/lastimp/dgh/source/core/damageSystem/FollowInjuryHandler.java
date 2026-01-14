@@ -62,13 +62,18 @@ public abstract class FollowInjuryHandler {
     }
 
     public static void arterialBleedingHandler(AbstractVisibleBody body, HealthCapability health) {
-        float bleed = body.getConditionValue(BLEED);
-        if ((body instanceof AbstractExtremities || body instanceof Head) && bleed > 0.8) {
+        if (body.getConditionValue(BLEED) > 0.8) {
+            handleArterialBleeding(body, health, 1);
+        }
+    }
+
+    private static void handleArterialBleeding(AbstractVisibleBody body, HealthCapability health, int level) {
+        if ((body instanceof AbstractExtremities || body instanceof Head)) {
             body.injury(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).maxValue());
-            health.addDirectInjury(body.getComponent(), BodyCondition.get(ARTERIAL_BLEEDING).getComponent(), 1, 1);
-        } else if (body instanceof Torso torso && bleed > 0.8) {
+            health.addDirectInjury(body.getComponent(), BodyCondition.get(ARTERIAL_BLEEDING).getComponent(),  level);
+        } else if (body instanceof Torso torso) {
             torso.injury(AORTIC_RUPTURE, BodyCondition.get(AORTIC_RUPTURE).maxValue());
-            health.addDirectInjury(body.getComponent(), BodyCondition.get(AORTIC_RUPTURE).getComponent(), 1);
+            health.addDirectInjury(body.getComponent(), BodyCondition.get(AORTIC_RUPTURE).getComponent(), level);
         }
     }
 
@@ -96,5 +101,26 @@ public abstract class FollowInjuryHandler {
             health.addDirectInjury(body.getComponent(), BodyCondition.get(TRAUMATIC_AMPUTATION).getComponent(), 1);
             health.addDirectInjury(body.getComponent(), BodyCondition.get(ARTERIAL_BLEEDING).getComponent(),  1);
         }
+    }
+
+    public static void foreignObjectHandler(AbstractVisibleBody body, HealthCapability health, float currentDamage, float prob) {
+        if (Utils.randomBetween(0, 1) > prob) return;
+
+        float damage = Math.min(0.2f, currentDamage * 0.25f);
+        body.injury(FOREIGN_OBJECT, damage);
+        health.addDirectInjury(body.getComponent(), BodyCondition.get(FOREIGN_OBJECT).getComponent(), damage,  1);
+        if (body.getConditionValue(FOREIGN_OBJECT) > 0.2f) {
+            handleArterialBleeding(body, health, 1);
+        }
+    }
+
+    public static void brainDamageHandler(AbstractVisibleBody body, HealthCapability health, float currentDamage, float threshold, float prob) {
+        if (!(body instanceof Head head)) return;
+        if (currentDamage < threshold) return;
+        if (Utils.randomBetween(0, 1) > prob) return;
+
+        float ratio = Utils.randomBetween(0.1f, 0.4f);
+        head.injury(BRAIN_DAMAGE, currentDamage * ratio);
+        health.addDirectInjury(body.getComponent(), BodyCondition.get(BRAIN_DAMAGE).getComponent(), currentDamage * ratio,  1);
     }
 }

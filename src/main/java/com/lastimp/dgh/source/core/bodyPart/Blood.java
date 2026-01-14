@@ -71,7 +71,6 @@ public class Blood extends AbstractBody {
         this.handleWithdraw(health);
         this.handleOxygen(health, entity);
         this.handlePressure(health);
-        this.handleInfection(health);
         this.handleSepsis(health);
         this.handleCombatStimulant(health, entity);
         return this;
@@ -162,14 +161,16 @@ public class Blood extends AbstractBody {
         }
     }
 
-    private void handleInfection(HealthCapability health) {
+    private void handleSepsis(HealthCapability health) {
         float infection = 0;
         float gangrene = 0;
+        float foreign_object = 0;
         for (var component : BodyComponents.VISIBLE_BODIES) {
             AbstractVisibleBody body = (AbstractVisibleBody) health.getComponent(component);
             infection += body.getConditionValue(INFECTION);
             if (body instanceof AbstractExtremities extremities)
                 gangrene += extremities.getConditionValue(GANGRENE);
+            foreign_object += body.getConditionValue(FOREIGN_OBJECT);
         }
         Blood blood = (Blood) health.getComponent(BLOOD);
         if (infection > 0.5f) {
@@ -178,9 +179,10 @@ public class Blood extends AbstractBody {
         if (gangrene > 0.15f) {
             blood.addConditionValue(SEPSIS, 2 * gangrene * BodyCondition.get(SEPSIS).healingSpeed() * DELTA);
         }
-    }
+        if (foreign_object > 0.15f) {
+            blood.addConditionValue(SEPSIS, 2 * foreign_object * BodyCondition.get(SEPSIS).healingSpeed() * DELTA);
+        }
 
-    private void handleSepsis(HealthCapability health) {
         if (this.abnormal(ANTIBIOTICS) && this.getConditionValue(OXYGEN) < 0.3f && this.getConditionValue(BLOOD_PRESSURE) > 0.7f) {
             this.healing(SEPSIS, -BodyCondition.get(SEPSIS).healingSpeed() * DELTA * 2);
         }

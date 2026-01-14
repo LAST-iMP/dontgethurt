@@ -18,7 +18,7 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)致命伤$(li2)烧伤$(li2)开放伤$(li2)内伤$(li2)脑损伤$(li2)出血$(li2)呼吸停止$(li2)手术休克$(li2)戒断$(li2)动脉出血$(li2)主动脉破裂$(li2)坏疽$(li2)心率不齐$(li2)心脏骤停"
+      "text": "$(li)致命伤$(li2)烧伤$(li2)开放伤$(li2)内伤$(li2)体内异物$(li2)脑损伤$(li2)出血$(li2)呼吸停止$(li2)手术休克$(li2)戒断$(li2)动脉出血$(li2)主动脉破裂$(li2)坏疽$(li2)心率不齐$(li2)心脏骤停"
     },
     {
       "type": "text",
@@ -41,7 +41,7 @@
     },
     {
       "type": "image",
-      "title": "开放伤口",
+      "title": "开放伤口(撕裂伤、贯穿伤)",
       "border": true,
       "images": [
         "dgh:textures/book/open_wound.png"
@@ -66,6 +66,20 @@
       "type": "text",
       "scale": 1.2,
       "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)对生命的直接损害$(li2)微量失血$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)时间、手术中镊子清理$(br)$(li)注意事项$(li2)轻微内伤通常不用理会"
+    },
+    {
+      "type": "image",
+      "title": "体内异物",
+      "border": true,
+      "images": [
+        "dgh:textures/book/pass_through.png"
+      ],
+      "text": "体内异物由贯穿伤或爆炸引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)导致动脉破裂$(li2)导致败血症$(br)$(li)急救措施$(li2)无$(br)$(li)治疗措施$(li2)直接或手术中镊子清理"
     },
     {
       "type": "image",
