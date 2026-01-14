@@ -91,6 +91,7 @@ public class HealingHandler {
                 AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
                 injury += injuryCheck(body, BURN, states);
                 injury += injuryCheck(body, OPEN_WOUND, states);
+                injury += injuryCheck(body, PASS_THROUGH, states);
                 injury += injuryCheck(body, INTERNAL_INJURY, states) * 2;
                 if (component == HEAD)
                     injury += injuryCheck(body, BRAIN_DAMAGE, states) * 3;

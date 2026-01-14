@@ -24,6 +24,10 @@ public class Tweezer extends AbstractPartlyHealItem {
             if (body.abnormal(RETRACTED_SKIN)) {
                 body.injury(OPEN_WOUND, 0.03f);
                 body.healing(INTERNAL_INJURY, -Mth.randomBetween(Utils.randomSource, 0.05f, 0.2f));
+                body.healing(FOREIGN_OBJECT, -Mth.randomBetween(Utils.randomSource, 0.05f, 0.2f));
+            } else if (body.abnormal(PASS_THROUGH)) {
+                body.injury(OPEN_WOUND, 0.05f);
+                body.healing(FOREIGN_OBJECT, -Mth.randomBetween(Utils.randomSource, 0.05f, 0.2f));
             } else {
                 body.injury(OPEN_WOUND, 0.05f);
                 body.setConditionValue(INTENSE_PAIN, BodyCondition.get(INTENSE_PAIN).maxValue());

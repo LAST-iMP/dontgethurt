@@ -122,6 +122,14 @@ public class Config {
             .comment("允许医生村民治疗")
             .define("PLAYER_DOCTOR_HEALING", true);
 
+    public static final ModConfigSpec.DoubleValue BYPASS_BRAIN_DAMAGE_PROB = BUILDER
+            .comment("头部贯穿伤-脑损伤概率")
+            .defineInRange("BYPASS_BRAIN_DAMAGE_PROB", 0.7, 0, 1.0);
+
+    public static final ModConfigSpec.DoubleValue BYPASS_FOREIGN_PROB = BUILDER
+            .comment("贯穿伤-体内异物概率")
+            .defineInRange("BYPASS_FOREIGN_PROB", 0.8, 0, 1.0);
+
     public static float body_life_factor;
     public static boolean tradition_healing;
     public static float healing_factor;
@@ -155,6 +163,9 @@ public class Config {
     public static boolean allow_down;
     public static boolean down_damage_resistance;
     public static boolean player_doctor_healing;
+
+    public static float bypass_brain_damage_prob;
+    public static float bypass_foreign_prob;
 
     // 构建配置
     public static final ModConfigSpec SPEC = BUILDER.pop().build();
@@ -192,6 +203,9 @@ public class Config {
         allow_down = ALLOW_DOWN.get();
         down_damage_resistance = DOWN_DAMAGE_RESISTANCE.get();
         player_doctor_healing = PLAYER_DOCTOR_HEALING.get();
+
+        bypass_brain_damage_prob = (float) (double) BYPASS_BRAIN_DAMAGE_PROB.get();
+        bypass_foreign_prob = (float) (double) BYPASS_FOREIGN_PROB.get();
         BodyCondition.init();
     }
 

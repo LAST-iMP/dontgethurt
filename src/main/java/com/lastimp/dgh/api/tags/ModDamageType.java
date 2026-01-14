@@ -9,6 +9,7 @@ import net.minecraft.world.damagesource.DamageType;
 
 public class ModDamageType {
     public static final TagKey<DamageType> FINAL_HEALTH_DAMAGE = TagKey.create(Registries.DAMAGE_TYPE, Common.ResourceLocation(DontGetHurt.MODID, "final_health_damage"));
+    public static final TagKey<DamageType> BULLETS = TagKey.create(Registries.DAMAGE_TYPE, Common.ResourceLocation("tacz", "bullets"));
 
     public static final ResourceKey<DamageType> OPEN_WOUND_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE,
             Common.ResourceLocation(DontGetHurt.MODID, "open_wound"));

@@ -25,7 +25,8 @@ public class ModLanguageProvider extends LanguageProvider {
 
         this.add(BodyCondition.BURN.toString(), "烧伤");
         this.add(BodyCondition.INTERNAL_INJURY.toString(), "内伤");
-        this.add(BodyCondition.OPEN_WOUND.toString(), "开放伤");
+        this.add(BodyCondition.OPEN_WOUND.toString(), "撕裂伤");
+        this.add(BodyCondition.PASS_THROUGH.toString(), "贯穿伤");
         this.add(BodyCondition.BLEED.toString(), "出血");
         this.add(BodyCondition.INFECTION.toString(), "感染");
         this.add(BodyCondition.FOREIGN_OBJECT.toString(), "体内异物");

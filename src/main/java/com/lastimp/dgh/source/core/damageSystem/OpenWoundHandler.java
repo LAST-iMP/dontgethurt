@@ -28,7 +28,7 @@ public class OpenWoundHandler {
     public static void handleExplosion(DamageSource source, LivingEntity entity, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
         handle(source, health, body, damageAmount);
         float damage = body.getConditionValue(OPEN_WOUND) + body.getConditionHidden(OPEN_WOUND);
-        FollowInjuryHandler.fractionHandler(body, health, damage, Config.baseFractureThreshold, 0.9f - Config.baseFractureThreshold, 0.0f, 1.0f, 0);
+        FollowInjuryHandler.fractionHandler(body, health, damage, Config.baseFractureThreshold, 0.9f - Config.baseFractureThreshold, 0.1f, 1.0f, 0);
         FollowInjuryHandler.pneumothoraxHandler(body, health);
         FollowInjuryHandler.arterialBleedingHandler(body, health);
         FollowInjuryHandler.traumaticAmputationHandler(entity, body, health, damage, Config.baseAmputationThreshold, Config.baseAmputationMaxProb - Config.baseAmputationThreshold, 0.0f, Config.baseAmputationMaxProb);
