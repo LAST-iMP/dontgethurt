@@ -1,8 +1,7 @@
-package com.lastimp.dgh.source.core.livingEntity.player;
+package com.lastimp.dgh.source.core.dyingSystem;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import com.lastimp.dgh.source.core.livingEntity.DyingHandler;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

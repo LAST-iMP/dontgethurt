@@ -17,7 +17,7 @@ public abstract class AbstractLimbs extends AbstractPartlyHealItem {
     }
 
     @Override
-    protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
+    protected boolean healOn(@NotNull LivingEntity source, @NotNull LivingEntity entity, BodyComponents component) {
         return HealthCapability.getAndApply(entity, h -> {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             if (!body.abnormal(SURGICAL_AMPUTATION)) return false;

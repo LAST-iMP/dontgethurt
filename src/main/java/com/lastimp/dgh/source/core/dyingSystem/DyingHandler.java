@@ -1,4 +1,4 @@
-package com.lastimp.dgh.source.core.livingEntity;
+package com.lastimp.dgh.source.core.dyingSystem;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.tags.ModDamageType;

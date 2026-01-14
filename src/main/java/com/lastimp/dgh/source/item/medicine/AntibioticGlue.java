@@ -15,7 +15,7 @@ public class AntibioticGlue extends AbstractPartlyHealItem {
     }
 
     @Override
-    protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
+    protected boolean healOn(@NotNull LivingEntity source, @NotNull LivingEntity entity, BodyComponents component) {
         return HealthCapability.getAndApply(entity, h -> {
             var body = h.getComponent(component);
             if (body.getConditionValue(OINTMENT) > 0.95f) return false;

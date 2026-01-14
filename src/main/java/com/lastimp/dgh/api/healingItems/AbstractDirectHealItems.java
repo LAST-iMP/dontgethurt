@@ -12,13 +12,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractDirectHealItems extends AbstractHealingItem{
     public AbstractDirectHealItems(Properties properties) {
         super(properties);
     }
 
-    public abstract boolean heal(@NotNull ServerPlayer source, @NotNull LivingEntity entity);
+    public abstract boolean heal(@NotNull LivingEntity source, @NotNull LivingEntity entity);
 
     protected abstract BodyComponents getAvaComponent();
 
@@ -27,7 +28,7 @@ public abstract class AbstractDirectHealItems extends AbstractHealingItem{
         if (usedHand == InteractionHand.OFF_HAND)
             return InteractionResultHolder.pass(player.getItemInHand(usedHand));
         if (!level.isClientSide) {
-            HealingHandler.useItemOn(player.getItemInHand(usedHand), (ServerPlayer) player, (ServerPlayer) player, this.getAvaComponent());
+            HealingHandler.useItemOn(player.getItemInHand(usedHand), (ServerPlayer) player, player, this.getAvaComponent());
         }
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide);
     }

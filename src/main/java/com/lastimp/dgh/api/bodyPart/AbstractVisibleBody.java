@@ -73,6 +73,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         handleFracture(health);
         handleSurgery(health);
         handleBleeding(health);
+        handleArterialBleeding(health);
         updateBoneEffect(entity);
         handleBoneDamage(health);
         handleBoneDeath();
@@ -130,7 +131,9 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     private void handleBandaged() {
         if (isBandaged()) {
             var bandage = BodyCondition.get(BANDAGED);
-            var factor = this.abnormalWithHidden(BURN) ? 2 : 1;
+            var factor = 0.25f;
+            factor = this.abnormalWithHidden(OPEN_WOUND) ? 1 : factor;
+            factor = this.abnormalWithHidden(BURN) ? 2 : factor;
             this.addConditionValue(BANDAGED, - bandage.healingSpeed() * DELTA * factor);
             if (!isBandaged()) {
                 this.injury(BANDAGED_DIRTY, BodyCondition.get(BANDAGED_DIRTY).maxValue());
@@ -264,6 +267,13 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
         Blood blood = (Blood) health.getComponent(BLOOD);
         blood.addConditionValue(BLOOD_LOSS, this.nextTickBleed * DELTA * Config.bleed_volume_ratio);
+    }
+
+    private void handleArterialBleeding(HealthCapability health) {
+        if (this.abnormal(ARTERIAL_BLEEDING) && !this.abnormal(CLAMPED_ARTERIES)) {
+            var blood = health.getComponent(BLOOD);
+            blood.injury(BLOOD_LOSS, Config.fractureBloodRatio * DELTA);
+        }
     }
 
     public boolean canHurtBone() {

@@ -42,7 +42,7 @@ public class ModItems {
                     .stacksTo(1)
     );
 
-    public static final DeferredItem<Item> BLOOD_PACK = registerItem(
+    public static final DeferredItem<BloodPacks> BLOOD_PACK = registerItem(
             "blood_pack",
             BloodPacks::new,
             new Item.Properties()

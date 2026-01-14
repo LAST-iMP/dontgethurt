@@ -1,19 +1,18 @@
 package com.lastimp.dgh.source.item.limbs;
 
-import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.LivingEntity;
+import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.api.healingItems.AbstractLimbs;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import org.jetbrains.annotations.NotNull;
 
-public class HumanHeart extends AbstractPartlyHealItem {
+public class HumanHeart extends AbstractLimbs {
 
     public HumanHeart(Properties properties) {
         super(properties);
     }
 
     @Override
-    protected boolean healOn(@NotNull ServerPlayer source, @NotNull LivingEntity entity, BodyComponents component) {
-        return false;
+    protected void addLimb(@NotNull HealthCapability health, @NotNull AbstractVisibleBody body) {
+
     }
 }

@@ -1,6 +1,5 @@
 package com.lastimp.dgh.api.healingItems;
 
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,7 +9,7 @@ public abstract class AbstractHealingEquipment extends AbstractDirectHealItems{
     }
 
     @Override
-    public boolean heal(@NotNull ServerPlayer source, @NotNull LivingEntity entity) {
+    public boolean heal(@NotNull LivingEntity source, @NotNull LivingEntity entity) {
         return this.heal(entity);
     }
 

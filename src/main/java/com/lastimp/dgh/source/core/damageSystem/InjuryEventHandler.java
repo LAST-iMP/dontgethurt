@@ -142,7 +142,10 @@ public class InjuryEventHandler {
     }
 
     public static void handleMagicDamage(DamageSource source, float damageAmount, LivingEntity entity, LivingDamageEvent.Pre event) {
-        handleDefaultDamage(source, damageAmount, entity, event);
+        HealthCapability.getAndApply(entity, h -> {
+            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(1,1.5f,1.5f,1.5f,1.2f,1.2f)));
+            InternalInjuryHandler.handleBluntTrauma(source, entity, h, (AbstractVisibleBody) body, damageAmount);
+        });
         event.setNewDamage(0f);
     }
 
@@ -157,7 +160,7 @@ public class InjuryEventHandler {
     public static void handleDefaultDamage(DamageSource source, float damageAmount, LivingEntity entity, LivingDamageEvent.Pre event) {
         HealthCapability.getAndApply(entity, h -> {
             var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(1,1.5f,1.5f,1.5f,1.2f,1.2f)));
-            InternalInjuryHandler.handleBluntTrauma(source, entity, h, (AbstractVisibleBody) body, damageAmount);
+            InternalInjuryHandler.handle(source, h, (AbstractVisibleBody) body, damageAmount);
         });
         event.setNewDamage(0f);
     }
