@@ -52,15 +52,12 @@ public class TaskBringToBed implements IMaidTask {
 
     @Override
     public List<Pair<Integer, BehaviorControl<? super EntityMaid>>> createBrainTasks(EntityMaid entityMaid) {
-        MaidWalkToLivingEntityTask maidWalkToLivingEntityTask = this.createWalkToLivingEntityTask();
-        return Lists.newArrayList(new Pair[]{
-                Pair.of(5, maidWalkToLivingEntityTask),
-        });
+        return Lists.newArrayList(new Pair[]{Pair.of(5, this.createWalkToLivingEntityTask()),});
     }
 
     @Override
     public List<Pair<Integer, BehaviorControl<? super EntityMaid>>> createRideBrainTasks(EntityMaid maid) {
-        return IMaidTask.super.createRideBrainTasks(maid);
+        return Lists.newArrayList(new Pair[]{Pair.of(5, this.createWalkToLivingEntityTask()),});
     }
 
     private MaidWalkToLivingEntityTask createWalkToLivingEntityTask() {
@@ -78,24 +75,26 @@ public class TaskBringToBed implements IMaidTask {
         for(int i = 0; i < inv.getSlots(); ++i) {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack.is(ModItems.STRETCHER.get())) {
-                StretcherItem item = (StretcherItem) stack.getItem();
-                var result = item.interactLivingEntity(stack, maid, player);
-                if (result == InteractionResult.SUCCESS) {
-                    this.stretcher = (StretcherEntity) player.getVehicle();
+                stack.shrink(1);
 
-                    ServerLevel targetLevel = player.server.getLevel(player.getRespawnDimension());
-                    var location = Player.findRespawnPositionAndUseSpawnBlock(targetLevel, player.getRespawnPosition(), player.getRespawnAngle(), player.isRespawnForced(), true);
-                    location.ifPresent((loc) -> {
-                        EntityMaid newMaid = (EntityMaid) maid.changeDimension(targetLevel);
-                        LivingEntity newOwner = (LivingEntity) maid.getOwner().changeDimension(targetLevel);
-                        StretcherEntity newStretcher = (StretcherEntity) this.stretcher.changeDimension(targetLevel);
-                        assert newMaid != null && newOwner != null && newStretcher != null;
+                ServerLevel targetLevel = player.server.getLevel(player.getRespawnDimension());
+                BlockPos blockPos = player.getRespawnPosition();
+                ServerLevel finalLevel = targetLevel == null ? player.server.overworld() : targetLevel;
+                BlockPos finalPos = blockPos == null ? player.server.overworld().getSharedSpawnPos() : blockPos;
 
-                        newMaid.teleportTo(loc.x, loc.y, loc.z);
-                        newStretcher.teleportTo(loc.x, loc.y, loc.z);
-                        newOwner.startRiding(newStretcher, true);
-                    });
-                }
+                var location = Player.findRespawnPositionAndUseSpawnBlock(finalLevel, finalPos, player.getRespawnAngle(), player.isRespawnForced(), true);
+                location.ifPresent((loc) -> {
+                    EntityMaid newMaid = (EntityMaid) maid.changeDimension(finalLevel);
+                    LivingEntity newOwner = (LivingEntity) player.changeDimension(finalLevel);
+                    newMaid = newMaid == null ? maid : newMaid;
+                    newOwner = newOwner == null ? player : newOwner;
+
+                    newMaid.teleportTo(loc.x, loc.y, loc.z);
+                    newOwner.teleportTo(loc.x, loc.y, loc.z);
+
+                    ItemStack newStack = ModItems.STRETCHER.get().getDefaultInstance();
+                    ((StretcherItem)newStack.getItem()).interactLivingEntity(newStack, newMaid, newOwner);
+                });
             }
         }
     }

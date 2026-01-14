@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.*;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.entity.EntityTypeTest;
@@ -35,7 +36,7 @@ public class DoctorVillagerGoal extends Goal {
         //有受伤玩家
         assert sitePos != null;
         var size = OperatingBedBlock.AVA_DISTANCE * 2;
-        var entityList = this.villager.level().getEntities(EntityTypeTest.forClass(LivingEntity.class), AABB.ofSize(sitePos.pos().getCenter(), size, size, size), HealthCapability::has);
+        var entityList = this.villager.level().getEntities(EntityTypeTest.forClass(LivingEntity.class), AABB.ofSize(sitePos.pos().getCenter(), size, size, size), this::livingTest);
         for (var entity : entityList) {
             if (this.validate(entity, sitePos.pos())) {
                 this.target = entity;
@@ -43,6 +44,10 @@ public class DoctorVillagerGoal extends Goal {
             }
         }
         return false;
+    }
+
+    private boolean livingTest(LivingEntity entity) {
+        return !(entity instanceof Monster);
     }
 
     @Override
@@ -63,10 +68,12 @@ public class DoctorVillagerGoal extends Goal {
     }
 
     private boolean validate(LivingEntity entity, BlockPos sitePos) {
-        return entity != null && entity.isAlive() &&
+        boolean closeEnoughAndAlive = entity != null && entity.isAlive() &&
                 entity.level().dimension() == this.villager.level().dimension() &&
-                entity.position().distanceTo(sitePos.getCenter()) < OperatingBedBlock.AVA_DISTANCE &&
-                HealthCapability.getAndApply(entity, h -> h.abnormal() && (h.currentHealer == null || h.currentHealer == this.villager), false);
+                entity.position().distanceTo(sitePos.getCenter()) < OperatingBedBlock.AVA_DISTANCE;
+        if (!closeEnoughAndAlive) return false;
+        if (entity.getHealth() < entity.getMaxHealth()) return true;
+        return HealthCapability.has(entity) && HealthCapability.getAndApply(entity, h -> h.abnormal() && (h.currentHealer == null || h.currentHealer == this.villager), false);
     }
 
     @Override
@@ -78,7 +85,8 @@ public class DoctorVillagerGoal extends Goal {
     public void start() {
         this.level = this.villager.getVillagerData().getLevel();
         this.villager.getNavigation().moveTo(this.target, 1.0);
-        HealthCapability.getAndApply(this.target, h -> h.currentHealer = this.villager);
+        if (HealthCapability.has(this.target))
+            HealthCapability.getAndApply(this.target, h -> h.currentHealer = this.villager);
     }
 
     @Override
@@ -94,7 +102,16 @@ public class DoctorVillagerGoal extends Goal {
         villager.getNavigation().stop();
 
         if (this.coolDown > 0) return;
-        this.coolDown += HealthCapability.getAndApply(this.target, (h) -> AiHealer.doHealing(this.villager, this.target, h, this.level), 0);
+
+        if (HealthCapability.has(this.target)) {
+            this.coolDown += HealthCapability.getAndApply(this.target, (h) -> {
+                this.target.level().broadcastEntityEvent(this.target, (byte) 14);
+                return AiHealer.doHealing(this.villager, this.target, h, this.level);
+            }, 0);
+        } else {
+            this.coolDown += 20;
+            this.target.heal(this.level);
+        }
     }
 
     @Override

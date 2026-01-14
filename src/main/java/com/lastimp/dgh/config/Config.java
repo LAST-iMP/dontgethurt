@@ -12,7 +12,7 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 public class Config {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder()
             .comment("General settings")
-            .push("general_1.2.2");
+            .push("general_1.2.7");
 
     public static final ForgeConfigSpec.DoubleValue BODY_LIFE_FACTOR = BUILDER
             .comment("肢体血量系数")
@@ -90,30 +90,6 @@ public class Config {
             .comment("骨折概率上限")
             .defineInRange("BASE_FRACTURE_MAX_PROB", 0.8, 0, 1.0);
 
-    public static float body_life_factor;
-    public static boolean tradition_healing;
-    public static float healing_factor;
-    public static float bandage_acc;
-    public static float burn_bleed_ratio;
-    public static float internal_bleed_ratio;
-    public static float open_wound_bleed_ratio;
-    public static float internal_food_healing;
-    public static float bleed_volume_ratio;
-    public static float withdraw_ratio;
-
-    public static int base_self_healing_time;
-    public static int base_med_available_time;
-    public static int volume_self_healing_time;
-
-    public static float resistance_convert_ratio;
-    public static float resistance_max;
-
-    public static float baseDislocationThreshold;
-    public static float baseFractureThreshold;
-    public static float baseDislocationMaxProb;
-    public static float baseFractureMaxProb;
-
-
     public static final ForgeConfigSpec.DoubleValue FRACTURE_ARTERIAL_PROB = BUILDER
             .comment("骨折-动脉出血概率")
             .defineInRange("FRACTURE_ARTERIAL_PROB", 0.1, 0, 1.0);
@@ -142,6 +118,33 @@ public class Config {
             .comment("允许濒死倒地减伤")
             .define("DOWN_DAMAGE_RESISTANCE", true);
 
+    public static final ForgeConfigSpec.BooleanValue PLAYER_DOCTOR_HEALING = BUILDER
+            .comment("允许医生村民治疗")
+            .define("PLAYER_DOCTOR_HEALING", true);
+
+    public static float body_life_factor;
+    public static boolean tradition_healing;
+    public static float healing_factor;
+    public static float bandage_acc;
+    public static float burn_bleed_ratio;
+    public static float internal_bleed_ratio;
+    public static float open_wound_bleed_ratio;
+    public static float internal_food_healing;
+    public static float bleed_volume_ratio;
+    public static float withdraw_ratio;
+
+    public static int base_self_healing_time;
+    public static int base_med_available_time;
+    public static int volume_self_healing_time;
+
+    public static float resistance_convert_ratio;
+    public static float resistance_max;
+
+    public static float baseDislocationThreshold;
+    public static float baseFractureThreshold;
+    public static float baseDislocationMaxProb;
+    public static float baseFractureMaxProb;
+
     public static float fractureArterialProb;
     public static float fractureBloodRatio;
     public static float basePneumothoraxProb;
@@ -151,6 +154,7 @@ public class Config {
 
     public static boolean allow_down;
     public static boolean down_damage_resistance;
+    public static boolean player_doctor_healing;
 
     // 构建配置
     public static final ForgeConfigSpec SPEC = BUILDER.pop().build();
@@ -187,6 +191,7 @@ public class Config {
 
         allow_down = ALLOW_DOWN.get();
         down_damage_resistance = DOWN_DAMAGE_RESISTANCE.get();
+        player_doctor_healing = PLAYER_DOCTOR_HEALING.get();
         BodyCondition.init();
     }
 
