@@ -1,6 +1,7 @@
 package com.lastimp.dgh.source.entity.villager;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.config.Config;
 import net.minecraft.world.entity.npc.Villager;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -12,6 +13,7 @@ public class VillagerEventBus {
     public static void onEntityJoin(EntityJoinLevelEvent event) {
         if (!(event.getEntity() instanceof Villager villager)) return;
         if (event.getLevel().isClientSide()) return;
+        if (!Config.player_doctor_healing) return;
 
         villager.goalSelector.addGoal(2, new DoctorVillagerGoal(villager));
     }

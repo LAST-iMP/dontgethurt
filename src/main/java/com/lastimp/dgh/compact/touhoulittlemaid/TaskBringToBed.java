@@ -21,7 +21,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.portal.DimensionTransition;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TaskBringToBed implements IMaidTask {
     public static final ResourceLocation ID = Common.ResourceLocation(DontGetHurt.MODID, "bring_to_bed");
@@ -44,15 +46,12 @@ public class TaskBringToBed implements IMaidTask {
 
     @Override
     public List<Pair<Integer, BehaviorControl<? super EntityMaid>>> createBrainTasks(EntityMaid entityMaid) {
-        MaidWalkToLivingEntityTask maidWalkToLivingEntityTask = this.createWalkToLivingEntityTask();
-        return Lists.newArrayList(new Pair[]{
-                Pair.of(5, maidWalkToLivingEntityTask),
-        });
+        return Lists.newArrayList(new Pair[]{Pair.of(5, this.createWalkToLivingEntityTask()),});
     }
 
     @Override
     public List<Pair<Integer, BehaviorControl<? super EntityMaid>>> createRideBrainTasks(EntityMaid maid) {
-        return IMaidTask.super.createRideBrainTasks(maid);
+        return Lists.newArrayList(new Pair[]{Pair.of(5, this.createWalkToLivingEntityTask()),});
     }
 
     private MaidWalkToLivingEntityTask createWalkToLivingEntityTask() {
@@ -76,7 +75,7 @@ public class TaskBringToBed implements IMaidTask {
                     this.stretcher = (StretcherEntity) player.getVehicle();
                     var location = player.findRespawnPositionAndUseSpawnBlock(true, DimensionTransition.DO_NOTHING);
 
-                    maid.teleportTo(location.newLevel(), location.pos().x, location.pos().y, location.pos().z, null, location.yRot(), location.xRot());
+                    maid.teleportTo(location.newLevel(), location.pos().x, location.pos().y, location.pos().z, Set.of(), location.yRot(), location.xRot());
                     this.stretcher.changeDimension(location);
                 }
             }
