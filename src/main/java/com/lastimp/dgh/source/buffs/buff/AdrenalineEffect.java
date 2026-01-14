@@ -18,7 +18,13 @@ public class AdrenalineEffect extends MobEffect {
         this.addAttributeModifier(
                 Attributes.ATTACK_DAMAGE,
                 Common.ResourceLocation(DontGetHurt.MODID, "adrenaline_effect"),
-                0.2f,
+                0.1f,
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+        );
+        this.addAttributeModifier(
+                Attributes.MOVEMENT_SPEED,
+                Common.ResourceLocation(DontGetHurt.MODID, "adrenaline_effect"),
+                0.1f,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
     }

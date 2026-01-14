@@ -183,9 +183,12 @@ public class Torso extends AbstractVisibleBody {
         }
     }
 
-    private boolean isFibrillation(HealthCapability health) {
+    private boolean isFibrillation(HealthCapability health, LivingEntity entity) {
         var blood = health.getComponent(BLOOD);
-        return this.abnormal(AORTIC_RUPTURE) || blood.getConditionValue(OXYGEN) > 0.10 || blood.getConditionValue(BLOOD_PRESSURE) < 0.7;
+        return (entity.hasEffect(ModEffects.ADRENALINE_EFFECT) && entity.getEffect(ModEffects.ADRENALINE_EFFECT).getAmplifier() > 0) ||
+                this.abnormal(AORTIC_RUPTURE) ||
+                blood.getConditionValue(OXYGEN) > 0.10 ||
+                blood.getConditionValue(BLOOD_PRESSURE) < 0.7;
     }
 
     private void handleFibrillation(HealthCapability health, LivingEntity entity) {
@@ -194,7 +197,7 @@ public class Torso extends AbstractVisibleBody {
         var torso = health.getComponent(TORSO);
         if (blood.getConditionValue(OXYGEN) > 0.9 || head.getConditionValue(TRAUMATIC_SHOCK) > 0.6) {
             this.addHeartRate(3.0f);
-        } else if (this.isFibrillation(health)) {
+        } else if (this.isFibrillation(health, entity)) {
             float factor = entity.hasEffect(ModEffects.ADRENALINE_EFFECT) ? 0.5f : 1.0f;
             this.addHeartRate(DELTA / 60 * factor * (int)(Math.min(3, this.getHeartRateLevel() + 1)));
         } else if (blood.getConditionValue(SEPSIS) > 0.2 || blood.getConditionValue(BLOOD_LOSS) > 0.4 || torso.getConditionValue(PNEUMOTHORAX) > 0.3f || entity.hasEffect(ModEffects.ADRENALINE_EFFECT)) {

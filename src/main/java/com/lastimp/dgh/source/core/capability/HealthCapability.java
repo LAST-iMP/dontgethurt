@@ -22,6 +22,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -175,6 +176,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         }
         this.vitality = 1.0f - this.body.updateVitalityLost(this, entity);
         this.vitality = (this.vitality > 0.999f) ? 1.0f : this.vitality;
+        this.handleAdrenaline(entity);
         this.almostDead = Math.min(this.almostDead, this.vitality);
         this.nearBedTick--;
         this.outerHealing = Math.max(0, this.outerHealing - this.outerHealingDelta);
@@ -218,6 +220,14 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         blood.healing(OXYGEN, -BodyCondition.get(OXYGEN).healingSpeed());
         blood.healing(BLOOD_PRESSURE, Utils.randomBetween(0.01f, 0.1f));
         torso.addHeartRate(-Utils.randomBetween(0.01f, 0.1f));
+    }
+
+    private void handleAdrenaline(LivingEntity entity) {
+        if (this.vitality < 0.8 && this.almostDead > 0.8) {
+            entity.addEffect(new MobEffectInstance(ModEffects.ADRENALINE_EFFECT, 40 * 20, 0));
+        } else if (this.vitality < 0.3 && this.almostDead > 0.3) {
+            entity.addEffect(new MobEffectInstance(ModEffects.ADRENALINE_EFFECT, 20 * 20, 1));
+        }
     }
 
     public boolean write(ItemStack stack, Component name, Component author) {

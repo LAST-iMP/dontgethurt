@@ -6,7 +6,6 @@ import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModEffects;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
@@ -27,8 +26,16 @@ public class Adrenaline extends AbstractDirectHealItems {
             Blood blood = (Blood) h.getComponent(BLOOD);
 
             blood.injury(BLOOD_PRESSURE, 0.3f);
-            torso.setHeartRateLevel(torso.getHeartRateLevel() / 2);
-            entity.addEffect(new MobEffectInstance(ModEffects.ADRENALINE_EFFECT, 60 * 20));
+            if (torso.getHeartRateLevel() >= 2) {
+                torso.setHeartRateLevel(torso.getHeartRateLevel() / 2);
+            }
+
+            if (entity.hasEffect(ModEffects.ADRENALINE_EFFECT)) {
+                int newAmp = entity.getEffect(ModEffects.ADRENALINE_EFFECT).getAmplifier() + 1;
+                entity.addEffect(new MobEffectInstance(ModEffects.ADRENALINE_EFFECT,  60 * 20, newAmp));
+            } else {
+                entity.addEffect(new MobEffectInstance(ModEffects.ADRENALINE_EFFECT, 60 * 20));
+            }
             return true;
         }, false);
     }

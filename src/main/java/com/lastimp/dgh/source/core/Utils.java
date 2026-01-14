@@ -1,6 +1,7 @@
 package com.lastimp.dgh.source.core;
 
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -17,6 +18,15 @@ import java.util.UUID;
 
 public abstract class Utils {
     public static final RandomSource randomSource = RandomSource.create(987654321);
+
+    public static void addParticlesAroundSelf(ParticleOptions particleOption, LivingEntity target) {
+        for(int i = 0; i < 5; ++i) {
+            double d0 = target.getRandom().nextGaussian() * 0.02;
+            double d1 = target.getRandom().nextGaussian() * 0.02;
+            double d2 = target.getRandom().nextGaussian() * 0.02;
+            target.level().addParticle(particleOption, target.getRandomX(1.0F), target.getRandomY() + (double)1.0F, target.getRandomZ(1.0F), d0, d1, d2);
+        }
+    }
 
     public static void drop(Item item, LivingEntity entity, int amount) {
         var stack=  new ItemStack(item, amount);
