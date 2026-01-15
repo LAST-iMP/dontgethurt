@@ -94,11 +94,11 @@ public class GuiEventBus {
 
                 graphics.drawCenteredString(mc.font,
                         Component.literal("按下鼠标求救"),
-                        graphics.guiWidth() / 2, graphics.guiHeight() / 2 - 50, 0xFF000000
+                        graphics.guiWidth() / 2, graphics.guiHeight() / 2 - 50, 0xFFFFFFFF
                 );
                 graphics.drawCenteredString(mc.font,
                         Component.literal("按住").append(KeyBinding.GIVE_UP.getTranslatedKeyMessage()).append("键5秒放弃治疗"),
-                        graphics.guiWidth() / 2, graphics.guiHeight() / 2 + 15 - 50, 0xFF000000
+                        graphics.guiWidth() / 2, graphics.guiHeight() / 2 + 15 - 50, 0xFFFFFFFF
                 );
             }
         });
