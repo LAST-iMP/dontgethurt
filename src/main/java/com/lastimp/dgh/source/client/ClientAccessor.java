@@ -3,13 +3,14 @@ package com.lastimp.dgh.source.client;
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @OnlyIn(value = Dist.CLIENT)
@@ -25,8 +26,8 @@ public abstract class ClientAccessor {
         return Minecraft.getInstance().level;
     }
 
-    public static AbstractClientPlayer getPlayer() {
-        return Minecraft.getInstance().player;
+    public static Optional<LocalPlayer> getPlayer() {
+        return Optional.ofNullable(Minecraft.getInstance().player);
     }
 
     public static LivingEntity getLiving(ClientLevel level, UUID uuid, Vec3 center, int range) {

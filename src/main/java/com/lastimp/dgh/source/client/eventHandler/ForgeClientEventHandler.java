@@ -6,6 +6,7 @@ import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.Network;
+import com.lastimp.dgh.source.client.ClientAccessor;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.source.core.menu.component.DynamicSlot;
@@ -15,20 +16,23 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(value = Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID, value = Dist.CLIENT)
 public class ForgeClientEventHandler {
     private static HealthScreen healthScreen = null;
+    private static int giveUpTick = 0;
 
     @SubscribeEvent
     public static void onScannerHealing(ScreenEvent.MouseButtonPressed.Pre event) {
@@ -96,19 +100,39 @@ public class ForgeClientEventHandler {
 
     @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
-        if(KeyBinding.OPEN_MENU_KEY.consumeClick()){
+        if (KeyBinding.OPEN_MENU_KEY.consumeClick()){
             Network.SERVER_INSTANCE.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.KEY_HEALTH_MENU, 0));
         }
     }
 
     @SubscribeEvent
-    public static void onGuiRender(RenderGuiEvent.Pre event) {
-        if (GuiOpenWrapper.MINECRAFT.get().player == null) return;
-        if (HealthCapability.isDying(GuiOpenWrapper.MINECRAFT.get().player)) {
-            var graphics = event.getGuiGraphics();
-            GuiOpenWrapper.MINECRAFT.get().gui.getChat().render(graphics, 0, graphics.guiHeight(), graphics.guiWidth());
-            event.setCanceled(true);
-        }
+    public static void onMouseInput(InputEvent.MouseButton.Pre event) {
+        if (event.getAction() == GLFW.GLFW_PRESS) return;
+        ClientAccessor.getPlayer().ifPresent(player -> {
+            if (HealthCapability.isDying(player)) {
+                Network.SERVER_INSTANCE.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.CALL_FOR_HELP, 0));
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void playerTick(TickEvent.PlayerTickEvent event) {
+        if (HealthCapability.isDying(event.player))
+            event.player.setPose(Pose.SWIMMING);
+
+        if (event.phase != TickEvent.Phase.END) return;
+        ClientAccessor.getPlayer().ifPresent(player -> {
+            if (!event.player.getUUID().equals(player.getUUID())) return;
+
+            if (KeyBinding.GIVE_UP.isDown() && HealthCapability.isDying(event.player)) {
+                giveUpTick++;
+                if (giveUpTick >= 100) {
+                    Network.SERVER_INSTANCE.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.GIVE_UP, 0));
+                }
+            } else {
+                giveUpTick = 0;
+            }
+        });
     }
 
     public static void setHealthScreen(HealthScreen healthScreen) {
