@@ -11,7 +11,8 @@
     "client.LocalPlayerAccessor",
     "client.MinecraftAccessor",
     "client.LivingEntityRendererMixin",
-    "PlayerMixin"
+    "client.PlayerSkinMixin",
+    "client.PlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
