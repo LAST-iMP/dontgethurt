@@ -1,6 +1,7 @@
 package com.lastimp.dgh.source.entity.villager;
 
 import com.google.common.collect.ImmutableMap;
+import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.block.OperatingBedBlock;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.healingSystem.AiHealer;

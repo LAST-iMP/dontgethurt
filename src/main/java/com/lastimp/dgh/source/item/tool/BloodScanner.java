@@ -36,7 +36,7 @@ public class BloodScanner extends AbstractHealingItem {
                 player.sendSystemMessage(Component.translatable(target.getName().getString()).append("的血液很正常"));
             } else {
                 var name = target instanceof Player ? target.getScoreboardName() : target.getName().getString();
-                HealthCapability.getAndApply(player, h -> BloodScanner.scanHealth(player, h, name));
+                HealthCapability.getAndApply(target, h -> BloodScanner.scanHealth(player, h, name));
             }
         }
         return InteractionResult.SUCCESS;
