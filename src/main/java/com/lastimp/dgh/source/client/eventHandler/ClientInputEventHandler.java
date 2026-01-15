@@ -30,7 +30,7 @@ import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(value = Dist.CLIENT)
 @EventBusSubscriber(modid = DontGetHurt.MODID,value = Dist.CLIENT)
-public class ForgeClientEventHandler {
+public class ClientInputEventHandler {
     private static HealthScreen healthScreen = null;
     private static int giveUpTick = 0;
     private static int callForHelpTick = 0;
@@ -145,7 +145,7 @@ public class ForgeClientEventHandler {
     }
 
     public static void setHealthScreen(HealthScreen healthScreen) {
-        ForgeClientEventHandler.healthScreen = healthScreen;
+        ClientInputEventHandler.healthScreen = healthScreen;
     }
 
 }

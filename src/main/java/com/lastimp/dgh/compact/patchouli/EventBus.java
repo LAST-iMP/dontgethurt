@@ -2,6 +2,7 @@ package com.lastimp.dgh.compact.patchouli;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
@@ -19,7 +20,7 @@ public class EventBus {
 
         var player = event.getEntity();
 
-        var data = player.getPersistentData();
+        var data = player.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         var key = "dgh_has_book";
 
         if (!data.getBoolean(key)) {

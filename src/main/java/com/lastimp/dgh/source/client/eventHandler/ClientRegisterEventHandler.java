@@ -16,7 +16,7 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 
 @OnlyIn(value = Dist.CLIENT)
 @EventBusSubscriber(modid = DontGetHurt.MODID, value = Dist.CLIENT)
-public class ModClientEventHandler {
+public class ClientRegisterEventHandler {
     @SubscribeEvent
     public static void onKeyRegister(RegisterKeyMappingsEvent event) {
         for (var key : KeyBinding.keys)
