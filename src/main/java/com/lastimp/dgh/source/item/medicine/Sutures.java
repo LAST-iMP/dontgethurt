@@ -6,6 +6,7 @@ import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
+import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -46,8 +47,8 @@ public class Sutures extends AbstractPartlyHealItem {
                 body.setConditionValue(RETRACTED_SKIN, BodyCondition.get(RETRACTED_SKIN).defaultValue());
                 body.setConditionValue(DRILLED_BONES, BodyCondition.get(DRILLED_BONES).defaultValue());
                 body.setConditionValue(CLAMPED_ARTERIES, BodyCondition.get(CLAMPED_ARTERIES).defaultValue());
-                if (body instanceof AbstractExtremities extremities)
-                    extremities.setConditionValue(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).defaultValue());
+                if (body instanceof AbstractExtremities || body instanceof Head)
+                    body.setConditionValue(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).defaultValue());
                 success = true;
             }
 
