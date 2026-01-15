@@ -1,38 +1,106 @@
 package com.lastimp.dgh.source.client.gui;
 
+import com.google.common.collect.ImmutableSet;
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.mixin.client.LocalPlayerAccessor;
+import com.lastimp.dgh.mixin.client.MinecraftAccessor;
 import com.lastimp.dgh.source.client.ClientAccessor;
+import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.gui.screens.DeathScreen;
+import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+
+import java.util.Set;
 
 @OnlyIn(value = Dist.CLIENT)
 @EventBusSubscriber(modid = DontGetHurt.MODID, value = Dist.CLIENT)
 public class GuiEventBus {
+    private static boolean onDying = false;
+    private static boolean onPause = false;
+    private static Set<ResourceLocation> BLOCKED_OVERLAYS;
 
     @SubscribeEvent
-    public static void onPlayerDead(LivingDeathEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return;
-        if (!player.level().isClientSide()) return;
-        GuiOpenWrapper.closeScreen();
+    public static void screenOpen(ScreenEvent.Opening event) {
+        Player player = Minecraft.getInstance().player;
+        if (player == null || !HealthCapability.isDying(player)) return;
+
+        var newScreen = event.getNewScreen();
+        if (event.getCurrentScreen() == null) {
+            onPause = newScreen instanceof PauseScreen;
+        }
+        if (!onPause && !(newScreen instanceof DeathScreen || newScreen instanceof ChatScreen || newScreen instanceof PauseScreen)) {
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
-    public static void onPlayerTick(PlayerTickEvent.Pre event) {
-        var player = event.getEntity();
-        if (player.level().isClientSide) {
-            if (player.getUUID().equals(GuiOpenWrapper.localPlayerUUID())){
-                if (HealthCapability.isDying(player) && GuiOpenWrapper.canOpenDyingScreen()) {
-                    GuiOpenWrapper.openDyingScreen();
-                } else if (!HealthCapability.isDying(player)){
-                    GuiOpenWrapper.closeDyingScreen();
-                }
+    public static void onGuiRender(RenderGuiEvent.Pre event) {
+        ClientAccessor.getPlayer().ifPresent(player -> {
+            if (HealthCapability.isDying(player)) {
+                player.setPose(Pose.SWIMMING);
+                ((LocalPlayerAccessor) player).setHandsBusy(true);
+                ((MinecraftAccessor) Minecraft.getInstance()).setMissTime(2);
+                onDying = true;
+            } else if (onDying) {
+                ((LocalPlayerAccessor) player).setHandsBusy(false);
+                onDying = false;
             }
+        });
+    }
+
+    @SubscribeEvent
+    public static void onRenderOverlay(RenderGuiLayerEvent.Pre event) {
+        if (BLOCKED_OVERLAYS == null) {
+            BLOCKED_OVERLAYS = ImmutableSet.of(
+                    VanillaGuiLayers.PLAYER_HEALTH,
+                    VanillaGuiLayers.HOTBAR,
+                    VanillaGuiLayers.CROSSHAIR,
+                    VanillaGuiLayers.ARMOR_LEVEL,
+                    VanillaGuiLayers.FOOD_LEVEL,
+                    VanillaGuiLayers.AIR_LEVEL,
+                    VanillaGuiLayers.VEHICLE_HEALTH,
+                    VanillaGuiLayers.JUMP_METER,
+                    VanillaGuiLayers.EXPERIENCE_BAR,
+                    VanillaGuiLayers.SELECTED_ITEM_NAME
+            );
         }
+        ClientAccessor.getPlayer().ifPresent(player -> {
+            if (HealthCapability.isDying(player) && BLOCKED_OVERLAYS.contains(event.getName()))
+                event.setCanceled(true);
+        });
+    }
+
+    @SubscribeEvent
+    public static void onRenderMyOverlay(RenderGuiEvent.Post event) {
+        ClientAccessor.getPlayer().ifPresent(player -> {
+            Minecraft mc = GuiOpenWrapper.mc();
+            if (!mc.options.hideGui && mc.screen == null) {
+                if (!HealthCapability.isDying(player)) return;
+                var graphics = event.getGuiGraphics();
+
+                graphics.drawCenteredString(mc.font,
+                        Component.literal("按下鼠标求救"),
+                        graphics.guiWidth() / 2, graphics.guiHeight() / 2 - 50, 0xFF000000
+                );
+                graphics.drawCenteredString(mc.font,
+                        Component.literal("按住").append(KeyBinding.GIVE_UP.getTranslatedKeyMessage()).append("键5秒放弃治疗"),
+                        graphics.guiWidth() / 2, graphics.guiHeight() / 2 + 15 - 50, 0xFF000000
+                );
+            }
+        });
     }
 }

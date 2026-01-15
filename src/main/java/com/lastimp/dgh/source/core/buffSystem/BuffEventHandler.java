@@ -24,7 +24,9 @@ public class BuffEventHandler {
     public static void onBuffUpdate(EntityTickEvent.Post event) {
         if (event.getEntity().level().isClientSide) return;
         var entity = event.getEntity();
-        if (!(entity instanceof LivingEntity livingEntity) || !HealthCapability.has(livingEntity)) return;
+        if (!(entity instanceof LivingEntity livingEntity)) return;
+        updateDyingEffects(livingEntity);
+        if (!HealthCapability.has(livingEntity)) return;
         HealthCapability.getAndApply(livingEntity, health -> {
             updateStaggerEffects(health, livingEntity);
             updateArmEffects(health, livingEntity);
@@ -33,6 +35,12 @@ public class BuffEventHandler {
             updateCureEffects(health, livingEntity);
             updateSymptomsEffects(health, livingEntity);
         });
+    }
+
+    private static void updateDyingEffects(LivingEntity entity) {
+        if (!HealthCapability.isDying(entity)) return;
+        entity.addEffect(new MobEffectInstance(MobEffects.JUMP, 19, -10));
+        entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 19));
     }
 
     private static void updateStaggerEffects(HealthCapability health, LivingEntity entity) {

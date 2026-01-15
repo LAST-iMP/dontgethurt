@@ -4,6 +4,7 @@ import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,6 +16,7 @@ public class LivingEntityMixin {
     @Inject(method = "isImmobile", at = @At("RETURN"), cancellable = true)
     private void isControlledByLocalInstance(CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object)this;
+        if (livingEntity instanceof Player) return;
         cir.setReturnValue(cir.getReturnValue() || HealthCapability.isDying(livingEntity));
     }
 

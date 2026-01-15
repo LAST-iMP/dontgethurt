@@ -8,6 +8,8 @@
     "EntityMixin"
   ],
   "client": [
+    "client.LocalPlayerAccessor",
+    "client.MinecraftAccessor",
     "client.LivingEntityRendererMixin",
     "PlayerMixin"
   ],
