@@ -1,5 +1,6 @@
 package com.lastimp.dgh.mixin;
 
+import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.core.particles.ParticleTypes;
@@ -16,7 +17,7 @@ public class LivingEntityMixin {
     @Inject(method = "isImmobile", at = @At("RETURN"), cancellable = true)
     private void isControlledByLocalInstance(CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object)this;
-        if (livingEntity instanceof Player) return;
+        if (livingEntity instanceof Player && Config.player_down_moving) return;
         cir.setReturnValue(cir.getReturnValue() || HealthCapability.isDying(livingEntity));
     }
 

@@ -33,6 +33,7 @@ import org.lwjgl.glfw.GLFW;
 public class ForgeClientEventHandler {
     private static HealthScreen healthScreen = null;
     private static int giveUpTick = 0;
+    private static int callForHelpTick = 0;
 
     @SubscribeEvent
     public static void onScannerHealing(ScreenEvent.MouseButtonPressed.Pre event) {
@@ -108,9 +109,11 @@ public class ForgeClientEventHandler {
     @SubscribeEvent
     public static void onMouseInput(InputEvent.MouseButton.Pre event) {
         if (event.getAction() == GLFW.GLFW_PRESS) return;
+        if (callForHelpTick > 0) return;
         ClientAccessor.getPlayer().ifPresent(player -> {
             if (HealthCapability.isDying(player)) {
                 PacketDistributor.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.CALL_FOR_HELP, 0));
+                callForHelpTick = 80;
             }
         });
     }
@@ -138,6 +141,7 @@ public class ForgeClientEventHandler {
                 giveUpTick = 0;
             }
         });
+        callForHelpTick--;
     }
 
     public static void setHealthScreen(HealthScreen healthScreen) {

@@ -22,8 +22,7 @@ public class KeyBinding {
     public static final Set<KeyMapping> keys = new HashSet<>();
 
     public static final KeyMapping OPEN_MENU_KEY = addKey(KEY_HEALTH_MENU, GLFW.GLFW_KEY_O);
-    public static final KeyMapping GIVE_UP =  addKey(KEY_GIVE_UP, GLFW.GLFW_KEY_ESCAPE);
-//    public static final KeyMapping CALL_FOR_HELP =  addKey(KEY_CALL_FOR_HELP, GLFW.GLFW_KEY_H);
+    public static final KeyMapping GIVE_UP =  addKey(KEY_GIVE_UP, GLFW.GLFW_KEY_O);
 
     private static KeyMapping addKey(String name, int key) {
         var newKey = new KeyMapping(

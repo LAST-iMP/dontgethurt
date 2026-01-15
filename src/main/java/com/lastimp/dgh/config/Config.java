@@ -12,7 +12,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder()
             .comment("General settings")
-            .push("general_1.2.2");
+            .push("general_1.2.8.4");
 
     public static final ModConfigSpec.DoubleValue BODY_LIFE_FACTOR = BUILDER
             .comment("肢体血量系数")
@@ -114,10 +114,6 @@ public class Config {
             .comment("允许濒死倒地")
             .define("ALLOW_DOWN", true);
 
-    public static final ModConfigSpec.BooleanValue DOWN_DAMAGE_RESISTANCE = BUILDER
-            .comment("允许濒死倒地减伤")
-            .define("DOWN_DAMAGE_RESISTANCE", true);
-
     public static final ModConfigSpec.BooleanValue PLAYER_DOCTOR_HEALING = BUILDER
             .comment("允许医生村民治疗")
             .define("PLAYER_DOCTOR_HEALING", true);
@@ -129,6 +125,14 @@ public class Config {
     public static final ModConfigSpec.DoubleValue BYPASS_FOREIGN_PROB = BUILDER
             .comment("贯穿伤-体内异物概率")
             .defineInRange("BYPASS_FOREIGN_PROB", 0.8, 0, 1.0);
+
+    public static final ModConfigSpec.BooleanValue PLAYER_GLOWING = BUILDER
+            .comment("允许玩家倒地发光")
+            .define("DOWN_GLOWING", true);
+
+    public static final ModConfigSpec.BooleanValue PLAYER_DOWN_MOVING = BUILDER
+            .comment("允许玩家倒地爬行")
+            .define("PLAYER_DOWN_MOVING", true);
 
     public static float body_life_factor;
     public static boolean tradition_healing;
@@ -161,11 +165,12 @@ public class Config {
     public static float baseAmputationMaxProb;
 
     public static boolean allow_down;
-    public static boolean down_damage_resistance;
     public static boolean player_doctor_healing;
 
     public static float bypass_brain_damage_prob;
     public static float bypass_foreign_prob;
+    public static boolean player_glowing;
+    public static boolean player_down_moving;
 
     // 构建配置
     public static final ModConfigSpec SPEC = BUILDER.pop().build();
@@ -201,11 +206,12 @@ public class Config {
         baseAmputationMaxProb = (float) BASE_AMPUTATION_MAX_PROB.getAsDouble();
 
         allow_down = ALLOW_DOWN.get();
-        down_damage_resistance = DOWN_DAMAGE_RESISTANCE.get();
         player_doctor_healing = PLAYER_DOCTOR_HEALING.get();
 
         bypass_brain_damage_prob = (float) (double) BYPASS_BRAIN_DAMAGE_PROB.get();
         bypass_foreign_prob = (float) (double) BYPASS_FOREIGN_PROB.get();
+        player_glowing = PLAYER_GLOWING.get();
+        player_down_moving = PLAYER_DOWN_MOVING.get();
         BodyCondition.init();
     }
 

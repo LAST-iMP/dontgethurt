@@ -66,7 +66,7 @@ public class HealingEventHandler {
         float maxHealth = getHealthWithOuterHealing(health, player);
         if (player.isDeadOrDying()) {
             PlayerDyingHandler.setPlayerDead(player);
-        } else if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative()) {
+        } else if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative() || player.isSpectator()) {
             player.setHealth(player.getMaxHealth());
         } else if (health.isDown() && maxHealth > 0) {
             player.setHealth(0.01f);
