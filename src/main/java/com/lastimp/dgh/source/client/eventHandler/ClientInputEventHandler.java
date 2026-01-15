@@ -16,7 +16,6 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -30,7 +29,7 @@ import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(value = Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID, value = Dist.CLIENT)
-public class ForgeClientEventHandler {
+public class ClientInputEventHandler {
     private static HealthScreen healthScreen = null;
     private static int giveUpTick = 0;
     private static int callForHelpTick = 0;
@@ -119,10 +118,7 @@ public class ForgeClientEventHandler {
     }
 
     @SubscribeEvent
-    public static void playerTick(TickEvent.PlayerTickEvent event) {
-        if (HealthCapability.isDying(event.player))
-            event.player.setPose(Pose.SWIMMING);
-
+    public static void onInputTick(TickEvent.PlayerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
         ClientAccessor.getPlayer().ifPresent(player -> {
             if (!event.player.getUUID().equals(player.getUUID())) return;
@@ -140,6 +136,6 @@ public class ForgeClientEventHandler {
     }
 
     public static void setHealthScreen(HealthScreen healthScreen) {
-        ForgeClientEventHandler.healthScreen = healthScreen;
+        ClientInputEventHandler.healthScreen = healthScreen;
     }
 }

@@ -28,6 +28,7 @@ public class DontGetHurt
     public static final float DELTA = 0.05f;
     public static final float EPS = 0.0001f;
 
+    @SuppressWarnings("removal")
     public DontGetHurt() {
         this(FMLJavaModLoadingContext.get());
     }

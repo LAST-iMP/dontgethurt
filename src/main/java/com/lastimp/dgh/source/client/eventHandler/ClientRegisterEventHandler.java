@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @OnlyIn(value = Dist.CLIENT)
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class ModClientEventHandler {
+public class ClientRegisterEventHandler {
     @SubscribeEvent
     public static void onKeyRegister(RegisterKeyMappingsEvent event) {
         for (var key : KeyBinding.keys)

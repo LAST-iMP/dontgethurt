@@ -30,10 +30,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class TaskBringToBed implements IMaidTask {
     public static final ResourceLocation ID = Common.ResourceLocation(DontGetHurt.MODID, "bring_to_bed");
-    private StretcherEntity stretcher = null;
 
     @Override
     public ResourceLocation getUid() {
@@ -84,16 +84,15 @@ public class TaskBringToBed implements IMaidTask {
 
                 var location = Player.findRespawnPositionAndUseSpawnBlock(finalLevel, finalPos, player.getRespawnAngle(), player.isRespawnForced(), true);
                 location.ifPresent((loc) -> {
-                    EntityMaid newMaid = (EntityMaid) maid.changeDimension(finalLevel);
-                    LivingEntity newOwner = (LivingEntity) player.changeDimension(finalLevel);
-                    newMaid = newMaid == null ? maid : newMaid;
-                    newOwner = newOwner == null ? player : newOwner;
+                    maid.teleportTo(finalLevel, loc.x, loc.y, loc.z, Set.of(), maid.getXRot(), maid.getYRot());
+                    var playerSuccess = player.teleportTo(finalLevel, loc.x, loc.y, loc.z, Set.of(), maid.getXRot(), maid.getYRot());
 
-                    newMaid.teleportTo(loc.x, loc.y, loc.z);
-                    newOwner.teleportTo(loc.x, loc.y, loc.z);
+                    if (playerSuccess) {
+                        Player newPlayer = (Player) finalLevel.getEntity(player.getUUID());
 
-                    ItemStack newStack = ModItems.STRETCHER.get().getDefaultInstance();
-                    ((StretcherItem)newStack.getItem()).interactLivingEntity(newStack, newMaid, newOwner);
+                        ItemStack newStack = ModItems.STRETCHER.get().getDefaultInstance();
+                        ((StretcherItem)newStack.getItem()).interactLivingEntity(newStack, newPlayer, newPlayer);
+                    }
                 });
             }
         }

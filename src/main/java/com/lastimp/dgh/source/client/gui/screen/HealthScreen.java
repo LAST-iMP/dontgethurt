@@ -7,7 +7,7 @@ import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.client.ClientAccessor;
-import com.lastimp.dgh.source.client.eventHandler.ForgeClientEventHandler;
+import com.lastimp.dgh.source.client.eventHandler.ClientInputEventHandler;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.client.gui.component.HealthComponentWidget;
 import com.lastimp.dgh.source.client.gui.component.HealthConditionWidget;
@@ -63,7 +63,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     public HealthScreen(HealthMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        ForgeClientEventHandler.setHealthScreen(this);
+        ClientInputEventHandler.setHealthScreen(this);
         ClientAccessor.setHealthScreen(this);
     }
 
@@ -210,7 +210,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         GuiOpenWrapper.MINECRAFT.get().setScreen(null);
 
         setHealthData(null);
-        ForgeClientEventHandler.setHealthScreen(null);
+        ClientInputEventHandler.setHealthScreen(null);
         ClientAccessor.setHealthScreen(null);
         super.onClose();
     }
