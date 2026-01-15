@@ -1,6 +1,7 @@
 package com.lastimp.dgh.source.core.buffSystem;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModEffects;
@@ -39,7 +40,8 @@ public class BuffEventHandler {
     private static void updateDyingEffects(LivingEntity entity) {
         if (!HealthCapability.isDying(entity)) return;
         entity.addEffect(new MobEffectInstance(MobEffects.JUMP, 19, -10));
-        entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 19));
+        if (Config.player_glowing)
+            entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 19));
     }
 
     private static void updateStaggerEffects(HealthCapability health, LivingEntity entity) {

@@ -69,7 +69,6 @@ public class DontGetHurt
         LOGGER.info("HELLO FROM COMMON SETUP");
         Network.registerMessage();
         event.enqueueWork(() -> {
-            HealthLivingEntityList.loadWhiteLists();
             BlackList.loadExternalBlacklist();
             HealthLivingEntityList.loadExternallist();
         });

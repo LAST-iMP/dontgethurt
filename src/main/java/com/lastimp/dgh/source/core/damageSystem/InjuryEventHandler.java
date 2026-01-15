@@ -8,6 +8,7 @@ import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModDamageType;
+import com.lastimp.dgh.config.HealthLivingEntityList;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -15,6 +16,7 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingBreatheEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -58,7 +60,14 @@ public class InjuryEventHandler {
         }
 
         damageAmount /= livingEntity.getMaxHealth() * Config.body_life_factor;
-        damageAmount /= HealthCapability.isDying(livingEntity) && Config.down_damage_resistance ? 10f : 1f;
+        if (HealthCapability.isDying(livingEntity)) {
+            if (source.getEntity() instanceof Player)
+                damageAmount *= HealthLivingEntityList.getEntityDownResist(livingEntity.getType(), HealthLivingEntityList.PLAYER_RESIST);
+            else if (source.getEntity() instanceof LivingEntity)
+                damageAmount *= HealthLivingEntityList.getEntityDownResist(livingEntity.getType(), HealthLivingEntityList.ENTITY_RESIST);
+            else
+                damageAmount *= HealthLivingEntityList.getEntityDownResist(livingEntity.getType(), HealthLivingEntityList.ENV_RESIST);
+        }
 
         if (source.is(DamageTypeTags.IS_FALL)) {
             handleFalling(event.getSource(), damageAmount, livingEntity, event);
