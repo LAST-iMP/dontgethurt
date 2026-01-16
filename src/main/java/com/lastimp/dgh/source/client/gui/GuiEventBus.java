@@ -87,7 +87,7 @@ public class GuiEventBus {
     @SubscribeEvent
     public static void onRenderMyOverlay(RenderGuiEvent.Post event) {
         ClientAccessor.getPlayer().ifPresent(player -> {
-            Minecraft mc = GuiOpenWrapper.mc();
+            Minecraft mc = ClientAccessor.mc();
             if (!mc.options.hideGui && mc.screen == null) {
                 if (!HealthCapability.isDying(player)) return;
                 var graphics = event.getGuiGraphics();

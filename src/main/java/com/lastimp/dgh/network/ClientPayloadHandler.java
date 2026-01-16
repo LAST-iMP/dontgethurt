@@ -6,12 +6,12 @@ import com.lastimp.dgh.config.HealthLivingEntityList;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.network.message.MyServerConfigSynData;
 import com.lastimp.dgh.source.client.ClientAccessor;
+import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ClientPayloadHandler {
@@ -20,9 +20,9 @@ public class ClientPayloadHandler {
         var context = ctx.get();
         context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             OperationType operation = OperationType.valueOf(data.oper());
-            if (operation == OperationType.HEALTH_SCANN && ClientAccessor.healthScreen() != null) {
+            if (operation == OperationType.HEALTH_SCANN && GuiOpenWrapper.healthScreen() != null) {
                 HealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag());
-                ClientAccessor.healthScreen().setHealthData(health);
+                GuiOpenWrapper.healthScreen().setHealthData(health);
             } else if (operation == OperationType.SYN) {
                 var entity = ClientAccessor.getLiving(data.entityID());
                 if (entity != null && HealthCapability.has(entity)) {

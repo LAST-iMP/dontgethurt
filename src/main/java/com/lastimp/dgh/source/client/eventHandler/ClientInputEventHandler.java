@@ -27,42 +27,44 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Objects;
+
 @OnlyIn(value = Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID, value = Dist.CLIENT)
 public class ClientInputEventHandler {
-    private static HealthScreen healthScreen = null;
     private static int giveUpTick = 0;
     private static int callForHelpTick = 0;
 
     @SubscribeEvent
     public static void onScannerHealing(ScreenEvent.MouseButtonPressed.Pre event) {
         if (event.getButton() != 1) return;
+        if (!(event.getScreen() instanceof HealthScreen)) return;
         if (!screenHealingCheck()) return;
 
-        assert healthScreen.getSlotUnderMouse() != null;
+        var healthScreen = GuiOpenWrapper.healthScreen();
         var slot = healthScreen.getSlotUnderMouse();
-        int index = slot.getSlotIndex();
+        int index = Objects.requireNonNull(slot).getSlotIndex();
         if (slot instanceof DynamicSlot)
             index += 36;
         Network.SERVER_INSTANCE.sendToServer(MyHealingItemUseData.getInstance(
                 healthScreen.getMenu().targetEntity, index, healthScreen.getSelectedComponent()
         ));
 
-        ItemStack stack = GuiOpenWrapper.MINECRAFT.get().player.getInventory().getItem(index);
-        if (stack.is(ModTags.MEDICAL_TOOLS_BAGS) && event.getScreen() instanceof HealthScreen healthScreen) {
+        ItemStack stack = slot.getItem();
+        if (stack.is(ModTags.MEDICAL_TOOLS_BAGS)) {
             healthScreen.getMenu().openBag(stack);
         }
         event.setCanceled(true);
     }
 
     private static boolean screenHealingCheck() {
-        Minecraft mc = GuiOpenWrapper.MINECRAFT.get();
+        Minecraft mc = ClientAccessor.mc();
         if (mc.level == null) return false;
         if (!mc.level.isClientSide()) return false;
         if (mc.player == null) return false;
-        if (healthScreen == null) return false;
+        if (GuiOpenWrapper.healthScreen() == null) return false;
 
-        var slot = healthScreen.getSlotUnderMouse();
+        var slot = GuiOpenWrapper.healthScreen().getSlotUnderMouse();
         if (slot == null) return false;
 
         var itemStack = slot.getItem();
@@ -133,9 +135,5 @@ public class ClientInputEventHandler {
             }
         });
         callForHelpTick--;
-    }
-
-    public static void setHealthScreen(HealthScreen healthScreen) {
-        ClientInputEventHandler.healthScreen = healthScreen;
     }
 }

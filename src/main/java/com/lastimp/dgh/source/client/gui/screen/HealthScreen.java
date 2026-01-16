@@ -63,8 +63,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     public HealthScreen(HealthMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        ClientInputEventHandler.setHealthScreen(this);
-        ClientAccessor.setHealthScreen(this);
+        GuiOpenWrapper.setHealthScreen(this);
     }
 
     @Override
@@ -207,11 +206,8 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     @Override
     public void onClose() {
-        GuiOpenWrapper.MINECRAFT.get().setScreen(null);
-
         setHealthData(null);
-        ClientInputEventHandler.setHealthScreen(null);
-        ClientAccessor.setHealthScreen(null);
+        GuiOpenWrapper.setHealthScreen(null);
         super.onClose();
     }
 
@@ -224,7 +220,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         int panelY = (guiGraphics.guiHeight() - PANEL_HEIGHT) / 2 + HEART_BEAT_Y;
         int max_width = (int) (HEART_BEAT_WIDTH * 0.75);
 
-        long tick = GuiOpenWrapper.MINECRAFT.get().level.getGameTime();
+        long tick = ClientAccessor.getGameTime();
         ResourceLocation heartBeat = HUD_HEART_BEAT;
         if (healthData != null) {
             Torso torso = (Torso) healthData.getComponent(TORSO);
@@ -245,14 +241,14 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     @Override
     protected void containerTick() {
-        var mc = GuiOpenWrapper.MINECRAFT.get();
+        var mc = ClientAccessor.mc();
         if (mc.level == null || mc.player == null) {
-            GuiOpenWrapper.MINECRAFT.get().setScreen(null);
+            GuiOpenWrapper.closeScreen();
             return;
         }
         var target = ClientAccessor.getLiving(mc.level, this.menu.targetEntity, mc.player.getEyePosition(), 40);
-        if (target == null || target.isDeadOrDying()) {
-            GuiOpenWrapper.MINECRAFT.get().setScreen(null);
+        if (target == null || target.isDeadOrDying() || HealthCapability.isDying(ClientAccessor.getPlayerOrThrow())) {
+            GuiOpenWrapper.closeScreen();
         } else {
             Network.SERVER_INSTANCE.sendToServer(MyReadAllConditionData.getInstance(
                     this.menu.targetEntity, 0, null, HEALTH_SCANN
@@ -264,7 +260,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     }
 
     private void playSound() {
-        long tick = GuiOpenWrapper.MINECRAFT.get().level.getGameTime();
+        long tick = ClientAccessor.getGameTime();
         SoundEvent sound = ModSounds.HEARTBEAT_NORMAL.get();
         if (healthData != null) {
             Torso torso = (Torso) healthData.getComponent(TORSO);
@@ -273,14 +269,14 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
             else if (torso.abnormal(HEARTRATE_INCREASE)) sound = ModSounds.HEARTBEAT_ACC.get();
         }
         if (tick % HEART_BEAT_WIDTH == 1) {
-            GuiOpenWrapper.MINECRAFT.get().getSoundManager().play(
+            ClientAccessor.mc().getSoundManager().play(
                     SimpleSoundInstance.forUI( sound, 1.0f)
             );
         }
     }
 
     private void updateEquipVisibleCoolDown() {
-        var player = GuiOpenWrapper.MINECRAFT.get().player;
+        var player = ClientAccessor.mc().player;
         if (player == null || HealthScreen.healthData == null) return;
         var cooldowns = player.getCooldowns();
         var oxygenMask = this.menu.getSlot(45).getItem().getItem();

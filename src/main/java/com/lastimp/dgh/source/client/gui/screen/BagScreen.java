@@ -2,6 +2,7 @@ package com.lastimp.dgh.source.client.gui.screen;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
+import com.lastimp.dgh.source.client.ClientAccessor;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.core.menu.BagMenu;
 import net.minecraft.client.Minecraft;
@@ -51,7 +52,7 @@ public class BagScreen extends AbstractContainerScreen<BagMenu> {
     }
 
     private boolean check() {
-        Minecraft mc = GuiOpenWrapper.MINECRAFT.get();
+        Minecraft mc = ClientAccessor.mc();
         // 跳过：菜单界面、无玩家、隐藏GUI（按F1)
         return !(mc.level == null || mc.player == null || mc.options.hideGui);
     }

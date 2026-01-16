@@ -1,6 +1,5 @@
 package com.lastimp.dgh.source.client;
 
-import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -9,13 +8,20 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.Lazy;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 @OnlyIn(value = Dist.CLIENT)
 public abstract class ClientAccessor {
-    private static HealthScreen healthScreen = null;
+    private static final Lazy<Minecraft> MINECRAFT = Lazy.of(Minecraft::getInstance);
+
+    public static Minecraft mc() {
+        return MINECRAFT.get();
+    }
 
     public static boolean canRenderGui() {
         Minecraft mc = Minecraft.getInstance();
@@ -26,8 +32,16 @@ public abstract class ClientAccessor {
         return Minecraft.getInstance().level;
     }
 
+    public static long getGameTime() {
+        return mc().level.getGameTime();
+    }
+
     public static Optional<LocalPlayer> getPlayer() {
         return Optional.ofNullable(Minecraft.getInstance().player);
+    }
+
+    public static @NotNull LocalPlayer getPlayerOrThrow() {
+        return Objects.requireNonNull(Minecraft.getInstance().player);
     }
 
     public static LivingEntity getLiving(ClientLevel level, UUID uuid, Vec3 center, int range) {
@@ -46,13 +60,5 @@ public abstract class ClientAccessor {
             return livingEntity;
         }
         return null;
-    }
-
-    public static HealthScreen healthScreen() {
-        return healthScreen;
-    }
-
-    public static void setHealthScreen(HealthScreen healthScreen) {
-        ClientAccessor.healthScreen = healthScreen;
     }
 }
