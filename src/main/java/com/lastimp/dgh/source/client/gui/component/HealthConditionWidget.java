@@ -1,7 +1,7 @@
 
 package com.lastimp.dgh.source.client.gui.component;
 
-import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
+import com.lastimp.dgh.source.client.ClientAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -51,7 +51,7 @@ public class HealthConditionWidget extends AbstractWidget {
         guiGraphics.blitSprite(texture, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
 
             int stringColor = 0xFF000000;
-        Minecraft mc = GuiOpenWrapper.MINECRAFT.get();
+        Minecraft mc = ClientAccessor.mc();
         guiGraphics.drawCenteredString(mc.font, this.getMessage(),
                 this.getX() + 3 + (this.width + iconSize) / 2,
                 this.getY() + (this.height - mc.font.lineHeight) / 2,

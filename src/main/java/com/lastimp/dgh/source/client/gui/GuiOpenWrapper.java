@@ -1,38 +1,24 @@
 
 package com.lastimp.dgh.source.client.gui;
 
-import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.source.client.gui.screen.BagScreen;
+import com.lastimp.dgh.source.client.ClientAccessor;
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
-import com.lastimp.dgh.source.register.ModMenus;
-import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.common.util.Lazy;
-
-import java.util.UUID;
 
 @OnlyIn(value = Dist.CLIENT)
-@EventBusSubscriber(modid = DontGetHurt.MODID, value = Dist.CLIENT)
 public class GuiOpenWrapper {
-    public static final Lazy<Minecraft> MINECRAFT = Lazy.of(Minecraft::getInstance);
+    private static HealthScreen healthScreen = null;
 
-    public static Minecraft mc() {
-        return MINECRAFT.get();
+    public static HealthScreen healthScreen() {
+        return healthScreen;
     }
 
-    public static UUID localPlayerUUID() {
-        return GuiOpenWrapper.MINECRAFT.get().player.getUUID();
+    public static void setHealthScreen(HealthScreen healthScreen) {
+        GuiOpenWrapper.healthScreen = healthScreen;
     }
 
-    @SubscribeEvent
-    public static void registerScreens(final RegisterMenuScreensEvent event) {
-        event.register(ModMenus.HEALTH_MENU.get(), HealthScreen::new);
-        event.register(ModMenus.HEALTH_CARE_BAG_MENU.get(), BagScreen::new);
-        event.register(ModMenus.SURGERY_TOOL_BAG_MENU.get(), BagScreen::new);
-        event.register(ModMenus.LIMB_REF_BAG_MENU.get(), BagScreen::new);
+    public static void closeScreen() {
+        ClientAccessor.mc().setScreen(null);
     }
 }

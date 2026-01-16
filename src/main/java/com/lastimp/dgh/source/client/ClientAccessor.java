@@ -1,25 +1,26 @@
 package com.lastimp.dgh.source.client;
 
-import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.util.Lazy;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 @OnlyIn(value = Dist.CLIENT)
 public abstract class ClientAccessor {
-    private static HealthScreen healthScreen = null;
+    private static final Lazy<Minecraft> MINECRAFT = Lazy.of(Minecraft::getInstance);
 
-    public static RegistryAccess registryAccess() {
-        return Minecraft.getInstance().player.registryAccess();
+    public static Minecraft mc() {
+        return MINECRAFT.get();
     }
 
     public static boolean canRenderGui() {
@@ -31,8 +32,16 @@ public abstract class ClientAccessor {
         return Minecraft.getInstance().level;
     }
 
+    public static long getGameTime() {
+        return mc().level.getGameTime();
+    }
+
     public static Optional<LocalPlayer> getPlayer() {
         return Optional.ofNullable(Minecraft.getInstance().player);
+    }
+
+    public static @NotNull LocalPlayer getPlayerOrThrow() {
+        return Objects.requireNonNull(Minecraft.getInstance().player);
     }
 
     public static LivingEntity getLiving(ClientLevel level, UUID uuid, Vec3 center, int range) {
@@ -41,7 +50,7 @@ public abstract class ClientAccessor {
                 (entity) -> entity.getUUID().equals(uuid)
         );
         if (!result.isEmpty())
-            return result.getFirst();
+            return result.get(0);
         return null;
     }
 
@@ -51,13 +60,5 @@ public abstract class ClientAccessor {
             return livingEntity;
         }
         return null;
-    }
-
-    public static HealthScreen healthScreen() {
-        return healthScreen;
-    }
-
-    public static void setHealthScreen(HealthScreen healthScreen) {
-        ClientAccessor.healthScreen = healthScreen;
     }
 }
