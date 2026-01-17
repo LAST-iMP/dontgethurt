@@ -110,12 +110,14 @@ public class ClientInputEventHandler {
 
     @SubscribeEvent
     public static void onMouseInput(InputEvent.MouseButton.Pre event) {
-        if (event.getAction() == GLFW.GLFW_PRESS) return;
-        if (callForHelpTick > 0) return;
         ClientAccessor.getPlayer().ifPresent(player -> {
             if (HealthCapability.isDying(player)) {
-                PacketDistributor.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.CALL_FOR_HELP, 0));
-                callForHelpTick = 80;
+                if (callForHelpTick <= 0 && event.getAction() == GLFW.GLFW_PRESS) {
+                    PacketDistributor.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.CALL_FOR_HELP, 0));
+                    callForHelpTick = 80;
+                }
+                if (ClientAccessor.mc().screen == null)
+                    event.setCanceled(true);
             }
         });
     }
