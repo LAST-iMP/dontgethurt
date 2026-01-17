@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.120'
+    id 'net.neoforged.moddev' version '2.0.139'
     id 'idea'
 }
 
@@ -68,7 +68,7 @@ neoForge {
         }
 
         data {
-            data()
+            clientData()
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
 
@@ -92,17 +92,17 @@ configurations {
 }
 
 dependencies {
-    compileOnly "vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api"
-    localRuntime "vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}"
+//    compileOnly "vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api"
+//    localRuntime "vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}"
 
-    compileOnly "mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}"
+//    compileOnly "mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}"
     localRuntime "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
 
-    compileOnly "curse.maven:tacz-1-21-1-1353462:7295633"
-    localRuntime "curse.maven:tacz-1-21-1-1353462:7295633"
+//    compileOnly "curse.maven:tacz-1-21-1-1353462:7295633"
+//    localRuntime "curse.maven:tacz-1-21-1-1353462:7295633"
 
-    compileOnly "curse.maven:touhou-little-maid-355044:7307724-sources-7307734"
-    localRuntime "curse.maven:touhou-little-maid-355044:7307724-sources-7307734"
+//    compileOnly "curse.maven:touhou-little-maid-355044:7307724-sources-7307734"
+//    localRuntime "curse.maven:touhou-little-maid-355044:7307724-sources-7307734"
 }
 
 
