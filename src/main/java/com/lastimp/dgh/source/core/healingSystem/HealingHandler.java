@@ -12,7 +12,7 @@ import com.lastimp.dgh.source.item.medicine.Bandages;
 import com.lastimp.dgh.source.item.medicine.Gypsum;
 import com.lastimp.dgh.source.item.medicine.Tourniquet;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +32,7 @@ public class HealingHandler {
 
     public static void useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, LivingEntity target, BodyComponents component) {
         if (target == null) return;
-        if (source.getCooldowns().isOnCooldown(itemStack.getItem())) return;
+        if (source.getCooldowns().isOnCooldown(itemStack)) return;
 
         boolean success = handleCut(itemStack, target, component);
         success |= handleWrite(itemStack, target, source);
@@ -47,12 +47,12 @@ public class HealingHandler {
         }
 
         if (success) {
-            source.getCooldowns().addCooldown(healingItem, 10);
+            source.getCooldowns().addCooldown(itemStack, 10);
             HealthCapability.getAndApply(target, h -> h.setLastHealer(source.getUUID()));
         }
 
         if (success && itemStack.isDamageableItem()) {
-            itemStack.hurtAndBreak(1, source.serverLevel(), source, (i) -> {});
+            itemStack.hurtAndBreak(1, source.level(), source, (i) -> {});
             if (itemStack.getDamageValue() >= itemStack.getMaxDamage())
                 itemStack.consume(1, target);
         } else if (success) {
@@ -84,7 +84,7 @@ public class HealingHandler {
     }
 
     public static void handleValindaHealing(LivingEntity entity, float amount) {
-        List<Pair<AbstractVisibleBody, ResourceLocation>> states = new ArrayList<>();
+        List<Pair<AbstractVisibleBody, Identifier>> states = new ArrayList<>();
         HealthCapability.getAndApply(entity, h -> {
             float injury = 0;
             for (var component : BodyComponents.VISIBLE_BODIES) {
@@ -108,7 +108,7 @@ public class HealingHandler {
         });
     }
 
-    private static float injuryCheck(AbstractVisibleBody body, ResourceLocation key, List<Pair<AbstractVisibleBody, ResourceLocation>> states) {
+    private static float injuryCheck(AbstractVisibleBody body, Identifier key, List<Pair<AbstractVisibleBody, Identifier>> states) {
         float result = 0;
         if (body.abnormalWithHidden(key)) {
             states.add(new Pair<>(body, key));

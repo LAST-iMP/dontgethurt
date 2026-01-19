@@ -10,7 +10,6 @@ import com.lastimp.dgh.network.message.MyServerConfigSynData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID)
@@ -21,10 +20,8 @@ public class ModEventBus {
         registrar.playBidirectional(
                 MyReadAllConditionData.TYPE,
                 MyReadAllConditionData.STREAM_CODEC,
-                new DirectionalPayloadHandler<>(
-                        ClientPayloadHandler::handleReadAllConditionData,
-                        ServerPayloadHandler::handleReadAllConditionData
-                )
+                ServerPayloadHandler::handleReadAllConditionData,
+                ClientPayloadHandler::handleReadAllConditionData
         );
         registrar.playToServer(
                 MyHealingItemUseData.TYPE,

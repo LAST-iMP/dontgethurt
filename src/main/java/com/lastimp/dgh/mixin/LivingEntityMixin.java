@@ -3,6 +3,7 @@ package com.lastimp.dgh.mixin;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;

@@ -8,7 +8,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +18,7 @@ import java.util.Set;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class Sutures extends AbstractPartlyHealItem {
-    private static final Set<ResourceLocation> cover = new HashSet<>();
+    private static final Set<Identifier> cover = new HashSet<>();
 
     public Sutures(Properties properties) {
         super(properties);
@@ -62,7 +62,7 @@ public class Sutures extends AbstractPartlyHealItem {
         }, false);
     }
 
-    public static void addCoverOnHeal(@NotNull ResourceLocation key) {
+    public static void addCoverOnHeal(@NotNull Identifier key) {
         cover.add(key);
     }
 }

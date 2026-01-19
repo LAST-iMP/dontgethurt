@@ -4,12 +4,11 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 
 import static com.lastimp.dgh.DontGetHurt.EPS;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.BONE_NETHERITE;
@@ -20,8 +19,8 @@ public abstract class AbstractLeg extends AbstractExtremities{
     private AttributeInstance jump_strength;
     private AttributeInstance safe_fall_distance;
 
-    private ResourceLocation uuid_bone_wood;
-    private ResourceLocation uuid_bone_netherite;
+    private Identifier uuid_bone_wood;
+    private Identifier uuid_bone_netherite;
 
     public AbstractLeg() {
         super();
@@ -45,7 +44,7 @@ public abstract class AbstractLeg extends AbstractExtremities{
 
     private void updateWoodBoneEffect() {
         if (uuid_bone_wood == null)
-            uuid_bone_wood = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_WOOD);
+            uuid_bone_wood = Common.getId(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_WOOD);
 
         if (this.getConditionHidden(BONE_WOOD) > BodyCondition.get(BONE_WOOD).maxValue() - EPS) {
             if (move_speed != null && move_speed.getModifier(uuid_bone_wood) == null)
@@ -62,7 +61,7 @@ public abstract class AbstractLeg extends AbstractExtremities{
 
     private void updateNetheriteBoneEffect() {
         if (uuid_bone_netherite == null)
-            uuid_bone_netherite = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
+            uuid_bone_netherite = Common.getId(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
 
         if (this.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS) {
             if (jump_strength != null && jump_strength.getModifier(uuid_bone_netherite) == null)

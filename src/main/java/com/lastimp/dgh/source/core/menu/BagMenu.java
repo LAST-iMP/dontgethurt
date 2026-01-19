@@ -1,8 +1,9 @@
 package com.lastimp.dgh.source.core.menu;
 
+import com.lastimp.dgh.source.core.menu.component.DynamicSlot;
 import com.lastimp.dgh.source.item.bases.AbstractMedicalBags;
-import com.lastimp.dgh.source.register.ModMenus;
 import com.lastimp.dgh.source.item.bases.BackpackInventory;
+import com.lastimp.dgh.source.register.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -10,11 +11,11 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("removal")
 public abstract class BagMenu extends AbstractContainerMenu {
     protected BackpackInventory handler;
     //服务端
@@ -154,7 +155,7 @@ public abstract class BagMenu extends AbstractContainerMenu {
         for (int row = 0; row < 1; row++) {
             for (int col = 0; col < 9; col++) {
                 int index = col + row * 9;
-                this.addSlot(new SlotItemHandler(handler, index, 8 + col * 18, 9 + row * 18));
+                this.addSlot(new DynamicSlot(handler, index, 8 + col * 18, 9 + row * 18));
             }
         }
     }

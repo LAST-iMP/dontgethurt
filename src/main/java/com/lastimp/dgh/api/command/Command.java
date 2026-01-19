@@ -15,9 +15,18 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permission;
+import net.minecraft.server.permissions.PermissionLevel;
+import net.minecraft.server.permissions.PermissionSet;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -44,7 +53,7 @@ public class Command {
                                         )
                                 )
                                 .then(Commands.literal("add")
-                                        .requires(source -> source.hasPermission(2))
+                                        .requires(source -> source.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.ADMINS)))
                                         .then(Commands.argument("entity", EntityArgument.entities())
                                                 .then(Commands.argument("Component", StringArgumentType.string())
                                                         .then(Commands.argument("Condition", StringArgumentType.string())
@@ -55,7 +64,7 @@ public class Command {
                                         )
                                 )
                                 .then(Commands.literal("reset")
-                                        .requires(source -> source.hasPermission(2))
+                                        .requires(source -> source.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.ADMINS)))
                                         .then(Commands.argument("entity", EntityArgument.entities())
                                                 .then(Commands.argument("Component", StringArgumentType.string())
                                                         .then(Commands.argument("Condition", StringArgumentType.string())
@@ -68,7 +77,7 @@ public class Command {
                                 )
                         )
                         .then(Commands.literal("health_menu")
-                                .requires(source -> source.hasPermission(2))
+                                .requires(source -> source.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.ADMINS)))
                                 .then(Commands.argument("player", EntityArgument.player())
                                         .executes(Command::openFullMenu)
                                 )
@@ -125,7 +134,7 @@ public class Command {
     public static int addComponentCondition(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var entities = EntityArgument.getEntities(context, "entity");
         BodyComponents components = BodyComponents.valueOf(StringArgumentType.getString(context, "Component").toUpperCase());
-        var condition = Common.ResourceBySeperator(StringArgumentType.getString(context, "Condition"), ':');
+        var condition = Common.getIdBySeperator(StringArgumentType.getString(context, "Condition"), ':');
         float value = FloatArgumentType.getFloat(context, "value");
 
         CommandSourceStack source = context.getSource();
@@ -146,7 +155,7 @@ public class Command {
     public static int resetComponentCondition(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var entities = EntityArgument.getEntities(context, "entity");
         BodyComponents components = BodyComponents.valueOf(StringArgumentType.getString(context, "Component").toUpperCase());
-        var condition = Common.ResourceBySeperator(StringArgumentType.getString(context, "Condition"), ':');
+        var condition = Common.getIdBySeperator(StringArgumentType.getString(context, "Condition"), ':');
 
         CommandSourceStack source = context.getSource();
         for (var entity : entities) {
@@ -197,7 +206,8 @@ public class Command {
                 var newHealth = new HealthCapability();
                 newHealth.autoPulse().setStackInSlot(0, oldHealth.autoPulse().getStackInSlot(0));
                 newHealth.oxygenMask().setStackInSlot(0, oldHealth.oxygenMask().getStackInSlot(0));
-                oldHealth.deserializeNBT(livingEntity.registryAccess(), newHealth.serializeNBT(livingEntity.registryAccess()));
+
+                oldHealth.deserialize(Common.rebuild(newHealth, entity.registryAccess()));
             });
         }
         return 1;

@@ -6,12 +6,13 @@ import com.lastimp.dgh.config.HealthLivingEntityList;
 import com.lastimp.dgh.network.message.MyServerConfigSynData;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -22,13 +23,13 @@ import net.neoforged.neoforge.network.PacketDistributor;
 public class PlayerEventBus {
     @SubscribeEvent
     public static void logIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity().level().isClientSide) return;
+        if (event.getEntity().level().isClientSide()) return;
         var player = event.getEntity();
 
         var data = player.getPersistentData();
-        var persistedTag = data.getCompound(Player.PERSISTED_NBT_TAG);
+        var persistedTag = data.getCompoundOrEmpty(Player.PERSISTED_NBT_TAG);
         var key = "dgh_new_player";
-        if (!persistedTag.getBoolean(key)) {
+        if (!persistedTag.getBooleanOr(key, false)) {
             player.getInventory().add(new ItemStack(ModItems.HEALTH_CARE_BAG.get()));
             player.getInventory().add(new ItemStack(ModItems.BANDAGE.get(), 8));
             player.getInventory().add(new ItemStack(ModItems.MORPHINE.get(), 2));
@@ -40,12 +41,13 @@ public class PlayerEventBus {
 
     @SubscribeEvent
     public static void logOut(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (event.getEntity().level().isClientSide) return;
+        if (event.getEntity().level().isClientSide()) return;
         var player = event.getEntity();
+        ServerLevel serverLevel = (ServerLevel) player.level();
 
-        GameRules rules = event.getEntity().level().getGameRules();
-        if(!player.level().getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION)) {
-            rules.getRule(GameRules.RULE_NATURAL_REGENERATION).set(true, event.getEntity().level().getServer());
+        GameRules rules = serverLevel.getGameRules();
+        if(!rules.get(GameRules.NATURAL_HEALTH_REGENERATION)) {
+            rules.set(GameRules.NATURAL_HEALTH_REGENERATION, false, serverLevel.getServer());
         }
     }
 

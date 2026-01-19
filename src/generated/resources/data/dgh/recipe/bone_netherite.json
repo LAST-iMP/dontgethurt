@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "a": {
-      "item": "minecraft:bone"
-    },
-    "b": {
-      "item": "minecraft:netherite_ingot"
-    }
+    "a": "minecraft:bone",
+    "b": "minecraft:netherite_ingot"
   },
   "pattern": [
     " b ",

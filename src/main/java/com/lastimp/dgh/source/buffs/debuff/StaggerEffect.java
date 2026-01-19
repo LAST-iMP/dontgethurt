@@ -1,7 +1,7 @@
 package com.lastimp.dgh.source.buffs.debuff;
 
 import com.lastimp.dgh.DontGetHurt;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,7 +18,7 @@ public class StaggerEffect extends MobEffect {
     public void onEffectStarted(LivingEntity livingEntity, int amplifier) {
         this.addAttributeModifier(
                 Attributes.MOVEMENT_SPEED,
-                ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "stagger_effect"),
+                Identifier.fromNamespaceAndPath(DontGetHurt.MODID, "stagger_effect"),
                 -0.05f,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );

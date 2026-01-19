@@ -2,7 +2,10 @@ package com.lastimp.dgh.source.core.dyingSystem;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
@@ -15,7 +18,7 @@ public class PlayerDyingHandler {
     public static void onPlayerTick(PlayerTickEvent.Pre event) {
         var player = event.getEntity();
 
-        if (!event.getEntity().level().isClientSide) {
+        if (!event.getEntity().level().isClientSide()) {
             if (HealthCapability.isDying(player)) {
                 if (player.isSleeping()) player.stopSleeping();
                 if (player.isFallFlying()) player.stopFallFlying();
@@ -35,10 +38,12 @@ public class PlayerDyingHandler {
     public static void onPlayerDeath(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
         if (!HealthCapability.has(player)) return;
-        var data = player.getPersistentData();
-        var persistedTag = data.getCompound(Player.PERSISTED_NBT_TAG);
         var key = "dgh_last_death_record";
-        HealthCapability.getAndApply(player, health -> HealthCapability.serializeRecord(key, health.directInjury(), persistedTag, player.registryAccess()));
+        var data = player.getPersistentData();
+        var persistedTag = data.getCompoundOrEmpty(Player.PERSISTED_NBT_TAG);
+        TagValueOutput output = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
+        HealthCapability.getAndApply(player, health -> HealthCapability.serializeRecord(key, health.directInjury(), output));
+        persistedTag.put(key, output.buildResult());
         data.put(Player.PERSISTED_NBT_TAG, persistedTag);
     }
 
@@ -47,9 +52,10 @@ public class PlayerDyingHandler {
         var player = event.getEntity();
         HealthCapability.getAndApply(event.getEntity(), newHealth -> {
             var data = player.getPersistentData();
-            var persistedTag = data.getCompound(Player.PERSISTED_NBT_TAG);
+            var persistedTag = data.getCompoundOrEmpty(Player.PERSISTED_NBT_TAG);
             var key = "dgh_last_death_record";
-            HealthCapability.deserializeRecord(key, newHealth.lastDeathDirectInjury(), persistedTag, player.registryAccess());
+            var input = TagValueInput.create(ProblemReporter.DISCARDING, player.registryAccess(), persistedTag.getCompoundOrEmpty(key));
+            HealthCapability.deserializeRecord(key, newHealth.lastDeathDirectInjury(), input);
             persistedTag.remove(key);
             data.put(Player.PERSISTED_NBT_TAG, persistedTag);
         });

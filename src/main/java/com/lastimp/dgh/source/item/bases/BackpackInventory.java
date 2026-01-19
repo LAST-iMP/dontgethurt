@@ -6,12 +6,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
-import net.neoforged.neoforge.items.ComponentItemHandler;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class BackpackInventory extends ComponentItemHandler {
+@SuppressWarnings("removal")
+public class BackpackInventory extends net.neoforged.neoforge.items.ComponentItemHandler {
     private final Set<TagKey<Item>> allowedItemTags = new HashSet<>();
     private final Set<Item> allowedItems = new HashSet<>();
 

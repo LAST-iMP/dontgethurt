@@ -13,7 +13,7 @@ import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
@@ -55,7 +55,7 @@ public class DoctorVillagerBehavior extends Behavior<Villager> {
 
     @Override
     protected void start(@NotNull ServerLevel level, Villager villager, long gameTime) {
-        this.level = villager.getVillagerData().getLevel();
+        this.level = villager.getVillagerData().level();
         villager.getNavigation().moveTo(this.target, 1.0);
         if (HealthCapability.has(this.target))
             HealthCapability.getAndApply(this.target, h -> h.currentHealer = villager);
@@ -99,9 +99,9 @@ public class DoctorVillagerBehavior extends Behavior<Villager> {
 
     private boolean villagerReady(Villager villager, GlobalPos sitePos) {
         //是医生
-        if (villager.getVillagerData().getProfession() != ModVillagers.DOCTOR_MAKER.get()) return false;
+        if (villager.getVillagerData().profession().getKey() != ModVillagers.DOCTOR_MAKER.getKey()) return false;
         //工作时间
-        if (villager.getBrain().getSchedule().getActivityAt((int) (villager.level().dayTime() % 24000)) != Activity.WORK) return false;
+        if (!villager.getBrain().isActive(Activity.WORK)) return false;
         //有工作站
         return sitePos != null && sitePos.dimension() == villager.level().dimension();
     }

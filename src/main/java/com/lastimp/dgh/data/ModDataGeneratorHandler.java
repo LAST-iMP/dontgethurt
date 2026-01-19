@@ -5,6 +5,7 @@ import com.lastimp.dgh.DontGetHurt;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -12,51 +13,38 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import java.util.Collections;
 import java.util.List;
 
-@EventBusSubscriber(modid = DontGetHurt.MODID)
+@EventBusSubscriber(modid = DontGetHurt.MODID, value = Dist.CLIENT)
 public class ModDataGeneratorHandler {
 
     @SubscribeEvent
-    public static void gatherData(GatherDataEvent event) {
-        var efh = event.getExistingFileHelper();
-
-        event.getGenerator().addProvider(
-                event.includeClient(),
-                (DataProvider.Factory<ModLanguageProvider>) output -> new ModLanguageProvider(output, DontGetHurt.MODID, "zh_cn")
-        );
-
-        event.getGenerator().addProvider(
-                event.includeClient(),
-                (DataProvider.Factory<ModItemModelProvider>) output -> new ModItemModelProvider(output, DontGetHurt.MODID, efh)
-        );
-
-        event.getGenerator().addProvider(
-                event.includeClient(),
-                (DataProvider.Factory<ModBlockStateProvider>) output -> new ModBlockStateProvider(output, DontGetHurt.MODID, efh)
-        );
-
+    public static void gatherData(GatherDataEvent.Client event) {
         var lp = event.getLookupProvider();
+        event.createProvider(ModLanguageProvider::new);
+
         event.getGenerator().addProvider(
-                event.includeServer(),
-                (DataProvider.Factory<ModRecipeProvider>) output -> new ModRecipeProvider(output, lp)
+                true,
+                (DataProvider.Factory<ModModelProvider>) output -> new ModModelProvider(output, DontGetHurt.MODID)
+        );
+
+        event.createProvider(ModRecipeProvider.Runner::new);
+
+        event.getGenerator().addProvider(
+                true,
+                (DataProvider.Factory<ModItemTagsProvider>) output -> new ModItemTagsProvider(output, lp, DontGetHurt.MODID)
         );
 
         event.getGenerator().addProvider(
-                event.includeClient(),
-                (DataProvider.Factory<ModItemTagsProvider>) output -> new ModItemTagsProvider(output, lp, DontGetHurt.MODID, efh)
+                true,
+                (DataProvider.Factory<ModBlockTagsProvider>) output -> new ModBlockTagsProvider(output, lp, DontGetHurt.MODID)
         );
 
-        event.getGenerator().addProvider(
-                event.includeClient(),
-                (DataProvider.Factory<ModBlockTagsProvider>) output -> new ModBlockTagsProvider(output, lp, DontGetHurt.MODID, efh)
-        );
+//        event.getGenerator().addProvider(
+//                true,
+//                (DataProvider.Factory<ModDamageTypeTagsProvider>) output -> new ModDamageTypeTagsProvider(output, lp, DontGetHurt.MODID)
+//        );
 
         event.getGenerator().addProvider(
-                event.includeClient(),
-                (DataProvider.Factory<ModDamageTypeTagsProvider>) output -> new ModDamageTypeTagsProvider(output, lp, DontGetHurt.MODID, efh)
-        );
-
-        event.getGenerator().addProvider(
-                event.includeServer(),
+                true,
                 (DataProvider.Factory<ModLootTableProvider>) output -> new ModLootTableProvider(
                         output, Collections.emptySet(), List.of(
                         new LootTableProvider.SubProviderEntry(ModLootTableProvider.ModBlockLootProvider::new, LootContextParamSets.BLOCK)
@@ -64,14 +52,14 @@ public class ModDataGeneratorHandler {
         );
 
         event.getGenerator().addProvider(
-                event.includeClient(),
-                (DataProvider.Factory<ModSoundsProvider>) output -> new ModSoundsProvider(output, DontGetHurt.MODID, efh)
+                true,
+                (DataProvider.Factory<ModSoundsProvider>) output -> new ModSoundsProvider(output, DontGetHurt.MODID)
         );
 
         event.getGenerator().addProvider(
-                event.includeServer(),
+                true,
                 (DataProvider.Factory<ModPoiTypeTagsProvider>) output -> new ModPoiTypeTagsProvider(
-                        output, lp, DontGetHurt.MODID, efh
+                        output, lp, DontGetHurt.MODID
                 )
         );
     }

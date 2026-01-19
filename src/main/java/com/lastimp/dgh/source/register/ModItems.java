@@ -22,11 +22,13 @@ import java.util.function.Supplier;
 import static com.lastimp.dgh.DontGetHurt.MODID;
 import static com.lastimp.dgh.source.register.ModBlocks.OPERATING_BED_BLOCK;
 
+@SuppressWarnings("removal")
 public class ModItems {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
 
     public static final HashSet<DeferredItem<?>> ITEMS_SET = new HashSet<>();
+    public static final HashSet<DeferredItem<?>> BLOCK_ITEMS_SET = new HashSet<>();
 
     public static final DeferredItem<BlockItem> OPERATING_BED_BLOCK_ITEM = registerSimpleBlockItem(
             "operating_bed",
@@ -348,7 +350,6 @@ public class ModItems {
             new Item.Properties()
                     .stacksTo(1)
                     .durability(4)
-                    .setNoRepair()
     );
 
     public static final DeferredItem<AntisepticSprayer> ANTISEPTIC_SPRAYER = registerItem(
@@ -447,7 +448,7 @@ public class ModItems {
 
     private static DeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block, Item.Properties properties) {
         DeferredItem<BlockItem> blockItem = ITEMS.registerSimpleBlockItem(name, block, properties);
-        ITEMS_SET.add(blockItem);
+        BLOCK_ITEMS_SET.add(blockItem);
         return blockItem;
     }
 

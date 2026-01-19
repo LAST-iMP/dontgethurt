@@ -6,20 +6,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
-@OnlyIn(value = Dist.CLIENT)
 public class HealthConditionWidget extends AbstractWidget {
-    private final ResourceLocation texture;
+    private final Identifier texture;
     private final int iconSize = 12;
     private int fgColor;
     private float severity = 0f;
 
-    public HealthConditionWidget(int width, int height, Component message, ResourceLocation texture, int fgColor) {
+    public HealthConditionWidget(int width, int height, Component message, Identifier texture, int fgColor) {
         super(0, 0, width, height, message);
         this.texture = texture;
         this.fgColor = fgColor;
@@ -47,8 +45,7 @@ public class HealthConditionWidget extends AbstractWidget {
         if (severity > 1)
             guiGraphics.fill(this.getX() + 1, this.getY() + 1, Mth.clamp((int)(this.getX() + this.width * (severity - 1)), this.getX() + 1, this.getX() + this.width - 1), this.getY() + this.height - 1, 0xFF7E0000);
 
-        // draw icon from texture (if you want to use atlas, supply proper tex size)
-        guiGraphics.blitSprite(texture, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
 
             int stringColor = 0xFF000000;
         Minecraft mc = ClientAccessor.mc();

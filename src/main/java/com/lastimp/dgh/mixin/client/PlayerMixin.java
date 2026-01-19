@@ -33,9 +33,9 @@ public class PlayerMixin {
         var tag = stack.get(DataComponents.PROFILE);
         if (tag == null) return;
 
-        GameProfile profile = tag.gameProfile();
+        GameProfile profile = tag.partialProfile();
         if (profile != null) {
-            cir.setReturnValue(Component.nullToEmpty(profile.getName()));
+            cir.setReturnValue(Component.nullToEmpty(profile.name()));
         }
     }
 }

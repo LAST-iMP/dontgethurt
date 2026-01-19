@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "a": {
-      "item": "dgh:antiseptic"
-    },
-    "b": {
-      "tag": "minecraft:buttons"
-    },
-    "i": {
-      "item": "minecraft:iron_ingot"
-    },
-    "r": {
-      "item": "minecraft:redstone"
-    }
+    "a": "dgh:antiseptic",
+    "b": "#minecraft:buttons",
+    "i": "minecraft:iron_ingot",
+    "r": "minecraft:redstone"
   },
   "pattern": [
     " r ",

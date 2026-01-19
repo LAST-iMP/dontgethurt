@@ -1,13 +1,10 @@
 package com.lastimp.dgh.source.core.capability;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 
-public class InjuryRecord implements INBTSerializable<CompoundTag> {
+public class InjuryRecord {
     private static final Component CAUSE = Component.literal("导致\n");
     private static final Component WITH = Component.literal("并导致\n");
     private String source;
@@ -32,8 +29,7 @@ public class InjuryRecord implements INBTSerializable<CompoundTag> {
         this.level = level;
     }
 
-    @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
+    public @UnknownNullability CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.putString("source", source);
         tag.putString("body", body);
@@ -43,13 +39,12 @@ public class InjuryRecord implements INBTSerializable<CompoundTag> {
         return tag;
     }
 
-    @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt) {
-        this.source = nbt.getString("source");
-        this.body = nbt.getString("body");
-        this.condition = nbt.getString("condition");
-        this.value = nbt.getFloat("value");
-        this.level = nbt.getInt("level");
+    public void deserializeNBT(CompoundTag nbt) {
+        this.source = nbt.getStringOr("source", "");
+        this.body = nbt.getStringOr("body", "");
+        this.condition = nbt.getStringOr("condition", "");
+        this.value = nbt.getFloatOr("value", 0f);
+        this.level = nbt.getIntOr("level", 0);
     }
 
     public Component getComponent(){
@@ -79,9 +74,9 @@ public class InjuryRecord implements INBTSerializable<CompoundTag> {
         return getComponent().getString();
     }
 
-    public static InjuryRecord phrase(HolderLookup.Provider provider, CompoundTag nbt) {
+    public static InjuryRecord phrase(CompoundTag nbt) {
         InjuryRecord record = new InjuryRecord();
-        record.deserializeNBT(provider, nbt);
+        record.deserializeNBT(nbt);
         return record;
     }
 }

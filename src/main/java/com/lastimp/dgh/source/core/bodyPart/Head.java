@@ -7,7 +7,7 @@ import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayList;
@@ -21,10 +21,10 @@ import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 
 public class Head extends AbstractVisibleBody {
-    private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
-    private static List<ResourceLocation> HEAD_CONDITIONS;
+    private static final Collection<Identifier> uniqueConditions = new LinkedHashSet<>();
+    private static List<Identifier> HEAD_CONDITIONS;
 
-    public static void addCondition(Collection<ResourceLocation> key) {
+    public static void addCondition(Collection<Identifier> key) {
         uniqueConditions.addAll(key);
     }
 
@@ -44,7 +44,7 @@ public class Head extends AbstractVisibleBody {
     }
 
     @Override
-    public List<ResourceLocation> getBodyConditions() {
+    public List<Identifier> getBodyConditions() {
         if (HEAD_CONDITIONS == null) {
             HEAD_CONDITIONS = new ArrayList<>(super.getBodyConditions());
             HEAD_CONDITIONS.addAll(uniqueConditions);

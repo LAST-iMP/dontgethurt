@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "a": {
-      "item": "minecraft:iron_ingot"
-    },
-    "b": {
-      "item": "minecraft:redstone"
-    },
-    "c": {
-      "item": "dgh:blood_pack_empty"
-    },
-    "d": {
-      "item": "minecraft:glass"
-    }
+    "a": "minecraft:iron_ingot",
+    "b": "minecraft:redstone",
+    "c": "dgh:blood_pack_empty",
+    "d": "minecraft:glass"
   },
   "pattern": [
     " d ",

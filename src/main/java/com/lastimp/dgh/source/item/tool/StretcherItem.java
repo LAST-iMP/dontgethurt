@@ -25,19 +25,18 @@ public class StretcherItem extends AbstractHealingItem {
     }
 
     public InteractionResult interactLivingEntity(ItemStack stack, LivingEntity source, LivingEntity target) {
-        if (!source.level().isClientSide) {
+        if (!source.level().isClientSide()) {
+            target.stopRiding();
             StretcherEntity stretcher = new StretcherEntity(
                     ModEntities.STRETCHER.get(),
                     source.level()
             );
-            stretcher.moveTo(
+            stretcher.setPos(
                     target.position().x,
-                    target.position().y + 0.1,
-                    target.position().z,
-                    source.getYRot(),
-                    0
+                    target.position().y + 0.2,
+                    target.position().z
             );
-            target.startRiding(stretcher, true);
+            target.startRiding(stretcher, true, true);
             source.level().addFreshEntity(stretcher);
             stack.shrink(1);
             return InteractionResult.SUCCESS;

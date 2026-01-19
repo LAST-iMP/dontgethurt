@@ -4,12 +4,10 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.world.entity.Pose;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-@OnlyIn(value = Dist.CLIENT)
 @EventBusSubscriber(modid = DontGetHurt.MODID, value = Dist.CLIENT)
 public class ClientTickEventHandler {
     @SubscribeEvent

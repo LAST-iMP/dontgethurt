@@ -10,18 +10,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ModTags {
-    public static final TagKey<Item> MEDICINE = ItemTags.create(Common.ResourceLocation("c", "medicine"));
+    public static final TagKey<Item> MEDICINE = ItemTags.create(Common.getId("c", "medicine"));
 
-    public static final TagKey<Item> MEDICAL_TOOLS = ItemTags.create(Common.ResourceLocation("c", "medical_tools"));
-    public static final TagKey<Item> MEDICAL_TOOLS_BASIC = ItemTags.create(Common.ResourceLocation("c", "medical_tools_basic"));
-    public static final TagKey<Item> MEDICAL_TOOLS_SURGERY = ItemTags.create(Common.ResourceLocation("c", "medical_tools_surgery"));
-    public static final TagKey<Item> MEDICAL_TOOLS_SHEARS = ItemTags.create(Common.ResourceLocation("forge", "shears"));
-    public static final TagKey<Item> MEDICAL_TOOLS_BAGS = ItemTags.create(Common.ResourceLocation("c", "medical_tools_bags"));
+    public static final TagKey<Item> MEDICAL_TOOLS = ItemTags.create(Common.getId("c", "medical_tools"));
+    public static final TagKey<Item> MEDICAL_TOOLS_BASIC = ItemTags.create(Common.getId("c", "medical_tools_basic"));
+    public static final TagKey<Item> MEDICAL_TOOLS_SURGERY = ItemTags.create(Common.getId("c", "medical_tools_surgery"));
+    public static final TagKey<Item> MEDICAL_TOOLS_SHEARS = ItemTags.create(Common.getId("forge", "shears"));
+    public static final TagKey<Item> MEDICAL_TOOLS_BAGS = ItemTags.create(Common.getId("c", "medical_tools_bags"));
 
-    public static final TagKey<Item> MEDICAL_LIMBS = ItemTags.create(Common.ResourceLocation("c", "limbs"));
+    public static final TagKey<Item> MEDICAL_LIMBS = ItemTags.create(Common.getId("c", "limbs"));
 
-    public static final TagKey<Item> OXYGEN_SUPPLIERS = ItemTags.create(Common.ResourceLocation("c", "oxygen_suppliers"));
-    public static final TagKey<Item> AUTOPULSE = ItemTags.create(Common.ResourceLocation("c", "autopulse"));
+    public static final TagKey<Item> OXYGEN_SUPPLIERS = ItemTags.create(Common.getId("c", "oxygen_suppliers"));
+    public static final TagKey<Item> AUTOPULSE = ItemTags.create(Common.getId("c", "autopulse"));
 
     private static final Set<TagKey<Item>> shearSet = new HashSet<>();
     private static final Set<TagKey<Item>> healthScreenAvaItem = new HashSet<>();

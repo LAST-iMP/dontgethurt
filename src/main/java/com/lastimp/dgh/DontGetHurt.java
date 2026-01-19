@@ -6,7 +6,7 @@ import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.config.HealthLivingEntityList;
 import com.lastimp.dgh.source.register.*;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import org.slf4j.Logger;
@@ -52,7 +52,7 @@ public class DontGetHurt
         MinecraftServer server = event.getServer();
         server.getAllLevels().forEach(level -> {
             GameRules gameRules = level.getGameRules();
-            gameRules.getRule(GameRules.RULE_NATURAL_REGENERATION).set(false, server);
+            gameRules.set(GameRules.NATURAL_HEALTH_REGENERATION, false, server);
         });
     }
 

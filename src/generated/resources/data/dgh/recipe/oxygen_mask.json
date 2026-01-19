@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "b": {
-      "item": "minecraft:bamboo_block"
-    },
-    "g": {
-      "item": "minecraft:glass"
-    },
-    "i": {
-      "item": "minecraft:iron_ingot"
-    },
-    "w": {
-      "tag": "minecraft:wool"
-    }
+    "b": "minecraft:bamboo_block",
+    "g": "minecraft:glass",
+    "i": "minecraft:iron_ingot",
+    "w": "#minecraft:wool"
   },
   "pattern": [
     " g ",

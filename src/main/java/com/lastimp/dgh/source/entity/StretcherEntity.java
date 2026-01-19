@@ -1,8 +1,11 @@
 package com.lastimp.dgh.source.entity;
 
+import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.register.ModItems;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -11,9 +14,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 public class StretcherEntity extends VehicleEntity {
     public static final EntityType<StretcherEntity> TYPE;
@@ -33,14 +39,6 @@ public class StretcherEntity extends VehicleEntity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag) {
-    }
-
-    @Override
-    protected void addAdditionalSaveData(CompoundTag tag) {
-    }
-
-    @Override
     public boolean isPickable() {
         return true;
     }
@@ -48,6 +46,16 @@ public class StretcherEntity extends VehicleEntity {
     @Override
     public boolean isPushable() {
         return true;
+    }
+
+    @Override
+    protected void readAdditionalSaveData(ValueInput input) {
+
+    }
+
+    @Override
+    protected void addAdditionalSaveData(ValueOutput output) {
+
     }
 
     /* ---------------- 尺寸 & 碰撞 ---------------- */
@@ -95,14 +103,17 @@ public class StretcherEntity extends VehicleEntity {
         }
 
         if (this.controller.level() != this.level()) {
-            this.changeDimension(new DimensionTransition(
+            var pos = this.controller.getPosition(1);
+            this.teleportTo(
                     (ServerLevel) this.controller.level(),
-                    this.controller.getPosition(1),
-                    this.getDeltaMovement(),
+                    pos.x(),
+                    pos.y(),
+                    pos.z(),
+                    Set.of(),
                     this.getYRot(),
                     this.getXRot(),
-                    DimensionTransition.PLAY_PORTAL_SOUND
-            ));
+                    true
+            );
             return;
         }
 
@@ -127,10 +138,12 @@ public class StretcherEntity extends VehicleEntity {
         this.yRotO = this.getYRot();
         if (this.getPatient() != null) {
             LivingEntity patient = getPatient();
-            patient.setYRot(-yRot);
+            patient.setYRot(this.getYRot() - 90);
             patient.yRotO = patient.getYRot();
-            patient.setYBodyRot(-yRot);
+            patient.setYBodyRot(this.getYRot() - 90);
             patient.yBodyRotO = patient.yBodyRot;
+            patient.setYHeadRot(this.getYRot() - 90);
+            patient.yHeadRotO = patient.yHeadRot;
             patient.resetFallDistance();
         }
     }
@@ -141,7 +154,7 @@ public class StretcherEntity extends VehicleEntity {
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
-        if (this.level().isClientSide) return InteractionResult.SUCCESS;
+        if (this.level().isClientSide()) return InteractionResult.SUCCESS;
 
         if (player.isShiftKeyDown()) {
             this.setController(this.controller == null ? player : null);
@@ -149,7 +162,7 @@ public class StretcherEntity extends VehicleEntity {
             LivingEntity patient = getPatient();
             if (patient != null) {
                 patient.stopRiding();
-                patient.moveTo(this.position().add(0, 0.5, 0));
+                patient.setPos(this.getX(), this.getY() + 0.5, this.getZ());
             }
             Utils.drop(ModItems.STRETCHER.get(), player, 1);
             this.discard();
@@ -158,14 +171,15 @@ public class StretcherEntity extends VehicleEntity {
     }
 
     static {
+        var key = ResourceKey.create(Registries.ENTITY_TYPE, Common.getId(DontGetHurt.MODID, "stretcher"));
         TYPE = EntityType.Builder.of(StretcherEntity::new, MobCategory.MISC)
                 .noSummon()
                 .fireImmune()
                 .sized(SIZE_LENGTH, SIZE_HEIGHT)
                 .clientTrackingRange(10).updateInterval(1)
                 .setShouldReceiveVelocityUpdates(true)
-                .passengerAttachments(Vec3.ZERO)
+                .passengerAttachments(new Vec3(0, 0.3, 0))
                 .vehicleAttachment(Vec3.ZERO)
-                .build("stretcher");
+                .build(key);
     }
 }

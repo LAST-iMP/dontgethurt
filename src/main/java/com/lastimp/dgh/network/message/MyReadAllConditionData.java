@@ -11,11 +11,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.level.storage.ValueInput;
 
 import java.util.UUID;
 
 public record MyReadAllConditionData(long id_most, long id_least, int entityID, CompoundTag tag, String oper) implements CustomPacketPayload {
-    public static final Type<MyReadAllConditionData> TYPE = new Type<>(Common.ResourceLocation(DontGetHurt.MODID, "my_read_all_condition"));
+    public static final Type<MyReadAllConditionData> TYPE = new Type<>(Common.getId(DontGetHurt.MODID, "my_read_all_condition"));
 
     public static final StreamCodec<ByteBuf, MyReadAllConditionData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_LONG,
@@ -46,9 +47,9 @@ public record MyReadAllConditionData(long id_most, long id_least, int entityID, 
         );
     }
 
-    public static HealthCapability getHealthFromInstance(CompoundTag tag, HolderLookup.Provider provider) {
+    public static HealthCapability getHealthFromInstance(ValueInput input) {
         HealthCapability health = new HealthCapability();
-        health.deserializeNBT(provider, tag);
+        health.deserialize(input);
         return health;
     }
 }

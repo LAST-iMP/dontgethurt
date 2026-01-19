@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.EntityType;
@@ -23,7 +23,7 @@ public class BlackList {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Map<String, Set<EntityType<?>>> EFFECT_BLACKLISTS = new HashMap<>();
-    private static final ResourceLocation BLACKLIST_JSON = Common.ResourceLocation(DontGetHurt.MODID, "blacklist.json");
+    private static final Identifier BLACKLIST_JSON = Common.getId(DontGetHurt.MODID, "blacklist.json");
 
     public static void loadBlacklists(ResourceManager resourceManager) {
         EFFECT_BLACKLISTS.clear();

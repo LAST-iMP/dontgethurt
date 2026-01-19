@@ -1,7 +1,6 @@
 
 package com.lastimp.dgh.source.core.damageSystem;
 
-import com.lastimp.dgh.compact.TaZC.BulletsInjuryHandler;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
@@ -45,7 +44,7 @@ public class InjuryEventHandler {
 
     @SubscribeEvent
     public static void onInjury(LivingDamageEvent.Pre event) {
-        if (event.getEntity().level().isClientSide) return;
+        if (event.getEntity().level().isClientSide()) return;
         var livingEntity = event.getEntity();
         if (!HealthCapability.has(livingEntity)) return;
         DontGetHurt.LOGGER.info(event.getSource() + " " + event.getNewDamage());
@@ -84,7 +83,7 @@ public class InjuryEventHandler {
         } else if (source.is(DamageTypes.ARROW)) {
             handleArrow(event.getSource(), damageAmount, livingEntity, event);
         } else if (source.is(ModDamageType.BULLETS)) {
-            BulletsInjuryHandler.handleBullet(event.getSource(), damageAmount, livingEntity, event);
+            handleArrow(event.getSource(), damageAmount, livingEntity, event);
         } else if (source.is(DamageTypes.STARVE)) {
             handleStarveDamage(event.getSource(), damageAmount, livingEntity, event);
         } else if (source.getEntity() != null && source.getEntity() instanceof LivingEntity) {

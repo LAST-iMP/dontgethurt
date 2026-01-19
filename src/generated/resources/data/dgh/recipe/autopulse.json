@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "a": {
-      "item": "dgh:adrenaline"
-    },
-    "d": {
-      "item": "minecraft:diamond"
-    },
-    "g": {
-      "item": "minecraft:gold_ingot"
-    },
-    "i": {
-      "item": "minecraft:iron_ingot"
-    },
-    "r": {
-      "item": "minecraft:redstone"
-    }
+    "a": "dgh:adrenaline",
+    "d": "minecraft:diamond",
+    "g": "minecraft:gold_ingot",
+    "i": "minecraft:iron_ingot",
+    "r": "minecraft:redstone"
   },
   "pattern": [
     "igi",

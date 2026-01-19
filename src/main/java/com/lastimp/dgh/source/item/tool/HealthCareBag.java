@@ -6,7 +6,7 @@ import com.lastimp.dgh.source.item.bases.BackpackInventory;
 import com.lastimp.dgh.source.item.bases.AbstractMedicalBags;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -26,9 +26,9 @@ public class HealthCareBag extends AbstractMedicalBags {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        if (!level.isClientSide && usedHand == InteractionHand.MAIN_HAND)
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand) {
+        if (!level.isClientSide() && usedHand == InteractionHand.MAIN_HAND)
             HealthCareBagMenuProvider.open(player, player.getMainHandItem());
-        return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide());
+        return InteractionResult.SUCCESS_SERVER;
     }
 }

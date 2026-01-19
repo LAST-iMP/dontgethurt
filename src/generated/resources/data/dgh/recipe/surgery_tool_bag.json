@@ -2,24 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "a": {
-      "tag": "minecraft:wool"
-    },
-    "b": {
-      "item": "minecraft:leather"
-    },
-    "c": {
-      "item": "dgh:scalpel"
-    },
-    "d": {
-      "item": "dgh:hemostat"
-    },
-    "e": {
-      "item": "dgh:retractor"
-    },
-    "f": {
-      "item": "minecraft:chest"
-    }
+    "a": "#minecraft:wool",
+    "b": "minecraft:leather",
+    "c": "dgh:scalpel",
+    "d": "dgh:hemostat",
+    "e": "dgh:retractor",
+    "f": "minecraft:chest"
   },
   "pattern": [
     "bab",

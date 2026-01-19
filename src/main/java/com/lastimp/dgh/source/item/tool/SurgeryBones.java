@@ -5,14 +5,14 @@ import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class SurgeryBones extends AbstractPartlyHealItem {
-    private final ResourceLocation boneType;
+    private final Identifier boneType;
     public static final String ID_WOOD = "wood_bone";
     public static final String ID_STONE = "stone_bone";
     public static final String ID_COPPER = "copper_bone";
@@ -21,7 +21,7 @@ public class SurgeryBones extends AbstractPartlyHealItem {
     public static final String ID_DIMOND = "dimond_bone";
     public static final String ID_NETHERITE = "netherite_bone";
 
-    public SurgeryBones(Properties properties, ResourceLocation boneType) {
+    public SurgeryBones(Properties properties, Identifier boneType) {
         super(properties);
         this.boneType = boneType;
     }

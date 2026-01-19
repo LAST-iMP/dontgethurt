@@ -11,7 +11,7 @@ import com.lastimp.dgh.source.item.tool.Scalpel;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.registries.DeferredItem;
 
@@ -21,289 +21,289 @@ import java.util.function.Function;
 import static com.lastimp.dgh.DontGetHurt.EPS;
 
 public class BodyCondition {
-    public static final Map<ResourceLocation, Lazy<BodyCondition>> conditions = new HashMap<>();
-    public static final List<ResourceLocation> bloodConditions = new LinkedList<>();
-    public static final List<ResourceLocation> injuryConditions = new LinkedList<>();
-    public static final List<ResourceLocation> surgeryConditions = new LinkedList<>();
-    public static final List<ResourceLocation> painConditions = new LinkedList<>();
-    public static final List<ResourceLocation> comfortConditions = new LinkedList<>();
-    public static final List<ResourceLocation> resistConditions = new LinkedList<>();
-    public static final Set<ResourceLocation> eyeVisible = new HashSet<>();
-    public static final Map<ResourceLocation, DeferredItem<SurgeryBones>> bones = new HashMap<>();
+    public static final Map<Identifier, Lazy<BodyCondition>> conditions = new HashMap<>();
+    public static final List<Identifier> bloodConditions = new LinkedList<>();
+    public static final List<Identifier> injuryConditions = new LinkedList<>();
+    public static final List<Identifier> surgeryConditions = new LinkedList<>();
+    public static final List<Identifier> painConditions = new LinkedList<>();
+    public static final List<Identifier> comfortConditions = new LinkedList<>();
+    public static final List<Identifier> resistConditions = new LinkedList<>();
+    public static final Set<Identifier> eyeVisible = new HashSet<>();
+    public static final Map<Identifier, DeferredItem<SurgeryBones>> bones = new HashMap<>();
 
-    public static ResourceLocation addCondition(ResourceLocation name, Function<ResourceLocation, BodyCondition> func) {
+    public static Identifier addCondition(Identifier name, Function<Identifier, BodyCondition> func) {
         conditions.put(name, Lazy.of(() -> func.apply(name)));
         return name;
     }
 
-    public static ConditionBuilder create(ResourceLocation name) {
+    public static ConditionBuilder create(Identifier name) {
         return new ConditionBuilder(new BodyCondition(name));
     }
 
-    public static BodyCondition get(ResourceLocation location) {
+    public static BodyCondition get(Identifier location) {
         return conditions.get(location).get();
     }
 
-    private BodyCondition(ResourceLocation name) {
+    private BodyCondition(Identifier name) {
         this.name = name;
-        this.texture = Common.ResourceLocation(name.getNamespace(), pathRoot + name.getPath());
+        this.texture = Common.getId(name.getNamespace(), pathRoot + name.getPath());
     }
 
     //肢体
-    public static final ResourceLocation BURN = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "burn"),
+    public static final Identifier BURN = addCondition(Common.getId(DontGetHurt.MODID, "burn"),
             (name) -> create(name)
                     .setHealing(1.0f / Config.base_self_healing_time, 0.25f)
                     .setValues(0.0f, 0.0f, 2.0f)
                     .isInjury().eyeVisible().build()
     );
-    public static final ResourceLocation INTERNAL_INJURY = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "internal_injury"),
+    public static final Identifier INTERNAL_INJURY = addCondition(Common.getId(DontGetHurt.MODID, "internal_injury"),
             (name) -> create(name)
                     .setHealing(1.0f / Config.base_self_healing_time, 0.5f)
                     .setValues(0.0f, 0.0f, 2.0f)
                     .isInjury().build()
     );
-    public static final ResourceLocation OPEN_WOUND = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "open_wound"),
+    public static final Identifier OPEN_WOUND = addCondition(Common.getId(DontGetHurt.MODID, "open_wound"),
             (name) -> create(name)
                     .setHealing(1.0f / Config.base_self_healing_time, 0.25f)
                     .setValues(0.0f, 0.0f, 2.0f)
                     .isInjury().eyeVisible().build()
     );
-    public static final ResourceLocation PASS_THROUGH = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "pass_through"),
+    public static final Identifier PASS_THROUGH = addCondition(Common.getId(DontGetHurt.MODID, "pass_through"),
             (name) -> create(name)
                     .setHealing(1.0f / Config.base_self_healing_time, 0.25f)
                     .setValues(0.0f, 0.0f, 2.0f)
                     .isInjury().eyeVisible().build()
     );
-    public static final ResourceLocation BLEED = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bleeding"),
+    public static final Identifier BLEED = addCondition(Common.getId(DontGetHurt.MODID, "bleeding"),
             (name) -> create(name)
                     .setHealing(0.0f, 0.0f).isInjury().eyeVisible().build()
     );
-    public static final ResourceLocation INFECTION = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "infection"),
+    public static final Identifier INFECTION = addCondition(Common.getId(DontGetHurt.MODID, "infection"),
             (name) -> create(name)
                     .setHealing(1.0f / Config.base_self_healing_time, 0.0f).isInjury().eyeVisible().build()
     );
-    public static final ResourceLocation FOREIGN_OBJECT = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "foreign_object"),
+    public static final Identifier FOREIGN_OBJECT = addCondition(Common.getId(DontGetHurt.MODID, "foreign_object"),
             (name) -> create(name)
                     .setHealing(0.0f, 0.0f).isInjury().build()
     );
-    public static final ResourceLocation FRACTURE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "fracture"),
+    public static final Identifier FRACTURE = addCondition(Common.getId(DontGetHurt.MODID, "fracture"),
             (name) -> create(name)
                     .setHealing(1.0f / Config.base_self_healing_time * 3, 0.0f).isPain().build()
     );
-    public static final ResourceLocation INTENSE_PAIN = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "intense_pain"),
+    public static final Identifier INTENSE_PAIN = addCondition(Common.getId(DontGetHurt.MODID, "intense_pain"),
             (name) -> create(name)
                     .setHealing(0.2f, 1.0f).isPain().eyeVisible().build()
     );
 
-    public static final ResourceLocation BANDAGED = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bandage"),
+    public static final Identifier BANDAGED = addCondition(Common.getId(DontGetHurt.MODID, "bandage"),
             (name) -> create(name)
                     .setHealing( 1.0f / Config.base_med_available_time, 0.0f).isComfort().eyeVisible().build()
     );
-    public static final ResourceLocation BANDAGED_DIRTY = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bandage_dirty"),
+    public static final Identifier BANDAGED_DIRTY = addCondition(Common.getId(DontGetHurt.MODID, "bandage_dirty"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isInjury().eyeVisible().build()
     );
-    public static final ResourceLocation OINTMENT = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "ointment"),
+    public static final Identifier OINTMENT = addCondition(Common.getId(DontGetHurt.MODID, "ointment"),
             (name) -> create(name)
                     .setHealing( 1.0f / Config.base_med_available_time, 1.0f).isComfort().eyeVisible().build()
     );
 
-    public static final ResourceLocation BURN_RES = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "burn_resist"),
+    public static final Identifier BURN_RES = addCondition(Common.getId(DontGetHurt.MODID, "burn_resist"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isResist().eyeVisible().build()
     );
-    public static final ResourceLocation INTERNAL_RES = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "internal_injury_resist"),
+    public static final Identifier INTERNAL_RES = addCondition(Common.getId(DontGetHurt.MODID, "internal_injury_resist"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isResist().eyeVisible().build()
     );
-    public static final ResourceLocation OPEN_WOUND_RES = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "open_wound_resist"),
+    public static final Identifier OPEN_WOUND_RES = addCondition(Common.getId(DontGetHurt.MODID, "open_wound_resist"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isResist().eyeVisible().build()
     );
-    public static final ResourceLocation BONE_DAMAGE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bone_damage"),
+    public static final Identifier BONE_DAMAGE = addCondition(Common.getId(DontGetHurt.MODID, "bone_damage"),
             (name) -> create(name)
                     .setHealing(1.0f / Config.base_self_healing_time / 2, 1.0f).isPain().build()
     );
-    public static final ResourceLocation BONE_DEATH = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bone_death"),
+    public static final Identifier BONE_DEATH = addCondition(Common.getId(DontGetHurt.MODID, "bone_death"),
             (name) -> create(name)
                     .setHealing(0, 0).isPain().build()
     );
-    public static final ResourceLocation ARTERIAL_BLEEDING = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "arterial_bleeding"),
+    public static final Identifier ARTERIAL_BLEEDING = addCondition(Common.getId(DontGetHurt.MODID, "arterial_bleeding"),
             (name) -> create(name)
                     .setHealing(0, 0).isInjury().eyeVisible().build()
     );
     //手术
-    public static final ResourceLocation SURGERY_INCISION = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "scalpel"),
+    public static final Identifier SURGERY_INCISION = addCondition(Common.getId(DontGetHurt.MODID, "scalpel"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isSurgery().eyeVisible().build()
     );
-    public static final ResourceLocation CLAMPED_BLEEDING = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "hemostat"),
+    public static final Identifier CLAMPED_BLEEDING = addCondition(Common.getId(DontGetHurt.MODID, "hemostat"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isSurgery().eyeVisible().build()
     );
-    public static final ResourceLocation RETRACTED_SKIN = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "retractor"),
+    public static final Identifier RETRACTED_SKIN = addCondition(Common.getId(DontGetHurt.MODID, "retractor"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isSurgery().eyeVisible().build()
     );
-    public static final ResourceLocation DRILLED_BONES = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "surgical_drill"),
+    public static final Identifier DRILLED_BONES = addCondition(Common.getId(DontGetHurt.MODID, "surgical_drill"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isSurgery().eyeVisible().build()
     );
-    public static final ResourceLocation SAWED_BONES = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "sawed_bones"),
+    public static final Identifier SAWED_BONES = addCondition(Common.getId(DontGetHurt.MODID, "sawed_bones"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isSurgery().eyeVisible().build()
     );
-    public static final ResourceLocation BONE_WOOD = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bone_wood"),
+    public static final Identifier BONE_WOOD = addCondition(Common.getId(DontGetHurt.MODID, "bone_wood"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isBone(ModItems.BONE_WOOD).setColor(0xFF7c3b19).build()
     );
-    public static final ResourceLocation BONE_STONE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bone_stone"),
+    public static final Identifier BONE_STONE = addCondition(Common.getId(DontGetHurt.MODID, "bone_stone"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isBone(ModItems.BONE_STONE).setColor(0xFF514b4d).build()
     );
-    public static final ResourceLocation BONE_COPPER = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bone_copper"),
+    public static final Identifier BONE_COPPER = addCondition(Common.getId(DontGetHurt.MODID, "bone_copper"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isBone(ModItems.BONE_COPPER).setColor(0xFFFF6F00).build()
     );
-    public static final ResourceLocation BONE_IRON = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bone_iron"),
+    public static final Identifier BONE_IRON = addCondition(Common.getId(DontGetHurt.MODID, "bone_iron"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isBone(ModItems.BONE_IRON).setColor(0xFFCBC6BD).build()
     );
-    public static final ResourceLocation BONE_GOLD = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bone_gold"),
+    public static final Identifier BONE_GOLD = addCondition(Common.getId(DontGetHurt.MODID, "bone_gold"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isBone(ModItems.BONE_GOLD).setColor(0xFFFEFF57).build()
     );
-    public static final ResourceLocation BONE_DIMOND = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bone_dimond"),
+    public static final Identifier BONE_DIMOND = addCondition(Common.getId(DontGetHurt.MODID, "bone_dimond"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isBone(ModItems.BONE_DIMOND).setColor(0xFF3CFFF5).build()
     );
-    public static final ResourceLocation BONE_NETHERITE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bone_netherite"),
+    public static final Identifier BONE_NETHERITE = addCondition(Common.getId(DontGetHurt.MODID, "bone_netherite"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isBone(ModItems.BONE_NETHERITE).setColor(0xFF845341).build()
     );
     //四肢
-    public static final ResourceLocation DISLOCATION = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "dislocation"),
+    public static final Identifier DISLOCATION = addCondition(Common.getId(DontGetHurt.MODID, "dislocation"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isPain().eyeVisible().build()
     );
-    public static final ResourceLocation PLASTER_CAST = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "plaster_cast"),
+    public static final Identifier PLASTER_CAST = addCondition(Common.getId(DontGetHurt.MODID, "plaster_cast"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isComfort().eyeVisible().build()
     );
-    public static final ResourceLocation CLAMPED_ARTERIES = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "clamped_arteries"),
+    public static final Identifier CLAMPED_ARTERIES = addCondition(Common.getId(DontGetHurt.MODID, "clamped_arteries"),
             (name) -> create(name)
                     .setHealing(0, 0).isPain().eyeVisible().build()
     );
-    public static final ResourceLocation GANGRENE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "gangrene"),
+    public static final Identifier GANGRENE = addCondition(Common.getId(DontGetHurt.MODID, "gangrene"),
             (name) -> create(name)
                     .setHealing(1.0f / Config.base_self_healing_time, 0).isInjury().eyeVisible().build()
     );
-    public static final ResourceLocation SURGICAL_AMPUTATION = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "surgical_amputation"),
+    public static final Identifier SURGICAL_AMPUTATION = addCondition(Common.getId(DontGetHurt.MODID, "surgical_amputation"),
             (name) -> create(name)
                     .setHealing(0, 0).isSurgery().eyeVisible().build()
     );
 
-    public static final ResourceLocation TRAUMATIC_AMPUTATION = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "traumatic_amputation"),
+    public static final Identifier TRAUMATIC_AMPUTATION = addCondition(Common.getId(DontGetHurt.MODID, "traumatic_amputation"),
             (name) -> create(name)
                     .setHealing(0, 0).isInjury().eyeVisible().build()
     );
 
     //躯干
-    public static final ResourceLocation ANALGESIA = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "analgesia"),
+    public static final Identifier ANALGESIA = addCondition(Common.getId(DontGetHurt.MODID, "analgesia"),
             (name) -> create(name)
                     .setHealing(1.0f/ Config.base_med_available_time, 1.0f).isComfort().eyeVisible().build()
     );
-    public static final ResourceLocation RESPIRATORY_ARREST= addCondition(Common.ResourceLocation(DontGetHurt.MODID, "respiratory_arrest"),
+    public static final Identifier RESPIRATORY_ARREST= addCondition(Common.getId(DontGetHurt.MODID, "respiratory_arrest"),
             (name) -> create(name)
                     .setHealing(0.5f, 1.0f).isInjury().eyeVisible().build()
     );
-    public static final ResourceLocation AORTIC_RUPTURE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "aortic_rupture"),
+    public static final Identifier AORTIC_RUPTURE = addCondition(Common.getId(DontGetHurt.MODID, "aortic_rupture"),
             (name) -> create(name)
                     .setHealing(0, 0).isInjury().eyeVisible().build()
     );
-    public static final ResourceLocation HEARTRATE_INCREASE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "heartrate_increase"),
+    public static final Identifier HEARTRATE_INCREASE = addCondition(Common.getId(DontGetHurt.MODID, "heartrate_increase"),
             (name) -> create(name)
                     .setHealing(1.0f / 60, 0).isInjury().build()
     );
-    public static final ResourceLocation HEARTRATE_IRREGULAR = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "heartrate_irregular"),
+    public static final Identifier HEARTRATE_IRREGULAR = addCondition(Common.getId(DontGetHurt.MODID, "heartrate_irregular"),
             (name) -> create(name)
                     .setHealing(1.0f / 40, 0).isInjury().build()
     );
-    public static final ResourceLocation HEARTRATE_STOP = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "heartrate_stop"),
+    public static final Identifier HEARTRATE_STOP = addCondition(Common.getId(DontGetHurt.MODID, "heartrate_stop"),
             (name) -> create(name)
                     .setHealing(1.0f / 20, 0).isInjury().build()
     );
-    public static final ResourceLocation PNEUMOTHORAX = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "pneumothorax"),
+    public static final Identifier PNEUMOTHORAX = addCondition(Common.getId(DontGetHurt.MODID, "pneumothorax"),
             (name) -> create(name).setHealing(0, 0).isPain().build()
     );
-    public static final ResourceLocation PNEUMOTHORAX_NEEDLE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "pneumothorax_needle"),
+    public static final Identifier PNEUMOTHORAX_NEEDLE = addCondition(Common.getId(DontGetHurt.MODID, "pneumothorax_needle"),
             (name) -> create(name).setHealing(1.0f/ Config.base_med_available_time, 1.0f).build()
     );
     //头脑
-    public static final ResourceLocation WITHDRAW = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "withdraw"),
+    public static final Identifier WITHDRAW = addCondition(Common.getId(DontGetHurt.MODID, "withdraw"),
             (name) -> create(name)
                     .setHealing(1.0f/ Config.base_med_available_time, 1.0f).isInjury().build()
     );
-    public static final ResourceLocation TRAUMATIC_SHOCK = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "traumatic_shock"),
+    public static final Identifier TRAUMATIC_SHOCK = addCondition(Common.getId(DontGetHurt.MODID, "traumatic_shock"),
             (name) -> create(name)
                     .setHealing(0.015f, 1.0f).isInjury().eyeVisible().build()
     );
-    public static final ResourceLocation BRAIN_DAMAGE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "brain_damage"),
+    public static final Identifier BRAIN_DAMAGE = addCondition(Common.getId(DontGetHurt.MODID, "brain_damage"),
             (name) -> create(name)
                     .setValues(0.0f, 0.0f, 2.1f)
                     .setHealing(0.001f, 2.1f).isInjury().build()
     );
-    public static final ResourceLocation COMA = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "coma"),
+    public static final Identifier COMA = addCondition(Common.getId(DontGetHurt.MODID, "coma"),
             (name) -> create(name).setHealing(0.2f, 1.0f).eyeVisible().isInjury().build()
     );
 
     //血液
-    public static final ResourceLocation SEPSIS = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "sepsis"),
+    public static final Identifier SEPSIS = addCondition(Common.getId(DontGetHurt.MODID, "sepsis"),
             (name) -> create(name)
                     .setHealing(0.0095f / 2, 0.3f).isBlood().build()
     );
-    public static final ResourceLocation HEMOTRANSFUSION = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "hemotransfusion"),
+    public static final Identifier HEMOTRANSFUSION = addCondition(Common.getId(DontGetHurt.MODID, "hemotransfusion"),
             (name) -> create(name)
                     .setHealing(0.0f, 0.0f).isBlood().build()
     );
-    public static final ResourceLocation BLOOD_LOSS = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "blood_loss"),
+    public static final Identifier BLOOD_LOSS = addCondition(Common.getId(DontGetHurt.MODID, "blood_loss"),
             (name) -> create(name)
                     .setHealing(1.0f / Config.volume_self_healing_time, 0.0f).isBlood().build()
     );
-    public static final ResourceLocation BLOOD_PRESSURE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "blood_pressure"),
+    public static final Identifier BLOOD_PRESSURE = addCondition(Common.getId(DontGetHurt.MODID, "blood_pressure"),
             (name) -> create(name)
                     .setValues(1.0f, 0.0f, 2.0f)
                     .setHealing(1.0f / Config.volume_self_healing_time, 0.0f).isBlood().build()
     );
-    public static final ResourceLocation PH_LEVEL = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "ph_level"),
+    public static final Identifier PH_LEVEL = addCondition(Common.getId(DontGetHurt.MODID, "ph_level"),
             (name) -> create(name)
                     .setHealing(0.0f, 0.0f).isBlood().build()
     );
-    public static final ResourceLocation IMMUNITY = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "immunity"),
+    public static final Identifier IMMUNITY = addCondition(Common.getId(DontGetHurt.MODID, "immunity"),
             (name) -> create(name)
                     .setHealing(0.0f, 0.0f).isBlood().build()
     );
-    public static final ResourceLocation OPIATE_OVERDOSE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "opiate_overdose"),
+    public static final Identifier OPIATE_OVERDOSE = addCondition(Common.getId(DontGetHurt.MODID, "opiate_overdose"),
             (name) -> create(name)
                     .setHealing(1.0f / Config.base_self_healing_time, 1.0f).isBlood().build()
     );
-    public static final ResourceLocation OPIATE_ADDICTED = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "opiate_addicted"),
+    public static final Identifier OPIATE_ADDICTED = addCondition(Common.getId(DontGetHurt.MODID, "opiate_addicted"),
             (name) -> create(name)
                     .setHealing(1.0f / Config.base_self_healing_time / 5, 1.0f).build()
     );
-    public static final ResourceLocation OXYGEN = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "oxygen"),
+    public static final Identifier OXYGEN = addCondition(Common.getId(DontGetHurt.MODID, "oxygen"),
             (name) -> create(name)
                     .setHealing(0.05f, 0.0f).isBlood().build()
     );
-    public static final ResourceLocation ANTIBIOTICS = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "antibiotics"),
+    public static final Identifier ANTIBIOTICS = addCondition(Common.getId(DontGetHurt.MODID, "antibiotics"),
             (name) -> create(name)
                     .setHealing(0.005f, 1.0f).isBlood().build()
     );
 
     public static final String pathRoot = "container/condition_icons/";
 
-    private ResourceLocation name;
-    public ResourceLocation texture;
+    private Identifier name;
+    public Identifier texture;
 
     private float defaultValue = 0f;
     private float minValue = 0f;

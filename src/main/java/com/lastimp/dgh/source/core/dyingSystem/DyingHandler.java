@@ -27,12 +27,12 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 public class DyingHandler {
     @SubscribeEvent
     public static void onEntityTick(EntityTickEvent.Pre event) {
-        if (event.getEntity().level().isClientSide) return;
+        if (event.getEntity().level().isClientSide()) return;
         if (!(event.getEntity() instanceof LivingEntity livingEntity)) return;
         if (livingEntity instanceof Player) return;
         if (!HealthCapability.has(livingEntity)) return;
 
-        if (!event.getEntity().level().isClientSide) {
+        if (!event.getEntity().level().isClientSide()) {
             if (HealthCapability.isDying(livingEntity)) {
                 if (livingEntity.isSleeping()) livingEntity.stopSleeping();
                 livingEntity.stopUsingItem();

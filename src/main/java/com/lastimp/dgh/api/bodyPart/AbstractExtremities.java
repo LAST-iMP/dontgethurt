@@ -4,7 +4,7 @@ import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayList;
@@ -18,11 +18,11 @@ import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 
 public abstract class AbstractExtremities extends AbstractVisibleBody {
-    private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
-    private static List<ResourceLocation> EXTREMITY_CONDITIONS;
+    private static final Collection<Identifier> uniqueConditions = new LinkedHashSet<>();
+    private static List<Identifier> EXTREMITY_CONDITIONS;
     private int tourniquetTick = 0;
 
-    public static void addCondition(Collection<ResourceLocation> key) {
+    public static void addCondition(Collection<Identifier> key) {
         uniqueConditions.addAll(key);
     }
 
@@ -32,7 +32,7 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
     }
 
     @Override
-    public List<ResourceLocation> getBodyConditions() {
+    public List<Identifier> getBodyConditions() {
         if (EXTREMITY_CONDITIONS == null) {
             EXTREMITY_CONDITIONS = new ArrayList<>(super.getBodyConditions());
             EXTREMITY_CONDITIONS.addAll(uniqueConditions);

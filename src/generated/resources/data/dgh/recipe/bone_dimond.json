@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "a": {
-      "item": "minecraft:bone"
-    },
-    "b": {
-      "item": "minecraft:diamond"
-    }
+    "a": "minecraft:bone",
+    "b": "minecraft:diamond"
   },
   "pattern": [
     " b ",

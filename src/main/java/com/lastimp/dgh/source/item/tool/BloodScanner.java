@@ -8,7 +8,6 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -23,17 +22,17 @@ public class BloodScanner extends AbstractHealingItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        if (!level.isClientSide)
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand) {
+        if (!level.isClientSide())
             HealthCapability.getAndApply(player, h -> BloodScanner.scanHealth(player, h, player.getScoreboardName()));
-        return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide);
+        return InteractionResult.SUCCESS_SERVER;
     }
 
     @Override
     public @NotNull InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
-        if (!player.level().isClientSide) {
+        if (!player.level().isClientSide()) {
             if (!HealthCapability.has(target)) {
-                player.sendSystemMessage(Component.translatable(target.getName().getString()).append("的血液很正常"));
+                player.displayClientMessage(Component.translatable(target.getName().getString()).append("的血液很正常"), true);
             } else {
                 var name = target instanceof Player ? target.getScoreboardName() : target.getName().getString();
                 HealthCapability.getAndApply(target, h -> BloodScanner.scanHealth(player, h, name));
@@ -49,15 +48,16 @@ public class BloodScanner extends AbstractHealingItem {
             float value = blood.getConditionValue(condition);
             if (blood.abnormal(condition)) {
                 if (!hasAbnormal)
-                    player.sendSystemMessage(Component.translatable(name).append("的血液状态为："));
+                    player.displayClientMessage(Component.translatable(name).append("的血液状态为："), false);
                 hasAbnormal = true;
-                player.sendSystemMessage(
-                        Component.translatable(condition.toString()).append(Component.literal(": " + String.format("%.2f", value)))
+                player.displayClientMessage(
+                        Component.translatable(condition.toString()).append(Component.literal(": " + String.format("%.2f", value))),
+                        false
                 );
             }
         }
         if (!hasAbnormal) {
-            player.sendSystemMessage(Component.translatable(name).append("的血液很正常"));
+            player.displayClientMessage(Component.translatable(name).append("的血液很正常"), true);
         }
     }
 }

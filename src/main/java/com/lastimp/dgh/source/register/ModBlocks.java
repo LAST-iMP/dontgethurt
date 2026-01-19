@@ -16,6 +16,7 @@ import java.util.function.Function;
 
 import static com.lastimp.dgh.DontGetHurt.MODID;
 
+@SuppressWarnings("removal")
 public class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
@@ -30,7 +31,7 @@ public class ModBlocks {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OperatingBedBlock.Entity>> OPERATING_BED_ENTITY = BLOCK_ENTITIES.register(
             "operating_bed",
-            () -> BlockEntityType.Builder.of(OperatingBedBlock.Entity::new, ModBlocks.OPERATING_BED_BLOCK.get()).build(null)
+            () -> new BlockEntityType<>(OperatingBedBlock.Entity::new, ModBlocks.OPERATING_BED_BLOCK.get())
     );
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties, ? extends T> func, BlockBehaviour.Properties props) {

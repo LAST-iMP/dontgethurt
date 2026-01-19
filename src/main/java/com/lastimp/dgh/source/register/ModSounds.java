@@ -15,28 +15,28 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> HEARTBEAT_NORMAL = SOUNDS.register(
             "heartbeat_normal",
                 () -> SoundEvent.createVariableRangeEvent(
-                        Common.ResourceLocation(MODID, "heartbeat_normal")
+                        Common.getId(MODID, "heartbeat_normal")
                 )
     );
 
     public static final DeferredHolder<SoundEvent, SoundEvent> HEARTBEAT_ACC = SOUNDS.register(
             "heartbeat_acc",
             () -> SoundEvent.createVariableRangeEvent(
-                    Common.ResourceLocation(MODID, "heartbeat_acc")
+                    Common.getId(MODID, "heartbeat_acc")
             )
     );
 
     public static final DeferredHolder<SoundEvent, SoundEvent> HEARTBEAT_ACC2 = SOUNDS.register(
             "heartbeat_acc2",
             () -> SoundEvent.createVariableRangeEvent(
-                    Common.ResourceLocation(MODID, "heartbeat_acc2")
+                    Common.getId(MODID, "heartbeat_acc2")
             )
     );
 
     public static final DeferredHolder<SoundEvent, SoundEvent> HEARTBEAT_STOP = SOUNDS.register(
             "heartbeat_stop",
             () -> SoundEvent.createVariableRangeEvent(
-                    Common.ResourceLocation(MODID, "heartbeat_stop")
+                    Common.getId(MODID, "heartbeat_stop")
             )
     );
 

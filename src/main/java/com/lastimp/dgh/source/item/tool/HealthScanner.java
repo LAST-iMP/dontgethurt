@@ -4,10 +4,9 @@ package com.lastimp.dgh.source.item.tool;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.source.core.menu.menuProvider.HealthMenuProvider;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -20,14 +19,14 @@ import java.util.List;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class HealthScanner extends AbstractHealingItem {
-    private static List<ResourceLocation> HEALTH_SCANNER_CONDITIONS;
-    private static List<ResourceLocation> EYESIGHT_CONDITIONS;
+    private static List<Identifier> HEALTH_SCANNER_CONDITIONS;
+    private static List<Identifier> EYESIGHT_CONDITIONS;
 
     public HealthScanner(Properties properties) {
         super(properties);
     }
 
-    public static List<ResourceLocation> healthScannerConditions() {
+    public static List<Identifier> healthScannerConditions() {
         if (HEALTH_SCANNER_CONDITIONS == null) {
             HEALTH_SCANNER_CONDITIONS = new LinkedList<>();
             HEALTH_SCANNER_CONDITIONS.addAll(injuryConditions);
@@ -39,7 +38,7 @@ public class HealthScanner extends AbstractHealingItem {
         return HEALTH_SCANNER_CONDITIONS;
     }
 
-    public static List<ResourceLocation> eyesightConditions() {
+    public static List<Identifier> eyesightConditions() {
         healthScannerConditions();
         if (EYESIGHT_CONDITIONS == null) {
             EYESIGHT_CONDITIONS = new LinkedList<>();
@@ -52,13 +51,13 @@ public class HealthScanner extends AbstractHealingItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand) {
         if (usedHand == InteractionHand.OFF_HAND)
-            return InteractionResultHolder.pass(player.getItemInHand(usedHand));
-        if (!level.isClientSide) {
+            return InteractionResult.PASS;
+        if (!level.isClientSide()) {
             HealthMenuProvider.open(player, player.getUUID(), true);
         }
-        return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide());
+        return InteractionResult.SUCCESS_SERVER;
     }
 
     @Override
@@ -66,7 +65,7 @@ public class HealthScanner extends AbstractHealingItem {
         if (!HealthCapability.has(target)) {
             return InteractionResult.SUCCESS;
         }
-        if (!player.level().isClientSide) {
+        if (!player.level().isClientSide()) {
             HealthMenuProvider.open(player, target.getUUID(), true);
         }
         return InteractionResult.CONSUME;

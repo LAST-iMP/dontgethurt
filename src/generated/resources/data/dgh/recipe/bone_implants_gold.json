@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "a": {
-      "item": "minecraft:bone_block"
-    },
-    "b": {
-      "item": "minecraft:gold_ingot"
-    }
+    "a": "minecraft:bone_block",
+    "b": "minecraft:gold_ingot"
   },
   "pattern": [
     " b ",

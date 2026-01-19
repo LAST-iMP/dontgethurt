@@ -6,7 +6,7 @@ import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,14 +15,14 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.BONE_DAMAGE;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.BONE_DEATH;
 
 public class BoneImplants extends AbstractPartlyHealItem {
-    private final ResourceLocation boneType;
+    private final Identifier boneType;
 
     public BoneImplants(Properties properties) {
         super(properties);
         this.boneType = null;
     }
 
-    public BoneImplants(Properties properties, ResourceLocation boneType) {
+    public BoneImplants(Properties properties, Identifier boneType) {
         super(properties);
         this.boneType = boneType;
     }

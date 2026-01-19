@@ -2,24 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "a": {
-      "tag": "minecraft:wool"
-    },
-    "b": {
-      "item": "minecraft:leather"
-    },
-    "c": {
-      "item": "dgh:bandage"
-    },
-    "d": {
-      "item": "dgh:suture"
-    },
-    "e": {
-      "item": "dgh:morphine"
-    },
-    "f": {
-      "item": "minecraft:chest"
-    }
+    "a": "#minecraft:wool",
+    "b": "minecraft:leather",
+    "c": "dgh:bandage",
+    "d": "dgh:suture",
+    "e": "dgh:morphine",
+    "f": "minecraft:chest"
   },
   "pattern": [
     "bab",

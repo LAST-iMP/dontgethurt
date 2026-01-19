@@ -6,7 +6,6 @@ import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.source.client.ClientAccessor;
-import com.lastimp.dgh.source.client.eventHandler.ClientInputEventHandler;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.client.gui.component.HealthComponentWidget;
 import com.lastimp.dgh.source.client.gui.component.HealthConditionWidget;
@@ -19,20 +18,19 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.HealthScanner;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.register.ModSounds;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import java.util.HashMap;
 
@@ -41,13 +39,12 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.OperationType.HEALTH_SCANN;
 import static com.lastimp.dgh.source.client.gui.component.HealthComponentWidget.*;
 
-@OnlyIn(value = Dist.CLIENT)
 public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
-    private static final ResourceLocation HUD_BACKGROUND = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
-    private static final ResourceLocation HUD_HEART_BEAT = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud.png");
-    private static final ResourceLocation HUD_HEART_BEAT_ACC = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud_acc.png");
-    private static final ResourceLocation HUD_HEART_BEAT_ACC2 = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud_acc2.png");
-    private static final ResourceLocation HUD_HEART_BEAT_STOP = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud_stop.png");
+    private static final Identifier HUD_BACKGROUND = Common.getId(DontGetHurt.MODID, "textures/gui/health_hud.png");
+    private static final Identifier HUD_HEART_BEAT = Common.getId(DontGetHurt.MODID, "textures/gui/heart_beat_hud.png");
+    private static final Identifier HUD_HEART_BEAT_ACC = Common.getId(DontGetHurt.MODID, "textures/gui/heart_beat_hud_acc.png");
+    private static final Identifier HUD_HEART_BEAT_ACC2 = Common.getId(DontGetHurt.MODID, "textures/gui/heart_beat_hud_acc2.png");
+    private static final Identifier HUD_HEART_BEAT_STOP = Common.getId(DontGetHurt.MODID, "textures/gui/heart_beat_hud_stop.png");
 
     private static final int PANEL_WIDTH = 256;   // 面板宽度
     private static final int PANEL_HEIGHT = 215;  // 面板高度
@@ -57,7 +54,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private static final int HEART_BEAT_HEIGHT = 16;
 
     private final HashMap<BodyComponents, HealthComponentWidget> componentWidgets = new HashMap<>();
-    private final HashMap<ResourceLocation, HealthConditionWidget> conditionWidgets = new HashMap<>();
+    private final HashMap<Identifier, HealthConditionWidget> conditionWidgets = new HashMap<>();
     private BodyComponents selectedComponent = null;
     private static HealthCapability healthData = null;
 
@@ -89,7 +86,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         this.addHandPulseWidget(210, 166, 17, 16);
     }
 
-    private void addHealthWidget(int x, int y, int width, int height, BodyComponents idx, ResourceLocation resource, ResourceLocation resourceLighted) {
+    private void addHealthWidget(int x, int y, int width, int height, BodyComponents idx, Identifier resource, Identifier resourceLighted) {
         HealthComponentWidget w = new HealthComponentWidget(
                 this.leftPos + x, this.topPos + y, width, height,
                 Component.literal(idx.toString()),
@@ -106,13 +103,13 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         HealthConditionWidget w = new HealthConditionWidget(
                 70, 16, condition.getComponent(), condition.texture, condition.color()
         );
-        conditionWidgets.put(Common.ResourceBySeperator(condition.name(), ':'), w);
+        conditionWidgets.put(Common.getIdBySeperator(condition.name(), ':'), w);
         this.addRenderableWidget(w);
     }
 
     private void addHandPulseWidget(int x, int y, int width, int height) {
         var button = Button.builder(Component.empty(), (b) -> {
-            PacketDistributor.sendToServer(MyHealingItemUseData.getInstance(
+            ClientPacketDistributor.sendToServer(MyHealingItemUseData.getInstance(
                     this.menu.targetEntity, MyHealingItemUseData.HAND_PULSE, TORSO
             ));
         }).bounds(this.leftPos + x, this.topPos + y, width, height).build();
@@ -185,7 +182,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         }
     }
 
-    private boolean visibilityCheck(AbstractBody body, ResourceLocation key) {
+    private boolean visibilityCheck(AbstractBody body, Identifier key) {
         if (!HealthScanner.healthScannerConditions().contains(key)) return false;
         if (!this.menu.isDevice && !HealthScanner.eyesightConditions().contains(key)) return false;
         if (!BodyCondition.get(key).abnormal(body.getCondition(key).getDisplayValue())) return false;
@@ -197,7 +194,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         int panelX = (guiGraphics.guiWidth() - PANEL_WIDTH) / 2;
         int panelY = (guiGraphics.guiHeight() - PANEL_HEIGHT) / 2;
 
-        guiGraphics.blit(HUD_BACKGROUND, panelX, panelY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, HUD_BACKGROUND, panelX, panelY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT, 256, 256);
         this.renderHeartBeat(guiGraphics);
     }
 
@@ -207,22 +204,26 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         int max_width = (int) (HEART_BEAT_WIDTH * 0.75);
 
         long tick = ClientAccessor.getGameTime();
-        ResourceLocation heartBeat = HUD_HEART_BEAT;
+        Identifier heartBeat = HUD_HEART_BEAT;
         if (healthData != null) {
             Torso torso = (Torso) healthData.getComponent(TORSO);
             if (torso.abnormal(HEARTRATE_STOP)) heartBeat = HUD_HEART_BEAT_STOP;
             else if (torso.abnormal(HEARTRATE_IRREGULAR)) heartBeat = HUD_HEART_BEAT_ACC2;
             else if (torso.abnormal(HEARTRATE_INCREASE)) heartBeat = HUD_HEART_BEAT_ACC;
         }
-        RenderSystem.enableBlend();
+
         for (int i = 0; i < max_width; i++) {
             int location = Math.toIntExact((i + tick) % HEART_BEAT_WIDTH);
-            guiGraphics.setColor(0.0F, (float) i / max_width, 0.0F, 1.0F);
-            guiGraphics.blit(heartBeat, panelX + location, panelY, 0, location, 0, 1, HEART_BEAT_HEIGHT, HEART_BEAT_WIDTH, HEART_BEAT_HEIGHT);
-        }
+            int color = ARGB.color(255, 0, 255 * i / max_width, 0);
 
-        guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.disableBlend();
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED_PREMULTIPLIED_ALPHA, heartBeat,
+                    panelX + location, panelY,
+                    location, 0,
+                    1, HEART_BEAT_HEIGHT, 1, HEART_BEAT_HEIGHT,
+                    HEART_BEAT_WIDTH, HEART_BEAT_HEIGHT,
+                    color
+            );
+        }
     }
 
     @Override
@@ -247,7 +248,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         if (target == null || target.isDeadOrDying() || HealthCapability.isDying(ClientAccessor.getPlayerOrThrow())) {
             GuiOpenWrapper.closeScreen();
         } else {
-            PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
+            ClientPacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
                     this.menu.targetEntity, 0, new CompoundTag(), HEALTH_SCANN
             ));
         }
@@ -276,10 +277,10 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
         var player = ClientAccessor.mc().player;
         if (player == null || HealthScreen.healthData == null) return;
         var cooldowns = player.getCooldowns();
-        var oxygenMask = this.menu.getSlot(45).getItem().getItem();
+        var oxygenMask = this.menu.getSlot(45).getItem();
         if (!cooldowns.isOnCooldown(oxygenMask))
             cooldowns.addCooldown(oxygenMask, HealthScreen.healthData.oxygenMaskCoolDown());
-        var autopulse = this.menu.getSlot(46).getItem().getItem();
+        var autopulse = this.menu.getSlot(46).getItem();
         if (!cooldowns.isOnCooldown(autopulse))
             cooldowns.addCooldown(autopulse, HealthScreen.healthData.autoPulseCoolDown());
     }

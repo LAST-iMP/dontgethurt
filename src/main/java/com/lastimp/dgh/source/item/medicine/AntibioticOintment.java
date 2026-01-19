@@ -28,12 +28,7 @@ public class AntibioticOintment extends AbstractPartlyHealItem {
     }
 
     @Override
-    public boolean hasCraftingRemainingItem(ItemStack stack) {
-        return stack.getDamageValue() < stack.getMaxDamage() - 1;
-    }
-
-    @Override
-    public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
+    public @NotNull ItemStack getCraftingRemainder(ItemStack itemStack) {
         var remaining = itemStack.copy();
         remaining.setDamageValue(itemStack.getDamageValue() + 1);
         return remaining.getDamageValue() >= remaining.getMaxDamage()

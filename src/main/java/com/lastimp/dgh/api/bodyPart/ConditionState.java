@@ -1,14 +1,13 @@
 
 package com.lastimp.dgh.api.bodyPart;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-import org.jetbrains.annotations.UnknownNullability;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 
 import static com.lastimp.dgh.DontGetHurt.EPS;
 
-public class ConditionState implements INBTSerializable<CompoundTag> {
+public class ConditionState implements ValueIOSerializable {
     public static final int MAX_TICK = 20;
     public static final float[] EASE_OUT_QUART = {
         0.0f,       0.18549375f,    0.3439f,    0.47799375f,    0.59034f,   0.68359375f,    0.7599f,    0.82149375f,
@@ -82,24 +81,22 @@ public class ConditionState implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        CompoundTag tag = new CompoundTag();
-        tag.putFloat("lastDisplayValue", this.lastDisplayValue);
-        tag.putFloat("displayValue", this.displayValue);
-        tag.putInt("tickCounter", this.tickCounter);
-        tag.putFloat("value", this.value);
-        tag.putFloat("hiddenValue", this.hiddenValue);
-        return tag;
+    public void serialize(ValueOutput valueOutput) {
+        valueOutput.putFloat("lastDisplayValue", this.lastDisplayValue);
+        valueOutput.putFloat("displayValue", this.displayValue);
+        valueOutput.putInt("tickCounter", this.tickCounter);
+        valueOutput.putFloat("value", this.value);
+        valueOutput.putFloat("hiddenValue", this.hiddenValue);
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
+    public void deserialize(ValueInput valueInput) {
         this.build(
-                tag.getFloat("lastDisplayValue"),
-                tag.getFloat("displayValue"),
-                tag.getInt("tickCounter"),
-                tag.getFloat("value"),
-                tag.getFloat("hiddenValue")
+                valueInput.getFloatOr("lastDisplayValue", 0f),
+                valueInput.getFloatOr("displayValue", 0f),
+                valueInput.getIntOr("tickCounter", 21),
+                valueInput.getFloatOr("value", 0f),
+                valueInput.getFloatOr("hiddenValue", 0f)
         );
     }
 }

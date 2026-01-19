@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": {
-      "item": "minecraft:ghast_tear"
-    },
-    "I": {
-      "item": "minecraft:blue_ice"
-    },
-    "L": {
-      "item": "minecraft:leather"
-    },
-    "R": {
-      "item": "minecraft:redstone"
-    },
-    "S": {
-      "item": "minecraft:soul_lantern"
-    }
+    "G": "minecraft:ghast_tear",
+    "I": "minecraft:blue_ice",
+    "L": "minecraft:leather",
+    "R": "minecraft:redstone",
+    "S": "minecraft:soul_lantern"
   },
   "pattern": [
     "IGI",

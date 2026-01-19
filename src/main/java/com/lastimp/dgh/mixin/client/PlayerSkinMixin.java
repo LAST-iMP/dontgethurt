@@ -2,12 +2,9 @@ package com.lastimp.dgh.mixin.client;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,9 +23,9 @@ public class PlayerSkinMixin {
         var tag = stack.get(DataComponents.PROFILE);
         if (tag == null) return;
 
-        GameProfile profile = tag.gameProfile();
+        GameProfile profile = tag.partialProfile();
         if (profile != null) {
-            cir.setReturnValue(Minecraft.getInstance().getConnection().getPlayerInfo(profile.getId()).getSkin());
+            cir.setReturnValue(Minecraft.getInstance().getConnection().getPlayerInfo(profile.id()).getSkin());
         }
     }
 }

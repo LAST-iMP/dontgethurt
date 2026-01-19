@@ -12,7 +12,7 @@ import net.minecraft.world.entity.EntityType;
 import java.util.Set;
 
 public record MyServerConfigSynData(String healthWhiteList) implements CustomPacketPayload {
-    public static final Type<MyServerConfigSynData> TYPE = new Type<>(Common.ResourceLocation(DontGetHurt.MODID, "my_server_config_data"));
+    public static final Type<MyServerConfigSynData> TYPE = new Type<>(Common.getId(DontGetHurt.MODID, "my_server_config_data"));
 
     public static final StreamCodec<ByteBuf, MyServerConfigSynData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8,

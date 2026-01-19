@@ -10,7 +10,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModEffects;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -25,8 +25,8 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public class Blood extends AbstractBody {
-    private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
-    private static List<ResourceLocation> BLOOD_CONDITIONS;
+    private static final Collection<Identifier> uniqueConditions = new LinkedHashSet<>();
+    private static List<Identifier> BLOOD_CONDITIONS;
 
     public Blood() {
         super();
@@ -36,12 +36,12 @@ public class Blood extends AbstractBody {
         this();
     }
 
-    public static void addCondition(Collection<ResourceLocation> key) {
+    public static void addCondition(Collection<Identifier> key) {
         uniqueConditions.addAll(key);
     }
 
     @Override
-    public List<ResourceLocation> getBodyConditions() {
+    public List<Identifier> getBodyConditions() {
         if (BLOOD_CONDITIONS == null) {
             BLOOD_CONDITIONS = new ArrayList<>(uniqueConditions);
         }

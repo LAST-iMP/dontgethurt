@@ -19,7 +19,7 @@ public class IntensePainEffect extends MobEffect {
     public void onEffectStarted(LivingEntity livingEntity, int amplifier) {
         this.addAttributeModifier(
                 Attributes.MOVEMENT_SPEED,
-                Common.ResourceLocation(DontGetHurt.MODID, "intense_pain"),
+                Common.getId(DontGetHurt.MODID, "intense_pain"),
                 -0.5f,
                 AttributeModifier.Operation.ADD_MULTIPLIED_BASE
         );

@@ -1,18 +1,19 @@
 package com.lastimp.dgh.source.core.menu.component;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import org.jetbrains.annotations.UnknownNullability;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-public class DynamicItemHandler implements IItemHandlerModifiable, INBTSerializable<CompoundTag> {
+@SuppressWarnings("removal")
+public class DynamicItemHandler implements net.neoforged.neoforge.items.IItemHandlerModifiable, ValueIOSerializable {
     private final Set<TagKey<Item>> allowedItemTags = new HashSet<>();
     private final Set<Item> allowedItems = new HashSet<>();
 
@@ -91,23 +92,27 @@ public class DynamicItemHandler implements IItemHandlerModifiable, INBTSerializa
     }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        CompoundTag tag = new CompoundTag();
-        for (int i = 0; i < stacks.length; i++) {
-            if (!stacks[i].isEmpty()) tag.put("item_"+i, stacks[i].save(provider));
+    public void serialize(ValueOutput valueOutput) {
+        for (int i = 0; i < this.stacks.length; i++) {
+            String key = "item_" + i;
+            ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, this.stacks[i]).ifSuccess(tag -> valueOutput.putString(key, tag.toString()));
         }
-        return tag;
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
-        for (int i = 0; i < stacks.length; i++) {
-            var stackTag = tag.getCompound("item_"+i);
-            if (!stackTag.isEmpty()) {
-                stacks[i] = ItemStack.parse(provider, tag.getCompound("item_" + i)).orElse(ItemStack.EMPTY);
-            } else {
-                stacks[i] = ItemStack.EMPTY;
-            }
+    public void deserialize(ValueInput valueInput) {
+        for (int i = 0; i < this.stacks.length; i++) {
+            String key = "item_" + i;
+            int finalI = i;
+            this.stacks[finalI] = ItemStack.EMPTY;
+            valueInput.getString(key).ifPresent(strTag -> {
+                try {
+                    var result = ItemStack.CODEC.parse(NbtOps.INSTANCE, TagParser.parseCompoundFully(strTag));
+                    result.ifSuccess(stack -> this.stacks[finalI] = stack);
+                } catch (CommandSyntaxException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
     }
 }

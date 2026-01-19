@@ -7,42 +7,6 @@
     "dgh:oxygen_mask",
     "dgh:antiseptic_sprayer",
     "dgh:autopulse",
-    "dgh:stasis_bag",
-    {
-      "id": "tfc:metal/shears/bismuth_bronze",
-      "required": false
-    },
-    {
-      "id": "tfc:metal/shears/black_bronze",
-      "required": false
-    },
-    {
-      "id": "tfc:metal/shears/bronze",
-      "required": false
-    },
-    {
-      "id": "tfc:metal/shears/copper",
-      "required": false
-    },
-    {
-      "id": "tfc:metal/shears/wrought_iron",
-      "required": false
-    },
-    {
-      "id": "tfc:metal/shears/steel",
-      "required": false
-    },
-    {
-      "id": "tfc:metal/shears/black_steel",
-      "required": false
-    },
-    {
-      "id": "tfc:metal/shears/blue_steel",
-      "required": false
-    },
-    {
-      "id": "tfc:metal/shears/red_steel",
-      "required": false
-    }
+    "dgh:stasis_bag"
   ]
 }

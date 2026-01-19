@@ -13,13 +13,16 @@ import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import com.lastimp.dgh.source.register.ModEffects;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
@@ -33,29 +36,29 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public abstract class AbstractVisibleBody extends AbstractBody {
-    private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
-    private static List<ResourceLocation> ANY_BODY_CONDITIONS;
+    private static final Collection<Identifier> uniqueConditions = new LinkedHashSet<>();
+    private static List<Identifier> ANY_BODY_CONDITIONS;
     private float nextTickBleed;
 
     private AttributeInstance armor;
     private AttributeInstance armor_toughness;
     private AttributeInstance knock_back_resist;
 
-    private ResourceLocation uuid_bone_stone;
-    private ResourceLocation uuid_bone_copper;
-    private ResourceLocation uuid_bone_iron;
-    private ResourceLocation uuid_bone_gold;
-    private ResourceLocation uuid_bone_dimond;
-    private ResourceLocation uuid_bone_netherite;
+    private Identifier uuid_bone_stone;
+    private Identifier uuid_bone_copper;
+    private Identifier uuid_bone_iron;
+    private Identifier uuid_bone_gold;
+    private Identifier uuid_bone_dimond;
+    private Identifier uuid_bone_netherite;
 
     private int nextFractureTick = 1200;
 
-    public static void addCondition(Collection<ResourceLocation> key) {
+    public static void addCondition(Collection<Identifier> key) {
         uniqueConditions.addAll(key);
     }
 
     @Override
-    public List<ResourceLocation> getBodyConditions() {
+    public List<Identifier> getBodyConditions() {
         if (ANY_BODY_CONDITIONS == null) {
             ANY_BODY_CONDITIONS = new ArrayList<>(uniqueConditions);
         }
@@ -100,20 +103,20 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     @Override
-    public void healing(ResourceLocation key, float value) {
+    public void healing(Identifier key, float value) {
         float heal = Mth.clamp(Math.min(-value, this.getConditionValue(key)), 0.0f, 2.0f) * Config.resistance_convert_ratio;
         handleResist(key, heal);
         super.healing(key, value);
     }
 
     @Override
-    public void healingHidden(ResourceLocation key, float value) {
+    public void healingHidden(Identifier key, float value) {
         float heal = Mth.clamp(Math.min(-value, this.getConditionHidden(key)), 0.0f, 2.0f) * Config.resistance_convert_ratio;
         handleResist(key, heal);
         super.healingHidden(key, value);
     }
 
-    private void handleResist(ResourceLocation key, float heal) {
+    private void handleResist(Identifier key, float heal) {
         if (key == BURN) {
             this.addConditionValue(BURN_RES, heal);
         } else if (key == OPEN_WOUND || key == PASS_THROUGH) {
@@ -186,13 +189,13 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.nextTickBleed += this.getCondition(PASS_THROUGH).getValue() * Config.open_wound_bleed_ratio * 1.5f;
     }
 
-    private void handleBandageAcc(ResourceLocation condition, float acc) {
+    private void handleBandageAcc(Identifier condition, float acc) {
         if (isBandaged()) {
             this.healingHidden(condition, - BodyCondition.get(condition).healingSpeed() * DELTA * (isBadBandaged() ? 1.0f : acc));
         }
     }
 
-    protected void handleCover(ResourceLocation condition) {
+    protected void handleCover(Identifier condition) {
         ConditionState state = this.getCondition(condition);
         if (!isBandaged() && !isBadBandaged()) {
             this.setConditionValue(condition, state.getValue() + state.getHiddenValue());
@@ -200,7 +203,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
     }
 
-    protected void handleFoodAcc(LivingEntity entity, ResourceLocation condition, float acc) {
+    protected void handleFoodAcc(LivingEntity entity, Identifier condition, float acc) {
         if (!this.abnormalWithHidden(condition)) return;
         if (!(entity instanceof ServerPlayer player)) return;
 
@@ -216,7 +219,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
     }
 
-    private void handleInjuryInfection(ResourceLocation condition) {
+    private void handleInjuryInfection(Identifier condition) {
         ConditionState state = this.getCondition(condition);
         if (isBadBandaged()) {
             this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * DELTA * 4 * state.getTotalValue());
@@ -234,7 +237,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
             this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * DELTA);
     }
 
-    private void handleCombatStimulant(LivingEntity entity, ResourceLocation condition) {
+    private void handleCombatStimulant(LivingEntity entity, Identifier condition) {
         if (!entity.hasEffect(ModEffects.COMBAT_STIMULANT_EFFECT)) return;
         if (this.abnormalOnlyHidden(condition)) {
             this.healingHidden(condition, -0.02f * DELTA);
@@ -338,7 +341,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void updateStoneBoneEffect() {
         if (uuid_bone_stone == null)
-            uuid_bone_stone = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_STONE);
+            uuid_bone_stone = Common.getId(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_STONE);
 
         if (this.getConditionHidden(BONE_STONE) > BodyCondition.get(BONE_STONE).maxValue() - EPS) {
             if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_stone) == null)
@@ -363,7 +366,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void updateCopperBoneEffect() {
         if (uuid_bone_copper == null)
-            uuid_bone_copper = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_COPPER);
+            uuid_bone_copper = Common.getId(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_COPPER);
 
         if (this.getConditionHidden(BONE_COPPER) > BodyCondition.get(BONE_COPPER).maxValue() - EPS) {
             if (armor != null && armor.getModifier(uuid_bone_copper) == null)
@@ -388,7 +391,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void updateIronBoneEffect() {
         if (uuid_bone_iron == null)
-            uuid_bone_iron = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_IRON);
+            uuid_bone_iron = Common.getId(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_IRON);
 
         if (this.getConditionHidden(BONE_IRON) > BodyCondition.get(BONE_IRON).maxValue() - EPS) {
             if (armor != null && armor.getModifier(uuid_bone_iron) == null)
@@ -405,7 +408,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void updateGoldBoneEffect() {
         if (uuid_bone_gold == null)
-            uuid_bone_gold = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_GOLD);
+            uuid_bone_gold = Common.getId(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_GOLD);
 
         if (this.getConditionHidden(BONE_GOLD) > BodyCondition.get(BONE_GOLD).maxValue() - EPS) {
             if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_gold) == null)
@@ -422,7 +425,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void updateDimondBoneEffect() {
         if (uuid_bone_dimond == null)
-            uuid_bone_dimond = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_DIMOND);
+            uuid_bone_dimond = Common.getId(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_DIMOND);
 
         if (this.getConditionHidden(BONE_DIMOND) > BodyCondition.get(BONE_DIMOND).maxValue() - EPS) {
             if (armor != null && armor.getModifier(uuid_bone_dimond) == null)
@@ -439,7 +442,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void updateNetheriteBoneEffect() {
         if (uuid_bone_netherite == null)
-            uuid_bone_netherite = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
+            uuid_bone_netherite = Common.getId(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
 
         if (this.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS) {
             if (armor != null && armor.getModifier(uuid_bone_netherite) == null)
@@ -493,7 +496,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         return 0;
     }
 
-    public ResourceLocation boneCrafted() {
+    public Identifier boneCrafted() {
         for (var key : BodyCondition.bones.keySet()) {
             if (this.abnormalWithHidden(key))
                 return key;
@@ -506,15 +509,14 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        var nbt = super.serializeNBT(provider);
-        nbt.putInt("nextFractureTick", this.nextFractureTick);
-        return nbt;
+    public void serialize(@NotNull ValueOutput valueOutput) {
+        super.serialize(valueOutput);
+        valueOutput.putInt("nextFractureTick", this.nextFractureTick);
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        this.nextFractureTick = nbt.getInt("nextFractureTick");
-        super.deserializeNBT(provider, nbt);
+    public void deserialize(@NotNull ValueInput valueInput) {
+        super.deserialize(valueInput);
+        this.nextFractureTick = valueInput.getIntOr("nextFractureTick", 1200);
     }
 }

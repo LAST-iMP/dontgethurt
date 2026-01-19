@@ -2,25 +2,25 @@
 package com.lastimp.dgh.source.core.capability;
 
 import com.lastimp.dgh.config.HealthLivingEntityList;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import org.jetbrains.annotations.Nullable;
 
-public class HealthProvider implements ICapabilityProvider<Entity, Void, HealthCapability>, INBTSerializable<CompoundTag> {
+public class HealthProvider implements ICapabilityProvider<Entity, Void, HealthCapability>, ValueIOSerializable {
     private final HealthCapability impl = new HealthCapability();
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        return impl.serializeNBT(provider);
+    public void serialize(ValueOutput output) {
+        impl.serialize(output);
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        impl.deserializeNBT(provider, nbt);
+    public void deserialize(ValueInput input) {
+        impl.deserialize(input);
     }
 
     @Override

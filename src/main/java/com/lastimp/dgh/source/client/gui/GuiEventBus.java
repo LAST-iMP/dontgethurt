@@ -12,11 +12,10 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
@@ -26,12 +25,11 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 import java.util.Set;
 
-@OnlyIn(value = Dist.CLIENT)
 @EventBusSubscriber(modid = DontGetHurt.MODID, value = Dist.CLIENT)
 public class GuiEventBus {
     private static boolean onDying = false;
     private static boolean onPause = false;
-    private static Set<ResourceLocation> BLOCKED_OVERLAYS;
+    private static Set<Identifier> BLOCKED_OVERLAYS;
 
     @SubscribeEvent
     public static void screenOpen(ScreenEvent.Opening event) {
@@ -73,8 +71,9 @@ public class GuiEventBus {
                     VanillaGuiLayers.FOOD_LEVEL,
                     VanillaGuiLayers.AIR_LEVEL,
                     VanillaGuiLayers.VEHICLE_HEALTH,
-                    VanillaGuiLayers.JUMP_METER,
-                    VanillaGuiLayers.EXPERIENCE_BAR,
+                    VanillaGuiLayers.CONTEXTUAL_INFO_BAR,
+                    VanillaGuiLayers.CONTEXTUAL_INFO_BAR_BACKGROUND,
+                    VanillaGuiLayers.EXPERIENCE_LEVEL,
                     VanillaGuiLayers.SELECTED_ITEM_NAME
             );
         }

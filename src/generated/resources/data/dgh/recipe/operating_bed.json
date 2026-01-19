@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "a": {
-      "tag": "minecraft:beds"
-    },
-    "b": {
-      "item": "minecraft:iron_bars"
-    },
-    "c": {
-      "item": "dgh:morphine"
-    }
+    "a": "#minecraft:beds",
+    "b": "minecraft:iron_bars",
+    "c": "dgh:morphine"
   },
   "pattern": [
     " c ",

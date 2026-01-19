@@ -5,6 +5,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
@@ -32,12 +33,12 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             UUID uuid = new UUID(data.id_most(), data.id_least());
             ServerPlayer sender = (ServerPlayer) context.player();
-            var target = Utils.getLivingWithHealth(sender.serverLevel(), uuid);
+            var target = Utils.getLivingWithHealth(sender.level(), uuid);
             if (target == null) return;
 
             HealthCapability.getAndApply(target, health -> PacketDistributor.sendToPlayer(
                     (ServerPlayer) context.player(),
-                    MyReadAllConditionData.getInstance(uuid, target.getId(), health.serializeNBT(sender.registryAccess()), OperationType.valueOf(data.oper()))
+                    MyReadAllConditionData.getInstance(uuid, target.getId(), Common.rebuildTag(health), OperationType.valueOf(data.oper()))
             ));
         })
         .exceptionally(e -> {
@@ -69,7 +70,7 @@ public class ServerPayloadHandler {
                             PlayerDyingHandler.setPlayerDead(player);
                             break;
                         case CALL_FOR_HELP:
-                            player.getServer().getPlayerList().getPlayers().forEach(p -> {
+                            player.level().players().forEach(p -> {
                                 p.sendSystemMessage(Component.literal(
                                         player.getScoreboardName() + "在("
                                                 + String.format("%.1f", player.position().x) + ", "
@@ -91,7 +92,7 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
                     ServerPlayer sourcePlayer = (ServerPlayer) context.player();
                     if (!(sourcePlayer.containerMenu instanceof HealthMenu healthMenu)) return;
-                    var target = Utils.getLivingWithHealth(((ServerPlayer) context.player()).serverLevel(), new UUID(data.id_most(), data.id_least()));
+                    var target = Utils.getLivingWithHealth(((ServerPlayer) context.player()).level(), new UUID(data.id_most(), data.id_least()));
                     if (target == null) return;
 
                     if (data.slotNum() == MyHealingItemUseData.HAND_PULSE) {

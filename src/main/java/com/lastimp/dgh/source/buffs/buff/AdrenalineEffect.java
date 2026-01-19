@@ -17,13 +17,13 @@ public class AdrenalineEffect extends MobEffect {
     public void onEffectStarted(LivingEntity livingEntity, int amplifier) {
         this.addAttributeModifier(
                 Attributes.ATTACK_DAMAGE,
-                Common.ResourceLocation(DontGetHurt.MODID, "adrenaline_effect"),
+                Common.getId(DontGetHurt.MODID, "adrenaline_effect"),
                 0.1f,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
         this.addAttributeModifier(
                 Attributes.MOVEMENT_SPEED,
-                Common.ResourceLocation(DontGetHurt.MODID, "adrenaline_effect"),
+                Common.getId(DontGetHurt.MODID, "adrenaline_effect"),
                 0.1f,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );

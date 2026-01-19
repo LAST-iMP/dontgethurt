@@ -6,8 +6,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +13,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-@OnlyIn(value = Dist.CLIENT)
 public abstract class ClientAccessor {
     private static final Lazy<Minecraft> MINECRAFT = Lazy.of(Minecraft::getInstance);
 

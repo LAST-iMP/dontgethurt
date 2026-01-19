@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "a": {
-      "item": "minecraft:leather"
-    },
-    "b": {
-      "item": "minecraft:string"
-    }
+    "a": "minecraft:leather",
+    "b": "minecraft:string"
   },
   "pattern": [
     " a ",

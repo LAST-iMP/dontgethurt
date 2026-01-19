@@ -5,21 +5,21 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("removal")
 public class DynamicSlot extends Slot {
     private static final Container emptyInventory = new SimpleContainer(0);
     private final int index;
-    private IItemHandler handler;
+    private net.neoforged.neoforge.items.IItemHandler handler;
 
-    public DynamicSlot(IItemHandler handler, int index, int x, int y) {
+    public DynamicSlot(net.neoforged.neoforge.items.IItemHandler handler, int index, int x, int y) {
         super(emptyInventory, index, x, y);
         this.handler = handler;
         this.index = index;
     }
 
-    public void setHandler(IItemHandler handler) {
+    public void setHandler(net.neoforged.neoforge.items.IItemHandler handler) {
         this.handler = handler;
         if (handler != null)
             this.set(this.handler.getStackInSlot(index));
@@ -46,9 +46,9 @@ public class DynamicSlot extends Slot {
         return this.handler.getStackInSlot(this.index);
     }
 
-    public void set(ItemStack stack) {
+    public void set(@NotNull ItemStack stack) {
         if (handler == null) return;
-        ((IItemHandlerModifiable)this.handler).setStackInSlot(this.index, stack);
+        ((net.neoforged.neoforge.items.IItemHandlerModifiable)this.handler).setStackInSlot(this.index, stack);
         this.setChanged();
     }
 

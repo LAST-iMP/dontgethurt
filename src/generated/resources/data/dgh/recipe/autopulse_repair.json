@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "dgh:autopulse"
-    },
-    {
-      "item": "dgh:adrenaline"
-    }
+    "dgh:autopulse",
+    "dgh:adrenaline"
   ],
   "result": {
     "count": 1,

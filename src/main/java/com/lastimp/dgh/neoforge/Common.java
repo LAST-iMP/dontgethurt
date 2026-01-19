@@ -1,29 +1,40 @@
 package com.lastimp.dgh.neoforge;
 
+import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.capability.InjuryRecord;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.ByteTag;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.network.Filterable;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.WritableBookContent;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.component.WrittenBookContent;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class Common {
-    public static ResourceLocation ResourceLocation(String namespace, String path) {
-        return ResourceLocation.fromNamespaceAndPath(namespace, path);
+    public static ValueInput rebuild(HealthCapability health, HolderLookup.Provider lookup) {
+        TagValueOutput output = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
+        health.serialize(output);
+        return TagValueInput.create(ProblemReporter.DISCARDING, lookup, output.buildResult());
     }
 
-    public static ResourceLocation ResourceBySeperator(String path, char seperator) {
-        return ResourceLocation.bySeparator(path, seperator);
+    public static CompoundTag rebuildTag(HealthCapability health) {
+        TagValueOutput output = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
+        health.serialize(output);
+        return output.buildResult();
+    }
+
+    public static Identifier getId(String namespace, String path) {
+        return Identifier.fromNamespaceAndPath(namespace, path);
+    }
+
+    public static Identifier getIdBySeperator(String path, char seperator) {
+        return Identifier.bySeparator(path, seperator);
     }
 
     public static WrittenBookContent getBookTag(Component title, Component author, List<InjuryRecord> recordList) {

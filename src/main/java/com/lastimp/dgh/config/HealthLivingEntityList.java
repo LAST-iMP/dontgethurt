@@ -8,7 +8,7 @@ import com.lastimp.dgh.DontGetHurt;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.loading.FMLPaths;
-import org.antlr.v4.runtime.misc.Triple;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -26,7 +26,7 @@ public class HealthLivingEntityList {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Map<EntityType<?>, Triple<Float, Float, Float>> HEALTH_WHITE_LIST = new HashMap();
     private static final Set<UUID> HEALTH_PLAYER_BLACK_LIST = new HashSet<>();
-    private static final Triple<Float, Float, Float> DEFAULT = new Triple<>(1f, 1f, 1f);
+    private static final Triple<Float, Float, Float> DEFAULT = Triple.of(1f, 1f, 1f);
 
     public static boolean isEntityWhitelisted(EntityType<?> entityType) {
         return HEALTH_WHITE_LIST.containsKey(entityType);
@@ -39,11 +39,11 @@ public class HealthLivingEntityList {
     public static float getEntityDownResist(EntityType<?> entityType, int resist_type) {
         if (!isEntityWhitelisted(entityType)) return 1.0f;
         if (resist_type == ENV_RESIST) {
-            return HEALTH_WHITE_LIST.get(entityType).a;
+            return HEALTH_WHITE_LIST.get(entityType).getLeft();
         } else if (resist_type == ENTITY_RESIST) {
-            return HEALTH_WHITE_LIST.get(entityType).b;
+            return HEALTH_WHITE_LIST.get(entityType).getMiddle();
         } else if (resist_type == PLAYER_RESIST) {
-            return HEALTH_WHITE_LIST.get(entityType).c;
+            return HEALTH_WHITE_LIST.get(entityType).getRight();
         }
         return 1.0f;
     }
@@ -106,7 +106,7 @@ public class HealthLivingEntityList {
             float evn = element.has("DOWN_DAMAGE_RESISTANCE_ENV") ? element.get("DOWN_DAMAGE_RESISTANCE_ENV").getAsFloat() : 0.1f;
             float entity = element.has("DOWN_DAMAGE_RESISTANCE_ENTITY") ? element.get("DOWN_DAMAGE_RESISTANCE_ENTITY").getAsFloat() : 0.1f;
             float player = element.has("DOWN_DAMAGE_RESISTANCE_PLAYER") ? element.get("DOWN_DAMAGE_RESISTANCE_PLAYER").getAsFloat() : 0.1f;
-            EntityType.byString(element.get("id").getAsString()).ifPresent(type -> HEALTH_WHITE_LIST.put(type, new Triple<>(evn, entity, player)));
+            EntityType.byString(element.get("id").getAsString()).ifPresent(type -> HEALTH_WHITE_LIST.put(type, Triple.of(evn, entity, player)));
         });
     }
 

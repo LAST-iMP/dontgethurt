@@ -7,15 +7,13 @@ import com.lastimp.dgh.source.core.menu.BagMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
-@OnlyIn(value = Dist.CLIENT)
 public class BagScreen extends AbstractContainerScreen<BagMenu> {
-    private static final ResourceLocation HUD_BACKGROUND = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/healthcare_bag_hud.png");
+    private static final Identifier HUD_BACKGROUND = Common.getId(DontGetHurt.MODID, "textures/gui/healthcare_bag_hud.png");
 
     private static final int PANEL_WIDTH = 176;   // 面板宽度
     private static final int PANEL_HEIGHT = 112;  // 面板高度
@@ -36,7 +34,7 @@ public class BagScreen extends AbstractContainerScreen<BagMenu> {
         int panelX = (guiGraphics.guiWidth() - PANEL_WIDTH) / 2;
         int panelY = (guiGraphics.guiHeight() - PANEL_HEIGHT) / 2;
 
-        guiGraphics.blit(HUD_BACKGROUND, panelX, panelY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, HUD_BACKGROUND, panelX, panelY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT, 256, 256);
     }
 
     @Override

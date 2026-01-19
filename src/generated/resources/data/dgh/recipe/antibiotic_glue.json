@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "dgh:antibiotics"
-    },
-    {
-      "item": "minecraft:magma_cream"
-    }
+    "dgh:antibiotics",
+    "minecraft:magma_cream"
   ],
   "result": {
     "count": 1,

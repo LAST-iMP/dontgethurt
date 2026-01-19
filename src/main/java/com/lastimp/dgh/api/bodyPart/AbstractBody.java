@@ -2,31 +2,29 @@
 package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import org.apache.commons.lang3.tuple.Triple;
-import org.jetbrains.annotations.UnknownNullability;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.DontGetHurt.EPS;
 
-public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
+public abstract class AbstractBody implements ValueIOSerializable {
 
-    private final HashMap<ResourceLocation, ConditionState> state = new HashMap<>();
+    private final HashMap<Identifier, ConditionState> state = new HashMap<>();
     private static final HashMap<String, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> handlers = new LinkedHashMap<>();
 
     public AbstractBody() {
@@ -39,7 +37,7 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         handlers.put(ID, handler);
     }
 
-    public abstract List<ResourceLocation> getBodyConditions();
+    public abstract List<Identifier> getBodyConditions();
 
     public abstract float getVitalityWeight();
 
@@ -47,53 +45,53 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     public abstract Component getComponent();
 
-    public ConditionState getCondition(ResourceLocation key) {
+    public ConditionState getCondition(Identifier key) {
         return state.get(key);
     }
 
-    public float getConditionValue(ResourceLocation key) {
+    public float getConditionValue(Identifier key) {
         return this.getCondition(key).getValue();
     }
 
-    public void setConditionValue(ResourceLocation key, float value) {
+    public void setConditionValue(Identifier key, float value) {
         ConditionState state = this.state.get(key);
         BodyCondition condition = BodyCondition.get(key);
         state.setValue(Mth.clamp(value, condition.minValue(), condition.maxValue()));
     }
 
-    public void addConditionValue(ResourceLocation key, float value) {
+    public void addConditionValue(Identifier key, float value) {
         float newValue = this.getConditionValue(key) + value;
         this.setConditionValue(key, newValue);
     }
 
-    public float getConditionHidden(ResourceLocation key) {
+    public float getConditionHidden(Identifier key) {
         return this.getCondition(key).getHiddenValue();
     }
 
-    public void setConditionHidden(ResourceLocation key, float value) {
+    public void setConditionHidden(Identifier key, float value) {
         ConditionState state = this.state.get(key);
         BodyCondition condition = BodyCondition.get(key);
         state.setHiddenValue(Mth.clamp(value, condition.minValue(), condition.maxValue()));
     }
 
-    public void addConditionHidden(ResourceLocation key, float value) {
+    public void addConditionHidden(Identifier key, float value) {
         float newValue = this.getConditionHidden(key) + value;
         this.setConditionHidden(key, newValue);
     }
 
-    public void injury(ResourceLocation key, float value) {
+    public void injury(Identifier key, float value) {
         this.addConditionValue(key, value);
     }
 
-    public void injuryHidden(ResourceLocation key, float value) {
+    public void injuryHidden(Identifier key, float value) {
         this.addConditionHidden(key, value);
     }
 
-    public void healing(ResourceLocation key, float value) {
+    public void healing(Identifier key, float value) {
         this.addConditionValue(key, value);
     }
 
-    public void healingHidden(ResourceLocation key, float value) {
+    public void healingHidden(Identifier key, float value) {
         this.addConditionHidden(key, value);
     }
 
@@ -125,7 +123,7 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         }
     }
 
-    protected List<ResourceLocation> getNoHealingConditions() {
+    protected List<Identifier> getNoHealingConditions() {
         return List.of();
     }
 
@@ -139,17 +137,17 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         }
     }
 
-    public boolean abnormalWithHidden(ResourceLocation key) {
+    public boolean abnormalWithHidden(Identifier key) {
         return this.abnormal(key) || this.abnormalOnlyHidden(key);
     }
 
-    public boolean abnormalOnlyHidden(ResourceLocation key) {
+    public boolean abnormalOnlyHidden(Identifier key) {
         if (!this.getBodyConditions().contains(key)) return false;
         var condition = BodyCondition.get(key);
         return condition.abnormal(this.getCondition(key).getHiddenValue());
     }
 
-    public boolean abnormal(ResourceLocation key) {
+    public boolean abnormal(Identifier key) {
         if (!this.getBodyConditions().contains(key)) return false;
         var condition = BodyCondition.get(key);
         return condition.abnormal(this.getConditionValue(key));
@@ -165,32 +163,27 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        CompoundTag tag = new CompoundTag();
-        for (Map.Entry<ResourceLocation, ConditionState> e : state.entrySet()) {
+    public void serialize(@NotNull ValueOutput valueOutput) {
+        for (Map.Entry<Identifier, ConditionState> e : state.entrySet()) {
             var key = e.getKey();
             var state = e.getValue();
             if (state.isDefault(BodyCondition.get(key))) continue;
-            tag.put(key.toString(), state.serializeNBT(provider));
+            valueOutput.putChild(key.toString(), state);
         }
-        return tag;
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        if (nbt == null) return;
+    public void deserialize(@NotNull ValueInput valueInput) {
         for (var key : this.getBodyConditions()) {
-            if (nbt.contains(key.toString())) {
-                state.get(key).deserializeNBT(provider, nbt.getCompound(key.toString()));
-            } else {
-                state.put(key, new ConditionState(BodyCondition.get(key).defaultValue()));
-            }
+            var newState = new ConditionState(BodyCondition.get(key).defaultValue());
+            valueInput.child(key.toString()).ifPresent(newState::deserialize);
+            state.put(key, newState);
         }
     }
 
-    public static <T extends AbstractBody> AbstractBody buildFromNBT(HolderLookup.Provider provider, CompoundTag nbt, Supplier<T> constructor) {
+    public static <T extends AbstractBody> AbstractBody buildFromNBT(@NotNull ValueInput valueInput, Supplier<T> constructor) {
         T body = constructor.get();
-        body.deserializeNBT(provider, nbt);
+        body.deserialize(valueInput);
         return body;
     }
 }

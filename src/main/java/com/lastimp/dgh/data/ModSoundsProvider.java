@@ -2,13 +2,12 @@ package com.lastimp.dgh.data;
 
 import com.lastimp.dgh.source.register.ModSounds;
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.SoundDefinition;
 import net.neoforged.neoforge.common.data.SoundDefinitionsProvider;
 
 public class ModSoundsProvider extends SoundDefinitionsProvider {
-    protected ModSoundsProvider(PackOutput output, String modId, ExistingFileHelper helper) {
-        super(output, modId, helper);
+    protected ModSoundsProvider(PackOutput output, String modId) {
+        super(output, modId);
     }
 
     @Override

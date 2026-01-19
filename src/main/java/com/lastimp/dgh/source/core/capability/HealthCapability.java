@@ -15,12 +15,15 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.*;
 import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModItems;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -28,8 +31,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -41,7 +47,7 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.OXYGEN;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.OperationType.SYN;
 
-public class HealthCapability implements INBTSerializable<CompoundTag> {
+public class HealthCapability implements ValueIOSerializable {
     private final WholeBody body = new WholeBody();
     private final DynamicItemHandler oxygenMask = new DynamicItemHandler();
     private final DynamicItemHandler autoPulse = new DynamicItemHandler();
@@ -109,7 +115,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         return this.body.getComponent(component);
     }
 
-    public BodyComponents findFor(ResourceLocation condition) {
+    public BodyComponents findFor(Identifier condition) {
         for (var component : VISIBLE_BODIES) {
             if (this.getComponent(component).abnormal(condition))
                 return component;
@@ -119,7 +125,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         return null;
     }
 
-    public BodyComponents findForHidden(ResourceLocation condition) {
+    public BodyComponents findForHidden(Identifier condition) {
         for (var component : VISIBLE_BODIES) {
             if (this.getComponent(component).abnormalWithHidden(condition))
                 return component;
@@ -251,67 +257,75 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         return tag;
     }
 
-    @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        CompoundTag tag = new CompoundTag();
-        tag.put("body", this.body.serializeNBT(provider));
-        tag.putFloat("playerVitality", this.vitality);
-        tag.putLong("livingTick", this.livingTick);
-        tag.putFloat("almostDead", this.almostDead);
-        tag.putInt("nearBedTick", this.nearBedTick);
-        tag.putFloat("outerHealing", this.outerHealing);
-        tag.putFloat("outerHealingDelta", this.outerHealingDelta);
-        tag.put("oxygenMask", this.oxygenMask.serializeNBT(provider));
-        tag.put("autoPulse", this.autoPulse.serializeNBT(provider));
-        tag.putInt("oxygenMaskCoolDown", this.oxygenMaskCoolDown);
-        tag.putInt("autoPulseCoolDown", this.autoPulseCoolDown);
-        tag.putUUID("lastHealer", this.lastHealer);
-
-        serializeRecord("directInjury", this.directInjury, tag, provider);
-        serializeRecord("lastDeathDirectInjury", this.lastDeathDirectInjury, tag, provider);
-        return tag;
-    }
-
-    public static void serializeRecord(String key, List<InjuryRecord> recordList, CompoundTag tag, HolderLookup.Provider provider) {
-        ListTag listTag = new ListTag();
-        recordList.forEach((record) -> listTag.add(listTag.size(), record.serializeNBT(provider)));
-        tag.put(key, listTag);
-    }
-
     public void lightDeserializeNBT(CompoundTag nbt) {
         if (nbt == null) return;
-        this.armBreak = nbt.getInt("armBreak");
-        this.leftArmVisible = nbt.getBoolean("leftArmVisible");
-        this.rightArmVisible = nbt.getBoolean("rightArmVisible");
-        this.leftLegVisible = nbt.getBoolean("leftLegVisible");
-        this.rightLegVisible = nbt.getBoolean("rightLegVisible");
+        this.armBreak = nbt.getIntOr("armBreak", 0);
+        this.leftArmVisible = nbt.getBooleanOr("leftArmVisible", true);
+        this.rightArmVisible = nbt.getBooleanOr("rightArmVisible", true);
+        this.leftLegVisible = nbt.getBooleanOr("leftLegVisible", true);
+        this.rightLegVisible = nbt.getBooleanOr("rightLegVisible", true);
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        if (nbt == null) return;
-        this.body.deserializeNBT(provider, nbt.getCompound("body"));
-        this.vitality = nbt.getFloat("playerVitality");
-        this.livingTick = nbt.getLong("livingTick");
-        this.almostDead = nbt.getFloat("almostDead");
-        this.nearBedTick = nbt.getInt("nearBedTick");
-        this.outerHealing = nbt.getFloat("outerHealing");
-        this.outerHealingDelta = nbt.getFloat("outerHealingDelta");
-        this.oxygenMask.deserializeNBT(provider, nbt.getCompound("oxygenMask"));
-        this.autoPulse.deserializeNBT(provider, nbt.getCompound("autoPulse"));
-        this.oxygenMaskCoolDown = nbt.getInt("oxygenMaskCoolDown");
-        this.autoPulseCoolDown = nbt.getInt("autoPulseCoolDown");
-        if (nbt.get("lastHealer") != null)
-            this.lastHealer = nbt.getUUID("lastHealer");
+    public void serialize(@NotNull ValueOutput valueOutput) {
+        valueOutput.putChild("body", this.body);
+        valueOutput.putFloat("playerVitality", this.vitality);
+        valueOutput.putLong("livingTick", this.livingTick);
+        valueOutput.putFloat("almostDead", this.almostDead);
+        valueOutput.putInt("nearBedTick", this.nearBedTick);
+        valueOutput.putFloat("outerHealing", this.outerHealing);
+        valueOutput.putFloat("outerHealingDelta", this.outerHealingDelta);
+        valueOutput.putChild("oxygenMask", this.oxygenMask);
+        valueOutput.putChild("autoPulse", this.autoPulse);
+        valueOutput.putInt("oxygenMaskCoolDown", this.oxygenMaskCoolDown);
+        valueOutput.putInt("autoPulseCoolDown", this.autoPulseCoolDown);
+        if (this.lastHealer != null)
+            valueOutput.putIntArray("lastHealer", UUIDUtil.uuidToIntArray(this.lastHealer));
 
-        deserializeRecord("directInjury", this.directInjury, nbt, provider);
-        deserializeRecord("lastDeathDirectInjury", this.lastDeathDirectInjury, nbt, provider);
+        serializeRecord("directInjury", this.directInjury, valueOutput);
+        serializeRecord("lastDeathDirectInjury", this.lastDeathDirectInjury, valueOutput);
     }
 
-    public static void deserializeRecord(String key, List<InjuryRecord> recordList, CompoundTag nbt, HolderLookup.Provider provider) {
-        ListTag listTag = nbt.getList(key, ListTag.TAG_COMPOUND);
-        recordList.clear();
-        listTag.forEach((tag -> recordList.add(InjuryRecord.phrase(provider, (CompoundTag) tag))));
+    @Override
+    public void deserialize(ValueInput valueInput) {
+        this.body.deserialize(valueInput.rawChildOrEmpty("body"));
+        this.vitality = valueInput.getFloatOr("playerVitality", 1.0f);
+        this.livingTick = valueInput.getLongOr("livingTick", 0L);
+        this.almostDead = valueInput.getFloatOr("almostDead", 1.0f);
+        this.nearBedTick = valueInput.getIntOr("nearBedTick", 0);
+        this.outerHealing = valueInput.getFloatOr("outerHealing", 0f);
+        this.outerHealingDelta = valueInput.getFloatOr("outerHealingDelta", 0f);
+        this.oxygenMask.deserialize(valueInput.rawChildOrEmpty("oxygenMask"));
+        this.autoPulse.deserialize(valueInput.rawChildOrEmpty("autoPulse"));
+        this.oxygenMaskCoolDown = valueInput.getIntOr("oxygenMaskCoolDown", 0);
+        this.autoPulseCoolDown = valueInput.getIntOr("autoPulseCoolDown", 0);
+        valueInput.getIntArray("lastHealer").ifPresent(ints -> this.lastHealer = UUIDUtil.uuidFromIntArray(ints));
+
+        deserializeRecord("directInjury", this.directInjury, valueInput);
+        deserializeRecord("lastDeathDirectInjury", this.lastDeathDirectInjury, valueInput);
+
+    }
+
+    public static void serializeRecord(String key, List<InjuryRecord> recordList, ValueOutput valueOutput) {
+        ListTag listTag = new ListTag();
+        CompoundTag tag = new CompoundTag();
+        recordList.forEach((record) -> listTag.add(listTag.size(), record.serializeNBT()));
+        tag.put("list", listTag);
+        valueOutput.putString(key, tag.toString());
+    }
+
+    public static void deserializeRecord(String key, List<InjuryRecord> recordList, ValueInput valueInput) {
+        valueInput.getString(key).ifPresent(string -> {
+            try {
+                CompoundTag tag = TagParser.parseCompoundFully(string);
+                tag.getList("list").ifPresent(list -> {
+                    recordList.clear();
+                    list.forEach((element -> recordList.add(InjuryRecord.phrase((CompoundTag) element))));
+                });
+            } catch (CommandSyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public boolean intensePain() {

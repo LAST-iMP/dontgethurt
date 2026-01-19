@@ -14,11 +14,14 @@ import com.lastimp.dgh.source.register.ModEffects;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
@@ -32,23 +35,23 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public class Torso extends AbstractVisibleBody {
-    private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
-    private static List<ResourceLocation> TORSO_CONDITIONS;
+    private static final Collection<Identifier> uniqueConditions = new LinkedHashSet<>();
+    private static List<Identifier> TORSO_CONDITIONS;
 
     private AttributeInstance fly_speed;
     private AttributeInstance knock_back_resist;
 
-    private ResourceLocation uuid_bone_wood;
-    private ResourceLocation uuid_bone_netherite;
+    private Identifier uuid_bone_wood;
+    private Identifier uuid_bone_netherite;
 
     private int nextPneumothoraxTick = 1800;
 
-    public static void addCondition(Collection<ResourceLocation> key) {
+    public static void addCondition(Collection<Identifier> key) {
         uniqueConditions.addAll(key);
     }
 
     @Override
-    public List<ResourceLocation> getBodyConditions() {
+    public List<Identifier> getBodyConditions() {
         if (TORSO_CONDITIONS == null) {
             TORSO_CONDITIONS = new ArrayList<>(super.getBodyConditions());
             TORSO_CONDITIONS.addAll(uniqueConditions);
@@ -103,7 +106,7 @@ public class Torso extends AbstractVisibleBody {
 
     private void updateWoodBoneEffect() {
         if (uuid_bone_wood == null)
-            uuid_bone_wood = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_WOOD);
+            uuid_bone_wood = Common.getId(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_WOOD);
 
         if (this.getConditionHidden(BONE_WOOD) > BodyCondition.get(BONE_WOOD).maxValue() - EPS) {
             if (fly_speed != null && fly_speed.getModifier(uuid_bone_wood) == null)
@@ -120,7 +123,7 @@ public class Torso extends AbstractVisibleBody {
 
     private void updateNetheriteBoneEffect() {
         if (uuid_bone_netherite == null)
-            uuid_bone_netherite = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
+            uuid_bone_netherite = Common.getId(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
 
         if (this.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS) {
             if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_netherite) == null)
@@ -238,7 +241,7 @@ public class Torso extends AbstractVisibleBody {
     }
 
     @Override
-    public void healing(ResourceLocation key, float value) {
+    public void healing(Identifier key, float value) {
         if (key == HEARTRATE_STOP || key == HEARTRATE_IRREGULAR || key == HEARTRATE_INCREASE) {
             this.addHeartRate(value);
         } else {
@@ -247,7 +250,7 @@ public class Torso extends AbstractVisibleBody {
     }
 
     @Override
-    public void injury(ResourceLocation key, float value) {
+    public void injury(Identifier key, float value) {
         if (key == HEARTRATE_STOP || key == HEARTRATE_IRREGULAR || key == HEARTRATE_INCREASE) {
             this.addHeartRate(value);
         } else {
@@ -256,16 +259,15 @@ public class Torso extends AbstractVisibleBody {
     }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        var nbt = super.serializeNBT(provider);
-        nbt.putInt("nextPneumothoraxTick", nextPneumothoraxTick);
-        return nbt;
+    public void serialize(@NotNull ValueOutput valueOutput) {
+        super.serialize(valueOutput);
+        valueOutput.putInt("nextPneumothoraxTick", nextPneumothoraxTick);
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        this.nextPneumothoraxTick = nbt.getInt("nextPneumothoraxTick");
-        super.deserializeNBT(provider, nbt);
+    public void deserialize(@NotNull ValueInput valueInput) {
+        this.nextPneumothoraxTick = valueInput.getIntOr("nextPneumothoraxTick", 1800);
+        super.deserialize(valueInput);
     }
 
 }

@@ -12,8 +12,7 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -25,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class SurgerySaw extends AbstractPartlyHealItem {
-    private static final ResourceLocation BONE_NATURAL = Common.ResourceLocation(DontGetHurt.MODID, "bone_natural");
+    private static final Identifier BONE_NATURAL = Common.getId(DontGetHurt.MODID, "bone_natural");
 
     public SurgerySaw(Properties properties) {
         super(properties);
@@ -69,7 +68,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
         body.setConditionValue(BONE_DAMAGE, BodyCondition.get(BONE_DAMAGE).defaultValue());
         body.setConditionValue(BONE_DEATH, BodyCondition.get(BONE_DEATH).defaultValue());
 
-        ResourceLocation boneKey = body.boneCrafted();
+        Identifier boneKey = body.boneCrafted();
         if (boneKey == null) {
             Utils.drop(ModItems.BONE_NATURAL.get(), player, boneReturn);
         } else {
@@ -92,7 +91,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
         return true;
     }
 
-    public static void sawExcept(LivingEntity source, AbstractBody body, ResourceLocation exception, int maxAmount) {
+    public static void sawExcept(LivingEntity source, AbstractBody body, Identifier exception, int maxAmount) {
         float returnFactor = body.getConditionValue(FRACTURE) + body.getConditionValue(BONE_DAMAGE) + body.getConditionValue(BONE_DEATH);
         int boneReturn = (int) (maxAmount * (1.0 - Math.min(1.0, returnFactor)));
         for (var key : BodyCondition.bones.keySet()) {
@@ -112,7 +111,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
             DyingHandler.setLivingDead(entity);
         } else {
             ItemStack head = new ItemStack(Items.PLAYER_HEAD);
-            head.set(DataComponents.PROFILE, new ResolvableProfile(player.getGameProfile()));
+            head.set(DataComponents.PROFILE, ResolvableProfile.createResolved(player.getGameProfile()));
             Utils.drop(head, source);
             PlayerDyingHandler.setPlayerDead(player);
         }

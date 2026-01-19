@@ -5,13 +5,13 @@ import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +20,6 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public class WholeBody extends AbstractBody {
     private final HashMap<BodyComponents, AbstractBody> components = new HashMap<>();
-    private static List<ResourceLocation> WHOLE_BODY_CONDITIONS;
 
     public WholeBody() {
         components.put(LEFT_ARM, new LeftArm());
@@ -46,11 +45,8 @@ public class WholeBody extends AbstractBody {
     }
 
     @Override
-    public List<ResourceLocation> getBodyConditions() {
-        if (WHOLE_BODY_CONDITIONS == null) {
-            WHOLE_BODY_CONDITIONS = List.of();
-        }
-        return WHOLE_BODY_CONDITIONS;
+    public List<Identifier> getBodyConditions() {
+        return List.of();
     }
 
     @Override
@@ -107,26 +103,20 @@ public class WholeBody extends AbstractBody {
     }
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        CompoundTag wholeBody = super.serializeNBT(provider);
-        CompoundTag tag = new CompoundTag();
+    public void serialize(@NotNull ValueOutput valueOutput) {
         for (BodyComponents comp : components.keySet()) {
-            tag.put(comp.name(), components.get(comp).serializeNBT(provider));
+            valueOutput.putChild(comp.name(), components.get(comp));
         }
-        tag.put(WHOLE_BODY.name(), wholeBody);
-        return tag;
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        if (nbt == null) return;
-        components.put(LEFT_ARM, AbstractBody.buildFromNBT(provider, nbt.getCompound(LEFT_ARM.name()), LeftArm::new));
-        components.put(RIGHT_ARM, AbstractBody.buildFromNBT(provider, nbt.getCompound(RIGHT_ARM.name()), RightArm::new));
-        components.put(LEFT_LEG, AbstractBody.buildFromNBT(provider, nbt.getCompound(LEFT_LEG.name()), LeftLeg::new));
-        components.put(RIGHT_LEG, AbstractBody.buildFromNBT(provider, nbt.getCompound(RIGHT_LEG.name()), RightLeg::new));
-        components.put(HEAD, AbstractBody.buildFromNBT(provider, nbt.getCompound(HEAD.name()), Head::new));
-        components.put(TORSO, AbstractBody.buildFromNBT(provider, nbt.getCompound(TORSO.name()), Torso::new));
-        components.put(BLOOD, AbstractBody.buildFromNBT(provider, nbt.getCompound(BLOOD.name()), Blood::new));
-        super.deserializeNBT(provider, nbt.getCompound(WHOLE_BODY.name()));
+    public void deserialize(@NotNull ValueInput valueInput) {
+        valueInput.child(LEFT_ARM.name()).ifPresent(nbt -> components.put(LEFT_ARM, AbstractBody.buildFromNBT(nbt, LeftArm::new)));
+        valueInput.child(RIGHT_ARM.name()).ifPresent(nbt -> components.put(RIGHT_ARM, AbstractBody.buildFromNBT(nbt, RightArm::new)));
+        valueInput.child(LEFT_LEG.name()).ifPresent(nbt -> components.put(LEFT_LEG, AbstractBody.buildFromNBT(nbt, LeftLeg::new)));
+        valueInput.child(RIGHT_LEG.name()).ifPresent(nbt -> components.put(RIGHT_LEG, AbstractBody.buildFromNBT(nbt, RightLeg::new)));
+        valueInput.child(HEAD.name()).ifPresent(nbt -> components.put(HEAD, AbstractBody.buildFromNBT(nbt, Head::new)));
+        valueInput.child(TORSO.name()).ifPresent(nbt -> components.put(TORSO, AbstractBody.buildFromNBT(nbt, Torso::new)));
+        valueInput.child(BLOOD.name()).ifPresent(nbt -> components.put(BLOOD, AbstractBody.buildFromNBT(nbt, Blood::new)));
     }
 }

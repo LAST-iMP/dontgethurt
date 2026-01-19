@@ -5,6 +5,7 @@ import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.config.BlackList;
 import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
@@ -24,18 +25,13 @@ public class PulseEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity livingEntity, int p_19468_) {
+    public boolean applyEffectTick(ServerLevel level, LivingEntity livingEntity, int p_19468_) {
         return this.apply(livingEntity);
     }
 
     @Override
     public boolean shouldApplyEffectTickThisTick(int p_19455_, int p_19456_) {
         return p_19455_ % 10 == 0;
-    }
-
-    @Override
-    public void onMobRemoved(LivingEntity livingEntity, int amplifier, Entity.RemovalReason reason) {
-        super.onMobRemoved(livingEntity, amplifier, reason);
     }
 
     private boolean apply(LivingEntity livingEntity) {

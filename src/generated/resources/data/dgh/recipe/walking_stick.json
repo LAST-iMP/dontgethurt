@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "i": {
-      "item": "minecraft:stick"
-    }
+    "i": "minecraft:stick"
   },
   "pattern": [
     "iii",

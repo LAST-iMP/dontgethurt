@@ -5,7 +5,7 @@ import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +15,7 @@ import java.util.Set;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.SURGERY_INCISION;
 
 public class Scalpel extends AbstractPartlyHealItem {
-    private static final Set<ResourceLocation> discover = new HashSet<>();
+    private static final Set<Identifier> discover = new HashSet<>();
 
     public Scalpel(Properties properties) {
         super(properties);
@@ -37,7 +37,7 @@ public class Scalpel extends AbstractPartlyHealItem {
         }, false);
     }
 
-    public static void addDiscoverOnHeal(@NotNull ResourceLocation key) {
+    public static void addDiscoverOnHeal(@NotNull Identifier key) {
         discover.add(key);
     }
 

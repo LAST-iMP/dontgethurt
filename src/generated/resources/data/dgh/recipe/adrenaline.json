@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "b": {
-      "item": "minecraft:glass_bottle"
-    },
-    "c": {
-      "item": "minecraft:golden_carrot"
-    },
-    "m": {
-      "item": "minecraft:glistering_melon_slice"
-    },
-    "r": {
-      "item": "minecraft:redstone"
-    },
-    "s": {
-      "item": "minecraft:sugar"
-    }
+    "b": "minecraft:glass_bottle",
+    "c": "minecraft:golden_carrot",
+    "m": "minecraft:glistering_melon_slice",
+    "r": "minecraft:redstone",
+    "s": "minecraft:sugar"
   },
   "pattern": [
     " c ",

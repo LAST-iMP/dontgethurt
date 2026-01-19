@@ -9,6 +9,9 @@ import com.lastimp.dgh.source.client.ClientAccessor;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.Objects;
@@ -18,7 +21,8 @@ public class ClientPayloadHandler {
         context.enqueueWork(() -> {
             OperationType operation = OperationType.valueOf(data.oper());
             if (operation == OperationType.HEALTH_SCANN && GuiOpenWrapper.healthScreen() != null) {
-                HealthCapability health = MyReadAllConditionData.getHealthFromInstance(data.tag(), context.player().registryAccess());
+                ValueInput input = TagValueInput.create(ProblemReporter.DISCARDING, context.player().registryAccess(), data.tag());
+                HealthCapability health = MyReadAllConditionData.getHealthFromInstance(input);
                 GuiOpenWrapper.healthScreen().setHealthData(health);
             } else if (operation == OperationType.SYN) {
                 var entity = ClientAccessor.getLiving(data.entityID());

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:bone"
-    },
-    {
-      "item": "minecraft:bone"
-    }
+    "minecraft:bone",
+    "minecraft:bone"
   ],
   "result": {
     "count": 2,

@@ -1,11 +1,13 @@
 
 package com.lastimp.dgh.data;
 
+import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModItems;
 import com.lastimp.dgh.source.register.ModPotions;
+import com.lastimp.dgh.source.register.ModVillagers;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.alchemy.Potion;
 import net.neoforged.neoforge.common.data.LanguageProvider;
@@ -14,8 +16,8 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import static com.lastimp.dgh.api.tags.ModDamageType.*;
 
 public class ModLanguageProvider extends LanguageProvider {
-    public ModLanguageProvider(PackOutput output, String modid, String locale) {
-        super(output, modid, locale);
+    public ModLanguageProvider(PackOutput output) {
+        super(output, DontGetHurt.MODID, "zh_cn");
     }
 
     @Override
@@ -93,7 +95,7 @@ public class ModLanguageProvider extends LanguageProvider {
 
 
         this.add("gui.dgh.health_gui.title", "健康状态");
-        this.add(KeyBinding.KEY_CATEGORY_DGH, "DGH");
+        this.add(KeyBinding.KEY_CATEGORY_DGH.id().toLanguageKey("key.category"), "DGH");
         this.add(KeyBinding.KEY_HEALTH_MENU, "健康面板");
         this.add(KeyBinding.KEY_GIVE_UP, "放弃生命");
         this.add(KeyBinding.KEY_CALL_FOR_HELP, "呼叫救援");
@@ -173,23 +175,24 @@ public class ModLanguageProvider extends LanguageProvider {
         this.addPotion(ModPotions.COMBAT_STIMULANT_POTION, "战斗兴奋剂");
         this.addPotion(ModPotions.ANALGESIA_POISON_POTION, "眩晕毒剂");
 
-        this.add("death.attack."+OPEN_WOUND_DAMAGE.location(), "%1$s 的身体被撕碎了");
-        this.add("death.attack."+INTERNAL_INJURY_DAMAGE.location(), "%1$s 体内一塌糊涂");
-        this.add("death.attack."+BURN_DAMAGE.location(), "%1$s 变成了黑碳");
-        this.add("death.attack."+BRAIN_DAMAGE.location(), "%1$s 变成了植物人");
-        this.add("death.attack."+BLEED_DAMAGE.location(), "%1$s 失血过多");
-        this.add("death.attack."+SURGERY_DAMAGE.location(), "%1$s 死于手术事故");
-        this.add("death.attack."+CANT_BREATH_DAMAGE.location(), "%1$s 无法呼吸");
+        this.add("death.attack."+OPEN_WOUND_DAMAGE.identifier(), "%1$s 的身体被撕碎了");
+        this.add("death.attack."+INTERNAL_INJURY_DAMAGE.identifier(), "%1$s 体内一塌糊涂");
+        this.add("death.attack."+BURN_DAMAGE.identifier(), "%1$s 变成了黑碳");
+        this.add("death.attack."+BRAIN_DAMAGE.identifier(), "%1$s 变成了植物人");
+        this.add("death.attack."+BLEED_DAMAGE.identifier(), "%1$s 失血过多");
+        this.add("death.attack."+SURGERY_DAMAGE.identifier(), "%1$s 死于手术事故");
+        this.add("death.attack."+CANT_BREATH_DAMAGE.identifier(), "%1$s 无法呼吸");
 
-        this.add("death.attack."+OPEN_WOUND_DAMAGE.location()+".player", "%1$s 的身体被撕碎了");
-        this.add("death.attack."+INTERNAL_INJURY_DAMAGE.location()+".player", "%1$s 体内一塌糊涂");
-        this.add("death.attack."+BURN_DAMAGE.location()+".player", "%1$s 变成了黑碳");
-        this.add("death.attack."+BRAIN_DAMAGE.location()+".player", "%1$s 变成了植物人");
-        this.add("death.attack."+BLEED_DAMAGE.location()+".player", "%1$s 失血过多");
-        this.add("death.attack."+SURGERY_DAMAGE.location()+".player", "%1$s 死于手术事故");
-        this.add("death.attack."+CANT_BREATH_DAMAGE.location()+".player", "%1$s 无法呼吸");
+        this.add("death.attack."+OPEN_WOUND_DAMAGE.identifier()+".player", "%1$s 的身体被撕碎了");
+        this.add("death.attack."+INTERNAL_INJURY_DAMAGE.identifier()+".player", "%1$s 体内一塌糊涂");
+        this.add("death.attack."+BURN_DAMAGE.identifier()+".player", "%1$s 变成了黑碳");
+        this.add("death.attack."+BRAIN_DAMAGE.identifier()+".player", "%1$s 变成了植物人");
+        this.add("death.attack."+BLEED_DAMAGE.identifier()+".player", "%1$s 失血过多");
+        this.add("death.attack."+SURGERY_DAMAGE.identifier()+".player", "%1$s 死于手术事故");
+        this.add("death.attack."+CANT_BREATH_DAMAGE.identifier()+".player", "%1$s 无法呼吸");
 
         this.add("entity.minecraft.villager.dgh.doctor", "医生");
+        this.add(ModVillagers.DOCTOR_MAKER.getRegisteredName(), "医生");
 
         this.add("task.dgh.bring_to_bed", "猫车");
         this.add("task.dgh.bring_to_bed.desc", "把倒下的主人救回出生点");

@@ -1,7 +1,7 @@
 package com.lastimp.dgh.source.buffs.buff;
 
 import com.lastimp.dgh.DontGetHurt;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,19 +18,19 @@ public class KeepLivingEffect extends MobEffect {
     public void onEffectStarted(LivingEntity livingEntity, int amplifier) {
         this.addAttributeModifier(
                 Attributes.MOVEMENT_SPEED,
-                ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "living_movement"),
+                Identifier.fromNamespaceAndPath(DontGetHurt.MODID, "living_movement"),
                 0.015f,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
         this.addAttributeModifier(
                 Attributes.ATTACK_SPEED,
-                ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "living_attack"),
+                Identifier.fromNamespaceAndPath(DontGetHurt.MODID, "living_attack"),
                 0.015f,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );
         this.addAttributeModifier(
                 Attributes.BLOCK_BREAK_SPEED,
-                ResourceLocation.fromNamespaceAndPath(DontGetHurt.MODID, "living_break"),
+                Identifier.fromNamespaceAndPath(DontGetHurt.MODID, "living_break"),
                 0.015f,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
         );

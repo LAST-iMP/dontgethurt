@@ -23,7 +23,7 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_LOSS;
 public class BuffEventHandler {
     @SubscribeEvent
     public static void onBuffUpdate(EntityTickEvent.Post event) {
-        if (event.getEntity().level().isClientSide) return;
+        if (event.getEntity().level().isClientSide()) return;
         var entity = event.getEntity();
         if (!(entity instanceof LivingEntity livingEntity)) return;
         updateDyingEffects(livingEntity);
@@ -40,7 +40,7 @@ public class BuffEventHandler {
 
     private static void updateDyingEffects(LivingEntity entity) {
         if (!HealthCapability.isDying(entity)) return;
-        entity.addEffect(new MobEffectInstance(MobEffects.JUMP, 19, -10));
+        entity.addEffect(new MobEffectInstance(MobEffects.JUMP_BOOST, 19, -10));
         if (Config.player_glowing)
             entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 19));
     }
@@ -58,7 +58,7 @@ public class BuffEventHandler {
         if (health.armBreak() == 0) return;
 
         var newEffect = new MobEffectInstance(
-                MobEffects.DIG_SLOWDOWN,
+                MobEffects.MINING_FATIGUE,
                 39, health.armBreak() - 1
         );
         entity.addEffect(newEffect);
@@ -75,7 +75,7 @@ public class BuffEventHandler {
             entity.addEffect(new MobEffectInstance(ModEffects.SWEATING_EFFECT, 99));
         }
         if (state.getValue() > 0.4f) {
-            entity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 199));
+            entity.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 199));
         }
     }
 

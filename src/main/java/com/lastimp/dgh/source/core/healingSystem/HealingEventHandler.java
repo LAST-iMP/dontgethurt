@@ -7,8 +7,10 @@ import com.lastimp.dgh.source.core.dyingSystem.DyingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
@@ -19,6 +21,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.DeathProtection;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -31,7 +34,7 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 public class HealingEventHandler {
     @SubscribeEvent
     public static void onHealthUpdate(EntityTickEvent.Pre event) {
-        if (event.getEntity().level().isClientSide) return;
+        if (event.getEntity().level().isClientSide()) return;
         if (!(event.getEntity() instanceof LivingEntity livingEntity)) return;
         if (!HealthCapability.has(livingEntity)) return;
 
@@ -39,7 +42,7 @@ public class HealingEventHandler {
             h = h.update(livingEntity);
             if (!(livingEntity instanceof ServerPlayer player)) {
                 updateLivingHealth(h, livingEntity);
-            } else if (!checkTotemDeathProtection(h, player)) {
+            } else if (!checkTotemDeathProtection(h, player, player.getLastDamageSource())) {
                 updatePlayerHealth(h, player);
             }
             h.SYNIfDirty(livingEntity);
@@ -109,34 +112,35 @@ public class HealingEventHandler {
         }
     }
 
-    private static boolean checkTotemDeathProtection(HealthCapability health, ServerPlayer player) {
+    private static boolean checkTotemDeathProtection(HealthCapability health, ServerPlayer player, DamageSource damageSource) {
         if (getHealthWithOuterHealing(health, player) > 0) return false;
+        if (damageSource != null && damageSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;
 
         ItemStack itemstack = null;
+        DeathProtection deathprotection = null;
         for (InteractionHand interactionhand : InteractionHand.values()) {
             ItemStack itemstack1 = player.getItemInHand(interactionhand);
-            DamageSource source = player.level().damageSources().genericKill();
-            if (itemstack1.is(Items.TOTEM_OF_UNDYING) && CommonHooks.onLivingUseTotem(player, source, itemstack1, interactionhand)) {
+            deathprotection = itemstack1.get(DataComponents.DEATH_PROTECTION);
+            if (deathprotection != null && net.neoforged.neoforge.common.CommonHooks.onLivingUseTotem(player, damageSource, itemstack1, interactionhand)) {
                 itemstack = itemstack1.copy();
                 itemstack1.shrink(1);
                 break;
             }
         }
-        if (itemstack == null) return false;
 
-        if (player instanceof ServerPlayer serverplayer) {
-            serverplayer.awardStat(Stats.ITEM_USED.get(Items.TOTEM_OF_UNDYING), 1);
-            CriteriaTriggers.USED_TOTEM.trigger(serverplayer, itemstack);
-            player.gameEvent(GameEvent.ITEM_INTERACT_FINISH);
+        if (itemstack != null) {
+            if (player instanceof ServerPlayer serverplayer) {
+                serverplayer.awardStat(Stats.ITEM_USED.get(itemstack.getItem()));
+                CriteriaTriggers.USED_TOTEM.trigger(serverplayer, itemstack);
+                itemstack.causeUseVibration(player, GameEvent.ITEM_INTERACT_FINISH);
+            }
+
+            HealingHandler.handleValindaHealing(player, 2);
+            player.setHealth(1.0F);
+            deathprotection.applyEffects(itemstack, player);
+            player.level().broadcastEntityEvent(player, (byte)35);
         }
 
-        HealingHandler.handleValindaHealing(player, 2);
-        player.setHealth(1);
-        player.removeEffectsCuredBy(net.neoforged.neoforge.common.EffectCures.PROTECTED_BY_TOTEM);
-        player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
-        player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
-        player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
-        player.level().broadcastEntityEvent(player, (byte)35);
-        return true;
+        return deathprotection != null;
     }
 }

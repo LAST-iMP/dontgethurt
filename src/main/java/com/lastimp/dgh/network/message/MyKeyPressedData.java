@@ -9,7 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record MyKeyPressedData (String key, int index) implements CustomPacketPayload {
-    public static final Type<MyKeyPressedData> TYPE = new Type<>( Common.ResourceLocation(DontGetHurt.MODID, "my_key_press_data"));
+    public static final Type<MyKeyPressedData> TYPE = new Type<>( Common.getId(DontGetHurt.MODID, "my_key_press_data"));
 
     public static final StreamCodec<ByteBuf, MyKeyPressedData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8,
