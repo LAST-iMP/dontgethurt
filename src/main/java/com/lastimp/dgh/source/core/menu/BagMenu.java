@@ -27,33 +27,13 @@ public class BagMenu extends AbstractContainerMenu {
         layoutPlayerInventorySlots(inv);
     }
 
-    public static class HealthCareBag extends BagMenu {
-        public HealthCareBag(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
+    public static class HealthSmallBag extends BagMenu {
+        public HealthSmallBag(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
             this(pContainerId, inv, buf.readItem());
         }
 
-        public HealthCareBag(int pContainerId, Inventory inv, ItemStack bagStack) {
-            super(ModMenus.HEALTH_CARE_BAG_MENU.get(), pContainerId, inv, bagStack);
-        }
-    }
-
-    public static class SurgeryToolBag extends BagMenu {
-        public SurgeryToolBag(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
-            this(pContainerId, inv, buf.readItem());
-        }
-
-        public SurgeryToolBag(int pContainerId, Inventory inv, ItemStack bagStack) {
-            super(ModMenus.SURGERY_TOOL_BAG_MENU.get(), pContainerId, inv, bagStack);
-        }
-    }
-
-    public static class LimbRefBag extends BagMenu {
-        public LimbRefBag(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
-            this(pContainerId, inv, buf.readItem());
-        }
-
-        public LimbRefBag(int pContainerId, Inventory inv, ItemStack bagStack) {
-            super(ModMenus.LIMB_REF_BAG_MENU.get(), pContainerId, inv, bagStack);
+        public HealthSmallBag(int pContainerId, Inventory inv, ItemStack bagStack) {
+            super(ModMenus.HEALTH_SMALL_BAG_MENU.get(), pContainerId, inv, bagStack);
         }
     }
 

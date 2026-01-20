@@ -6,6 +6,8 @@ import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.source.client.renderer.OperatingBedRenderer;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.source.client.renderer.StretcherRenderer;
+import com.lastimp.dgh.source.client.tooltip.ClientBagToolTip;
+import com.lastimp.dgh.source.item.tool.AutoUseBag;
 import com.lastimp.dgh.source.register.ModBlocks;
 import com.lastimp.dgh.source.client.renderer.MyModelLayers;
 import com.lastimp.dgh.source.register.ModEntities;
@@ -14,6 +16,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -42,12 +45,15 @@ public class ClientRegisterEventHandler {
     }
 
     @SubscribeEvent
-    static void onClientSetup(FMLClientSetupEvent event) {
+    public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             MenuScreens.register(ModMenus.HEALTH_MENU.get(), HealthScreen::new);
-            MenuScreens.register(ModMenus.HEALTH_CARE_BAG_MENU.get(), BagScreen::new);
-            MenuScreens.register(ModMenus.SURGERY_TOOL_BAG_MENU.get(), BagScreen::new);
-            MenuScreens.register(ModMenus.LIMB_REF_BAG_MENU.get(), BagScreen::new);
+            MenuScreens.register(ModMenus.HEALTH_SMALL_BAG_MENU.get(), BagScreen::new);
         });
+    }
+
+    @SubscribeEvent
+    public static void registerToolTips(RegisterClientTooltipComponentFactoriesEvent event) {
+        event.register(AutoUseBag.Tooltip.class, ClientBagToolTip::new);
     }
 }

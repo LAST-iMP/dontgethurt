@@ -7,23 +7,17 @@ import com.lastimp.dgh.source.register.ModItems;
 import com.lastimp.dgh.source.register.ModPotions;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.function.Consumer;
@@ -472,6 +466,16 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('i', Items.STICK)
                 .define('w', ItemTags.PLANKS)
                 .unlockedBy("has_stick", has(Items.STICK))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.AUTO_USE_BAG.get())
+                .pattern("iii")
+                .pattern("bgb")
+                .pattern("rir")
+                .define('i', Items.IRON_INGOT)
+                .define('b', ItemTags.STONE_BUTTONS)
+                .define('r', Items.REDSTONE)
+                .define('g', Items.TRAPPED_CHEST)
+                .unlockedBy("has_trap", has(Items.TRAPPED_CHEST))
                 .save(recipeOutput);
 
 

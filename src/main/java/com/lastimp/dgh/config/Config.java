@@ -76,11 +76,11 @@ public class Config {
 
     public static final ForgeConfigSpec.DoubleValue BASE_DISLOCATION_THRESHOLD = BUILDER
             .comment("伤口脱臼阈值")
-            .defineInRange("BASE_DISLOCATION_THRESHOLD", 0.1, 0, 1.0);
+            .defineInRange("BASE_DISLOCATION_THRESHOLD", 0.1, 0, 2.0);
 
     public static final ForgeConfigSpec.DoubleValue BASE_FRACTURE_THRESHOLD = BUILDER
             .comment("伤口骨折阈值")
-            .defineInRange("BASE_FRACTURE_THRESHOLD", 0.25, 0, 0.7);
+            .defineInRange("BASE_FRACTURE_THRESHOLD", 0.25, 0, 2.0);
 
     public static final ForgeConfigSpec.DoubleValue BASE_DISLOCATION_MAX_PROB = BUILDER
             .comment("脱臼概率上限")
@@ -104,7 +104,7 @@ public class Config {
 
     public static final ForgeConfigSpec.DoubleValue BASE_AMPUTATION_THRESHOLD = BUILDER
             .comment("截肢阈值")
-            .defineInRange("BASE_AMPUTATION_THRESHOLD", 0.05, 0, 0.7);
+            .defineInRange("BASE_AMPUTATION_THRESHOLD", 0.05, 0, 2.0);
 
     public static final ForgeConfigSpec.DoubleValue BASE_AMPUTATION_MAX_PROB = BUILDER
             .comment("截肢最大概率")
@@ -124,7 +124,7 @@ public class Config {
 
     public static final ForgeConfigSpec.DoubleValue BYPASS_FOREIGN_PROB = BUILDER
             .comment("贯穿伤-体内异物概率")
-            .defineInRange("BYPASS_FOREIGN_PROB", 0.8, 0, 1.0);
+            .defineInRange("BYPASS_FOREIGN_PROB", 0.8, 0, 2.0);
 
     public static final ForgeConfigSpec.BooleanValue PLAYER_GLOWING = BUILDER
             .comment("允许玩家倒地发光")

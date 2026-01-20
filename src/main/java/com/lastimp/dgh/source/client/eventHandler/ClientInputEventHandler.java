@@ -51,7 +51,7 @@ public class ClientInputEventHandler {
         ));
 
         ItemStack stack = slot.getItem();
-        if (stack.is(ModTags.MEDICAL_TOOLS_BAGS)) {
+        if (stack.is(ModTags.MEDICAL_TOOLS_SMALL_BAGS) && !stack.is(ModTags.MEDICAL_USAGE_BAGS)) {
             healthScreen.getMenu().openBag(stack);
         }
         event.setCanceled(true);
@@ -95,7 +95,7 @@ public class ClientInputEventHandler {
 
         var itemStack = slot.getItem();
         if (itemStack.isEmpty()) return false;
-        if (itemStack.is(ModTags.MEDICAL_TOOLS_BAGS)) return true;
+        if (itemStack.is(ModTags.MEDICAL_TOOLS_SMALL_BAGS)) return true;
         if (itemStack.is(ModItems.HEALTH_SCANNER.get())) return true;
         return false;
     }

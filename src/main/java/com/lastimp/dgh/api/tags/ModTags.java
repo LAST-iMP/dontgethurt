@@ -16,7 +16,8 @@ public class ModTags {
     public static final TagKey<Item> MEDICAL_TOOLS_BASIC = ItemTags.create(Common.ResourceLocation("c", "medical_tools_basic"));
     public static final TagKey<Item> MEDICAL_TOOLS_SURGERY = ItemTags.create(Common.ResourceLocation("c", "medical_tools_surgery"));
     public static final TagKey<Item> MEDICAL_TOOLS_SHEARS = ItemTags.create(Common.ResourceLocation("forge", "shears"));
-    public static final TagKey<Item> MEDICAL_TOOLS_BAGS = ItemTags.create(Common.ResourceLocation("c", "medical_tools_bags"));
+    public static final TagKey<Item> MEDICAL_TOOLS_SMALL_BAGS = ItemTags.create(Common.ResourceLocation("c", "medical_tools_small_bags"));
+    public static final TagKey<Item> MEDICAL_USAGE_BAGS = ItemTags.create(Common.ResourceLocation("c", "medical_usage_bags"));
 
     public static final TagKey<Item> MEDICAL_LIMBS = ItemTags.create(Common.ResourceLocation("c", "limbs"));
 
@@ -31,7 +32,7 @@ public class ModTags {
 
         addHealthScreenAvaItem(ModTags.MEDICINE);
         addHealthScreenAvaItem(ModTags.MEDICAL_TOOLS);
-        addHealthScreenAvaItem(ModTags.MEDICAL_TOOLS_BAGS);
+        addHealthScreenAvaItem(ModTags.MEDICAL_TOOLS_SMALL_BAGS);
     }
 
     public static void addShearTage(TagKey<Item> key) {

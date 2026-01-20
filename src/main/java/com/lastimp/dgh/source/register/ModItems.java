@@ -446,6 +446,13 @@ public class ModItems {
                     .stacksTo(16)
     );
 
+    public static final RegistryObject<Item> AUTO_USE_BAG = registerItem(
+            "auto_use_bag",
+            AutoUseBag::new,
+            new Item.Properties()
+                    .stacksTo(1)
+    );
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

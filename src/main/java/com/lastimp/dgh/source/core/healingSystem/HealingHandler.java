@@ -30,16 +30,18 @@ import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
 
 public class HealingHandler {
 
-    public static void useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, LivingEntity target, BodyComponents component) {
-        if (target == null) return;
-        if (source.getCooldowns().isOnCooldown(itemStack.getItem())) return;
+    public static boolean useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, LivingEntity target, BodyComponents component) {
+        if (target == null) return false;
+        if (source.getCooldowns().isOnCooldown(itemStack.getItem())) return false;
 
-        boolean success = handleCut(itemStack, target, component);
-        success |= handleWrite(itemStack, target, source);
+        if (handleCut(itemStack, target, component) || handleWrite(itemStack, target, source)) {
+            return true;
+        }
 
-        if (!(itemStack.getItem() instanceof AbstractHealingItem healingItem)) return;
-        if (!healingItem.available(target, itemStack)) return;
+        if (!(itemStack.getItem() instanceof AbstractHealingItem healingItem)) return false;
+        if (!healingItem.available(target, itemStack)) return false;
 
+        boolean success = false;
         if (healingItem instanceof AbstractDirectHealItems item) {
             success = item.heal(source, target);
         } else if (healingItem instanceof AbstractPartlyHealItem item) {
@@ -49,15 +51,13 @@ public class HealingHandler {
         if (success) {
             source.getCooldowns().addCooldown(healingItem, 10);
             HealthCapability.getAndApply(target, h -> h.setLastHealer(source.getUUID()));
-        }
-
-        if (success && itemStack.isDamageableItem()) {
-            itemStack.hurtAndBreak(1, source, (player) -> {});
-            if (itemStack.getDamageValue() >= itemStack.getMaxDamage())
+            if (itemStack.isDamageableItem()) {
+                itemStack.hurtAndBreak(1, source, (player) -> {});
+            } else {
                 itemStack.shrink(1);
-        } else if (success) {
-            itemStack.shrink(1);
+            }
         }
+        return success;
     }
 
     private static boolean handleCut(ItemStack itemStack, LivingEntity target, BodyComponents component) {
