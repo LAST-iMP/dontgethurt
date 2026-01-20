@@ -1,6 +1,6 @@
 package com.lastimp.dgh.source.core.menu;
 
-import com.lastimp.dgh.source.item.bases.AbstractMedicalBags;
+import com.lastimp.dgh.source.item.bases.AbstractSmallBag;
 import com.lastimp.dgh.source.register.ModMenus;
 import com.lastimp.dgh.source.item.bases.BackpackInventory;
 import net.minecraft.network.FriendlyByteBuf;
@@ -20,40 +20,19 @@ public abstract class BagMenu extends AbstractContainerMenu {
     //服务端
     public BagMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inv, ItemStack bagStack) {
         super(menuType, containerId);
-        this.handler = ((AbstractMedicalBags)bagStack.getItem()).getBackPackHandler(bagStack);
+        this.handler = ((AbstractSmallBag)bagStack.getItem()).getBackPackHandler(bagStack);
         this.layoutPlayerInventorySlots(inv);
     }
 
-    public static class HealthCareBag extends BagMenu {
-        public HealthCareBag(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
+    public static class HealthSmallBag extends BagMenu {
+        public HealthSmallBag(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
             this(pContainerId, inv, inv.player.getInventory().getItem(buf.readInt()));
         }
 
-        public HealthCareBag(int pContainerId, Inventory inv, ItemStack bagStack) {
-            super(ModMenus.HEALTH_CARE_BAG_MENU.get(), pContainerId, inv, bagStack);
+        public HealthSmallBag(int pContainerId, Inventory inv, ItemStack bagStack) {
+            super(ModMenus.HEALTH_SMALL_BAG_MENU.get(), pContainerId, inv, bagStack);
         }
     }
-
-    public static class SurgeryToolBag extends BagMenu {
-        public SurgeryToolBag(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
-            this(pContainerId, inv, inv.player.getInventory().getItem(buf.readInt()));
-        }
-
-        public SurgeryToolBag(int pContainerId, Inventory inv, ItemStack bagStack) {
-            super(ModMenus.SURGERY_TOOL_BAG_MENU.get(), pContainerId, inv, bagStack);
-        }
-    }
-
-    public static class LimbRefBag extends BagMenu {
-        public LimbRefBag(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
-            this(pContainerId, inv, inv.player.getInventory().getItem(buf.readInt()));
-        }
-
-        public LimbRefBag(int pContainerId, Inventory inv, ItemStack bagStack) {
-            super(ModMenus.LIMB_REF_BAG_MENU.get(), pContainerId, inv, bagStack);
-        }
-    }
-
 
     @Override
     public boolean stillValid(Player player) {

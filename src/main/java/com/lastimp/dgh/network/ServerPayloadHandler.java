@@ -9,13 +9,11 @@ import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
+import com.lastimp.dgh.source.core.healingSystem.BagHealerHandler;
 import com.lastimp.dgh.source.core.menu.HealthMenu;
 import com.lastimp.dgh.source.core.Utils;
-import com.lastimp.dgh.source.core.menu.menuProvider.LimbRefMenuProvider;
-import com.lastimp.dgh.source.register.ModItems;
-import com.lastimp.dgh.source.core.menu.menuProvider.HealthCareBagMenuProvider;
+import com.lastimp.dgh.source.core.menu.MenuOpenWrapper;
 import com.lastimp.dgh.source.core.menu.menuProvider.HealthMenuProvider;
-import com.lastimp.dgh.source.core.menu.menuProvider.SurgeryToolBagMenuProvider;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.network.chat.Component;
@@ -55,15 +53,7 @@ public class ServerPayloadHandler {
                             HealthMenuProvider.open(player, player.getUUID(), false);
                             break;
                         case KEY_SLOT_USE:
-                            var slot = player.getInventory().getItem(data.index());
-                            if (slot.is(ModItems.HEALTH_SCANNER))
-                                HealthMenuProvider.open(player, player.getUUID(), true);
-                            if (slot.is(ModItems.HEALTH_CARE_BAG))
-                                HealthCareBagMenuProvider.open(player, slot);
-                            if (slot.is(ModItems.SURGERY_TOOL_BAG))
-                                SurgeryToolBagMenuProvider.open(player, slot);
-                            if (slot.is(ModItems.LIMB_REF_BEG.get()))
-                                LimbRefMenuProvider.open(player, slot);
+                            MenuOpenWrapper.openMenu(player.getInventory().getItem(data.index()), player);
                             break;
                         case GIVE_UP:
                             PlayerDyingHandler.setPlayerDead(player);
@@ -100,11 +90,15 @@ public class ServerPayloadHandler {
                     }
 
                     ItemStack stack = healthMenu.getStackBySlotNum(data.slotNum());
-                    if (stack.is(ModTags.MEDICAL_TOOLS_BAGS)) {
+                    if (stack.is(ModTags.MEDICAL_TOOLS_SMALL_BAGS) && !stack.is(ModTags.MEDICAL_USAGE_BAGS)) {
                         healthMenu.openBag(stack);
                     } else {
                         BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
-                        HealingHandler.useItemOn(stack, sourcePlayer, target, component);
+                        if (stack.is(ModTags.MEDICAL_USAGE_BAGS)) {
+                            BagHealerHandler.handleBagHealing(stack, sourcePlayer, target, component);
+                        } else {
+                            HealingHandler.useItemOn(stack, sourcePlayer, target, component);
+                        }
                         healthMenu.getSlot(data.slotNum()).setByPlayer(stack);
                     }
                 })

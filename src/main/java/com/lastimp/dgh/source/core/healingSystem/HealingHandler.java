@@ -26,20 +26,21 @@ import java.util.List;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.BRAIN_DAMAGE;
 import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
-import static com.lastimp.dgh.api.tags.ModTags.MEDICAL_TOOLS_SHEARS;
 
 public class HealingHandler {
 
-    public static void useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, LivingEntity target, BodyComponents component) {
-        if (target == null) return;
-        if (source.getCooldowns().isOnCooldown(itemStack.getItem())) return;
+    public static boolean useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, LivingEntity target, BodyComponents component) {
+        if (target == null) return false;
+        if (source.getCooldowns().isOnCooldown(itemStack.getItem())) return false;
 
-        boolean success = handleCut(itemStack, target, component);
-        success |= handleWrite(itemStack, target, source);
+        if (handleCut(itemStack, target, component) || handleWrite(itemStack, target, source)) {
+            return true;
+        }
 
-        if (!(itemStack.getItem() instanceof AbstractHealingItem healingItem)) return;
-        if (!healingItem.available(target, itemStack)) return;
+        if (!(itemStack.getItem() instanceof AbstractHealingItem healingItem)) return false;
+        if (!healingItem.available(target, itemStack)) return false;
 
+        boolean success = false;
         if (healingItem instanceof AbstractDirectHealItems item) {
             success = item.heal(source, target);
         } else if (healingItem instanceof AbstractPartlyHealItem item) {
@@ -49,15 +50,13 @@ public class HealingHandler {
         if (success) {
             source.getCooldowns().addCooldown(healingItem, 10);
             HealthCapability.getAndApply(target, h -> h.setLastHealer(source.getUUID()));
-        }
-
-        if (success && itemStack.isDamageableItem()) {
-            itemStack.hurtAndBreak(1, source.serverLevel(), source, (i) -> {});
-            if (itemStack.getDamageValue() >= itemStack.getMaxDamage())
+            if (itemStack.isDamageableItem()) {
+                itemStack.hurtAndBreak(1, source.serverLevel(), source, (i) -> {});
+            } else {
                 itemStack.consume(1, target);
-        } else if (success) {
-            itemStack.consume(1, target);
+            }
         }
+        return success;
     }
 
     private static boolean handleCut(ItemStack itemStack, LivingEntity target, BodyComponents component) {

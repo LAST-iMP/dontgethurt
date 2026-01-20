@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class BackpackInventory extends ComponentItemHandler {
     private final Set<TagKey<Item>> allowedItemTags = new HashSet<>();
-    private final Set<Item> allowedItems = new HashSet<>();
+    private final Set<TagKey<Item>> disAllowedItemTags = new HashSet<>();
 
     public BackpackInventory(MutableDataComponentHolder parent, DataComponentType<ItemContainerContents> component, int size) {
         super(parent, component, size);
@@ -24,18 +24,14 @@ public class BackpackInventory extends ComponentItemHandler {
         return this;
     }
 
-    public BackpackInventory addAllowed(Item item) {
-        this.allowedItems.add(item);
-        return this;
+    public void addDisAllowed(TagKey<Item> tags) {
+        this.disAllowedItemTags.add(tags);
     }
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
         if (!super.isItemValid(slot, stack)) return false;
-        for (var tag : this.allowedItemTags)
-            if (stack.is(tag)) return true;
-        for (var item : this.allowedItems)
-            if (stack.is(item)) return true;
-        return stack.isEmpty();
+        boolean result = this.allowedItemTags.stream().anyMatch(stack::is) && this.disAllowedItemTags.stream().noneMatch(stack::is);
+        return result || stack.isEmpty();
     }
 }

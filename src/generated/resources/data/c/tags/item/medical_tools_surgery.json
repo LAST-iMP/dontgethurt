@@ -27,6 +27,7 @@
     "dgh:oxygen_mask",
     "dgh:human_hand",
     "dgh:human_leg",
-    "dgh:suture"
+    "dgh:suture",
+    "dgh:auto_use_bag"
   ]
 }

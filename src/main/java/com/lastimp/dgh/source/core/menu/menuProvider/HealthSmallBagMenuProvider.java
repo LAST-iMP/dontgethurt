@@ -10,26 +10,26 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class LimbRefMenuProvider implements MenuProvider {
+public class HealthSmallBagMenuProvider implements MenuProvider {
     private final ItemStack bagStack;
 
-    public LimbRefMenuProvider(ItemStack bagStack) {
+    public HealthSmallBagMenuProvider(ItemStack bagStack) {
         this.bagStack = bagStack;
     }
 
     public static void open(Player player, ItemStack itemStack) {
-        player.openMenu(new LimbRefMenuProvider(itemStack), buf -> {
+        player.openMenu(new HealthSmallBagMenuProvider(itemStack), buf -> {
             buf.writeInt(player.getInventory().findSlotMatchingItem(itemStack));
         });
     }
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("gui." + DontGetHurt.MODID + ".limb_menu_tool_bag");
+        return Component.translatable("gui." + DontGetHurt.MODID + ".health_small_bag");
     }
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return new BagMenu.LimbRefBag(i, inventory, bagStack);
+        return new BagMenu.HealthSmallBag(i, inventory, bagStack);
     }
 }

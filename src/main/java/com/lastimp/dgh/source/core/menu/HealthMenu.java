@@ -4,9 +4,8 @@ package com.lastimp.dgh.source.core.menu;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.menu.component.DynamicSlot;
-import com.lastimp.dgh.source.item.bases.AbstractMedicalBags;
+import com.lastimp.dgh.source.item.bases.AbstractSmallBag;
 import com.lastimp.dgh.source.item.bases.BackpackInventory;
-import com.lastimp.dgh.source.register.ModItems;
 import com.lastimp.dgh.source.register.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
@@ -45,7 +44,7 @@ public class HealthMenu extends AbstractContainerMenu {
     }
 
     public void openBag(ItemStack stack) {
-        this.handler = ((AbstractMedicalBags)stack.getItem()).getBackPackHandler(stack);
+        this.handler = ((AbstractSmallBag)stack.getItem()).getBackPackHandler(stack);
         this.setBagHandler(this.handler);
     }
 

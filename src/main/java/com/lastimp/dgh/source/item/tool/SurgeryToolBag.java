@@ -1,17 +1,12 @@
 package com.lastimp.dgh.source.item.tool;
 
 import com.lastimp.dgh.api.tags.ModTags;
-import com.lastimp.dgh.source.core.menu.menuProvider.SurgeryToolBagMenuProvider;
 import com.lastimp.dgh.source.item.bases.BackpackInventory;
-import com.lastimp.dgh.source.item.bases.AbstractMedicalBags;
+import com.lastimp.dgh.source.item.bases.AbstractSmallBag;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 
-public class SurgeryToolBag extends AbstractMedicalBags {
+public class SurgeryToolBag extends AbstractSmallBag {
 
     public SurgeryToolBag(Properties properties) {
         super(properties);
@@ -22,12 +17,5 @@ public class SurgeryToolBag extends AbstractMedicalBags {
         var backpack = new BackpackInventory(bagStack, DataComponents.CONTAINER, 9);
         backpack.addAllowed(ModTags.MEDICAL_TOOLS_SURGERY);
         return backpack;
-    }
-
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        if (!level.isClientSide && usedHand == InteractionHand.MAIN_HAND)
-            SurgeryToolBagMenuProvider.open(player, player.getMainHandItem());
-        return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide());
     }
 }

@@ -82,7 +82,8 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.AUTOPULSE.getKey())
                 .add(ModItems.HUMAN_HAND.getKey())
                 .add(ModItems.HUMAN_LEG.getKey())
-                .add(ModItems.STASIS_BAG.getKey());
+                .add(ModItems.STASIS_BAG.getKey())
+                .add(ModItems.AUTO_USE_BAG.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_BASIC)
                 .add(SHEARS)
@@ -92,7 +93,8 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.OXYGEN_MASK.getKey())
                 .add(ModItems.ANTISEPTIC_SPRAYER.getKey())
                 .add(ModItems.AUTOPULSE.getKey())
-                .add(ModItems.STASIS_BAG.getKey());
+                .add(ModItems.STASIS_BAG.getKey())
+                .add(ModItems.AUTO_USE_BAG.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_SURGERY)
                 .add(ModItems.SCALPEL.getKey())
@@ -122,7 +124,8 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.OXYGEN_MASK.getKey())
                 .add(ModItems.HUMAN_HAND.getKey())
                 .add(ModItems.HUMAN_LEG.getKey())
-                .add(ModItems.SUTURE.getKey());
+                .add(ModItems.SUTURE.getKey())
+                .add(ModItems.AUTO_USE_BAG.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_SHEARS)
                 .add(SHEARS)
@@ -132,10 +135,14 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.HUMAN_HAND.getKey())
                 .add(ModItems.HUMAN_LEG.getKey());
 
-        this.tag(ModTags.MEDICAL_TOOLS_BAGS)
+        this.tag(ModTags.MEDICAL_TOOLS_SMALL_BAGS)
                 .add(ModItems.HEALTH_CARE_BAG.getKey())
                 .add(ModItems.SURGERY_TOOL_BAG.getKey())
-                .add(ModItems.LIMB_REF_BEG.getKey());
+                .add(ModItems.LIMB_REF_BEG.getKey())
+                .add(ModItems.AUTO_USE_BAG.getKey());
+
+        this.tag(ModTags.MEDICAL_USAGE_BAGS)
+                .add(ModItems.AUTO_USE_BAG.getKey());
 
         this.tag(ItemTags.BEDS)
                 .add(ModItems.OPERATING_BED_BLOCK_ITEM.getKey());

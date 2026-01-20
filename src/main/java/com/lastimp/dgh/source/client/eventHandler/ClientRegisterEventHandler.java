@@ -6,6 +6,8 @@ import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.source.client.renderer.OperatingBedRenderer;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.source.client.renderer.StretcherRenderer;
+import com.lastimp.dgh.source.client.tooltip.ClientBagToolTip;
+import com.lastimp.dgh.source.item.tool.AutoUseBag;
 import com.lastimp.dgh.source.register.ModBlocks;
 import com.lastimp.dgh.source.client.renderer.MyModelLayers;
 import com.lastimp.dgh.source.register.ModEntities;
@@ -15,6 +17,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
@@ -43,8 +46,11 @@ public class ClientRegisterEventHandler {
     @SubscribeEvent
     public static void registerScreens(final RegisterMenuScreensEvent event) {
         event.register(ModMenus.HEALTH_MENU.get(), HealthScreen::new);
-        event.register(ModMenus.HEALTH_CARE_BAG_MENU.get(), BagScreen::new);
-        event.register(ModMenus.SURGERY_TOOL_BAG_MENU.get(), BagScreen::new);
-        event.register(ModMenus.LIMB_REF_BAG_MENU.get(), BagScreen::new);
+        event.register(ModMenus.HEALTH_SMALL_BAG_MENU.get(), BagScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void registerToolTips(RegisterClientTooltipComponentFactoriesEvent event) {
+        event.register(AutoUseBag.Tooltip.class, ClientBagToolTip::new);
     }
 }

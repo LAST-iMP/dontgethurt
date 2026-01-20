@@ -154,6 +154,7 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.WALKING_STICK.get(), "木拐");
         this.add(ModItems.STRETCHER.get(), "木担架");
         this.add(ModItems.MANNITOL.get(), "甘露醇");
+        this.add(ModItems.AUTO_USE_BAG.get(), "便携医疗包");
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");
         this.add(ModEffects.INTENSE_PAIN_EFFECT.get(), "剧痛");

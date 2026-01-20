@@ -464,6 +464,16 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('w', ItemTags.PLANKS)
                 .unlockedBy("has_stick", has(Items.STICK))
                 .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.AUTO_USE_BAG.get())
+                .pattern("iii")
+                .pattern("bgb")
+                .pattern("rir")
+                .define('i', Items.IRON_INGOT)
+                .define('b', ItemTags.STONE_BUTTONS)
+                .define('r', Items.REDSTONE)
+                .define('g', Items.TRAPPED_CHEST)
+                .unlockedBy("has_trap", has(Items.TRAPPED_CHEST))
+                .save(recipeOutput);
 
         var book = PatchouliAPI.get().getBookStack(Common.ResourceLocation(DontGetHurt.MODID, "medical_guide"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, book)

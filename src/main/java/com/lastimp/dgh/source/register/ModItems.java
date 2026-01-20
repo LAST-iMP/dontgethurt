@@ -439,6 +439,13 @@ public class ModItems {
                     .stacksTo(16)
     );
 
+    public static final DeferredItem<AutoUseBag> AUTO_USE_BAG = registerItem(
+            "auto_use_bag",
+            AutoUseBag::new,
+            new Item.Properties()
+                    .stacksTo(1)
+    );
+
     private static <T extends Item> DeferredItem<T> registerItem(String name, Function<Item.Properties, ? extends T> func, Item.Properties properties) {
         DeferredItem<T> item = ITEMS.registerItem(name, func, properties);
         ITEMS_SET.add(item);
