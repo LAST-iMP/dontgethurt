@@ -76,7 +76,7 @@ public class BodyCondition {
     );
     public static final ResourceLocation BLEED = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bleeding"),
             (name) -> create(name)
-                    .setHealing(0.0f, 0.0f).isInjury().eyeVisible().build()
+                    .setHealing(0.0f, 0.0f).build()
     );
     public static final ResourceLocation INFECTION = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "infection"),
             (name) -> create(name)
@@ -102,6 +102,10 @@ public class BodyCondition {
     public static final ResourceLocation BANDAGED_DIRTY = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bandage_dirty"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isInjury().eyeVisible().build()
+    );
+    public static final ResourceLocation HERB_BANDAGED = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "herb_bandage"),
+            (name) -> create(name)
+                    .setHealing( 1.0f / Config.base_med_available_time, 1.0f).isComfort().eyeVisible().build()
     );
     public static final ResourceLocation OINTMENT = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "ointment"),
             (name) -> create(name)
@@ -187,6 +191,10 @@ public class BodyCondition {
                     .setHealing( 0.0f, 0.0f).isPain().eyeVisible().build()
     );
     public static final ResourceLocation PLASTER_CAST = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "plaster_cast"),
+            (name) -> create(name)
+                    .setHealing( 0.0f, 0.0f).isComfort().eyeVisible().build()
+    );
+    public static final ResourceLocation CLAMP_PLATE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "clamp_plate"),
             (name) -> create(name)
                     .setHealing( 0.0f, 0.0f).isComfort().eyeVisible().build()
     );
@@ -472,6 +480,7 @@ public class BodyCondition {
                 INFECTION,
                 FOREIGN_OBJECT,
                 BANDAGED,
+                HERB_BANDAGED,
                 BANDAGED_DIRTY,
                 OINTMENT,
                 CLAMPED_ARTERIES,
@@ -479,6 +488,7 @@ public class BodyCondition {
                 FRACTURE,
                 INTENSE_PAIN,
                 PLASTER_CAST,
+                CLAMP_PLATE,
                 BONE_DAMAGE,
                 BONE_DEATH,
 

@@ -3,6 +3,8 @@ package com.lastimp.dgh.source.core.healingSystem;
 
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.config.HealthLivingEntityList;
+import com.lastimp.dgh.config.WhiteListRecord;
 import com.lastimp.dgh.source.core.dyingSystem.DyingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
@@ -90,7 +92,7 @@ public class HealingEventHandler {
         if (lastDamageSource != null) {
             if (lastDamageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || lastDamageSource.is(DamageTypes.OUTSIDE_BORDER)) return false;
         }
-        return maxHealth > -entity.getMaxHealth() && Config.allow_down;
+        return maxHealth > -entity.getMaxHealth() && HealthLivingEntityList.canEntityLieDown(entity.getType());
     }
 
     @SubscribeEvent

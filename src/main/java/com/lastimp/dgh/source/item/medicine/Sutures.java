@@ -53,6 +53,9 @@ public class Sutures extends AbstractPartlyHealItem {
             }
 
             if (success) {
+                if (body.abnormal(HERB_BANDAGED)) {
+                    body.injury(INFECTION, 0.25f);
+                }
                 for (var key : cover) {
                     body.setConditionHidden(key, body.getConditionValue(key) + body.getConditionHidden(key));
                     body.setConditionValue(key, BodyCondition.get(key).defaultValue());

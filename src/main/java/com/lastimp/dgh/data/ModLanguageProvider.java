@@ -40,6 +40,7 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(BodyCondition.BANDAGED.toString(), "绷带包扎");
         this.add(BodyCondition.BANDAGED_DIRTY.toString(), "脏绷带");
         this.add(BodyCondition.OINTMENT.toString(), "药膏涂抹");
+        this.add(BodyCondition.HERB_BANDAGED.toString(), "草药涂抹");
 
         this.add(BodyCondition.BURN_RES.toString(), "烧伤抗性");
         this.add(BodyCondition.INTERNAL_RES.toString(), "内伤抗性");
@@ -61,6 +62,7 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(BodyCondition.GANGRENE.toString(), "坏疽");
         this.add(BodyCondition.SURGICAL_AMPUTATION.toString(), "手术性截肢");
         this.add(BodyCondition.TRAUMATIC_AMPUTATION.toString(), "创伤性截肢");
+        this.add(BodyCondition.CLAMP_PLATE.toString(), "夹板固定");
 
         this.add(BodyCondition.ANALGESIA.toString(), "镇痛");
         this.add(BodyCondition.RESPIRATORY_ARREST.toString(), "呼吸停止");
@@ -159,6 +161,10 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.STRETCHER.get(), "木担架");
         this.add(ModItems.MANNITOL.get(), "甘露醇");
         this.add(ModItems.AUTO_USE_BAG.get(), "便携医疗包");
+        this.add(ModItems.MEDICINE_BAG.get(), "药剂包");
+        this.add(ModItems.CLAMP.get(), "夹板");
+        this.add(ModItems.GRASS_STRING.get(), "草绳");
+        this.add(ModItems.HERB_BANDAGE.get(), "草药");
 
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");

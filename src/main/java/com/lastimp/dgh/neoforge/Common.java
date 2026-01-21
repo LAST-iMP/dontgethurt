@@ -12,6 +12,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Common {
+    public static ResourceLocation ResourceLocation(String path) {
+        return ResourceLocation.parse(path);
+    }
+
     public static ResourceLocation ResourceLocation(String namespace, String path) {
         return ResourceLocation.fromNamespaceAndPath(namespace, path);
     }

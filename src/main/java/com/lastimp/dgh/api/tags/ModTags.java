@@ -11,6 +11,7 @@ import java.util.Set;
 
 public class ModTags {
     public static final TagKey<Item> MEDICINE = ItemTags.create(Common.ResourceLocation("c", "medicine"));
+    public static final TagKey<Item> MEDICINE_DIRECT = ItemTags.create(Common.ResourceLocation("c", "medicine_direct"));
 
     public static final TagKey<Item> MEDICAL_TOOLS = ItemTags.create(Common.ResourceLocation("c", "medical_tools"));
     public static final TagKey<Item> MEDICAL_TOOLS_BASIC = ItemTags.create(Common.ResourceLocation("c", "medical_tools_basic"));
@@ -31,6 +32,7 @@ public class ModTags {
         addShearTage(MEDICAL_TOOLS_SHEARS);
 
         addHealthScreenAvaItem(ModTags.MEDICINE);
+        addHealthScreenAvaItem(ModTags.MEDICINE_DIRECT);
         addHealthScreenAvaItem(ModTags.MEDICAL_TOOLS);
         addHealthScreenAvaItem(ModTags.MEDICAL_TOOLS_SMALL_BAGS);
     }

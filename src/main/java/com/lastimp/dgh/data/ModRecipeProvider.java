@@ -14,6 +14,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -476,6 +477,33 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('r', Items.REDSTONE)
                 .define('g', Items.TRAPPED_CHEST)
                 .unlockedBy("has_trap", has(Items.TRAPPED_CHEST))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.MEDICINE_BAG.get())
+                .pattern("w w")
+                .pattern("wgw")
+                .pattern(" i ")
+                .define('i', Items.IRON_NUGGET)
+                .define('w', ItemTags.WOOL)
+                .define('g', Items.GLASS_BOTTLE)
+                .unlockedBy("has_wool", has(ItemTags.WOOL))
+                .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.GRASS_STRING.get(), 3)
+                .requires(Items.GRASS, 3)
+                .unlockedBy("has_grass", has(Items.GRASS))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.CLAMP.get())
+                .pattern("wgw")
+                .pattern("w w")
+                .pattern("wgw")
+                .define('w', ItemTags.PLANKS)
+                .define('g', Tags.Items.STRING)
+                .unlockedBy("has_string", has(Tags.Items.STRING))
+                .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.HERB_BANDAGE.get(), 4)
+                .requires(Items.GRASS, 2)
+                .requires(ItemTags.SAPLINGS)
+                .requires(ItemTags.SMALL_FLOWERS)
+                .unlockedBy("has_grass", has(Items.GRASS))
                 .save(recipeOutput);
 
 

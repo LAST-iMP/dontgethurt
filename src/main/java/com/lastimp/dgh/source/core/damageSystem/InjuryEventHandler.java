@@ -141,7 +141,7 @@ public class InjuryEventHandler {
                 var body = h.getComponent(VISIBLE_BODIES.get(i));
                 OpenWoundHandler.handleExplosion(source, entity, h, (AbstractVisibleBody) body, 0.5f * damageAmount * weight[i]);
                 InternalInjuryHandler.handleExplosion(source, entity, h, (AbstractVisibleBody) body, 0.5f * damageAmount * weight[i]);
-                FollowInjuryHandler.foreignObjectHandler((AbstractVisibleBody)body, h, damageAmount, 0.5f);
+                FollowInjuryHandler.foreignObjectHandler((AbstractVisibleBody)body, h, damageAmount, Config.bypass_foreign_prob * 0.6f);
             }
         });
         event.setAmount(0f);

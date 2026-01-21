@@ -13,6 +13,7 @@ public class PassThroughHandler {
     public static void handle(DamageSource source, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
         damageAmount *= (1.0f - body.getConditionValue(OPEN_WOUND_RES) * Config.resistance_max);
         body.injury(PASS_THROUGH, damageAmount);
+        if (body.abnormal(CLAMP_PLATE)) body.setConditionValue(CLAMP_PLATE, BodyCondition.get(CLAMP_PLATE).defaultValue());
         health.addDirectInjury(source.getEntity(), body.getComponent(), BodyCondition.get(PASS_THROUGH).getComponent(), damageAmount);
     }
 

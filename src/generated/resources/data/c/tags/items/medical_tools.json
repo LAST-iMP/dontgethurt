@@ -39,6 +39,7 @@
     "dgh:human_leg",
     "dgh:stasis_bag",
     "dgh:auto_use_bag",
+    "dgh:medicine_bag",
     {
       "id": "tfc:metal/shears/bismuth_bronze",
       "required": false

@@ -8,7 +8,6 @@ import com.lastimp.dgh.DontGetHurt;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.loading.FMLPaths;
-import org.antlr.v4.runtime.misc.Triple;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -17,16 +16,15 @@ import java.nio.file.Path;
 import java.util.*;
 
 public class HealthLivingEntityList {
-    public static final String WHITE_LIST_ID = "health_white_list_1.2.8";
+    public static final String WHITE_LIST_ID = "health_white_list_1.2.10";
     public static final String PLAYER_BLACK_LIST_ID = "player_black_list";
     public static final int ENV_RESIST = 0;
     public static final int ENTITY_RESIST = 1;
     public static final int PLAYER_RESIST = 2;
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Map<EntityType<?>, Triple<Float, Float, Float>> HEALTH_WHITE_LIST = new HashMap();
+    private static final Map<EntityType<?>, WhiteListRecord> HEALTH_WHITE_LIST = new HashMap();
     private static final Set<UUID> HEALTH_PLAYER_BLACK_LIST = new HashSet<>();
-    private static final Triple<Float, Float, Float> DEFAULT = new Triple<>(1f, 1f, 1f);
 
     public static boolean isEntityWhitelisted(EntityType<?> entityType) {
         return HEALTH_WHITE_LIST.containsKey(entityType);
@@ -39,13 +37,18 @@ public class HealthLivingEntityList {
     public static float getEntityDownResist(EntityType<?> entityType, int resist_type) {
         if (!isEntityWhitelisted(entityType)) return 1.0f;
         if (resist_type == ENV_RESIST) {
-            return HEALTH_WHITE_LIST.get(entityType).a;
+            return HEALTH_WHITE_LIST.get(entityType).DOWN_DAMAGE_RESISTANCE_ENV();
         } else if (resist_type == ENTITY_RESIST) {
-            return HEALTH_WHITE_LIST.get(entityType).b;
+            return HEALTH_WHITE_LIST.get(entityType).DOWN_DAMAGE_RESISTANCE_ENTITY();
         } else if (resist_type == PLAYER_RESIST) {
-            return HEALTH_WHITE_LIST.get(entityType).c;
+            return HEALTH_WHITE_LIST.get(entityType).DOWN_DAMAGE_RESISTANCE_PLAYER();
         }
         return 1.0f;
+    }
+
+    public static boolean canEntityLieDown(EntityType<?> entityType) {
+        if (!isEntityWhitelisted(entityType)) return false;
+        return HEALTH_WHITE_LIST.get(entityType).CAN_LIE_DOWN();
     }
 
     public static Set<EntityType<?>> getWhiteList() {
@@ -64,19 +67,22 @@ public class HealthLivingEntityList {
                         "    \"id\": \"minecraft:player\",\n" +
                         "    \"DOWN_DAMAGE_RESISTANCE_ENV\": 0.1,\n" +
                         "    \"DOWN_DAMAGE_RESISTANCE_ENTITY\": 0.1,\n" +
-                        "    \"DOWN_DAMAGE_RESISTANCE_PLAYER\": 0.1\n" +
+                        "    \"DOWN_DAMAGE_RESISTANCE_PLAYER\": 0.1,\n" +
+                        "    \"CAN_LIE_DOWN\": true\n" +
                         "  },\n" +
                         "  {\n" +
                         "    \"id\": \"minecraft:villager\",\n" +
                         "    \"DOWN_DAMAGE_RESISTANCE_ENV\": 0.1,\n" +
                         "    \"DOWN_DAMAGE_RESISTANCE_ENTITY\": 0.1,\n" +
-                        "    \"DOWN_DAMAGE_RESISTANCE_PLAYER\": 0.1\n" +
+                        "    \"DOWN_DAMAGE_RESISTANCE_PLAYER\": 0.1,\n" +
+                        "    \"CAN_LIE_DOWN\": true\n" +
                         "  },\n" +
                         "  {\n" +
                         "    \"id\": \"touhou_little_maid:maid\",\n" +
                         "    \"DOWN_DAMAGE_RESISTANCE_ENV\": 0.1,\n" +
                         "    \"DOWN_DAMAGE_RESISTANCE_ENTITY\": 0.1,\n" +
-                        "    \"DOWN_DAMAGE_RESISTANCE_PLAYER\": 0.1\n" +
+                        "    \"DOWN_DAMAGE_RESISTANCE_PLAYER\": 0.1,\n" +
+                        "    \"CAN_LIE_DOWN\": true\n" +
                         "  }\n" +
                         "]");
                 writer.close();
@@ -95,7 +101,7 @@ public class HealthLivingEntityList {
 
     public static void loadServerData(String json) {
         JsonArray root = HealthLivingEntityList.GSON.fromJson(json, JsonArray.class);
-        root.forEach(jsonElement -> EntityType.byString(jsonElement.getAsString()).ifPresent(type -> HEALTH_WHITE_LIST.put(type, DEFAULT)));
+        root.forEach(jsonElement -> EntityType.byString(jsonElement.getAsString()).ifPresent(type -> HEALTH_WHITE_LIST.put(type, WhiteListRecord.DEFAULT)));
     }
 
     private static void loadWhiteList(Reader json) {
@@ -106,7 +112,8 @@ public class HealthLivingEntityList {
             float evn = element.has("DOWN_DAMAGE_RESISTANCE_ENV") ? element.get("DOWN_DAMAGE_RESISTANCE_ENV").getAsFloat() : 0.1f;
             float entity = element.has("DOWN_DAMAGE_RESISTANCE_ENTITY") ? element.get("DOWN_DAMAGE_RESISTANCE_ENTITY").getAsFloat() : 0.1f;
             float player = element.has("DOWN_DAMAGE_RESISTANCE_PLAYER") ? element.get("DOWN_DAMAGE_RESISTANCE_PLAYER").getAsFloat() : 0.1f;
-            EntityType.byString(element.get("id").getAsString()).ifPresent(type -> HEALTH_WHITE_LIST.put(type, new Triple<>(evn, entity, player)));
+            boolean canLieDown = !element.has("CAN_LIE_DOWN") || element.get("CAN_LIE_DOWN").getAsBoolean();
+            EntityType.byString(element.get("id").getAsString()).ifPresent(type -> HEALTH_WHITE_LIST.put(type, new WhiteListRecord(evn, entity, player, canLieDown)));
         });
     }
 

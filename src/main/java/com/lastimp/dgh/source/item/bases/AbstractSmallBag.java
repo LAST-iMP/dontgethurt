@@ -1,6 +1,7 @@
 package com.lastimp.dgh.source.item.bases;
 
-import com.lastimp.dgh.source.core.menu.menuProvider.HealthSmallBagMenuProvider;
+import com.lastimp.dgh.source.core.menu.MenuOpenWrapper;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +18,7 @@ public abstract class AbstractSmallBag extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         if (!level.isClientSide && usedHand == InteractionHand.MAIN_HAND)
-            HealthSmallBagMenuProvider.open(player, player.getMainHandItem());
+            MenuOpenWrapper.openMenu(player.getMainHandItem(), (ServerPlayer) player);
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide());
     }
 }

@@ -1,15 +1,13 @@
 package com.lastimp.dgh.network;
 
-import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.enums.OperationType;
-import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
-import com.lastimp.dgh.source.core.healingSystem.BagHealerHandler;
+import com.lastimp.dgh.source.core.menu.BagMenu;
 import com.lastimp.dgh.source.core.menu.HealthMenu;
 import com.lastimp.dgh.source.core.menu.MenuOpenWrapper;
 import com.lastimp.dgh.source.core.menu.menuProvider.HealthMenuProvider;
@@ -18,7 +16,6 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -77,7 +74,7 @@ public class ServerPayloadHandler {
         var context = ctx.get();
         context.enqueueWork(() -> {
             ServerPlayer sourcePlayer = ctx.get().getSender();
-            if (sourcePlayer == null || !(sourcePlayer.containerMenu instanceof HealthMenu healthMenu)) return;
+            if (sourcePlayer == null) return;
             var target = Utils.getLivingWithHealth(ctx.get().getSender().serverLevel(), new UUID(data.id_most(), data.id_least()));
             if (target == null) return;
 
@@ -86,17 +83,10 @@ public class ServerPayloadHandler {
                 return;
             }
 
-            ItemStack stack = healthMenu.getStackBySlotNum(data.slotNum());
-            if (stack.is(ModTags.MEDICAL_TOOLS_SMALL_BAGS) && !stack.is(ModTags.MEDICAL_USAGE_BAGS)) {
-                healthMenu.openBag(stack);
-            } else {
-                BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
-                if (stack.is(ModTags.MEDICAL_USAGE_BAGS)) {
-                    BagHealerHandler.handleBagHealing(stack, sourcePlayer, target, component);
-                } else {
-                    HealingHandler.useItemOn(stack, sourcePlayer, target, component);
-                }
-                healthMenu.getSlot(data.slotNum()).setByPlayer(stack);
+            if (sourcePlayer.containerMenu instanceof HealthMenu healthMenu) {
+                HealingHandler.handleHealthMenuItemUse(healthMenu, data, sourcePlayer, target);
+            } else if (sourcePlayer.containerMenu instanceof BagMenu.MedicineSmallBag medicineSmallBagMenu) {
+                HealingHandler.handleMedicineBagMenuItemUse(medicineSmallBagMenu, data, sourcePlayer, target);
             }
         });
         context.setPacketHandled(true);

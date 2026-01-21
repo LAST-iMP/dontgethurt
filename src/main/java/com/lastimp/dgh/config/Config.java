@@ -124,7 +124,7 @@ public class Config {
 
     public static final ForgeConfigSpec.DoubleValue BYPASS_FOREIGN_PROB = BUILDER
             .comment("贯穿伤-体内异物概率")
-            .defineInRange("BYPASS_FOREIGN_PROB", 0.8, 0, 2.0);
+            .defineInRange("BYPASS_FOREIGN_PROB", 0.8, 0, 1.0);
 
     public static final ForgeConfigSpec.BooleanValue PLAYER_GLOWING = BUILDER
             .comment("允许玩家倒地发光")

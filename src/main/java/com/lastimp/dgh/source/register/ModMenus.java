@@ -18,6 +18,7 @@ public class ModMenus {
 
     public static final Supplier<MenuType<HealthMenu>> HEALTH_MENU = registerMenuType(HealthMenu::new, "health_menu");
     public static final Supplier<MenuType<BagMenu>> HEALTH_SMALL_BAG_MENU = registerMenuType(BagMenu.HealthSmallBag::new, "health_small_bag_menu");
+    public static final Supplier<MenuType<BagMenu>> HEALTH_SMALL_MEDICINE_BAG_MENU = registerMenuType(BagMenu.MedicineSmallBag::new, "health_small_medicine_bag_menu");
 
     private static <T extends AbstractContainerMenu> Supplier<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
         return MENU_TYPES.register(name, () -> IForgeMenuType.create(factory));
