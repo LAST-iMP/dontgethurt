@@ -3,6 +3,7 @@ package com.lastimp.dgh.source.client.eventHandler;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.client.gui.screen.BagScreen;
 import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
+import com.lastimp.dgh.source.client.gui.screen.MedicineBagScreen;
 import com.lastimp.dgh.source.client.renderer.OperatingBedRenderer;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.source.client.renderer.StretcherRenderer;
@@ -47,6 +48,7 @@ public class ClientRegisterEventHandler {
     public static void registerScreens(final RegisterMenuScreensEvent event) {
         event.register(ModMenus.HEALTH_MENU.get(), HealthScreen::new);
         event.register(ModMenus.HEALTH_SMALL_BAG_MENU.get(), BagScreen::new);
+        event.register(ModMenus.HEALTH_SMALL_MEDICINE_BAG_MENU.get(), MedicineBagScreen::new);
     }
 
     @SubscribeEvent

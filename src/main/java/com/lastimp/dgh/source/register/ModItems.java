@@ -446,6 +446,34 @@ public class ModItems {
                     .stacksTo(1)
     );
 
+    public static final DeferredItem<MedicineBag> MEDICINE_BAG = registerItem(
+            "medicine_bag",
+            MedicineBag::new,
+            new Item.Properties()
+                    .stacksTo(1)
+    );
+
+    public static final DeferredItem<HerbBandage> HERB_BANDAGE = registerItem(
+            "herb_bandage",
+            HerbBandage::new,
+            new Item.Properties()
+                    .stacksTo(64)
+    );
+
+    public static final DeferredItem<Clamp> CLAMP = registerItem(
+            "clamp",
+            Clamp::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final DeferredItem<Item> GRASS_STRING = registerItem(
+            "grass_string",
+            Item::new,
+            new Item.Properties()
+                    .stacksTo(64)
+    );
+
     private static <T extends Item> DeferredItem<T> registerItem(String name, Function<Item.Properties, ? extends T> func, Item.Properties properties) {
         DeferredItem<T> item = ITEMS.registerItem(name, func, properties);
         ITEMS_SET.add(item);

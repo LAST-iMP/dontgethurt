@@ -66,6 +66,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     public AbstractBody update(HealthCapability health, LivingEntity entity) {
         super.update(health, entity);
         handleBandaged();
+        handleHerb(entity);
         handleBurning(entity);
         handleInternalInjury(entity);
         handleOpenWound(entity);
@@ -143,6 +144,16 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
     }
 
+    private void handleHerb(LivingEntity entity) {
+        if (!this.abnormal(HERB_BANDAGED)) return;
+        if (entity.isInWaterRainOrBubble()) {
+            this.injury(HERB_BANDAGED, -0.1f * DELTA);
+        }
+        if (this.abnormal(SURGERY_INCISION)) {
+            this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * 4 * DELTA);
+        }
+    }
+
     private void handleBurning(LivingEntity entity) {
         if (!this.abnormalWithHidden(BURN)) return;
         this.handleBandageAcc(BURN, Config.bandage_acc);
@@ -151,7 +162,8 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.handleInjuryInfection(BURN);
         this.handleCombatStimulant(entity, BURN);
 
-        if (!isBandaged()) this.nextTickBleed += this.getCondition(BURN).getValue() * Config.burn_bleed_ratio;
+        if (isBandaged() || isHerbed()) return;
+        this.nextTickBleed += this.getCondition(BURN).getValue() * Config.burn_bleed_ratio;
     }
 
     private void handleInternalInjury(LivingEntity entity) {
@@ -170,7 +182,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.handleInjuryInfection(OPEN_WOUND);
         this.handleCombatStimulant(entity, OPEN_WOUND);
 
-        if (isBandaged()) return;
+        if (isBandaged() || isHerbed()) return;
         this.nextTickBleed += this.getCondition(OPEN_WOUND).getValue() * Config.open_wound_bleed_ratio;
     }
 
@@ -182,12 +194,15 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.handleInjuryInfection(PASS_THROUGH);
         this.handleCombatStimulant(entity, PASS_THROUGH);
 
-        if (isBandaged()) return;
+        if (isBandaged() || isHerbed()) return;
         this.nextTickBleed += this.getCondition(PASS_THROUGH).getValue() * Config.open_wound_bleed_ratio * 1.5f;
     }
 
     private void handleBandageAcc(ResourceLocation condition, float acc) {
         if (isBandaged()) {
+            this.healingHidden(condition, - BodyCondition.get(condition).healingSpeed() * DELTA * (isBadBandaged() ? 1.0f : acc));
+        }
+        if (isHerbed()) {
             this.healingHidden(condition, - BodyCondition.get(condition).healingSpeed() * DELTA * (isBadBandaged() ? 1.0f : acc));
         }
     }
@@ -220,7 +235,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         ConditionState state = this.getCondition(condition);
         if (isBadBandaged()) {
             this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * DELTA * 4 * state.getTotalValue());
-        } else if (!isBandaged()) {
+        } else if (!isBandaged() && !isHerbed()) {
             this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * DELTA * state.getTotalValue());
         }
     }
@@ -228,7 +243,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     private void handleInfection() {
         if (this.abnormal(OINTMENT))
             this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * 3 * DELTA);
-        else if (this.isBandaged())
+        else if (this.isBandaged() || isHerbed())
             this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * 2 * DELTA);
         else if (!this.isBadBandaged())
             this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * DELTA);
@@ -248,7 +263,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         this.handleCover(FRACTURE);
 
         Torso torso = (Torso) health.getComponent(TORSO);
-        if (!torso.abnormal(ANALGESIA) && !this.isBandaged() && !this.isBadBandaged()) {
+        if (!this.abnormal(CLAMP_PLATE) && !torso.abnormal(ANALGESIA) && !this.isBandaged() && !this.isBadBandaged()) {
             this.setConditionValue(INTENSE_PAIN, BodyCondition.get(INTENSE_PAIN).maxValue());
         }
 
@@ -464,6 +479,10 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     public boolean isBandaged() {
         return this.abnormal(BANDAGED);
+    }
+
+    public boolean isHerbed() {
+        return this.abnormal(HERB_BANDAGED);
     }
 
     public boolean isBadBandaged() {

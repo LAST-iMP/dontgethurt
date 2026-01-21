@@ -11,6 +11,7 @@ import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
 public class ModItemTagsProvider extends TagsProvider<Item> {
     public static final ResourceKey<Item> SHEARS = ResourceKey.create(Registries.ITEM, Common.ResourceLocation("minecraft", "shears"));
     public static final ResourceKey<Item> WRITABLE_BOOK = ResourceKey.create(Registries.ITEM, Common.ResourceLocation("minecraft", "writable_book"));
+    public static final ResourceKey<Item> POTIONS = ResourceKey.create(Registries.ITEM, Common.ResourceLocation("minecraft", "potion"));
 
     protected ModItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, Registries.ITEM, lookupProvider, modId, existingFileHelper);
@@ -42,6 +44,18 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.ANTIBIOTIC_OINTMENT.getKey())
                 .add(ModItems.PLASTIC_SKIN.getKey())
                 .add(ModItems.ANTIBIOTIC_GLUE.getKey())
+                .add(ModItems.MANNITOL.getKey())
+                .add(ModItems.HERB_BANDAGE.getKey())
+                .add(ModItems.CLAMP.getKey());
+
+        this.tag(ModTags.MEDICINE_DIRECT)
+                .add(POTIONS)
+                .add(ModItems.BLOOD_PACK.getKey())
+                .add(ModItems.BLOOD_PACK_EMPTY.getKey())
+                .add(ModItems.MORPHINE.getKey())
+                .add(ModItems.NALOXONE.getKey())
+                .add(ModItems.ADRENALINE.getKey())
+                .add(ModItems.ANTIBIOTICS.getKey())
                 .add(ModItems.MANNITOL.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS)
@@ -83,7 +97,8 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.HUMAN_HAND.getKey())
                 .add(ModItems.HUMAN_LEG.getKey())
                 .add(ModItems.STASIS_BAG.getKey())
-                .add(ModItems.AUTO_USE_BAG.getKey());
+                .add(ModItems.AUTO_USE_BAG.getKey())
+                .add(ModItems.MEDICINE_BAG.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_BASIC)
                 .add(SHEARS)
@@ -139,13 +154,17 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.HEALTH_CARE_BAG.getKey())
                 .add(ModItems.SURGERY_TOOL_BAG.getKey())
                 .add(ModItems.LIMB_REF_BEG.getKey())
-                .add(ModItems.AUTO_USE_BAG.getKey());
+                .add(ModItems.AUTO_USE_BAG.getKey())
+                .add(ModItems.MEDICINE_BAG.getKey());
 
         this.tag(ModTags.MEDICAL_USAGE_BAGS)
                 .add(ModItems.AUTO_USE_BAG.getKey());
 
         this.tag(ItemTags.BEDS)
                 .add(ModItems.OPERATING_BED_BLOCK_ITEM.getKey());
+
+        this.tag(Tags.Items.STRINGS)
+                .add(ModItems.GRASS_STRING.getKey());
 
         this.tag(ModTags.OXYGEN_SUPPLIERS)
                 .add(ModItems.OXYGEN_MASK.getKey());

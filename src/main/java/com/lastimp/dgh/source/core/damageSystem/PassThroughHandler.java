@@ -7,13 +7,13 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.OPEN_WOUND_RES;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.PASS_THROUGH;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class PassThroughHandler {
     public static void handle(DamageSource source, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
         damageAmount *= (1.0f - body.getConditionValue(OPEN_WOUND_RES) * Config.resistance_max);
         body.injury(PASS_THROUGH, damageAmount);
+        if (body.abnormal(CLAMP_PLATE)) body.setConditionValue(CLAMP_PLATE, BodyCondition.get(CLAMP_PLATE).defaultValue());
         health.addDirectInjury(source.getEntity(), body.getComponent(), BodyCondition.get(PASS_THROUGH).getComponent(), damageAmount);
     }
 

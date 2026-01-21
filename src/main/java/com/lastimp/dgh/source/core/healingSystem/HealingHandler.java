@@ -6,9 +6,13 @@ import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.source.core.menu.BagMenu;
+import com.lastimp.dgh.source.core.menu.HealthMenu;
 import com.lastimp.dgh.source.item.medicine.Bandages;
+import com.lastimp.dgh.source.item.medicine.Clamp;
 import com.lastimp.dgh.source.item.medicine.Gypsum;
 import com.lastimp.dgh.source.item.medicine.Tourniquet;
 import net.minecraft.network.chat.Component;
@@ -17,6 +21,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PotionItem;
 import org.jetbrains.annotations.NotNull;
 import oshi.util.tuples.Pair;
 
@@ -28,6 +33,30 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.BRAIN_DAMAGE;
 import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
 
 public class HealingHandler {
+    public static void handleHealthMenuItemUse(HealthMenu healthMenu, final MyHealingItemUseData data, ServerPlayer sourcePlayer, LivingEntity target) {
+        ItemStack stack = healthMenu.getStackBySlotNum(data.slotNum());
+        if (stack.is(ModTags.MEDICAL_TOOLS_SMALL_BAGS) && !stack.is(ModTags.MEDICAL_USAGE_BAGS)) {
+            healthMenu.openBag(stack);
+        } else {
+            BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
+            if (stack.is(ModTags.MEDICAL_USAGE_BAGS)) {
+                BagHealerHandler.handleBagHealing(stack, sourcePlayer, target, component);
+            } else {
+                HealingHandler.useItemOn(stack, sourcePlayer, target, component);
+            }
+            healthMenu.getSlot(data.slotNum()).setByPlayer(stack);
+        }
+    }
+
+    public static void handleMedicineBagMenuItemUse(BagMenu.MedicineSmallBag healthMenu, final MyHealingItemUseData data, ServerPlayer sourcePlayer, LivingEntity target) {
+        ItemStack stack = healthMenu.getStackBySlotNum(data.slotNum());
+        if (stack.getItem() instanceof PotionItem potionItem) {
+            Utils.drop(potionItem.finishUsingItem(stack, target.level(), target), sourcePlayer);
+        } else if (stack.getItem() instanceof AbstractDirectHealItems){
+            HealingHandler.useItemOn(stack, sourcePlayer, target, null);
+        }
+        healthMenu.getSlot(data.slotNum()).setByPlayer(stack);
+    }
 
     public static boolean useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, LivingEntity target, BodyComponents component) {
         if (target == null) return false;
@@ -65,6 +94,7 @@ public class HealingHandler {
             success |= Bandages.cut(target, component);
             success |= Gypsum.cut(target, component);
             success |= Tourniquet.cut(target, component);
+            success |= Clamp.cut(target, component);
         }
         return success;
     }

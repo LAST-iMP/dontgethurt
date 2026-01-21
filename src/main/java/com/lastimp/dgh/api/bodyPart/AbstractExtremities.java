@@ -1,6 +1,5 @@
 package com.lastimp.dgh.api.bodyPart;
 
-import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -14,7 +13,6 @@ import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
-import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 
 public abstract class AbstractExtremities extends AbstractVisibleBody {
@@ -48,8 +46,8 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
     }
 
     public boolean available(HealthCapability health) {
-        boolean available = this.isBandaged() || this.isBadBandaged() || !this.abnormal(DISLOCATION);
-        available &= this.abnormal(PLASTER_CAST) || !this.abnormalWithHidden(FRACTURE);
+        boolean available = this.isBandaged() || this.isBadBandaged() || this.abnormal(CLAMP_PLATE) || !this.abnormal(DISLOCATION);
+        available &= this.abnormal(PLASTER_CAST) || this.abnormal(CLAMP_PLATE) || !this.abnormalWithHidden(FRACTURE);
         available |= health.getComponent(TORSO).abnormal(ANALGESIA);
         available &= !this.abnormalWithHidden(SAWED_BONES);
         available &= (!this.abnormal(TRAUMATIC_AMPUTATION) && !this.abnormal(SURGICAL_AMPUTATION));
@@ -84,7 +82,7 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
         if (!this.abnormal(DISLOCATION)) return;
 
         Torso torso = (Torso) health.getComponent(TORSO);
-        if (!torso.abnormal(ANALGESIA) && !this.isBandaged() && !this.isBadBandaged()) {
+        if (!this.abnormal(CLAMP_PLATE) && !torso.abnormal(ANALGESIA) && !this.isBandaged() && !this.isBadBandaged()) {
             this.setConditionValue(INTENSE_PAIN, BodyCondition.get(INTENSE_PAIN).maxValue());
         }
     }

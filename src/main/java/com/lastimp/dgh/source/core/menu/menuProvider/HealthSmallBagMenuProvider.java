@@ -11,16 +11,10 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class HealthSmallBagMenuProvider implements MenuProvider {
-    private final ItemStack bagStack;
+    protected final ItemStack bagStack;
 
     public HealthSmallBagMenuProvider(ItemStack bagStack) {
         this.bagStack = bagStack;
-    }
-
-    public static void open(Player player, ItemStack itemStack) {
-        player.openMenu(new HealthSmallBagMenuProvider(itemStack), buf -> {
-            buf.writeInt(player.getInventory().findSlotMatchingItem(itemStack));
-        });
     }
 
     @Override
@@ -31,5 +25,16 @@ public class HealthSmallBagMenuProvider implements MenuProvider {
     @Override
     public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
         return new BagMenu.HealthSmallBag(i, inventory, bagStack);
+    }
+
+    public static class MedicineSmallBagMenuProvider extends HealthSmallBagMenuProvider {
+        public MedicineSmallBagMenuProvider(ItemStack bagStack) {
+            super(bagStack);
+        }
+
+        @Override
+        public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+            return new BagMenu.MedicineSmallBag(i, inventory, this.bagStack);
+        }
     }
 }

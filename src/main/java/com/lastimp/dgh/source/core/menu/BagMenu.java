@@ -16,10 +16,12 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public abstract class BagMenu extends AbstractContainerMenu {
+    private final int Y_SHIFT;
     protected BackpackInventory handler;
     //服务端
-    public BagMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inv, ItemStack bagStack) {
+    public BagMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inv, int y_shift, ItemStack bagStack) {
         super(menuType, containerId);
+        this.Y_SHIFT = y_shift;
         this.handler = ((AbstractSmallBag)bagStack.getItem()).getBackPackHandler(bagStack);
         this.layoutPlayerInventorySlots(inv);
     }
@@ -30,8 +32,23 @@ public abstract class BagMenu extends AbstractContainerMenu {
         }
 
         public HealthSmallBag(int pContainerId, Inventory inv, ItemStack bagStack) {
-            super(ModMenus.HEALTH_SMALL_BAG_MENU.get(), pContainerId, inv, bagStack);
+            super(ModMenus.HEALTH_SMALL_BAG_MENU.get(), pContainerId, inv, 0, bagStack);
         }
+    }
+
+    public static class MedicineSmallBag extends BagMenu {
+        public MedicineSmallBag(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
+            this(pContainerId, inv, inv.player.getInventory().getItem(buf.readInt()));
+        }
+
+        public MedicineSmallBag(int pContainerId, Inventory inv, ItemStack bagStack) {
+            super(ModMenus.HEALTH_SMALL_MEDICINE_BAG_MENU.get(), pContainerId, inv, 18, bagStack);
+        }
+    }
+
+    public ItemStack getStackBySlotNum(int slotNum) {
+        if (slotNum >= 36 && this.handler == null) return ItemStack.EMPTY;
+        return this.getSlot(slotNum).getItem();
     }
 
     @Override
@@ -121,12 +138,12 @@ public abstract class BagMenu extends AbstractContainerMenu {
     protected void layoutPlayerInventorySlots(Inventory playerInventory) {
         // Hotbar
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 89));
+            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 89 + Y_SHIFT));
         }
         // Player inventory
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
-                this.addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 31 + row * 18));
+                this.addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 31 + row * 18 + Y_SHIFT));
             }
         }
         // 背包内部

@@ -1,23 +1,19 @@
 package com.lastimp.dgh.neoforge;
 
 import com.lastimp.dgh.source.core.capability.InjuryRecord;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.ByteTag;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.network.Filterable;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.item.component.WrittenBookContent;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class Common {
+    public static ResourceLocation ResourceLocation(String path) {
+        return ResourceLocation.parse(path);
+    }
+
     public static ResourceLocation ResourceLocation(String namespace, String path) {
         return ResourceLocation.fromNamespaceAndPath(namespace, path);
     }

@@ -2,6 +2,7 @@
 package com.lastimp.dgh.data;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.register.ModItems;
 import com.lastimp.dgh.source.register.ModPotions;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.Potions;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import vazkii.patchouli.api.PatchouliAPI;
 
@@ -473,6 +475,33 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('r', Items.REDSTONE)
                 .define('g', Items.TRAPPED_CHEST)
                 .unlockedBy("has_trap", has(Items.TRAPPED_CHEST))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.MEDICINE_BAG.get())
+                .pattern("w w")
+                .pattern("wgw")
+                .pattern(" i ")
+                .define('i', Items.IRON_NUGGET)
+                .define('w', ItemTags.WOOL)
+                .define('g', Items.GLASS_BOTTLE)
+                .unlockedBy("has_wool", has(ItemTags.WOOL))
+                .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.GRASS_STRING.get(), 3)
+                .requires(Items.SHORT_GRASS, 3)
+                .unlockedBy("has_grass", has(Items.SHORT_GRASS))
+                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.CLAMP.get())
+                .pattern("wgw")
+                .pattern("w w")
+                .pattern("wgw")
+                .define('w', ItemTags.PLANKS)
+                .define('g', Tags.Items.STRINGS)
+                .unlockedBy("has_string", has(Tags.Items.STRINGS))
+                .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.HERB_BANDAGE.get(), 4)
+                .requires(Items.SHORT_GRASS, 2)
+                .requires(ItemTags.SAPLINGS)
+                .requires(ItemTags.SMALL_FLOWERS)
+                .unlockedBy("has_grass", has(Items.SHORT_GRASS))
                 .save(recipeOutput);
 
         var book = PatchouliAPI.get().getBookStack(Common.ResourceLocation(DontGetHurt.MODID, "medical_guide"));

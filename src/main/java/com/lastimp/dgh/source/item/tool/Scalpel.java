@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.SURGERY_INCISION;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public class Scalpel extends AbstractPartlyHealItem {
     private static final Set<ResourceLocation> discover = new HashSet<>();
@@ -28,6 +28,8 @@ public class Scalpel extends AbstractPartlyHealItem {
             if (body.abnormal(SURGERY_INCISION)) return false;
 
             body.setConditionValue(SURGERY_INCISION, BodyCondition.get(SURGERY_INCISION).maxValue());
+            if (body.abnormal(HERB_BANDAGED))
+                body.injury(INFECTION, 0.25f);
 
             for (var key : discover) {
                 body.setConditionValue(key, body.getConditionHidden(key) + body.getConditionValue(key));
