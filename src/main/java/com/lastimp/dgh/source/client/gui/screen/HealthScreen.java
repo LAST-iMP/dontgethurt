@@ -42,7 +42,7 @@ import static com.lastimp.dgh.api.enums.OperationType.HEALTH_SCANN;
 import static com.lastimp.dgh.source.client.gui.component.HealthComponentWidget.*;
 
 @OnlyIn(value = Dist.CLIENT)
-public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
+public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<T> {
     private static final ResourceLocation HUD_BACKGROUND = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/health_hud.png");
     private static final ResourceLocation HUD_HEART_BEAT = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud.png");
     private static final ResourceLocation HUD_HEART_BEAT_ACC = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud_acc.png");
@@ -61,7 +61,7 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
     private BodyComponents selectedComponent = null;
     private static HealthCapability healthData = null;
 
-    public HealthScreen(HealthMenu menu, Inventory playerInventory, Component title) {
+    public HealthScreen(T menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         GuiOpenWrapper.setHealthScreen(this);
     }
@@ -294,5 +294,10 @@ public class HealthScreen extends AbstractContainerScreen<HealthMenu> {
 
     public BodyComponents getSelectedComponent() {
         return selectedComponent;
+    }
+
+    @Override
+    public T getMenu() {
+        return this.menu;
     }
 }
