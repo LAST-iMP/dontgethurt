@@ -35,7 +35,7 @@ public class PlayerEventBus {
             persistedTag.putBoolean(key, true);
             data.put(Player.PERSISTED_NBT_TAG, persistedTag);
         }
-        PacketDistributor.sendToPlayer((ServerPlayer) player, MyServerConfigSynData.getInstance(HealthLivingEntityList.getWhiteList()));
+        PacketDistributor.sendToPlayer((ServerPlayer) player, MyServerConfigSynData.getInstance(HealthLivingEntityList.getConfig()));
     }
 
     @SubscribeEvent

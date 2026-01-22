@@ -34,7 +34,7 @@ public class ClientPayloadHandler {
     }
 
     public static void handleServerConfigSYNData(final MyServerConfigSynData data, final IPayloadContext context) {
-        context.enqueueWork(() -> HealthLivingEntityList.loadServerData(data.healthWhiteList()))
+        context.enqueueWork(() -> HealthLivingEntityList.loadServerData(data.tag()))
         .exceptionally(e -> {
             context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
             return null;

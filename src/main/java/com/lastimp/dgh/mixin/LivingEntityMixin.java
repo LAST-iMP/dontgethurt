@@ -1,6 +1,7 @@
 package com.lastimp.dgh.mixin;
 
 import com.lastimp.dgh.config.Config;
+import com.lastimp.dgh.config.HealthLivingEntityList;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.core.particles.ParticleTypes;
@@ -26,5 +27,12 @@ public class LivingEntityMixin {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
         if (id == 14) Utils.addParticlesAroundSelf(ParticleTypes.HAPPY_VILLAGER, livingEntity);
         ci.cancel();
+    }
+
+    @Inject(method = "canBeSeenAsEnemy", at = @At("RETURN"), cancellable = true)
+    public void canBeSeenAsEnemy(CallbackInfoReturnable<Boolean> cir) {
+        LivingEntity livingEntity = (LivingEntity) (Object)this;
+        boolean attackable = !HealthCapability.has(livingEntity) || !HealthCapability.isDying(livingEntity) || HealthLivingEntityList.canBeSeenWhenLying(livingEntity.getType());
+        cir.setReturnValue(cir.getReturnValue() && attackable);
     }
 }

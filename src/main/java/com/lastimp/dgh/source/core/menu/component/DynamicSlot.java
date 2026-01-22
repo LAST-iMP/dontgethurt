@@ -12,6 +12,7 @@ public class DynamicSlot extends Slot {
     private static final Container emptyInventory = new SimpleContainer(0);
     private final int index;
     private IItemHandler handler;
+    private boolean active = true;
 
     public DynamicSlot(IItemHandler handler, int index, int x, int y) {
         super(emptyInventory, index, x, y);
@@ -25,6 +26,10 @@ public class DynamicSlot extends Slot {
             this.set(this.handler.getStackInSlot(index));
         else
             this.set(ItemStack.EMPTY);
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public boolean mayPlace(ItemStack stack) {
@@ -63,5 +68,9 @@ public class DynamicSlot extends Slot {
     public ItemStack remove(int amount) {
         if (handler == null) return ItemStack.EMPTY;
         return this.handler.extractItem(this.index, amount, false);
+    }
+
+    public boolean isActive() {
+        return this.active;
     }
 }

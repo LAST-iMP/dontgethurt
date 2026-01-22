@@ -9,6 +9,7 @@ import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.source.core.menu.component.DynamicItemHandler;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import com.lastimp.dgh.source.register.ModEffects;
 import net.minecraft.core.HolderLookup;
@@ -33,6 +34,7 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public abstract class AbstractVisibleBody extends AbstractBody {
+    private final DynamicItemHandler organ = new DynamicItemHandler(36, 64);
     private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
     private static List<ResourceLocation> ANY_BODY_CONDITIONS;
     private float nextTickBleed;
@@ -60,6 +62,10 @@ public abstract class AbstractVisibleBody extends AbstractBody {
             ANY_BODY_CONDITIONS = new ArrayList<>(uniqueConditions);
         }
         return ANY_BODY_CONDITIONS;
+    }
+
+    public DynamicItemHandler organ() {
+        return this.organ;
     }
 
     @Override

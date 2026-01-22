@@ -2,6 +2,7 @@
 package com.lastimp.dgh.source.item.tool;
 
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
+import com.lastimp.dgh.source.core.menu.MenuOpenWrapper;
 import com.lastimp.dgh.source.core.menu.menuProvider.HealthMenuProvider;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.resources.ResourceLocation;
@@ -56,7 +57,7 @@ public class HealthScanner extends AbstractHealingItem {
         if (usedHand == InteractionHand.OFF_HAND)
             return InteractionResultHolder.pass(player.getItemInHand(usedHand));
         if (!level.isClientSide) {
-            HealthMenuProvider.open(player, player.getUUID(), true);
+            MenuOpenWrapper.openHealthMenu(player, player.getUUID(), true);
         }
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide());
     }
@@ -67,7 +68,7 @@ public class HealthScanner extends AbstractHealingItem {
             return InteractionResult.SUCCESS;
         }
         if (!player.level().isClientSide) {
-            HealthMenuProvider.open(player, target.getUUID(), true);
+            MenuOpenWrapper.openHealthMenu(player, target.getUUID(), true);
         }
         return InteractionResult.CONSUME;
     }

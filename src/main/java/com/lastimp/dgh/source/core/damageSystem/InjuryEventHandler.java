@@ -48,7 +48,6 @@ public class InjuryEventHandler {
         if (event.getEntity().level().isClientSide) return;
         var livingEntity = event.getEntity();
         if (!HealthCapability.has(livingEntity)) return;
-        DontGetHurt.LOGGER.info(event.getSource() + " " + event.getNewDamage());
 
         float damageAmount = event.getNewDamage();
         float absorption = livingEntity.getAbsorptionAmount();

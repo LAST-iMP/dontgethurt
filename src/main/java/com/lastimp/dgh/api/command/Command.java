@@ -4,6 +4,7 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.neoforge.Common;
+import com.lastimp.dgh.source.core.menu.MenuOpenWrapper;
 import com.lastimp.dgh.source.core.menu.menuProvider.HealthMenuProvider;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.mojang.brigadier.CommandDispatcher;
@@ -80,7 +81,7 @@ public class Command {
         ServerPlayer source = context.getSource().getPlayer();
         ServerPlayer target = EntityArgument.getPlayer(context, "player");
         if (source != null)
-            HealthMenuProvider.open(source, target.getUUID(), true);
+            MenuOpenWrapper.openHealthMenu(source, target.getUUID(), true);
         return 1;
     }
 

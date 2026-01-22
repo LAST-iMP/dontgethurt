@@ -1,25 +1,20 @@
 
 package com.lastimp.dgh.network;
 
-import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.enums.OperationType;
-import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
-import com.lastimp.dgh.source.core.healingSystem.BagHealerHandler;
 import com.lastimp.dgh.source.core.menu.BagMenu;
 import com.lastimp.dgh.source.core.menu.HealthMenu;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.menu.MenuOpenWrapper;
-import com.lastimp.dgh.source.core.menu.menuProvider.HealthMenuProvider;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -51,7 +46,7 @@ public class ServerPayloadHandler {
                     ServerPlayer player = (ServerPlayer) context.player();
                     switch (key) {
                         case KEY_HEALTH_MENU:
-                            HealthMenuProvider.open(player, player.getUUID(), false);
+                            MenuOpenWrapper.openHealthMenu(player, player.getUUID(), false);
                             break;
                         case KEY_SLOT_USE:
                             MenuOpenWrapper.openMenu(player.getInventory().getItem(data.index()), player);

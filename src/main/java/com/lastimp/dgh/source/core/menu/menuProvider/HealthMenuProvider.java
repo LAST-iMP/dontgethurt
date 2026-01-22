@@ -20,13 +20,6 @@ public class HealthMenuProvider implements MenuProvider {
         this.isDevice = isDevice;
     }
 
-    public static void open(Player player, UUID targetPlayer, boolean isDevice) {
-        player.openMenu(new HealthMenuProvider(targetPlayer, isDevice), buf -> {
-            buf.writeUUID(targetPlayer);
-            buf.writeBoolean(isDevice);
-        });
-    }
-
     @Override
     public Component getDisplayName() {
         return Component.translatable("gui." + DontGetHurt.MODID + ".health_menu");
