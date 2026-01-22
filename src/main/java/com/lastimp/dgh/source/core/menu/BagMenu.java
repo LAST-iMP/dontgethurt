@@ -63,7 +63,7 @@ public class BagMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return true;
+        return player.getInventory().contains(this.bagStack);
     }
 
     @Override

@@ -28,6 +28,7 @@
     "dgh:human_hand",
     "dgh:human_leg",
     "dgh:suture",
-    "dgh:auto_use_bag"
+    "dgh:auto_use_bag",
+    "dgh:aed"
   ]
 }

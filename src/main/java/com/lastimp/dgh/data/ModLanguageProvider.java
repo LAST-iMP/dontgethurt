@@ -165,6 +165,7 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.CLAMP.get(), "夹板");
         this.add(ModItems.GRASS_STRING.get(), "草绳");
         this.add(ModItems.HERB_BANDAGE.get(), "草药");
+        this.add(ModItems.AED.get(), "电击除颤器");
 
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");

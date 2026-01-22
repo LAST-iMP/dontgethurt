@@ -9,6 +9,7 @@
     "dgh:autopulse",
     "dgh:stasis_bag",
     "dgh:auto_use_bag",
+    "dgh:aed",
     {
       "id": "tfc:metal/shears/bismuth_bronze",
       "required": false

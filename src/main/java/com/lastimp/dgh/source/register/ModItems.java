@@ -481,6 +481,15 @@ public class ModItems {
                     .stacksTo(64)
     );
 
+    public static final RegistryObject<Item> AED = registerItem(
+            "aed",
+            AED::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(20)
+                    .setNoRepair()
+    );
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

@@ -40,6 +40,13 @@ public class ModSounds {
             )
     );
 
+    public static final RegistryObject<SoundEvent> AED = SOUNDS.register(
+            "aed",
+            () -> SoundEvent.createVariableRangeEvent(
+                    Common.ResourceLocation(MODID, "aed")
+            )
+    );
+
     public static void register(IEventBus eventBus) {
         SOUNDS.register(eventBus);
     }

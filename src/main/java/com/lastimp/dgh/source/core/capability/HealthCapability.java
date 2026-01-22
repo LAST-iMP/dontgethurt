@@ -213,7 +213,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         Torso torso = (Torso) this.getComponent(BodyComponents.TORSO);
         blood.healing(OXYGEN, -BodyCondition.get(OXYGEN).healingSpeed());
         blood.healing(BLOOD_PRESSURE, Utils.randomBetween(0.01f, 0.1f));
-        torso.addHeartRate(-Utils.randomBetween(0.01f, 0.1f));
+        torso.addHeartRate(-Utils.randomBetween(0.01f, 0.2f));
     }
 
     private void handleAdrenaline(LivingEntity entity) {

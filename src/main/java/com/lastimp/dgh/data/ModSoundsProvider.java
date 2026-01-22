@@ -33,5 +33,10 @@ public class ModSoundsProvider extends SoundDefinitionsProvider {
                 .with(
                         sound(ModSounds.HEARTBEAT_STOP.getId(), SoundDefinition.SoundType.SOUND)
                 ));
+        this.add(ModSounds.AED, definition()
+                .subtitle(ModSounds.AED.getId().toString())
+                .with(
+                        sound(ModSounds.AED.getId(), SoundDefinition.SoundType.SOUND)
+                ));
     }
 }
