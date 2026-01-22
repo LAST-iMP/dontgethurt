@@ -17,11 +17,13 @@ import javax.annotation.Nullable;
 
 public abstract class BagMenu extends AbstractContainerMenu {
     private final int Y_SHIFT;
+    private final ItemStack itemStack;
     protected BackpackInventory handler;
     //服务端
     public BagMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inv, int y_shift, ItemStack bagStack) {
         super(menuType, containerId);
         this.Y_SHIFT = y_shift;
+        this.itemStack = bagStack;
         this.handler = ((AbstractSmallBag)bagStack.getItem()).getBackPackHandler(bagStack);
         this.layoutPlayerInventorySlots(inv);
     }
@@ -53,7 +55,7 @@ public abstract class BagMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return true;
+        return player.getInventory().contains(this.itemStack);
     }
 
     @Override

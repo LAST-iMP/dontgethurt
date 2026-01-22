@@ -474,6 +474,15 @@ public class ModItems {
                     .stacksTo(64)
     );
 
+    public static final DeferredItem<AED> AED = registerItem(
+            "aed",
+            AED::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .durability(20)
+                    .setNoRepair()
+    );
+
     private static <T extends Item> DeferredItem<T> registerItem(String name, Function<Item.Properties, ? extends T> func, Item.Properties properties) {
         DeferredItem<T> item = ITEMS.registerItem(name, func, properties);
         ITEMS_SET.add(item);

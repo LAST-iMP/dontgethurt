@@ -1,4 +1,10 @@
 {
+  "aed": {
+    "sounds": [
+      "dgh:aed"
+    ],
+    "subtitle": "dgh:aed"
+  },
   "heartbeat_acc": {
     "sounds": [
       "dgh:heartbeat_acc"

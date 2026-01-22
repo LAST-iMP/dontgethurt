@@ -13,8 +13,12 @@ import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.menu.component.DynamicSlot;
 import com.lastimp.dgh.source.register.ModItems;
+import com.lastimp.dgh.source.register.ModSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -24,6 +28,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
@@ -54,6 +59,9 @@ public class ClientInputEventHandler {
         ItemStack stack = slot.getItem();
         if (stack.is(ModTags.MEDICAL_TOOLS_SMALL_BAGS) && !stack.is(ModTags.MEDICAL_USAGE_BAGS)) {
             healthScreen.getMenu().openBag(stack);
+        }
+        if (stack.is(ModItems.AED)) {
+            ClientAccessor.mc().getSoundManager().play(SimpleSoundInstance.forUI(ModSounds.AED.get(), 1.0f));
         }
         event.setCanceled(true);
     }
@@ -146,5 +154,17 @@ public class ClientInputEventHandler {
             }
         });
         callForHelpTick--;
+    }
+
+    @SubscribeEvent
+    public static void onInteractWithLiving(PlayerInteractEvent.EntityInteractSpecific event) {
+        var player = event.getEntity();
+        var target = event.getTarget();
+        if (!player.level().isClientSide()) return;
+        if (!target.isAlive() || !(target instanceof LivingEntity livingEntity)) return;
+        if (!HealthCapability.has(livingEntity)) return;
+        if (!player.getItemInHand(InteractionHand.MAIN_HAND).is(ModItems.AED)) return;
+
+        ClientAccessor.mc().getSoundManager().play(SimpleSoundInstance.forUI(ModSounds.AED.get(), 1.0f));
     }
 }

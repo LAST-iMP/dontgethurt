@@ -24,7 +24,7 @@ public class Autopulse extends AbstractHealingEquipment {
             Torso torso = (Torso) h.getComponent(BodyComponents.TORSO);
             blood.healing(OXYGEN, -BodyCondition.get(OXYGEN).healingSpeed() * 2);
             blood.healing(BLOOD_PRESSURE, 0.05f);
-            torso.addHeartRate(-0.05f);
+            torso.addHeartRate(-0.08f);
             return true;
         },false);
     }

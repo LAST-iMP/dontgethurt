@@ -52,8 +52,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("bcc")
                 .define('a', Items.IRON_NUGGET)
                 .define('b', Items.IRON_INGOT)
-                .define('c', Items.STRING)
-                .unlockedBy("has_string", has(Items.STRING))
+                .define('c', Tags.Items.STRINGS)
+                .unlockedBy("has_string", has(Tags.Items.STRINGS))
                 .save(recipeOutput);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.BLOOD_SCANNER.get(), 1)
                 .pattern(" d ")
@@ -503,6 +503,22 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(ItemTags.SMALL_FLOWERS)
                 .unlockedBy("has_grass", has(Items.SHORT_GRASS))
                 .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.AED.get())
+                .pattern("grg")
+                .pattern("lal")
+                .pattern("ccc")
+                .define('c', Items.WAXED_CUT_COPPER_SLAB)
+                .define('l', Items.LIGHTNING_ROD)
+                .define('g', Items.GOLD_INGOT)
+                .define('r', Items.REDSTONE)
+                .define('a', Items.AMETHYST_BLOCK)
+                .unlockedBy("has_copper", has(Items.COPPER_INGOT))
+                .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.AED.get())
+                .requires(ModItems.AED)
+                .requires(Items.AMETHYST_BLOCK)
+                .unlockedBy("has_copper", has(Items.COPPER_INGOT))
+                .save(recipeOutput, Common.ResourceLocation(DontGetHurt.MODID, "aed_repair"));
 
         var book = PatchouliAPI.get().getBookStack(Common.ResourceLocation(DontGetHurt.MODID, "medical_guide"));
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, book)

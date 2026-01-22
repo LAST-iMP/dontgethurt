@@ -101,7 +101,7 @@ public class BodyCondition {
     );
     public static final ResourceLocation BANDAGED_DIRTY = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bandage_dirty"),
             (name) -> create(name)
-                    .setHealing( 0.0f, 0.0f).isInjury().eyeVisible().build()
+                    .setHealing( 0.0f, 0.0f).isPain().eyeVisible().build()
     );
     public static final ResourceLocation HERB_BANDAGED = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "herb_bandage"),
             (name) -> create(name)
