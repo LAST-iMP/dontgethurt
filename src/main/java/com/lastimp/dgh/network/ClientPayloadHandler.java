@@ -35,7 +35,7 @@ public class ClientPayloadHandler {
 
     public static void handleServerConfigSYNData(final MyServerConfigSynData data, final Supplier<NetworkEvent.Context> ctx) {
         var context = ctx.get();
-        context.enqueueWork(() -> HealthLivingEntityList.loadServerData(data.healthWhiteList()));
+        context.enqueueWork(() -> HealthLivingEntityList.loadServerData(data.tag()));
         context.setPacketHandled(true);
     }
 }

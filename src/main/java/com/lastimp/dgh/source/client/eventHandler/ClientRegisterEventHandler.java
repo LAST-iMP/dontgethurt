@@ -8,6 +8,7 @@ import com.lastimp.dgh.source.client.renderer.OperatingBedRenderer;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.source.client.renderer.StretcherRenderer;
 import com.lastimp.dgh.source.client.tooltip.ClientBagToolTip;
+import com.lastimp.dgh.source.core.menu.HealthMenu;
 import com.lastimp.dgh.source.item.tool.AutoUseBag;
 import com.lastimp.dgh.source.register.ModBlocks;
 import com.lastimp.dgh.source.client.renderer.MyModelLayers;
@@ -48,7 +49,7 @@ public class ClientRegisterEventHandler {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            MenuScreens.register(ModMenus.HEALTH_MENU.get(), HealthScreen::new);
+            MenuScreens.register(ModMenus.HEALTH_MENU.get(), HealthScreen<HealthMenu>::new);
             MenuScreens.register(ModMenus.HEALTH_SMALL_BAG_MENU.get(), BagScreen::new);
             MenuScreens.register(ModMenus.HEALTH_SMALL_MEDICINE_BAG_MENU.get(), MedicineBagScreen::new);
         });

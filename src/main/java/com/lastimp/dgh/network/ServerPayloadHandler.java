@@ -10,7 +10,6 @@ import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
 import com.lastimp.dgh.source.core.menu.BagMenu;
 import com.lastimp.dgh.source.core.menu.HealthMenu;
 import com.lastimp.dgh.source.core.menu.MenuOpenWrapper;
-import com.lastimp.dgh.source.core.menu.menuProvider.HealthMenuProvider;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
@@ -47,7 +46,7 @@ public class ServerPayloadHandler {
             ServerPlayer player = ctx.get().getSender();
             switch (key) {
                 case KEY_HEALTH_MENU:
-                    HealthMenuProvider.open(player, player.getUUID(), false);
+                    MenuOpenWrapper.openHealthMenu(player, player.getUUID(), false);
                     break;
                 case KEY_SLOT_USE:
                     MenuOpenWrapper.openMenu(player.getInventory().getItem(data.index()), player);

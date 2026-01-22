@@ -38,7 +38,7 @@ public class PlayerEventBus {
         }
         Network.CLIENT_INSTANCE.send(
                 PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-                MyServerConfigSynData.getInstance(HealthLivingEntityList.getWhiteList())
+                MyServerConfigSynData.getInstance(HealthLivingEntityList.getConfig())
         );
     }
 
