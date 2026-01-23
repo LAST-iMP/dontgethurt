@@ -3,7 +3,6 @@ package com.lastimp.dgh.source.item.medicine;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,10 +20,5 @@ public class Antibiotics extends AbstractDirectHealItems {
             blood.healing(ANTIBIOTICS, 0.5f);
             return true;
         }, false);
-    }
-
-    @Override
-    protected BodyComponents getAvaComponent() {
-        return BodyComponents.BLOOD;
     }
 }

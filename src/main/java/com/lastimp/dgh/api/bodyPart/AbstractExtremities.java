@@ -45,6 +45,14 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
         return super.canHurtBone();
     }
 
+    @Override
+    public float updateVitalityLost(HealthCapability health, LivingEntity entity) {
+        var loss = super.updateVitalityLost(health, entity);
+        if (this.abnormal(SURGICAL_AMPUTATION) || this.abnormal(TRAUMATIC_AMPUTATION))
+            loss = Math.max(0.5f, loss);
+        return loss;
+    }
+
     public boolean available(HealthCapability health) {
         boolean available = this.isBandaged() || this.isBadBandaged() || this.abnormal(CLAMP_PLATE) || !this.abnormal(DISLOCATION);
         available &= this.abnormal(PLASTER_CAST) || this.abnormal(CLAMP_PLATE) || !this.abnormalWithHidden(FRACTURE);

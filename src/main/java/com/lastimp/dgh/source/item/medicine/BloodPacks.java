@@ -6,9 +6,7 @@ import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -36,10 +34,5 @@ public class BloodPacks extends AbstractDirectHealItems {
             }
             return true;
         }, false);
-    }
-
-    @Override
-    protected BodyComponents getAvaComponent() {
-        return BodyComponents.BLOOD;
     }
 }

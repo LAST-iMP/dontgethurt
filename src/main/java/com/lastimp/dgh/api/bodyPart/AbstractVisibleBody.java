@@ -98,35 +98,39 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     @Override
     public float updateVitalityLost(HealthCapability health, LivingEntity entity) {
         float lost = 0;
-        var burn = this.getCondition(BURN);
-        var open_wound = this.getCondition(OPEN_WOUND);
-        var pass_through = this.getCondition(PASS_THROUGH);
-        var internal_injury = this.getCondition(INTERNAL_INJURY);
-        lost += (burn.getTotalValue() + open_wound.getTotalValue() + internal_injury.getValue() + pass_through.getValue()) * this.getVitalityWeight();
+        lost += this.getCondition(BURN).getTotalValue();
+        lost += this.getCondition(OPEN_WOUND).getTotalValue();
+        lost += this.getCondition(PASS_THROUGH).getTotalValue();
+        lost += this.getCondition(INTERNAL_INJURY).getTotalValue();
         return lost;
     }
 
     @Override
     public void healing(ResourceLocation key, float value) {
-        float heal = Mth.clamp(Math.min(-value, this.getConditionValue(key)), 0.0f, 2.0f) * Config.resistance_convert_ratio;
+        float heal = Mth.clamp(Math.min(-value, this.getConditionValue(key)), 0.0f, 2.0f);
         handleResist(key, heal);
         super.healing(key, value);
     }
 
     @Override
     public void healingHidden(ResourceLocation key, float value) {
-        float heal = Mth.clamp(Math.min(-value, this.getConditionHidden(key)), 0.0f, 2.0f) * Config.resistance_convert_ratio;
+        float heal = Mth.clamp(Math.min(-value, this.getConditionHidden(key)), 0.0f, 2.0f);
         handleResist(key, heal);
         super.healingHidden(key, value);
     }
 
     private void handleResist(ResourceLocation key, float heal) {
+        float shield = heal / 2;
+        heal *= Config.resistance_convert_ratio;
         if (key == BURN) {
             this.addConditionValue(BURN_RES, heal);
+            this.addConditionHidden(BURN_RES, shield);
         } else if (key == OPEN_WOUND || key == PASS_THROUGH) {
             this.addConditionValue(OPEN_WOUND_RES, heal);
+            this.addConditionHidden(OPEN_WOUND_RES, shield);
         } else if (key == INTERNAL_INJURY) {
             this.addConditionValue(INTERNAL_RES, heal);
+            this.addConditionHidden(INTERNAL_RES, shield);
         }
     }
 
@@ -510,12 +514,13 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         return value;
     }
 
-    public int fractCheckTimes () {
+    public int fractCheckTimes (HealthCapability health) {
         var bone = this.boneCrafted();
-        if (bone == BONE_WOOD) return -1;
-        if (bone == BONE_DIMOND) return 1;
-        if (bone == BONE_NETHERITE) return 1;
-        return 0;
+        var base = health.getComponent(BLOOD).abnormal(HARDENER) ? 1 : 0;
+        if (bone == BONE_WOOD) return base-1;
+        if (bone == BONE_DIMOND) return base+1;
+        if (bone == BONE_NETHERITE) return base+1;
+        return base;
     }
 
     public ResourceLocation boneCrafted() {

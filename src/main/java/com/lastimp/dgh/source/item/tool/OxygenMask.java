@@ -1,6 +1,5 @@
 package com.lastimp.dgh.source.item.tool;
 
-import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractHealingEquipment;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,11 +9,6 @@ import org.jetbrains.annotations.NotNull;
 public class OxygenMask extends AbstractHealingEquipment {
     public OxygenMask(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    protected BodyComponents getAvaComponent() {
-        return BodyComponents.BLOOD;
     }
 
     @Override

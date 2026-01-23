@@ -5,12 +5,15 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.mixin.client.LocalPlayerAccessor;
 import com.lastimp.dgh.mixin.client.MinecraftAccessor;
 import com.lastimp.dgh.source.client.ClientAccessor;
+import com.lastimp.dgh.source.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.source.register.ModEffects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Pose;
@@ -42,9 +45,14 @@ public class GuiEventBus {
         if (event.getCurrentScreen() == null) {
             onPause = newScreen instanceof PauseScreen;
         }
-        if (!onPause && !(newScreen instanceof DeathScreen || newScreen instanceof ChatScreen || newScreen instanceof PauseScreen)) {
+        if (!onPause && !screenAvaWhenDying(player, newScreen)) {
             event.setCanceled(true);
         }
+    }
+
+    private static boolean screenAvaWhenDying(Player player, Screen screen) {
+        if (screen instanceof DeathScreen || screen instanceof ChatScreen || screen instanceof PauseScreen) return true;
+        return player.hasEffect(ModEffects.ADRENALINE_EFFECT) && screen instanceof HealthScreen<?>;
     }
 
     @SubscribeEvent

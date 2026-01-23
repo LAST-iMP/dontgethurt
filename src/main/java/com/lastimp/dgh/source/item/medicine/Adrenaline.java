@@ -1,6 +1,5 @@
 package com.lastimp.dgh.source.item.medicine;
 
-import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
@@ -38,10 +37,5 @@ public class Adrenaline extends AbstractDirectHealItems {
             }
             return true;
         }, false);
-    }
-
-    @Override
-    protected BodyComponents getAvaComponent() {
-        return BLOOD;
     }
 }

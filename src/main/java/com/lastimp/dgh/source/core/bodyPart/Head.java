@@ -77,7 +77,7 @@ public class Head extends AbstractVisibleBody {
     @Override
     public float updateVitalityLost(HealthCapability health, LivingEntity entity) {
         var loss = super.updateVitalityLost(health, entity);
-        loss += this.getVitalityWeight() * this.getConditionValue(BRAIN_DAMAGE);
+        loss += this.getConditionValue(BRAIN_DAMAGE);
         return loss;
     }
 

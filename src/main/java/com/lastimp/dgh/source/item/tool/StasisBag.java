@@ -22,11 +22,6 @@ public class StasisBag extends AbstractHealingEquipment {
     }
 
     @Override
-    protected BodyComponents getAvaComponent() {
-        return BodyComponents.TORSO;
-    }
-
-    @Override
     public boolean heal(@NotNull LivingEntity entity) {
         return HealthCapability.getAndApply(entity, h -> {
             Torso torso = (Torso) h.getComponent(BodyComponents.TORSO);

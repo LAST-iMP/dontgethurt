@@ -2,8 +2,10 @@
 package com.lastimp.dgh.source.core.bodyPart;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
+import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -92,7 +94,12 @@ public class WholeBody extends AbstractBody {
     public float updateVitalityLost(HealthCapability health, LivingEntity entity) {
         float lost = 0;
         for (BodyComponents components : this.components.keySet()) {
-            lost += this.getComponent(components).updateVitalityLost(health, entity);
+            var body = this.getComponent(components);
+            var bodyLost = body.updateVitalityLost(health, entity);
+            if (body instanceof AbstractExtremities && Config.limited_body_part_vitality_lost)
+                bodyLost = Math.min(bodyLost, 1);
+            bodyLost *= this.getVitalityWeight();
+            lost += bodyLost;
         }
         return lost;
     }

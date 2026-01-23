@@ -22,7 +22,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 
-import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.LEGS;
@@ -111,7 +110,7 @@ public class InjuryEventHandler {
             float[] weight = Utils.getRandom(1, 1);
             for (int i = 0; i < LEGS.size(); i++) {
                 var leg = h.getComponent(LEGS.get(i));
-                BurnHandler.handle(source, h, leg, damageAmount * weight[i]);
+                BurnHandler.handle(source, h, (AbstractVisibleBody) leg, damageAmount * weight[i]);
             }
         });
         event.setNewDamage(0f);
@@ -121,7 +120,7 @@ public class InjuryEventHandler {
         HealthCapability.getAndApply(entity, h -> {
             BodyComponents randomComponent = BodyComponents.random();
 
-            BurnHandler.handle(source, h, h.getComponent(randomComponent), damageAmount);
+            BurnHandler.handle(source, h, (AbstractVisibleBody) h.getComponent(randomComponent), damageAmount);
         });
         event.setNewDamage(0f);
     }
@@ -142,7 +141,7 @@ public class InjuryEventHandler {
                 var body = h.getComponent(VISIBLE_BODIES.get(i));
                 OpenWoundHandler.handleExplosion(source, entity, h, (AbstractVisibleBody) body, 0.5f * damageAmount * weight[i]);
                 InternalInjuryHandler.handleExplosion(source, entity, h, (AbstractVisibleBody) body, 0.5f * damageAmount * weight[i]);
-                FollowInjuryHandler.foreignObjectHandler((AbstractVisibleBody)body, h, damageAmount, Config.bypass_foreign_prob * 0.6f);
+                FollowInjuryHandler.foreignObjectHandler((AbstractVisibleBody)body, h, damageAmount * weight[i], Config.bypass_foreign_prob * 0.6f);
             }
         });
         event.setNewDamage(0f);
@@ -158,7 +157,7 @@ public class InjuryEventHandler {
 
     public static void handleEntityAttack(DamageSource source, float damageAmount, LivingEntity entity, LivingDamageEvent.Pre event) {
         HealthCapability.getAndApply(entity, h -> {
-            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(INJURY_WEIGHT)));
+            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(Utils.getAttackPart((LivingEntity) source.getEntity(), entity, Config.damage_part_strick_level))));
             OpenWoundHandler.handleEntityAttack(source, entity, h, (AbstractVisibleBody) body, damageAmount);
         });
         event.setNewDamage(0f);

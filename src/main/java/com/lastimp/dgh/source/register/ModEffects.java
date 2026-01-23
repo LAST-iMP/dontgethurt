@@ -4,6 +4,7 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.source.buffs.SymptomsEffect;
 import com.lastimp.dgh.source.buffs.buff.AdrenalineEffect;
 import com.lastimp.dgh.source.buffs.buff.CureEffect;
+import com.lastimp.dgh.source.buffs.buff.FoodConsumerEffect;
 import com.lastimp.dgh.source.buffs.buff.KeepLivingEffect;
 import com.lastimp.dgh.source.buffs.debuff.IntensePainEffect;
 import com.lastimp.dgh.source.buffs.debuff.PulseEffect;
@@ -71,6 +72,10 @@ public class ModEffects {
 
     public static final DeferredHolder<MobEffect, PulseEffect> ANALGESIA_POISON_EFFECT = MOB_EFFECTS.register(
             "analgesia_poison_effect", () -> new PulseEffect(0xFFFFBE4F)
+    );
+
+    public static final DeferredHolder<MobEffect, FoodConsumerEffect> FOOD_CONSUMER_EFFECT = MOB_EFFECTS.register(
+            "food_consumer_effect", () -> new FoodConsumerEffect(0xFF88FFD4)
     );
 
     public static void register(IEventBus eventBus) {

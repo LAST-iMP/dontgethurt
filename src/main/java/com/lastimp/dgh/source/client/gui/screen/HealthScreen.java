@@ -6,7 +6,6 @@ import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.source.client.ClientAccessor;
-import com.lastimp.dgh.source.client.eventHandler.ClientInputEventHandler;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.client.gui.component.HealthComponentWidget;
 import com.lastimp.dgh.source.client.gui.component.HealthConditionWidget;
@@ -18,6 +17,7 @@ import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.HealthScanner;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
+import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModSounds;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -249,7 +249,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
             return;
         }
         var target = ClientAccessor.getLiving(mc.level, this.menu.targetEntity, mc.player.getEyePosition(), 40);
-        if (target == null || target.isDeadOrDying() || HealthCapability.isDying(ClientAccessor.getPlayerOrThrow())) {
+        if (target == null || target.isDeadOrDying() || (HealthCapability.isDying(ClientAccessor.getPlayerOrThrow()) && !ClientAccessor.getPlayerOrThrow().hasEffect(ModEffects.ADRENALINE_EFFECT))) {
             GuiOpenWrapper.closeScreen();
         } else {
             PacketDistributor.sendToServer(MyReadAllConditionData.getInstance(
