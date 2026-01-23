@@ -18,6 +18,7 @@ import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.HealthScanner;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
+import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModSounds;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -251,7 +252,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
             return;
         }
         var target = ClientAccessor.getLiving(mc.level, this.menu.targetEntity, mc.player.getEyePosition(), 40);
-        if (target == null || target.isDeadOrDying() || HealthCapability.isDying(ClientAccessor.getPlayerOrThrow())) {
+        if (target == null || target.isDeadOrDying() || (HealthCapability.isDying(ClientAccessor.getPlayerOrThrow()) && !ClientAccessor.getPlayerOrThrow().hasEffect(ModEffects.ADRENALINE_EFFECT.get()))) {
             GuiOpenWrapper.closeScreen();
         } else {
             Network.SERVER_INSTANCE.sendToServer(MyReadAllConditionData.getInstance(

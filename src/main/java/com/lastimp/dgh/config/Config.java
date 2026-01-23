@@ -134,6 +134,14 @@ public class Config {
             .comment("允许玩家倒地爬行")
             .define("PLAYER_DOWN_MOVING", true);
 
+    public static final ForgeConfigSpec.IntValue DAMAGE_PART_STRICK_LEVEL = BUILDER
+            .comment("伤害部位严格等级：0-随机部位，1-少量部位约束，2-大量部位约束，3-严格部位")
+            .defineInRange("DAMAGE_PART_STRICK_LEVEL", 2, 0, 3);
+
+    public static final ForgeConfigSpec.BooleanValue LIMITED_BODY_PART_VITALITY_LOST = BUILDER
+            .comment("受限的部位生命损伤")
+            .define("LIMITED_BODY_PART_VITALITY_LOST", true);
+
     public static float body_life_factor;
     public static boolean tradition_healing;
     public static float healing_factor;
@@ -171,6 +179,8 @@ public class Config {
     public static float bypass_foreign_prob;
     public static boolean player_glowing;
     public static boolean player_down_moving;
+    public static int damage_part_strick_level;
+    public static boolean limited_body_part_vitality_lost;
 
     // 构建配置
     public static final ForgeConfigSpec SPEC = BUILDER.pop().build();
@@ -212,6 +222,8 @@ public class Config {
         bypass_foreign_prob = (float) (double) BYPASS_FOREIGN_PROB.get();
         player_glowing = PLAYER_GLOWING.get();
         player_down_moving = PLAYER_DOWN_MOVING.get();
+        damage_part_strick_level = DAMAGE_PART_STRICK_LEVEL.get();
+        limited_body_part_vitality_lost = LIMITED_BODY_PART_VITALITY_LOST.get();
         BodyCondition.init();
     }
 

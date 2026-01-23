@@ -13,11 +13,6 @@ public class OxygenMask extends AbstractHealingEquipment {
     }
 
     @Override
-    protected BodyComponents getAvaComponent() {
-        return BodyComponents.BLOOD;
-    }
-
-    @Override
     public boolean heal(@NotNull LivingEntity entity) {
         return HealthCapability.getAndApply(entity, health -> {
             if (entity.getAirSupply() == entity.getMaxAirSupply()) return false;

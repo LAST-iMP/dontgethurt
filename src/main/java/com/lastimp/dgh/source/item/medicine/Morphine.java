@@ -32,9 +32,4 @@ public class Morphine extends AbstractDirectHealItems {
             return true;
         }, false);
     }
-
-    @Override
-    protected BodyComponents getAvaComponent() {
-        return TORSO;
-    }
 }

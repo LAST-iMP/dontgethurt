@@ -12,7 +12,10 @@ public class BagHealerHandler {
         BackpackInventory inv = (BackpackInventory) BagItemCapabilityProvider.getBackPackHandler(stack);
         for (int i = 0; i < inv.getSlots(); i++) {
             var slotItem = inv.getStackInSlot(i);
-            if (HealingHandler.useItemOn(slotItem, player, target, component)) break;
+            if (HealingHandler.useItemOn(slotItem, player, target, component)) {
+                inv.setStackInSlot(i, slotItem);
+                break;
+            }
         }
         var bagTag = stack.getOrCreateTag();
         bagTag.put("inv", inv.serializeNBT());

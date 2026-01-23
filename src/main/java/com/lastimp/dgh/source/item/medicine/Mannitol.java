@@ -24,9 +24,4 @@ public class Mannitol extends AbstractDirectHealItems {
             return true;
         }, false);
     }
-
-    @Override
-    protected BodyComponents getAvaComponent() {
-        return TORSO;
-    }
 }

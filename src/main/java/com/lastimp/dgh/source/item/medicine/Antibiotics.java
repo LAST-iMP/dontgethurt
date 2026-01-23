@@ -22,9 +22,4 @@ public class Antibiotics extends AbstractDirectHealItems {
             return true;
         }, false);
     }
-
-    @Override
-    protected BodyComponents getAvaComponent() {
-        return BodyComponents.BLOOD;
-    }
 }

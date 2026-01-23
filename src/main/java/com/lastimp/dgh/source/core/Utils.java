@@ -8,6 +8,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -16,8 +17,40 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.UUID;
 
+import static com.lastimp.dgh.source.core.damageSystem.InjuryEventHandler.INJURY_WEIGHT;
+
 public abstract class Utils {
     public static final RandomSource randomSource = RandomSource.create(987654321);
+
+    public static float[] getAttackPart(LivingEntity attacker, LivingEntity target, int strickLevel) {
+        if (!(attacker instanceof Player)) return INJURY_WEIGHT;
+        var attackerEye = attacker.getEyePosition(0.5f);
+        var attackerLookAngel = attacker.getLookAngle();
+        var distance_upbound = target.distanceTo(attacker) + 4;
+        var targetBox = target.getBoundingBox();
+        var targetHeight = targetBox.maxY - targetBox.minY;
+
+        var hitResult = targetBox.clip(attackerEye, attackerEye.add(attackerLookAngel.multiply(new Vec3(distance_upbound, distance_upbound, distance_upbound))));
+        if (hitResult.isPresent() && strickLevel > 0) {
+            var hit = hitResult.get();
+            var hitHeight = hit.y - targetBox.minY;
+
+            if (hitHeight > targetHeight * (21d / 29d)) {
+                if (strickLevel >= 3) return new float[]{1f,0f,0f,0f,0f,0f};
+                if (strickLevel >= 2) return new float[]{1f,1f,0f,0f,0f,0f};
+                return new float[]{1f,1f,1f,1f,0f,0f};
+            } else if (hitHeight > targetHeight * (11d / 29d)) {
+                if (strickLevel >= 3) return new float[]{0f,  1f,1f,1f,0f,0f};
+                if (strickLevel >= 2) return new float[]{0.9f,1f,1f,1f,0.7f,0.7f};
+                return new float[]{1f,1f,1f,1f,0.8f,0.8f};
+            } else {
+                if (strickLevel >= 3) return new float[]{0f,0f,0f,0f,1f,1f};
+                if (strickLevel >= 2) return new float[]{0f,0.7f,0.7f,0.7f,1f,1f};
+                return new float[]{0f,0.8f,0.8f,0.8f,1f,1f};
+            }
+        }
+        return INJURY_WEIGHT;
+    }
 
     public static void addParticlesAroundSelf(ParticleOptions particleOption, LivingEntity target) {
         for(int i = 0; i < 5; ++i) {

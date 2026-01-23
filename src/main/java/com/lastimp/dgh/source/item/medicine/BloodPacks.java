@@ -35,9 +35,4 @@ public class BloodPacks extends AbstractDirectHealItems {
             return true;
         }, false);
     }
-
-    @Override
-    protected BodyComponents getAvaComponent() {
-        return BodyComponents.BLOOD;
-    }
 }

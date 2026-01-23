@@ -39,9 +39,4 @@ public class Adrenaline extends AbstractDirectHealItems {
             return true;
         }, false);
     }
-
-    @Override
-    protected BodyComponents getAvaComponent() {
-        return BLOOD;
-    }
 }

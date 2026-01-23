@@ -32,9 +32,4 @@ public class Naloxone extends AbstractDirectHealItems {
             return true;
         }, false);
     }
-
-    @Override
-    protected BodyComponents getAvaComponent() {
-        return TORSO;
-    }
 }

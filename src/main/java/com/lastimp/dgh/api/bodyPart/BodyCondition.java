@@ -305,6 +305,10 @@ public class BodyCondition {
             (name) -> create(name)
                     .setHealing(0.005f, 1.0f).isBlood().build()
     );
+    public static final ResourceLocation HARDENER = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "hardener"),
+            (name) -> create(name)
+                    .setHealing(0.01f, 1.0f).isBlood().build()
+    );
 
     private static final String pathRoot = "textures/gui/sprites/container/condition_icons/";
 
@@ -530,7 +534,8 @@ public class BodyCondition {
                 OPIATE_OVERDOSE,
                 OPIATE_ADDICTED,
                 OXYGEN,
-                ANTIBIOTICS
+                ANTIBIOTICS,
+                HARDENER
         ));
 
         Torso.addCondition(List.of(

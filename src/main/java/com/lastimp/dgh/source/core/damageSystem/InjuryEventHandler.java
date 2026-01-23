@@ -109,7 +109,7 @@ public class InjuryEventHandler {
         HealthCapability.getAndApply(entity, h -> {
             BodyComponents randomComponent = BodyComponents.random();
 
-            BurnHandler.handle(source, h, h.getComponent(randomComponent), damageAmount);
+            BurnHandler.handle(source, h, (AbstractVisibleBody) h.getComponent(randomComponent), damageAmount);
         });
         event.setAmount(0f);
     }
@@ -119,7 +119,7 @@ public class InjuryEventHandler {
             float[] weight = Utils.getRandom(1, 1);
             for (int i = 0; i < LEGS.size(); i++) {
                 var leg = h.getComponent(LEGS.get(i));
-                BurnHandler.handle(source, h, leg, damageAmount * weight[i]);
+                BurnHandler.handle(source, h, (AbstractVisibleBody) leg, damageAmount * weight[i]);
             }
         });
         event.setAmount(0f);
@@ -141,7 +141,7 @@ public class InjuryEventHandler {
                 var body = h.getComponent(VISIBLE_BODIES.get(i));
                 OpenWoundHandler.handleExplosion(source, entity, h, (AbstractVisibleBody) body, 0.5f * damageAmount * weight[i]);
                 InternalInjuryHandler.handleExplosion(source, entity, h, (AbstractVisibleBody) body, 0.5f * damageAmount * weight[i]);
-                FollowInjuryHandler.foreignObjectHandler((AbstractVisibleBody)body, h, damageAmount, Config.bypass_foreign_prob * 0.6f);
+                FollowInjuryHandler.foreignObjectHandler((AbstractVisibleBody)body, h, damageAmount * weight[i], Config.bypass_foreign_prob * 0.6f);
             }
         });
         event.setAmount(0f);
@@ -157,7 +157,7 @@ public class InjuryEventHandler {
 
     public static void handleEntityAttack(DamageSource source, float damageAmount, LivingEntity entity, LivingDamageEvent event) {
         HealthCapability.getAndApply(entity, h -> {
-            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(INJURY_WEIGHT)));
+            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(Utils.getAttackPart((LivingEntity) source.getEntity(), entity, Config.damage_part_strick_level))));
             OpenWoundHandler.handleEntityAttack(source, entity, h, (AbstractVisibleBody) body, damageAmount);
         });
         event.setAmount(0f);

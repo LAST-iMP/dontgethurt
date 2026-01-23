@@ -41,11 +41,6 @@ public class AED extends AbstractDirectHealItems {
     }
 
     @Override
-    protected BodyComponents getAvaComponent() {
-        return BodyComponents.TORSO;
-    }
-
-    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         return InteractionResultHolder.pass(player.getItemInHand(usedHand));
     }

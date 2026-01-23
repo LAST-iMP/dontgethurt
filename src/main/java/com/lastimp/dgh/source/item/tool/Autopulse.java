@@ -35,11 +35,6 @@ public class Autopulse extends AbstractHealingEquipment {
     }
 
     @Override
-    protected BodyComponents getAvaComponent() {
-        return BodyComponents.TORSO;
-    }
-
-    @Override
     public boolean available(LivingEntity target, ItemStack stack) {
         if (stack.getDamageValue() >= stack.getMaxDamage() - 1) {
             return false;

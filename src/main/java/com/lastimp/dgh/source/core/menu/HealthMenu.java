@@ -7,6 +7,7 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.menu.component.DynamicItemHandler;
 import com.lastimp.dgh.source.core.menu.component.DynamicSlot;
 import com.lastimp.dgh.source.item.bases.BackpackInventory;
+import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
@@ -143,7 +144,7 @@ public class HealthMenu extends AbstractContainerMenu {
         if (this.bagStack != null && !player.getInventory().contains(this.bagStack)) {
             this.closeBag();
         }
-        return !HealthCapability.isDying(player);
+        return !HealthCapability.isDying(player) || player.hasEffect(ModEffects.ADRENALINE_EFFECT.get());
     }
 
     // 添加玩家背包的slot和热键的栏的slot

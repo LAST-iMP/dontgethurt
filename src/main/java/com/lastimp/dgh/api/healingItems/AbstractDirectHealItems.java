@@ -26,14 +26,12 @@ public abstract class AbstractDirectHealItems extends AbstractHealingItem{
 
     public abstract boolean heal(@NotNull LivingEntity source, @NotNull LivingEntity entity);
 
-    protected abstract BodyComponents getAvaComponent();
-
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         if (usedHand == InteractionHand.OFF_HAND)
             return InteractionResultHolder.pass(player.getItemInHand(usedHand));
         if (!level.isClientSide) {
-            HealingHandler.useItemOn(player.getItemInHand(usedHand), (ServerPlayer) player, (ServerPlayer) player, this.getAvaComponent());
+            HealingHandler.useItemOn(player.getItemInHand(usedHand), (ServerPlayer) player, player, null);
         }
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide);
     }
@@ -43,7 +41,7 @@ public abstract class AbstractDirectHealItems extends AbstractHealingItem{
         if (usedHand == InteractionHand.OFF_HAND)
             return InteractionResult.PASS;
         if (!player.level().isClientSide && HealthCapability.has(interactionTarget)) {
-            HealingHandler.useItemOn(player.getItemInHand(usedHand), (ServerPlayer) player, interactionTarget, this.getAvaComponent());
+            HealingHandler.useItemOn(player.getItemInHand(usedHand), (ServerPlayer) player, interactionTarget, null);
         }
         return InteractionResult.SUCCESS;
     }
