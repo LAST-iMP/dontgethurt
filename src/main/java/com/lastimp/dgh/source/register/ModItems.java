@@ -483,6 +483,34 @@ public class ModItems {
                     .setNoRepair()
     );
 
+    public static final DeferredItem<FoodConsumer> FOOD_CONSUMER = registerItem(
+            "food_consumer",
+            FoodConsumer::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final DeferredItem<Fentanyl> FENTANYL = registerItem(
+            "fentanyl",
+            Fentanyl::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final DeferredItem<Hyperzine> HYPERZINE = registerItem(
+            "hyperzine",
+            Hyperzine::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final DeferredItem<Hardener> HARDENER = registerItem(
+            "hardener",
+            Hardener::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
     private static <T extends Item> DeferredItem<T> registerItem(String name, Function<Item.Properties, ? extends T> func, Item.Properties properties) {
         DeferredItem<T> item = ITEMS.registerItem(name, func, properties);
         ITEMS_SET.add(item);

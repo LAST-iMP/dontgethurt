@@ -13,7 +13,29 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)部位指定$(li2)绷带$(li2)可塑人造皮肤$(li2)缝合线$(li2)石膏$(li2)医用支架$(li2)止血带$(li2)气胸针$(li2)引流管$(li2)抗生素软膏$(li2)抗生素凝胶$(br)$(li)直接使用$(li2)(空)血包$(li2)吗啡$(li2)烯丙羟吗啡酮$(li2)肾上腺素$(li2)广谱抗生素$(li2)战斗兴奋剂$(br)"
+      "text": ""
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)部位指定$(li2)草药$(li2)绷带$(li2)可塑人造皮肤$(li2)缝合线$(li2)石膏$(li2)医用支架$(li2)止血带$(li2)气胸针$(li2)引流管$(li2)抗生素软膏$(li2)抗生素凝胶$(br)"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)直接使用$(li2)(空)血包$(li2)吗啡$(li2)烯丙羟吗啡酮$(li2)肾上腺素$(li2)广谱抗生素$(li2)战斗兴奋剂$(li2)健胃消食片$(li2)芬太尼$(li2)加速粉剂$(li2)钢化粉剂$(li2)甘露醇$(br)"
+    },
+    {
+      "type": "spotlight",
+      "title": "草药",
+      "item": "dgh:herb_bandage",
+      "scale": 1.2,
+      "text": "使用草药保护伤口，阻止出血，在水中或淋雨会快速消失。$(br)$(li)效果$(li2)阻止出血(内伤无效)$(li)主治$(li2)外伤",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:herb_bandage"
     },
     {
       "type": "spotlight",
@@ -197,10 +219,64 @@
       "recipe": "dgh:antibiotics"
     },
     {
+      "type": "spotlight",
+      "title": "健胃消食片",
+      "item": "dgh:food_consumer",
+      "scale": 1.2,
+      "text": "对自己或别人使用以增加伤害格挡。$(br)$(li)效果$(li2)增加伤害格挡$(li)负面效果$(li2)消耗饱食度",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:food_consumer"
+    },
+    {
+      "type": "spotlight",
+      "title": "芬太尼",
+      "item": "dgh:fentanyl",
+      "scale": 1.2,
+      "text": "强效吗啡。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:fentanyl"
+    },
+    {
+      "type": "spotlight",
+      "title": "加速粉剂",
+      "item": "dgh:hyperzine",
+      "scale": 1.2,
+      "text": "对自己或别人使用以增加速度。$(br)$(li)效果$(li2)增加移动、挖掘、攻击速度$(li)负面效果$(li2)阿片药物",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:hyperzine"
+    },
+    {
+      "type": "spotlight",
+      "title": "钢化粉剂",
+      "item": "dgh:hardener",
+      "scale": 1.2,
+      "text": "对自己或别人使用强化身体。$(br)$(li)效果$(li2)增加50%伤害抗性，增加骨折优势骰$(li)负面效果$(li2)阿片药物",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:hardener"
+    },
+    {
       "title": "战斗兴奋剂",
       "type": "text",
       "scale": 1.2,
       "text": "持续治疗全身伤势。$(br)$(li)效果$(li2)持续治疗全身伤势$(li)负面效果$(li2)增加阿片上瘾$(br)配方详见炼药"
+    },
+    {
+      "title": "甘露醇",
+      "type": "text",
+      "scale": 1.2,
+      "text": "治疗脑损伤，无其他效果，在医生村民处购买。"
     }
   ]
 }

@@ -13,6 +13,10 @@ import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 
 public class BurnHandler {
     public static void handle(DamageSource source, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
+        float block = Math.min(damageAmount, body.getConditionHidden(BURN_RES));
+        damageAmount -= block;
+        body.addConditionHidden(BURN_RES, -block);
+
         float resist = body.getConditionValue(BURN_RES) * Config.resistance_max;
         resist += health.getComponent(BLOOD).getConditionValue(HARDENER) / 2;
         damageAmount *= (1.0f - Math.min(1, resist));

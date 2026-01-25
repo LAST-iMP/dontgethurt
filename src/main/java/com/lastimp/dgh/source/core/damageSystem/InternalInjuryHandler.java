@@ -14,6 +14,10 @@ import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 
 public abstract class InternalInjuryHandler {
     public static void handle(DamageSource source, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
+        float block = Math.min(damageAmount, body.getConditionHidden(INTERNAL_RES));
+        damageAmount -= block;
+        body.addConditionHidden(INTERNAL_RES, -block);
+
         float resist = body.getConditionValue(INTERNAL_RES) * Config.resistance_max;
         resist += health.getComponent(BLOOD).getConditionValue(HARDENER) / 2;
         damageAmount *= (1.0f - Math.min(1, resist));

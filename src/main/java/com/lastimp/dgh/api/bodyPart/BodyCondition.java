@@ -52,25 +52,25 @@ public class BodyCondition {
     //肢体
     public static final ResourceLocation BURN = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "burn"),
             (name) -> create(name)
-                    .setHealing(1.0f / Config.base_self_healing_time, 0.25f)
+                    .setHealing(0.5f / Config.base_self_healing_time, 0.25f)
                     .setValues(0.0f, 0.0f, 2.0f)
                     .isInjury().eyeVisible().build()
     );
     public static final ResourceLocation INTERNAL_INJURY = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "internal_injury"),
             (name) -> create(name)
-                    .setHealing(1.0f / Config.base_self_healing_time, 0.5f)
+                    .setHealing(0.5f / Config.base_self_healing_time, 0.5f)
                     .setValues(0.0f, 0.0f, 2.0f)
                     .isInjury().build()
     );
     public static final ResourceLocation OPEN_WOUND = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "open_wound"),
             (name) -> create(name)
-                    .setHealing(1.0f / Config.base_self_healing_time, 0.25f)
+                    .setHealing(0.5f / Config.base_self_healing_time, 0.25f)
                     .setValues(0.0f, 0.0f, 2.0f)
                     .isInjury().eyeVisible().build()
     );
     public static final ResourceLocation PASS_THROUGH = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "pass_through"),
             (name) -> create(name)
-                    .setHealing(1.0f / Config.base_self_healing_time, 0.25f)
+                    .setHealing(0.5f / Config.base_self_healing_time, 0.25f)
                     .setValues(0.0f, 0.0f, 2.0f)
                     .isInjury().eyeVisible().build()
     );

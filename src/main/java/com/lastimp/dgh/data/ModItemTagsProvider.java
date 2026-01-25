@@ -46,7 +46,11 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.ANTIBIOTIC_GLUE.getKey())
                 .add(ModItems.MANNITOL.getKey())
                 .add(ModItems.HERB_BANDAGE.getKey())
-                .add(ModItems.CLAMP.getKey());
+                .add(ModItems.CLAMP.getKey())
+                .add(ModItems.FOOD_CONSUMER.getKey())
+                .add(ModItems.FENTANYL.getKey())
+                .add(ModItems.HYPERZINE.getKey())
+                .add(ModItems.HARDENER.getKey());
 
         this.tag(ModTags.MEDICINE_DIRECT)
                 .add(POTIONS)
@@ -56,7 +60,11 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.NALOXONE.getKey())
                 .add(ModItems.ADRENALINE.getKey())
                 .add(ModItems.ANTIBIOTICS.getKey())
-                .add(ModItems.MANNITOL.getKey());
+                .add(ModItems.MANNITOL.getKey())
+                .add(ModItems.FOOD_CONSUMER.getKey())
+                .add(ModItems.FENTANYL.getKey())
+                .add(ModItems.HYPERZINE.getKey())
+                .add(ModItems.HARDENER.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS)
                 .add(SHEARS)

@@ -174,17 +174,24 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
             HealthConditionWidget widget = this.conditionWidgets.get(condition);
             if (!this.visibilityCheck(bodyPart, condition)) continue;
             if (widgetCount > 12) break;
+
+            widget.setSeverity(bodyPart.getCondition(condition).getDisplayValue());
             if (condition == FRACTURE && (bodyPart instanceof AbstractVisibleBody visibleBody)) {
                 var bone = visibleBody.boneCrafted();
                 int color = bone == null ? BodyCondition.get(FRACTURE).color() : BodyCondition.get(bone).color();
                 widget.setPortionColor(color);
+            } else if (injuryConditions.contains(condition)) {
+                float addition = Math.max(0, bodyPart.getCondition(condition).getDisplayValue() - 1);
+                widget.setAdditionValueAndColor(addition, 0xFF7E0000);
+            } else if (resistConditions.contains(condition)) {
+                float addition = Math.max(0, bodyPart.getCondition(condition).getHiddenValue());
+                widget.setAdditionValueAndColor(addition, 0xFF99ffa3);
             }
 
             widget.setPosition(
                     this.leftPos + 85 + (widgetCount % 2) * 72,
                     this.topPos + 11 + (widgetCount / 2) * 18
             );
-            widget.setSeverity(bodyPart.getCondition(condition).getDisplayValue());
             widget.visible = true;
             widgetCount += 1;
         }
@@ -193,6 +200,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
     protected boolean visibilityCheck(AbstractBody body, ResourceLocation key) {
         if (!HealthScanner.healthScannerConditions().contains(key)) return false;
         if (!this.menu.isDevice && !HealthScanner.eyesightConditions().contains(key)) return false;
+        if (resistConditions.contains(key) && body.abnormalWithHidden(key)) return true;
         if (!BodyCondition.get(key).abnormal(body.getCondition(key).getDisplayValue())) return false;
         return !this.onOrgan;
     }

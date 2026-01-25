@@ -202,6 +202,18 @@
     },
     {
       "type": "spotlight",
+      "title": "电击除颤器",
+      "item": "dgh:aed",
+      "scale": 1.2,
+      "text": "跳动吧！心脏！。",
+      "link_recipe": true
+    },
+    {
+      "type": "crafting",
+      "recipe": "dgh:aed"
+    },
+    {
+      "type": "spotlight",
       "title": "骨骼植入物",
       "item": "dgh:bone_implants",
       "scale": 1.2,

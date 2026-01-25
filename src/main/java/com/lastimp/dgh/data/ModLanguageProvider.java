@@ -84,6 +84,7 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(BodyCondition.OPIATE_ADDICTED.toString(), "阿片成瘾");
         this.add(BodyCondition.OXYGEN.toString(), "低血氧");
         this.add(BodyCondition.ANTIBIOTICS.toString(), "广谱抗生素");
+        this.add(BodyCondition.HARDENER.toString(), "钢化");
 
         this.add(BodyCondition.BONE_WOOD.toString(), "木骨植入");
         this.add(BodyCondition.BONE_STONE.toString(), "石骨植入");
@@ -162,6 +163,10 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.GRASS_STRING.get(), "草绳");
         this.add(ModItems.HERB_BANDAGE.get(), "草药");
         this.add(ModItems.AED.get(), "电击除颤器");
+        this.add(ModItems.FOOD_CONSUMER.get(), "健胃消食片");
+        this.add(ModItems.FENTANYL.get(), "芬太尼");
+        this.add(ModItems.HYPERZINE.get(), "加速粉剂");
+        this.add(ModItems.HARDENER.get(), "钢化粉剂");
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");
         this.add(ModEffects.INTENSE_PAIN_EFFECT.get(), "剧痛");

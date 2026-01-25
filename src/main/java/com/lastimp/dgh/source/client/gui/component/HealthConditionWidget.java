@@ -18,6 +18,8 @@ public class HealthConditionWidget extends AbstractWidget {
     private final int iconSize = 12;
     private int fgColor;
     private float severity = 0f;
+    private float addValue;
+    private int addColor;
 
     public HealthConditionWidget(int width, int height, Component message, ResourceLocation texture, int fgColor) {
         super(0, 0, width, height, message);
@@ -26,8 +28,16 @@ public class HealthConditionWidget extends AbstractWidget {
         this.visible = false;
     }
 
+    public HealthConditionWidget(int width, int height, Component message, ResourceLocation texture, int fgColor, int addColor) {
+        super(0, 0, width, height, message);
+        this.texture = texture;
+        this.fgColor = fgColor;
+        this.visible = false;
+    }
+
     public void setSeverity(float severity) {
         this.severity = Mth.clamp(severity, 0f, 2f);
+        this.addValue = 0;
     }
 
     @Override
@@ -44,13 +54,13 @@ public class HealthConditionWidget extends AbstractWidget {
         // draw filled portion
         int filled = (int) (this.width * Math.min(severity, 1.0));
         guiGraphics.fill(this.getX() + 1, this.getY() + 1, Mth.clamp(this.getX() + filled, this.getX() + 1, this.getX() + this.width - 1), this.getY() + this.height - 1, fgColor);
-        if (severity > 1)
-            guiGraphics.fill(this.getX() + 1, this.getY() + 1, Mth.clamp((int)(this.getX() + this.width * (severity - 1)), this.getX() + 1, this.getX() + this.width - 1), this.getY() + this.height - 1, 0xFF7E0000);
+        if (this.addValue > 0)
+            guiGraphics.fill(this.getX() + 1, this.getY() + 1, Mth.clamp((int)(this.getX() + this.width * this.addValue), this.getX() + 1, this.getX() + this.width - 1), this.getY() + this.height - 1, this.addColor);
 
         // draw icon from texture (if you want to use atlas, supply proper tex size)
         guiGraphics.blitSprite(texture, this.getX() + 2, this.getY() + 2, iconSize, iconSize);
 
-            int stringColor = 0xFF000000;
+        int stringColor = 0xFF000000;
         Minecraft mc = ClientAccessor.mc();
         guiGraphics.drawCenteredString(mc.font, this.getMessage(),
                 this.getX() + 3 + (this.width + iconSize) / 2,
@@ -65,5 +75,10 @@ public class HealthConditionWidget extends AbstractWidget {
 
     public void setPortionColor(int color) {
         this.fgColor = color;
+    }
+
+    public void setAdditionValueAndColor(float value, int color) {
+        this.addValue = value;
+        this.addColor = color;
     }
 }
