@@ -15,7 +15,7 @@ public class FoodConsumer extends AbstractDirectHealItems {
     @Override
     public boolean heal(@NotNull LivingEntity source, @NotNull LivingEntity entity) {
         if (!(entity instanceof Player player)) return false;
-        player.addEffect(new MobEffectInstance(ModEffects.FOOD_CONSUMER_EFFECT, 20 * 40));
+        player.addEffect(new MobEffectInstance(ModEffects.FOOD_CONSUMER_EFFECT, 20 * 120));
         return true;
     }
 }

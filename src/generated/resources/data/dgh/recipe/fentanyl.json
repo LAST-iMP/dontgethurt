@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "dgh:morphine"
+    },
+    {
+      "item": "minecraft:poppy"
+    },
+    {
+      "item": "minecraft:poppy"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:fentanyl"
+  }
+}

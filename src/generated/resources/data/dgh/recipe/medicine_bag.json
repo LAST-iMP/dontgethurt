@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "g": {
+      "item": "minecraft:glass_bottle"
+    },
+    "i": {
+      "item": "minecraft:iron_nugget"
+    },
+    "w": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "w w",
+    "wgw",
+    " i "
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:medicine_bag"
+  }
+}

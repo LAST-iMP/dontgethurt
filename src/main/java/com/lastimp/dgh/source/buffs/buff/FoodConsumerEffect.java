@@ -26,11 +26,10 @@ public class FoodConsumerEffect extends MobEffect {
         HealthCapability.getAndApply(livingEntity, h -> {
             if (livingEntity instanceof Player player) {
                 var food = player.getFoodData();
-                if (food.getFoodLevel() > 12) {
-                    food.addExhaustion(6);
-                }
+                if (food.getFoodLevel() < 12) return;
+                food.addExhaustion(6);
             }
-            float block = 0.5f / (livingEntity.getMaxHealth() * Config.body_life_factor);
+            float block = 0.5f / 3f / (livingEntity.getMaxHealth() * Config.body_life_factor);
             for (var component : BodyComponents.VISIBLE_BODIES) {
                 h.getComponent(component).addConditionHidden(BURN_RES, block);
                 h.getComponent(component).addConditionHidden(INTERNAL_RES, block);

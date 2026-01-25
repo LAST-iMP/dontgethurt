@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:amethyst_block"
+    },
+    "c": {
+      "item": "minecraft:waxed_cut_copper_slab"
+    },
+    "g": {
+      "item": "minecraft:gold_ingot"
+    },
+    "l": {
+      "item": "minecraft:lightning_rod"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "grg",
+    "lal",
+    "ccc"
+  ],
+  "result": {
+    "count": 1,
+    "id": "dgh:aed"
+  }
+}

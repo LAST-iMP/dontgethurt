@@ -182,6 +182,7 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModEffects.ADRENALINE_EFFECT.get(), "肾上腺素");
         this.add(ModEffects.COMBAT_STIMULANT_EFFECT.get(), "战斗兴奋剂");
         this.add(ModEffects.ANALGESIA_POISON_EFFECT.get(), "眩晕毒剂中毒");
+        this.add(ModEffects.FOOD_CONSUMER_EFFECT.get(), "消食");
 
         this.addPotion(ModPotions.COMBAT_STIMULANT_POTION, "战斗兴奋剂");
         this.addPotion(ModPotions.ANALGESIA_POISON_POTION, "眩晕毒剂");
