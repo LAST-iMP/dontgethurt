@@ -12,7 +12,7 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 public class Config {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder()
             .comment("General settings")
-            .push("general_1.2.8.4");
+            .push("general_1.2.10");
 
     public static final ForgeConfigSpec.DoubleValue BODY_LIFE_FACTOR = BUILDER
             .comment("肢体血量系数")
@@ -68,7 +68,7 @@ public class Config {
 
     public static final ForgeConfigSpec.DoubleValue RESISTANCE_CONVERT_RATIO = BUILDER
             .comment("治愈-抗性转化系数")
-            .defineInRange("RESISTANCE_CONVERT_RATIO", 0.01, 0, 1.0);
+            .defineInRange("RESISTANCE_CONVERT_RATIO", 0.02, 0, 1.0);
 
     public static final ForgeConfigSpec.DoubleValue RESISTANCE_MAX = BUILDER
             .comment("抗性上限")

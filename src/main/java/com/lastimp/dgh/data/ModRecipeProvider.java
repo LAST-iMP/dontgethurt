@@ -521,6 +521,31 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(Items.AMETHYST_BLOCK)
                 .unlockedBy("has_copper", has(Items.COPPER_INGOT))
                 .save(recipeOutput, Common.ResourceLocation(DontGetHurt.MODID, "aed_repair"));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.FOOD_CONSUMER.get())
+                .requires(Tags.Items.CROPS)
+                .requires(Tags.Items.CROPS)
+                .requires(Items.SUGAR, 2)
+                .unlockedBy("has_sugar", has(Items.SUGAR))
+                .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.FENTANYL.get())
+                .requires(ModItems.MORPHINE.get())
+                .requires(Items.POPPY, 2)
+                .unlockedBy("has_poppy", has(Items.POPPY))
+                .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.HYPERZINE.get())
+                .requires(ModItems.FENTANYL.get())
+                .requires(Items.SUGAR)
+                .requires(Items.GUNPOWDER)
+                .requires(Items.BONE_MEAL)
+                .unlockedBy("has_sugar", has(Items.SUGAR))
+                .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.HARDENER.get())
+                .requires(ModItems.FENTANYL.get())
+                .requires(Items.TURTLE_HELMET)
+                .requires(Items.GUNPOWDER)
+                .requires(Items.BONE_MEAL)
+                .unlockedBy("has_sugar", has(Items.SUGAR))
+                .save(recipeOutput);
 
 
         var book = PatchouliAPI.get().getBookStack(Common.ResourceLocation(DontGetHurt.MODID, "medical_guide"));

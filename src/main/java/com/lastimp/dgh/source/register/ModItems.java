@@ -490,6 +490,34 @@ public class ModItems {
                     .setNoRepair()
     );
 
+    public static final RegistryObject<Item> FOOD_CONSUMER = registerItem(
+            "food_consumer",
+            FoodConsumer::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> FENTANYL = registerItem(
+            "fentanyl",
+            Fentanyl::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> HYPERZINE = registerItem(
+            "hyperzine",
+            Hyperzine::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> HARDENER = registerItem(
+            "hardener",
+            Hardener::new,
+            new Item.Properties()
+                    .stacksTo(16)
+    );
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

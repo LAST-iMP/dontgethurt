@@ -18,7 +18,7 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)致命伤$(li2)烧伤$(li2)开放伤$(li2)内伤$(li2)体内异物$(li2)脑损伤$(li2)出血$(li2)呼吸停止$(li2)手术休克$(li2)戒断$(li2)动脉出血$(li2)主动脉破裂$(li2)坏疽$(li2)心率不齐$(li2)心脏骤停"
+      "text": "$(li)致命伤$(li2)烧伤$(li2)开放伤$(li2)内伤$(li2)体内异物$(li2)脑损伤$(li2)出血$(li2)呼吸停止$(li2)手术休克$(li2)戒断$(li2)动脉出血$(li2)主动脉破裂$(li2)坏疽$(li2)心率不齐$(li2)心脏骤停$(li2)创伤性截肢"
     },
     {
       "type": "text",
@@ -209,6 +209,20 @@
     },
     {
       "type": "image",
+      "title": "创伤性截肢",
+      "border": true,
+      "images": [
+        "dgh:textures/book/traumatic_amputation.png"
+      ],
+      "text": "由骨折后再次受到的严重伤害引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)四肢$(br)$(li)影响$(li2)失能、动脉出血$(br)$(li)急救措施$(li2)止血带(br)$(li)治疗措施$(li2)截肢手术"
+    },
+    {
+      "type": "image",
       "title": "伤口感染",
       "border": true,
       "images": [
@@ -247,7 +261,35 @@
     {
       "type": "text",
       "scale": 1.2,
-      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)肢体剧痛$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)绷带完全包扎后石膏固定、骨合成手术$(br)"
+      "text": "$(li)有效部位$(li2)全身$(br)$(li)影响$(li2)肢体剧痛$(br)$(li)急救措施$(li2)绷带包扎$(br)$(li)治疗措施$(li2)绷带完全包扎后石膏固定、骨合成手术"
+    },
+    {
+      "type": "image",
+      "title": "昏迷",
+      "border": true,
+      "images": [
+        "dgh:textures/book/coma.png"
+      ],
+      "text": "昏迷由心跳停止或毒剂引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)头$(br)$(li)影响$(li2)倒地$(br)$(li)治疗措施$(li2)治疗病因"
+    },
+    {
+      "type": "image",
+      "title": "心跳加快",
+      "border": true,
+      "images": [
+        "dgh:textures/book/heartrate_increase.png"
+      ],
+      "text": "心跳加快由心颤或肾上腺素引起。"
+    },
+    {
+      "type": "text",
+      "scale": 1.2,
+      "text": "$(li)有效部位$(li2)胸口$(br)$(li)影响$(li2)无$(br)$(li)治疗措施$(li2)治疗病因"
     },
     {
       "type": "image",

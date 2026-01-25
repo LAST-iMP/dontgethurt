@@ -17,6 +17,10 @@
     "dgh:antibiotic_glue",
     "dgh:mannitol",
     "dgh:herb_bandage",
-    "dgh:clamp"
+    "dgh:clamp",
+    "dgh:food_consumer",
+    "dgh:fentanyl",
+    "dgh:hyperzine",
+    "dgh:hardener"
   ]
 }
