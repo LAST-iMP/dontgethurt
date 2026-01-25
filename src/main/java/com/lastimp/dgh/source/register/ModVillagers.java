@@ -60,7 +60,7 @@ public class ModVillagers {
                     16, 2, 0.05F
             ));
             level1Trades.add((trader, rand) -> new MerchantOffer(
-                    new ItemCost(Items.BONE, 24), // 玩家出售的物品
+                    new ItemCost(Items.POPPY, 8), // 玩家出售的物品
                     new ItemStack(Items.EMERALD, 1), // 玩家获得的物品
                     16, 2, 0.05F
             ));
