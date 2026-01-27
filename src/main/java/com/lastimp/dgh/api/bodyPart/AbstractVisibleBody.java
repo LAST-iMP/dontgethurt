@@ -85,7 +85,17 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         updateBoneEffect(entity);
         handleBoneDamage(health);
         handleBoneDeath();
+        updateOrgan(health, entity);
         return this;
+    }
+
+    private void updateOrgan(HealthCapability health, LivingEntity entity) {
+        for (int i = 0; i < this.organ.getSlots(); i++) {
+            var stack = this.organ().getStackInSlot(i);
+            if (stack.isEmpty()) continue;
+            stack = ((AbstractOrgan)stack.getItem()).update(stack, health, this, entity);
+            this.organ().setStackInSlot(i, stack);
+        }
     }
 
     @Override
