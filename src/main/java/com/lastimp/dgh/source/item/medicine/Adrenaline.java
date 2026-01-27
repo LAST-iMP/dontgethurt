@@ -5,9 +5,15 @@ import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModEffects;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_PRESSURE;
 import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
@@ -37,5 +43,15 @@ public class Adrenaline extends AbstractDirectHealItems {
             }
             return true;
         }, false);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.add(Component.literal("治疗"));
+        tooltipComponents.add(Component.literal("·心脏骤停").withStyle(ChatFormatting.BLUE));
+        tooltipComponents.add(Component.literal("造成"));
+        tooltipComponents.add(Component.literal("·攻击+10%每级").withStyle(ChatFormatting.GREEN));
+        tooltipComponents.add(Component.literal("·移速+10%每级").withStyle(ChatFormatting.GREEN));
+        tooltipComponents.add(Component.literal("·心颤").withStyle(ChatFormatting.RED));
     }
 }

@@ -1,8 +1,10 @@
 package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -51,6 +53,14 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
         if (this.abnormal(SURGICAL_AMPUTATION) || this.abnormal(TRAUMATIC_AMPUTATION))
             loss = Math.max(0.5f, loss);
         return loss;
+    }
+
+    @Override
+    public void addOriginOrgan(LivingEntity livingEntity, boolean newEntity) {
+        if (!newEntity) return;
+        this.insertOrganIfMissing(0, ORGAN_1_END, livingEntity, ModTags.SKIN, ModItems.SKIN.get().getDefaultInstance());
+        this.insertOrganIfMissing(1, ORGAN_1_END, livingEntity, ModTags.MUSCLE, ModItems.MUSCLE.get().getDefaultInstance());
+        this.insertOrganIfMissing(2, ORGAN_1_END, livingEntity, ModTags.NEURO, ModItems.NEURO.get().getDefaultInstance());
     }
 
     public boolean available(HealthCapability health) {

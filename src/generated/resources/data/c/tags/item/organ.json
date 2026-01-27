@@ -1,0 +1,15 @@
+{
+  "values": [
+    "dgh:brain",
+    "dgh:eye",
+    "dgh:spinal_cord",
+    "dgh:heart",
+    "dgh:kidney",
+    "dgh:liver",
+    "dgh:lungs",
+    "dgh:stomach",
+    "dgh:muscle",
+    "dgh:neuro",
+    "dgh:skin"
+  ]
+}

@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh.source.core.bodyPart;
 
+import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
@@ -11,6 +12,7 @@ import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import com.lastimp.dgh.source.register.ModEffects;
+import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -41,6 +43,7 @@ public class Torso extends AbstractVisibleBody {
     private ResourceLocation uuid_bone_wood;
     private ResourceLocation uuid_bone_netherite;
 
+    private boolean heartStable = true;
     private int nextPneumothoraxTick = 1800;
 
     public static void addCondition(Collection<ResourceLocation> key) {
@@ -69,6 +72,27 @@ public class Torso extends AbstractVisibleBody {
     @Override
     public Component getComponent() {
         return Component.literal("胸口");
+    }
+
+    @Override
+    protected void initOrgan() {
+        super.initOrgan();
+        this.organ().setValidator((slot, stack) -> {
+            if (stack.is(ModTags.ORGAN_TORSO)) return true;
+            return false;
+        });
+    }
+
+    @Override
+    public void addOriginOrgan(LivingEntity livingEntity, boolean newEntity) {
+        this.insertOrganIfMissing(0, ORGAN_1_END, livingEntity, ModTags.HEART, ModItems.HEART.get().getDefaultInstance());
+        this.insertOrganIfMissing(1, ORGAN_1_END, livingEntity, ModTags.LUNGS, ModItems.LUNGS.get().getDefaultInstance());
+        this.insertOrganIfMissing(2, ORGAN_1_END, livingEntity, ModTags.STOMACH, ModItems.STOMACH.get().getDefaultInstance());
+        this.insertOrganIfMissing(3, ORGAN_1_END, livingEntity, ModTags.LIVER, ModItems.LIVER.get().getDefaultInstance());
+        if (!newEntity)
+            this.insertOrganIfMissing(4, ORGAN_1_END, livingEntity, ModTags.KIDNEY, ModItems.KIDNEY.get().getDefaultInstance());
+        else
+            this.insertOrganIfMissing(4, ORGAN_1_END, 2, livingEntity, ModTags.KIDNEY, ModItems.KIDNEY.get().getDefaultInstance());
     }
 
     @Override
@@ -194,18 +218,16 @@ public class Torso extends AbstractVisibleBody {
     private void handleFibrillation(HealthCapability health, LivingEntity entity) {
         var blood = health.getComponent(BLOOD);
         var head = health.getComponent(HEAD);
-        var torso = health.getComponent(TORSO);
-        if (blood.getConditionValue(OXYGEN) > 0.9 || head.getConditionValue(TRAUMATIC_SHOCK) > 0.6) {
+        this.heartStable = false;
+        if (blood.getConditionValue(OXYGEN) > 0.9 || head.getConditionValue(TRAUMATIC_SHOCK) > 0.6 || this.countOrganMatch(ModTags.HEART) < 1) {
             this.addHeartRate(3.0f);
         } else if (this.isFibrillation(health, entity)) {
             float factor = entity.hasEffect(ModEffects.ADRENALINE_EFFECT) ? 0.5f : 1.0f;
             this.addHeartRate(DELTA / 60 * factor * (int)(Math.min(3, this.getHeartRateLevel() + 1)));
-        } else if (blood.getConditionValue(SEPSIS) > 0.2 || blood.getConditionValue(BLOOD_LOSS) > 0.4 || torso.getConditionValue(PNEUMOTHORAX) > 0.3f || entity.hasEffect(ModEffects.ADRENALINE_EFFECT)) {
-            if (this.getHeartRateLevel() < 0.5f) {
-                this.addHeartRate(DELTA / 20.0f);
-            }
+        } else if (this.getHeartRateLevel() < 0.5f && (blood.getConditionValue(SEPSIS) > 0.2 || blood.getConditionValue(BLOOD_LOSS) > 0.4 || this.getConditionValue(PNEUMOTHORAX) > 0.3f || entity.hasEffect(ModEffects.ADRENALINE_EFFECT))) {
+            this.addHeartRate(DELTA / 20.0f);
         } else if (this.getHeartRateLevel() <= 2) {
-            this.addHeartRate(-DELTA / 30.0f);
+            this.heartStable = true;
         }
     }
 
@@ -266,6 +288,10 @@ public class Torso extends AbstractVisibleBody {
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         this.nextPneumothoraxTick = nbt.getInt("nextPneumothoraxTick");
         super.deserializeNBT(provider, nbt);
+    }
+
+    public boolean heartStable() {
+        return heartStable;
     }
 
 }

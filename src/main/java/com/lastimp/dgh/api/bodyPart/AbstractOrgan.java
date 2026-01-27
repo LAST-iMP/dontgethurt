@@ -10,5 +10,7 @@ public abstract class AbstractOrgan extends Item {
         super(properties);
     }
 
-    public abstract ItemStack update(ItemStack stack, HealthCapability health, AbstractVisibleBody body, LivingEntity entity);
+    public ItemStack update(ItemStack stack, HealthCapability health, AbstractBody body, LivingEntity entity) {
+        return stack;
+    }
 }

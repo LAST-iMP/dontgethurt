@@ -26,5 +26,17 @@ public class VillagerEventBus {
                 ImmutableList.of(Pair.of(2, new DoctorVillagerBehavior())),
                 ImmutableSet.of(Pair.of(MemoryModuleType.JOB_SITE, MemoryStatus.VALUE_PRESENT))
         );
+
+        villager.getBrain().addActivityWithConditions(
+                Activity.IDLE,
+                ImmutableList.of(Pair.of(2, new DoctorVillagerBehavior())),
+                ImmutableSet.of(Pair.of(MemoryModuleType.JOB_SITE, MemoryStatus.VALUE_PRESENT))
+        );
+
+        villager.getBrain().addActivityWithConditions(
+                Activity.MEET,
+                ImmutableList.of(Pair.of(2, new DoctorVillagerBehavior())),
+                ImmutableSet.of(Pair.of(MemoryModuleType.JOB_SITE, MemoryStatus.VALUE_PRESENT))
+        );
     }
 }

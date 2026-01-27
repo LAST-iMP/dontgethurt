@@ -167,6 +167,17 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.FENTANYL.get(), "芬太尼");
         this.add(ModItems.HYPERZINE.get(), "加速粉剂");
         this.add(ModItems.HARDENER.get(), "钢化粉剂");
+        this.add(ModItems.BRAIN.get(), "人类大脑");
+        this.add(ModItems.EYE.get(), "人类眼睛");
+        this.add(ModItems.SPINAL_CORD.get(), "人类脊髓");
+        this.add(ModItems.HEART.get(), "人类心脏");
+        this.add(ModItems.KIDNEY.get(), "人类肾");
+        this.add(ModItems.LIVER.get(), "人类肝脏");
+        this.add(ModItems.LUNGS.get(), "人类肺");
+        this.add(ModItems.STOMACH.get(), "人类胃");
+        this.add(ModItems.MUSCLE.get(), "人类肌肉");
+        this.add(ModItems.NEURO.get(), "人类神经");
+        this.add(ModItems.SKIN.get(), "人类皮肤");
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");
         this.add(ModEffects.INTENSE_PAIN_EFFECT.get(), "剧痛");

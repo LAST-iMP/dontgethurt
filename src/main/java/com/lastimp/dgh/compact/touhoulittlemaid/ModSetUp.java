@@ -13,5 +13,7 @@ public class ModSetUp {
     public static void onAttachCapabilities(final FMLCommonSetupEvent event) {
         if (!ModList.get().isLoaded("touhou_little_maid")) return;
         NeoForge.EVENT_BUS.addListener(ModEventBus::onMaidTombstone);
+        NeoForge.EVENT_BUS.addListener(ModEventBus::onMaidItemTransfer);
+        NeoForge.EVENT_BUS.addListener(ModEventBus::onItemMaidTransfer);
     }
 }

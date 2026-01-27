@@ -2,6 +2,7 @@ package com.lastimp.dgh.source.client.gui;
 
 import com.google.common.collect.ImmutableSet;
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.mixin.client.LocalPlayerAccessor;
 import com.lastimp.dgh.mixin.client.MinecraftAccessor;
 import com.lastimp.dgh.source.client.ClientAccessor;
@@ -10,10 +11,12 @@ import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModEffects;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Pose;
@@ -39,7 +42,7 @@ public class GuiEventBus {
     @SubscribeEvent
     public static void screenOpen(ScreenEvent.Opening event) {
         Player player = Minecraft.getInstance().player;
-        if (player == null || !HealthCapability.isDying(player)) return;
+        if (player == null || !HealthCapability.isDown(player)) return;
 
         var newScreen = event.getNewScreen();
         if (event.getCurrentScreen() == null) {
@@ -58,7 +61,7 @@ public class GuiEventBus {
     @SubscribeEvent
     public static void onGuiRender(RenderGuiEvent.Pre event) {
         ClientAccessor.getPlayer().ifPresent(player -> {
-            if (HealthCapability.isDying(player)) {
+            if (HealthCapability.isDown(player)) {
                 player.setPose(Pose.SWIMMING);
                 ((LocalPlayerAccessor) player).setHandsBusy(true);
                 ((MinecraftAccessor) Minecraft.getInstance()).setMissTime(2);
@@ -96,19 +99,35 @@ public class GuiEventBus {
     public static void onRenderMyOverlay(RenderGuiEvent.Post event) {
         ClientAccessor.getPlayer().ifPresent(player -> {
             Minecraft mc = ClientAccessor.mc();
-            if (!mc.options.hideGui && mc.screen == null) {
-                if (!HealthCapability.isDying(player)) return;
-                var graphics = event.getGuiGraphics();
-
-                graphics.drawCenteredString(mc.font,
-                        Component.literal("按下鼠标求救"),
-                        graphics.guiWidth() / 2, graphics.guiHeight() / 2 - 50, 0xFFFFFFFF
-                );
-                graphics.drawCenteredString(mc.font,
-                        Component.literal("按住").append(KeyBinding.GIVE_UP.getTranslatedKeyMessage()).append("键5秒放弃治疗"),
-                        graphics.guiWidth() / 2, graphics.guiHeight() / 2 + 15 - 50, 0xFFFFFFFF
-                );
+            var graphics = event.getGuiGraphics();
+            renderEyeOverlay(player, graphics);
+            if (!mc.options.hideGui) {
+                renderDyingOverlay(player, graphics);
             }
         });
+    }
+
+    private static void renderEyeOverlay(LocalPlayer player, GuiGraphics graphics) {
+        if (player.isDeadOrDying()) return;
+        HealthCapability.getAndApply(player, h -> {
+            int avaEye = h.availableEye();
+            if (avaEye >= 2) return;
+            int color = avaEye == 1 ? 0x80000000 : 0xEF000000;
+            graphics.fill(0, 0, graphics.guiWidth(), graphics.guiHeight(), color);
+        });
+    }
+
+    private static void renderDyingOverlay(LocalPlayer player, GuiGraphics graphics) {
+        if (!HealthCapability.isDying(player)) return;
+        graphics.drawCenteredString(ClientAccessor.mc().font,
+                Component.literal("按下鼠标求救"),
+                graphics.guiWidth() / 2, graphics.guiHeight() / 2 - 50, 0xFFFFFFFF
+        );
+        if (Config.enable_self_suicide) {
+            graphics.drawCenteredString(ClientAccessor.mc().font,
+                    Component.literal("按住").append(KeyBinding.GIVE_UP.getTranslatedKeyMessage()).append("键5秒放弃治疗"),
+                    graphics.guiWidth() / 2, graphics.guiHeight() / 2 + 15 - 50, 0xFFFFFFFF
+            );
+        }
     }
 }

@@ -121,9 +121,9 @@ public class HealingHandler {
                 injury += injuryCheck(body, BURN, states);
                 injury += injuryCheck(body, OPEN_WOUND, states);
                 injury += injuryCheck(body, PASS_THROUGH, states);
-                injury += injuryCheck(body, INTERNAL_INJURY, states) * 2;
+                injury += injuryCheck(body, INTERNAL_INJURY, states);
                 if (component == HEAD)
-                    injury += injuryCheck(body, BRAIN_DAMAGE, states) * 3;
+                    injury += injuryCheck(body, BRAIN_DAMAGE, states);
             }
             if (injury < 0.001) return;
 

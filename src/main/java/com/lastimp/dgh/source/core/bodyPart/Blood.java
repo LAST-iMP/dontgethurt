@@ -64,6 +64,11 @@ public class Blood extends AbstractBody {
     }
 
     @Override
+    public void addOriginOrgan(LivingEntity livingEntity, boolean newEntity) {
+
+    }
+
+    @Override
     public AbstractBody update(HealthCapability health, LivingEntity entity) {
         super.update(health, entity);
         this.handleBloodVolume(health);
@@ -87,6 +92,15 @@ public class Blood extends AbstractBody {
     @Override
     public int slowDownLevel(HealthCapability health) {
         return this.getConditionValue(OPIATE_OVERDOSE) < 0.5f? 0 : 8;
+    }
+
+    @Override
+    public void healingAll(boolean healPain) {
+        this.getBodyConditions().forEach(key -> {
+            var condition = BodyCondition.get(key);
+            this.setConditionValue(key, condition.defaultValue());
+            this.setConditionHidden(key, condition.defaultValue());
+        });
     }
 
     private void handleBloodVolume(HealthCapability health) {
