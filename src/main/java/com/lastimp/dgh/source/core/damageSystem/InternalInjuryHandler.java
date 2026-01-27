@@ -13,7 +13,7 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 
 public abstract class InternalInjuryHandler {
-    public static void handle(DamageSource source, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
+    public static boolean handle(DamageSource source, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
         float block = Math.min(damageAmount, body.getConditionHidden(INTERNAL_RES));
         damageAmount -= block;
         body.addConditionHidden(INTERNAL_RES, -block);
@@ -25,10 +25,11 @@ public abstract class InternalInjuryHandler {
         body.injury(INTERNAL_INJURY, damageAmount);
         if (body.abnormal(CLAMP_PLATE)) body.setConditionValue(CLAMP_PLATE, BodyCondition.get(CLAMP_PLATE).defaultValue());
         health.addDirectInjury(source.getEntity(), body.getComponent(), Component.literal("内伤"), damageAmount);
+        return damageAmount > 0;
     }
 
     public static void handleBluntTrauma(DamageSource source, LivingEntity entity, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
-        handle(source, health, body, damageAmount);
+        if (!handle(source, health, body, damageAmount)) return;
         float damage = body.getConditionValue(INTERNAL_INJURY) + body.getConditionHidden(INTERNAL_INJURY);
         if (body instanceof AbstractExtremities extremities)
             FollowInjuryHandler.dislocationHandler(extremities, health, damage);
@@ -39,7 +40,7 @@ public abstract class InternalInjuryHandler {
     }
 
     public static void handleExplosion(DamageSource source, LivingEntity entity, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
-        handle(source, health, body, damageAmount);
+        if (!handle(source, health, body, damageAmount)) return;
         float damage = body.getConditionValue(INTERNAL_INJURY) + body.getConditionHidden(INTERNAL_INJURY);
         if (body instanceof AbstractExtremities extremities)
             FollowInjuryHandler.dislocationHandler(extremities, health, damage, Config.baseDislocationThreshold, 1, 0.15f, 0.36f, 0);

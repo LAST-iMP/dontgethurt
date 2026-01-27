@@ -22,6 +22,10 @@ public class Config {
             .comment("启用伤口治疗，关闭生命盾")
             .define("TRADITION_HEALING", false);
 
+    public static final ModConfigSpec.DoubleValue HEALTH_SHIELD_REDU = BUILDER
+            .comment("生命盾衰减率(越大越慢)")
+            .defineInRange("HEALTH_SHIELD_REDU", 60f, 1, Float.MAX_VALUE);
+
     public static final ModConfigSpec.DoubleValue HEALING_FACTOR = BUILDER
             .comment("回血系数")
             .defineInRange("HEALING_FACTOR", 0.5f, 0, 1000);
@@ -142,8 +146,17 @@ public class Config {
             .comment("受限的部位生命损伤")
             .define("LIMITED_BODY_PART_VITALITY_LOST", true);
 
+    public static final ModConfigSpec.BooleanValue ENABLE_LIVING_EFFECT = BUILDER
+            .comment("启用长生久视buff")
+            .define("ENABLE_LIVING_EFFECT", true);
+
+    public static final ModConfigSpec.BooleanValue ENABLE_SELF_SUICIDE = BUILDER
+            .comment("启用放弃治疗")
+            .define("ENABLE_SELF_SUICIDE", true);
+
     public static float body_life_factor;
     public static boolean tradition_healing;
+    public static float health_shield_redu;
     public static float healing_factor;
     public static float bandage_acc;
     public static float burn_bleed_ratio;
@@ -181,6 +194,8 @@ public class Config {
     public static boolean player_down_moving;
     public static int damage_part_strick_level;
     public static boolean limited_body_part_vitality_lost;
+    public static boolean enable_living_effect;
+    public static boolean enable_self_suicide;
 
     // 构建配置
     public static final ModConfigSpec SPEC = BUILDER.pop().build();
@@ -189,6 +204,7 @@ public class Config {
     static void onLoad(final ModConfigEvent event) {
         body_life_factor = (float) BODY_LIFE_FACTOR.getAsDouble();
         tradition_healing = TRADITION_HEALING.getAsBoolean();
+        health_shield_redu = (float) HEALTH_SHIELD_REDU.getAsDouble();
         healing_factor = (float) HEALING_FACTOR.getAsDouble();
         bandage_acc = (float) BANDAGE_ACC.getAsDouble();
         burn_bleed_ratio = (float) BURN_BLEED_RATIO.getAsDouble();
@@ -215,15 +231,17 @@ public class Config {
         baseAmputationThreshold = (float) BASE_AMPUTATION_THRESHOLD.getAsDouble();
         baseAmputationMaxProb = (float) BASE_AMPUTATION_MAX_PROB.getAsDouble();
 
-        allow_down = ALLOW_DOWN.get();
-        player_doctor_healing = PLAYER_DOCTOR_HEALING.get();
+        allow_down = ALLOW_DOWN.getAsBoolean();
+        player_doctor_healing = PLAYER_DOCTOR_HEALING.getAsBoolean();
 
         bypass_brain_damage_prob = (float) (double) BYPASS_BRAIN_DAMAGE_PROB.get();
         bypass_foreign_prob = (float) (double) BYPASS_FOREIGN_PROB.get();
-        player_glowing = PLAYER_GLOWING.get();
-        player_down_moving = PLAYER_DOWN_MOVING.get();
-        damage_part_strick_level = DAMAGE_PART_STRICK_LEVEL.get();
-        limited_body_part_vitality_lost = LIMITED_BODY_PART_VITALITY_LOST.get();
+        player_glowing = PLAYER_GLOWING.getAsBoolean();
+        player_down_moving = PLAYER_DOWN_MOVING.getAsBoolean();
+        damage_part_strick_level = DAMAGE_PART_STRICK_LEVEL.getAsInt();
+        limited_body_part_vitality_lost = LIMITED_BODY_PART_VITALITY_LOST.getAsBoolean();
+        enable_living_effect = ENABLE_LIVING_EFFECT.getAsBoolean();
+        enable_self_suicide = ENABLE_SELF_SUICIDE.getAsBoolean();
         BodyCondition.init();
     }
 

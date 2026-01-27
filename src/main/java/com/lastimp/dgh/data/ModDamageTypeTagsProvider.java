@@ -4,7 +4,9 @@ import com.lastimp.dgh.api.tags.ModDamageType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.DamageTypeTagsProvider;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.damagesource.DamageType;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,22 +19,18 @@ public class ModDamageTypeTagsProvider extends DamageTypeTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        this.tag(ModDamageType.FINAL_HEALTH_DAMAGE)
-                .add(ModDamageType.OPEN_WOUND_DAMAGE)
-                .add(ModDamageType.INTERNAL_INJURY_DAMAGE)
-                .add(ModDamageType.BURN_DAMAGE)
-                .add(ModDamageType.BRAIN_DAMAGE)
-                .add(ModDamageType.BLEED_DAMAGE)
-                .add(ModDamageType.SURGERY_DAMAGE)
-                .add(ModDamageType.CANT_BREATH_DAMAGE);
+        ResourceKey<DamageType>[] damages = new ResourceKey[ModDamageType.DGH_FINAL_DAMAGE.size()];
+        ModDamageType.DGH_FINAL_DAMAGE.toArray(damages);
 
-        this.tag(DamageTypeTags.BYPASSES_ARMOR)
-                .add(ModDamageType.OPEN_WOUND_DAMAGE)
-                .add(ModDamageType.INTERNAL_INJURY_DAMAGE)
-                .add(ModDamageType.BURN_DAMAGE)
-                .add(ModDamageType.BRAIN_DAMAGE)
-                .add(ModDamageType.BLEED_DAMAGE)
-                .add(ModDamageType.SURGERY_DAMAGE)
-                .add(ModDamageType.CANT_BREATH_DAMAGE);
+        this.tag(ModDamageType.FINAL_HEALTH_DAMAGE).add(damages);
+        this.tag(DamageTypeTags.BYPASSES_ARMOR).add(damages);
+        this.tag(DamageTypeTags.BYPASSES_SHIELD).add(damages);
+        this.tag(DamageTypeTags.BYPASSES_INVULNERABILITY).add(damages);
+        this.tag(DamageTypeTags.BYPASSES_COOLDOWN).add(damages);
+        this.tag(DamageTypeTags.BYPASSES_EFFECTS).add(damages);
+        this.tag(DamageTypeTags.BYPASSES_RESISTANCE).add(damages);
+        this.tag(DamageTypeTags.BYPASSES_ENCHANTMENTS).add(damages);
+        this.tag(DamageTypeTags.BYPASSES_WOLF_ARMOR).add(damages);
+        this.tag(DamageTypeTags.NO_KNOCKBACK).add(damages);
     }
 }

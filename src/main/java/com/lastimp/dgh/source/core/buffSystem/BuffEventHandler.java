@@ -39,9 +39,11 @@ public class BuffEventHandler {
     }
 
     private static void updateDyingEffects(LivingEntity entity) {
-        if (!HealthCapability.isDying(entity)) return;
-        entity.addEffect(new MobEffectInstance(MobEffects.JUMP, 19, -10));
-        if (Config.player_glowing)
+        var isDown = HealthCapability.isDown(entity) || HealthCapability.isFootLostDown(entity);
+        var isDying = HealthCapability.isDying(entity);
+        if (isDying || isDown)
+            entity.addEffect(new MobEffectInstance(MobEffects.JUMP, 19, -10));
+        if (isDying && Config.player_glowing)
             entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 19));
     }
 
@@ -80,6 +82,7 @@ public class BuffEventHandler {
     }
 
     private static void updateLivingTimeEffects(HealthCapability health, LivingEntity entity) {
+        if (!Config.enable_living_effect) return;
         int amp = (int) Math.sqrt((double) health.livingTick() / 1000);
         amp = Math.min(amp, 39);
         if (amp < 1) return;

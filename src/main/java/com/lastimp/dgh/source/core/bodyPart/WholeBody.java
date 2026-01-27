@@ -2,27 +2,24 @@
 package com.lastimp.dgh.source.core.bodyPart;
 
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.function.Predicate;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
-public class WholeBody extends AbstractBody {
+public class WholeBody implements INBTSerializable<CompoundTag> {
     private final HashMap<BodyComponents, AbstractBody> components = new HashMap<>();
-    private static List<ResourceLocation> WHOLE_BODY_CONDITIONS;
 
     public WholeBody() {
         components.put(LEFT_ARM, new LeftArm());
@@ -35,76 +32,42 @@ public class WholeBody extends AbstractBody {
     }
 
     public AbstractBody getComponent(BodyComponents component) {
-        return component == WHOLE_BODY ? this : components.get(component);
+        return components.get(component);
+    }
+
+    public boolean anyMatch(Predicate<? super AbstractBody> predicate) {
+        return this.components.values().stream().anyMatch(predicate);
+    }
+
+    @SuppressWarnings("unchecked")
+    public boolean anyVisibleMatch(Predicate<? super AbstractVisibleBody> predicate) {
+        return VISIBLE_BODIES.stream().map(this::getComponent).anyMatch((Predicate<? super AbstractBody>) predicate);
     }
 
     public boolean isInfected() {
-        for (var component : VISIBLE_BODIES) {
-            if (((AbstractVisibleBody)this.getComponent(component)).isInfected()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public List<ResourceLocation> getBodyConditions() {
-        if (WHOLE_BODY_CONDITIONS == null) {
-            WHOLE_BODY_CONDITIONS = List.of();
-        }
-        return WHOLE_BODY_CONDITIONS;
-    }
-
-    @Override
-    public float getVitalityWeight() {
-        return 1;
-    }
-
-    @Override
-    public String getShortID() {
-        return "whole_body";
-    }
-
-    @Override
-    public Component getComponent() {
-        return Component.literal("全身");
+        return this.anyVisibleMatch(AbstractVisibleBody::isInfected);
     }
 
     public boolean abnormal() {
-        for (var key : this.components.values()) {
-            if (key.abnormal()) return true;
-        }
-        return false;
+        return this.anyMatch(AbstractBody::abnormal);
     }
 
-    @Override
-    public AbstractBody update(HealthCapability health, LivingEntity entity) {
-        super.update(health, entity);
-        for (BodyComponents components : this.components.keySet()) {
-            this.updateComponent(components, health, entity);
-        }
-        return this;
+    public void update(HealthCapability health, LivingEntity entity) {
+        this.components.values().forEach(body -> body.updatePre(health, entity).update(health, entity).updatePost(health, entity));
     }
 
-    private void updateComponent(BodyComponents component, HealthCapability health, LivingEntity entity) {
-        components.get(component).updatePre(health, entity).update(health, entity).updatePost(health, entity);
-    }
-
-    @Override
     public float updateVitalityLost(HealthCapability health, LivingEntity entity) {
         float lost = 0;
-        for (BodyComponents components : this.components.keySet()) {
-            var body = this.getComponent(components);
+        for (var body : this.components.values()) {
             var bodyLost = body.updateVitalityLost(health, entity);
-            if (body instanceof AbstractExtremities && Config.limited_body_part_vitality_lost)
+            if (!(body instanceof Head) && Config.limited_body_part_vitality_lost)
                 bodyLost = Math.min(bodyLost, 1);
-            bodyLost *= this.getVitalityWeight();
+            bodyLost *= body.getVitalityWeight();
             lost += bodyLost;
         }
         return lost;
     }
 
-    @Override
     public int slowDownLevel(HealthCapability health) {
         int slowDown = 0;
         for (var body : this.components.values()) {
@@ -113,27 +76,33 @@ public class WholeBody extends AbstractBody {
         return Mth.clamp(slowDown, 0, 19);
     }
 
+    public void addOriginOrganOnDeath(LivingEntity livingEntity) {
+        VISIBLE_BODIES.stream().map(this::getComponent).forEach(body -> body.addOriginOrgan(livingEntity, false));
+    }
+
+    public void healingAll(boolean healPain) {
+        this.components.values().forEach(body -> body.healingAll(healPain));
+    }
+
     @Override
     public CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        CompoundTag wholeBody = super.serializeNBT(provider);
         CompoundTag tag = new CompoundTag();
-        for (BodyComponents comp : components.keySet()) {
-            tag.put(comp.name(), components.get(comp).serializeNBT(provider));
-        }
-        tag.put(WHOLE_BODY.name(), wholeBody);
+        this.components.keySet().forEach(key -> tag.put(key.name(), this.getComponent(key).serializeNBT(provider)));
+        return tag;
+    }
+
+    public CompoundTag deathSerializeNBT(HolderLookup.Provider provider) {
+        CompoundTag tag = new CompoundTag();
+        this.components.keySet().forEach(key -> tag.put(key.name(), this.getComponent(key).deathSerializeNBT(provider)));
         return tag;
     }
 
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        if (nbt == null) return;
-        components.put(LEFT_ARM, AbstractBody.buildFromNBT(provider, nbt.getCompound(LEFT_ARM.name()), LeftArm::new));
-        components.put(RIGHT_ARM, AbstractBody.buildFromNBT(provider, nbt.getCompound(RIGHT_ARM.name()), RightArm::new));
-        components.put(LEFT_LEG, AbstractBody.buildFromNBT(provider, nbt.getCompound(LEFT_LEG.name()), LeftLeg::new));
-        components.put(RIGHT_LEG, AbstractBody.buildFromNBT(provider, nbt.getCompound(RIGHT_LEG.name()), RightLeg::new));
-        components.put(HEAD, AbstractBody.buildFromNBT(provider, nbt.getCompound(HEAD.name()), Head::new));
-        components.put(TORSO, AbstractBody.buildFromNBT(provider, nbt.getCompound(TORSO.name()), Torso::new));
-        components.put(BLOOD, AbstractBody.buildFromNBT(provider, nbt.getCompound(BLOOD.name()), Blood::new));
-        super.deserializeNBT(provider, nbt.getCompound(WHOLE_BODY.name()));
+        this.components.keySet().forEach(key -> components.get(key).deserializeNBT(provider, nbt.getCompound(key.name())));
+    }
+
+    public void respawnDeserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+        this.components.keySet().forEach(key -> components.get(key).respawnDeserializeNBT(provider, nbt.getCompound(key.name())));
     }
 }

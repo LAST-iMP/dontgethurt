@@ -14,13 +14,13 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 public class ClientTickEventHandler {
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Pre event) {
-        if (HealthCapability.isDying(event.getEntity()))
+        if (HealthCapability.isDown(event.getEntity()))
             event.getEntity().setPose(Pose.SWIMMING);
     }
 
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Post event) {
-        if (HealthCapability.isDying(event.getEntity()))
+        if (HealthCapability.isDown(event.getEntity()))
             event.getEntity().setPose(Pose.SWIMMING);
     }
 }

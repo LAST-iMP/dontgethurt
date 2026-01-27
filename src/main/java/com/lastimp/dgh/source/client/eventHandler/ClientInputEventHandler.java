@@ -4,6 +4,8 @@ package com.lastimp.dgh.source.client.eventHandler;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.config.Config;
+import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.source.client.ClientAccessor;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
@@ -30,7 +32,6 @@ import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Objects;
@@ -52,7 +53,7 @@ public class ClientInputEventHandler {
         int index = Objects.requireNonNull(slot).getSlotIndex();
         if (slot instanceof DynamicSlot)
             index += 36;
-        PacketDistributor.sendToServer(MyHealingItemUseData.getInstance(
+        Common.sendToServer(MyHealingItemUseData.getInstance(
                 healthScreen.getMenu().targetEntity, index, healthScreen.getSelectedComponent()
         ));
 
@@ -90,7 +91,7 @@ public class ClientInputEventHandler {
         if (!menuItemUseCheck(slot)) return;
 
         int index = slot.getSlotIndex();
-        PacketDistributor.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.KEY_SLOT_USE, index));
+        Common.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.KEY_SLOT_USE, index));
         event.setCanceled(true);
     }
 
@@ -112,7 +113,7 @@ public class ClientInputEventHandler {
     @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
         if (KeyBinding.OPEN_MENU_KEY.consumeClick()){
-            PacketDistributor.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.KEY_HEALTH_MENU, 0));
+            Common.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.KEY_HEALTH_MENU, 0));
         }
     }
 
@@ -121,7 +122,7 @@ public class ClientInputEventHandler {
         ClientAccessor.getPlayer().ifPresent(player -> {
             if (HealthCapability.isDying(player)) {
                 if (callForHelpTick <= 0 && event.getAction() == GLFW.GLFW_PRESS) {
-                    PacketDistributor.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.CALL_FOR_HELP, 0));
+                    Common.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.CALL_FOR_HELP, 0));
                     callForHelpTick = 80;
                 }
                 if (ClientAccessor.mc().screen == null)
@@ -132,22 +133,22 @@ public class ClientInputEventHandler {
 
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Pre event) {
-        if (HealthCapability.isDying(event.getEntity()))
+        if (HealthCapability.isDown(event.getEntity()) || HealthCapability.isFootLostDown(event.getEntity()))
             event.getEntity().setPose(Pose.SWIMMING);
     }
 
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Post event) {
-        if (HealthCapability.isDying(event.getEntity()))
+        if (HealthCapability.isDown(event.getEntity()) || HealthCapability.isFootLostDown(event.getEntity()))
             event.getEntity().setPose(Pose.SWIMMING);
 
         ClientAccessor.getPlayer().ifPresent(player -> {
-            if (!event.getEntity().getUUID().equals(player.getUUID())) return;
+            if (!event.getEntity().getUUID().equals(player.getUUID()) || !Config.enable_self_suicide) return;
 
             if (KeyBinding.GIVE_UP.isDown() && HealthCapability.isDying(event.getEntity())) {
                 giveUpTick++;
                 if (giveUpTick >= 100) {
-                    PacketDistributor.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.GIVE_UP, 0));
+                    Common.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.GIVE_UP, 0));
                 }
             } else {
                 giveUpTick = 0;

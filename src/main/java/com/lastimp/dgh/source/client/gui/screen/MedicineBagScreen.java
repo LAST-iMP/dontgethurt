@@ -14,7 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 
@@ -45,7 +44,7 @@ public class MedicineBagScreen extends AbstractContainerScreen<BagMenu> {
 
     private void addDirectUseButton(int index, int x, int y, int width, int height) {
         var button = Button.builder(Component.empty(), (b) -> {
-            PacketDistributor.sendToServer(MyHealingItemUseData.getInstance(
+            Common.sendToServer(MyHealingItemUseData.getInstance(
                     ClientAccessor.getPlayerOrThrow().getUUID(), index + 36, TORSO
             ));
         }).bounds(this.leftPos + x, this.topPos + y, width, height).build();

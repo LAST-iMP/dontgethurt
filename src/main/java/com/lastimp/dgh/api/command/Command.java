@@ -67,6 +67,12 @@ public class Command {
                                                 .executes(Command::reset)
                                         )
                                 )
+                                .then(Commands.literal("heal_all")
+                                        .requires(source -> source.hasPermission(2))
+                                        .then(Commands.argument("entity", EntityArgument.entities())
+                                                .executes(Command::healAll)
+                                        )
+                                )
                         )
                         .then(Commands.literal("health_menu")
                                 .requires(source -> source.hasPermission(2))
@@ -200,6 +206,21 @@ public class Command {
                 newHealth.oxygenMask().setStackInSlot(0, oldHealth.oxygenMask().getStackInSlot(0));
                 oldHealth.deserializeNBT(livingEntity.registryAccess(), newHealth.serializeNBT(livingEntity.registryAccess()));
             });
+            livingEntity.removeAllEffects();
+        }
+        return 1;
+    }
+
+    public static int healAll(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        var entities = EntityArgument.getEntities(context, "entity");
+
+        CommandSourceStack source = context.getSource();
+        for (var entity : entities) {
+            if (!(entity instanceof LivingEntity livingEntity)) continue;
+            if (!HealthCapability.has(livingEntity)) continue;
+            source.sendSuccess(() -> Component.literal("已将实体" + livingEntity.getScoreboardName() + "全部治疗"), true);
+            HealthCapability.getAndApply(livingEntity, h -> h.healingAll(true));
+            livingEntity.removeAllEffects();
         }
         return 1;
     }

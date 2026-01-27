@@ -21,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.portal.DimensionTransition;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -57,7 +56,7 @@ public class TaskBringToBed implements IMaidTask {
     private MaidWalkToLivingEntityTask createWalkToLivingEntityTask() {
         return new MaidWalkToLivingEntityTask(
                 0.6f, 1.5f,
-                (maid) -> (maid.getOwner() != null && HealthCapability.isDying(maid.getOwner()) && maid.getOwner().getVehicle() == null),
+                (maid) -> (maid.getOwner() != null && HealthCapability.isDown(maid.getOwner()) && maid.getOwner().getVehicle() == null),
                 (maid, livingEntity) -> livingEntity.is(maid.getOwner()),
                 this::startCarry
         );

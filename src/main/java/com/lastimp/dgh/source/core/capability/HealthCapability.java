@@ -6,6 +6,8 @@ import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.api.healingItems.AbstractHealingEquipment;
 import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.config.Config;
+import com.lastimp.dgh.config.HealthLivingEntityList;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.source.core.Utils;
@@ -29,7 +31,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.util.INBTSerializable;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -42,6 +43,8 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.OperationType.SYN;
 
 public class HealthCapability implements INBTSerializable<CompoundTag> {
+    public static final String HEALTH_RECORD = "health_record";
+
     private final WholeBody body = new WholeBody();
     private final DynamicItemHandler oxygenMask = new DynamicItemHandler();
     private final DynamicItemHandler autoPulse = new DynamicItemHandler();
@@ -63,6 +66,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     private boolean rightArmVisible = true;
     private boolean leftLegVisible = true;
     private boolean rightLegVisible = true;
+    private boolean isDown = false;
 
     private UUID lastHealer = UUID.randomUUID();
 
@@ -76,16 +80,14 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         autoPulse.addAllowed(ModTags.AUTOPULSE);
     }
 
-    public static boolean has(LivingEntity entity) {
-        return HealthProvider.has(entity);
+    public static boolean has(Entity entity) {
+        if (entity instanceof Player player)
+            return HealthLivingEntityList.isEntityWhitelisted(player.getType()) && !HealthLivingEntityList.isPlayerBlacklisted(player);
+        return HealthLivingEntityList.isEntityWhitelisted(entity.getType());
     }
 
     private static Optional<HealthCapability> get(LivingEntity entity) {
         return has(entity) ? Optional.of(entity.getData(ModCapabilities.HEALTH.get())) : Optional.empty();
-    }
-
-    public static void set(LivingEntity entity, HealthCapability capability) {
-        entity.setData(ModCapabilities.HEALTH, capability);
     }
 
     public static <T> T getAndApply(LivingEntity entity, Function<HealthCapability, T> function, T orElse) {
@@ -180,7 +182,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.almostDead = Math.min(this.almostDead, this.vitality);
         this.nearBedTick--;
         this.outerHealing = Math.max(0, this.outerHealing - this.outerHealingDelta);
-        this.outerHealingDelta = this.outerHealing <= 0 ? 0 : Math.min(1.0f / 20, this.outerHealing + 1.0f / 60 / 20);
+        this.outerHealingDelta = this.outerHealing <= 0 ? 0 : this.outerHealingDelta + 1.0f / Config.health_shield_redu / 20;
         this.isInfected = this.body.isInfected();
 
         this.leftArmVisible = updateIfDirty(AbstractExtremities.visible(this, LEFT_ARM), this.leftArmVisible);
@@ -192,6 +194,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
             this.directInjury.clear();
             this.currentHealer = null;
         }
+        this.isDown = updateIfDirty(isDown(entity), this.isDown);
     }
 
     private <T> T updateIfDirty(T value, T oldValue) {
@@ -203,7 +206,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     public void SYNIfDirty(LivingEntity livingEntity) {
         if (!this.isDirty) return;
-        PacketDistributor.sendToPlayersNear(
+        Common.sendToPlayersNear(
                 (ServerLevel) livingEntity.level(), null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), 64,
                 MyReadAllConditionData.getInstance(livingEntity.getUUID(), livingEntity.getId(), this.lightSerializeNBT(), SYN)
         );
@@ -230,6 +233,10 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         }
     }
 
+    public void addOriginOrganOnDeath(LivingEntity livingEntity) {
+        this.body.addOriginOrganOnDeath(livingEntity);
+    }
+
     public boolean write(ItemStack stack, Component name, Component author) {
         if (!stack.is(Items.WRITTEN_BOOK)) return false;
         if (this.lastDeathDirectInjury.isEmpty() && this.directInjury.isEmpty()) return false;
@@ -241,6 +248,11 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         return true;
     }
 
+    public void healingAll(boolean healPain) {
+        this.body.healingAll(healPain);
+        this.resetAlmostDead();
+    }
+
     public CompoundTag lightSerializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.putInt("armBreak", this.armBreak);
@@ -248,6 +260,14 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         tag.putBoolean("rightArmVisible", this.rightArmVisible);
         tag.putBoolean("leftLegVisible", this.leftLegVisible);
         tag.putBoolean("rightLegVisible", this.rightLegVisible);
+        tag.putBoolean("isDown", this.isDown);
+        return tag;
+    }
+
+    public CompoundTag deathSerializeNBT(HolderLookup.Provider provider) {
+        CompoundTag tag = new CompoundTag();
+        tag.put("body", this.body.deathSerializeNBT(provider));
+        serializeRecord("directInjury", this.directInjury, tag, provider);
         return tag;
     }
 
@@ -272,7 +292,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         return tag;
     }
 
-    public static void serializeRecord(String key, List<InjuryRecord> recordList, CompoundTag tag, HolderLookup.Provider provider) {
+    private static void serializeRecord(String key, List<InjuryRecord> recordList, CompoundTag tag, HolderLookup.Provider provider) {
         ListTag listTag = new ListTag();
         recordList.forEach((record) -> listTag.add(listTag.size(), record.serializeNBT(provider)));
         tag.put(key, listTag);
@@ -285,6 +305,12 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.rightArmVisible = nbt.getBoolean("rightArmVisible");
         this.leftLegVisible = nbt.getBoolean("leftLegVisible");
         this.rightLegVisible = nbt.getBoolean("rightLegVisible");
+        this.isDown = nbt.getBoolean("isDown");
+    }
+
+    public void respawnDeserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
+        this.body.respawnDeserializeNBT(provider, nbt.getCompound("body"));
+        deserializeRecord("directInjury", this.lastDeathDirectInjury, nbt, provider);
     }
 
     @Override
@@ -308,7 +334,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         deserializeRecord("lastDeathDirectInjury", this.lastDeathDirectInjury, nbt, provider);
     }
 
-    public static void deserializeRecord(String key, List<InjuryRecord> recordList, CompoundTag nbt, HolderLookup.Provider provider) {
+    private static void deserializeRecord(String key, List<InjuryRecord> recordList, CompoundTag nbt, HolderLookup.Provider provider) {
         ListTag listTag = nbt.getList(key, ListTag.TAG_COMPOUND);
         recordList.clear();
         listTag.forEach((tag -> recordList.add(InjuryRecord.phrase(provider, (CompoundTag) tag))));
@@ -323,14 +349,27 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
                 this.getComponent(TORSO).abnormal(INTENSE_PAIN);
     }
 
-    public boolean isDown() {
-        if (this.getComponent(HEAD).getConditionValue(COMA) > 0.5f) return true;
-        if (this.isFrozen()) return true;
-        return false;
+    public static boolean isFootLostDown(LivingEntity entity) {
+        return HealthCapability.getAndApply(entity, h -> {
+            return !h.rightLegVisible && !h.leftLegVisible;
+        }, false);
+    }
+
+    public static boolean isDown(LivingEntity entity) {
+        if (isDying(entity)) return true;
+        if (entity.hasEffect(ModEffects.ANALGESIA_POISON_EFFECT)) return true;
+        return HealthCapability.getAndApply(entity, h -> {
+            if (entity.level().isClientSide()){
+                return h.isDown;
+            } else {
+                if (h.getComponent(HEAD).getConditionValue(COMA) > 0.5f) return true;
+                if (h.isFrozen()) return true;
+                return false;
+            }
+        }, false);
     }
 
     public static boolean isDying(LivingEntity entity) {
-        if (!HealthCapability.has(entity) && entity.hasEffect(ModEffects.ANALGESIA_POISON_EFFECT)) return true;
         return entity.getHealth() < 0.05 && !entity.isDeadOrDying();
     }
 

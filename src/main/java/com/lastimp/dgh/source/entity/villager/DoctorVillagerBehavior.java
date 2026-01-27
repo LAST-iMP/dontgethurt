@@ -14,7 +14,6 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
@@ -100,8 +99,6 @@ public class DoctorVillagerBehavior extends Behavior<Villager> {
     private boolean villagerReady(Villager villager, GlobalPos sitePos) {
         //是医生
         if (villager.getVillagerData().getProfession() != ModVillagers.DOCTOR_MAKER.get()) return false;
-        //工作时间
-        if (villager.getBrain().getSchedule().getActivityAt((int) (villager.level().dayTime() % 24000)) != Activity.WORK) return false;
         //有工作站
         return sitePos != null && sitePos.dimension() == villager.level().dimension();
     }

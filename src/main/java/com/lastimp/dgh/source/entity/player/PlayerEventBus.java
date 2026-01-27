@@ -3,6 +3,7 @@ package com.lastimp.dgh.source.entity.player;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.config.HealthLivingEntityList;
+import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.MyServerConfigSynData;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
@@ -16,7 +17,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID)
 public class PlayerEventBus {
@@ -35,7 +35,7 @@ public class PlayerEventBus {
             persistedTag.putBoolean(key, true);
             data.put(Player.PERSISTED_NBT_TAG, persistedTag);
         }
-        PacketDistributor.sendToPlayer((ServerPlayer) player, MyServerConfigSynData.getInstance(HealthLivingEntityList.getConfig()));
+        Common.sendToPlayer((ServerPlayer) player, MyServerConfigSynData.getInstance(HealthLivingEntityList.getConfig()));
     }
 
     @SubscribeEvent
@@ -52,7 +52,7 @@ public class PlayerEventBus {
     @SubscribeEvent
     public static void onPlayerInteractEntity(PlayerInteractEvent.EntityInteract event) {
         if (!(event.getTarget() instanceof LivingEntity target)) return;
-        if (!HealthCapability.isDying(target)) return;
+        if (!HealthCapability.isDown(target)) return;
 
         Player player = event.getEntity();
         var item = player.getMainHandItem();

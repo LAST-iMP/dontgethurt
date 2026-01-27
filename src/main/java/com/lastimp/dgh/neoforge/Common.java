@@ -2,9 +2,13 @@ package com.lastimp.dgh.neoforge;
 
 import com.lastimp.dgh.source.core.capability.InjuryRecord;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.world.item.component.WrittenBookContent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +24,18 @@ public class Common {
 
     public static ResourceLocation ResourceBySeperator(String path, char seperator) {
         return ResourceLocation.bySeparator(path, seperator);
+    }
+
+    public static void sendToServer(CustomPacketPayload payload) {
+        PacketDistributor.sendToServer(payload);
+    }
+
+    public static void sendToPlayer(ServerPlayer player, CustomPacketPayload payload) {
+        PacketDistributor.sendToPlayer(player, payload);
+    }
+
+    public static void sendToPlayersNear(ServerLevel level, ServerPlayer excluded, double x, double y, double z, double radius, CustomPacketPayload payload) {
+        PacketDistributor.sendToPlayersNear(level, excluded, x, y, z, radius, payload);
     }
 
     public static WrittenBookContent getBookTag(Component title, Component author, List<InjuryRecord> recordList) {

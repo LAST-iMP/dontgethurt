@@ -3,8 +3,14 @@ package com.lastimp.dgh.source.item.medicine;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.BRAIN_DAMAGE;
 import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
@@ -22,5 +28,11 @@ public class Mannitol extends AbstractDirectHealItems {
             head.healing(BRAIN_DAMAGE, -1f);
             return true;
         }, false);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.add(Component.literal("治疗"));
+        tooltipComponents.add(Component.literal("·脑损伤").withStyle(ChatFormatting.BLUE));
     }
 }
