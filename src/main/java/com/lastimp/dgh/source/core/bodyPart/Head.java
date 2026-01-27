@@ -1,11 +1,13 @@
 
 package com.lastimp.dgh.source.core.bodyPart;
 
+import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -42,6 +44,25 @@ public class Head extends AbstractVisibleBody {
     @Override
     public Component getComponent() {
         return Component.literal("头部");
+    }
+
+    @Override
+    protected void initOrgan() {
+        super.initOrgan();
+        this.organ().setValidator((slot, stack) -> {
+            if (stack.is(ModTags.ORGAN_HEAD)) return true;
+            return false;
+        });
+    }
+
+    @Override
+    public void addOriginOrgan(LivingEntity livingEntity, boolean newEntity) {
+        this.insertOrganIfMissing(0, ORGAN_1_END, livingEntity, ModTags.BRAIN, ModItems.BRAIN.get().getDefaultInstance());
+        this.insertOrganIfMissing(1, ORGAN_1_END, livingEntity, ModTags.SPINAL_CORD, ModItems.SPINAL_CORD.get().getDefaultInstance());
+        if (!newEntity)
+            this.insertOrganIfMissing(2, ORGAN_1_END, livingEntity, ModTags.EYE, ModItems.EYE.get().getDefaultInstance());
+        else
+            this.insertOrganIfMissing(2, ORGAN_1_END, 2, livingEntity, ModTags.EYE, ModItems.EYE.get().getDefaultInstance());
     }
 
     @Override
@@ -106,20 +127,27 @@ public class Head extends AbstractVisibleBody {
 
     private void handleBrainDamage(HealthCapability health) {
         //起因
+        float brain_damage = 0;
         var blood = health.getComponent(BLOOD);
         if (this.abnormal(FRACTURE) && !this.isBandaged() && !this.isBadBandaged()) {
-            this.injury(BRAIN_DAMAGE, 0.001f * DELTA);
+            brain_damage += 0.001f;
         }
         if (blood.getConditionValue(OXYGEN) > 0.1f) {
-            this.injury(BRAIN_DAMAGE, blood.getConditionValue(OXYGEN) * 0.01f * DELTA);
+            brain_damage += blood.getConditionValue(OXYGEN) * 0.01f;
         }
         if (this.getConditionValue(TRAUMATIC_SHOCK) > 0.1f) {
-            this.injury(BRAIN_DAMAGE, this.getConditionValue(TRAUMATIC_SHOCK) * 0.01f * DELTA);
+            brain_damage += this.getConditionValue(TRAUMATIC_SHOCK) * 0.01f;
         }
         if (blood.abnormal(SEPSIS)) {
-            this.injury(BRAIN_DAMAGE, 0.001f * 4 * blood.getConditionValue(SEPSIS) * DELTA);
+            brain_damage += 0.001f * 4 * blood.getConditionValue(SEPSIS) * 0.01f;
+        }
+        if (this.countOrganMatch(ModTags.BRAIN) < 1) {
+            brain_damage += 0.1f;
         }
         //更新 自然回复
+        if (brain_damage > 0) {
+            this.injury(BRAIN_DAMAGE, brain_damage * DELTA);
+        }
     }
 
     private void handleComa(HealthCapability health) {

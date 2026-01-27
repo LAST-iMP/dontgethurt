@@ -16,7 +16,7 @@ public class DynamicItemHandler implements IItemHandlerModifiable, INBTSerializa
     private final Set<TagKey<Item>> allowedItemTags = new HashSet<>();
     private final Set<Item> allowedItems = new HashSet<>();
 
-    private final ItemStack[] stacks;
+    protected final ItemStack[] stacks;
     private final int limit;
 
     public DynamicItemHandler() {
@@ -87,7 +87,7 @@ public class DynamicItemHandler implements IItemHandlerModifiable, INBTSerializa
 
     @Override
     public void setStackInSlot(int i, ItemStack itemStack) {
-        this.stacks[i] = itemStack;
+        this.stacks[i] = itemStack != null ? itemStack : ItemStack.EMPTY;
     }
 
     @Override

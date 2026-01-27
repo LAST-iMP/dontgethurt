@@ -19,7 +19,7 @@ public class LivingEntityMixin {
     private void isControlledByLocalInstance(CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object)this;
         if (livingEntity instanceof Player && Config.player_down_moving) return;
-        cir.setReturnValue(cir.getReturnValue() || HealthCapability.isDying(livingEntity));
+        cir.setReturnValue(cir.getReturnValue() || HealthCapability.isDown(livingEntity));
     }
 
     @Inject(at = @At("HEAD"), method = "handleEntityEvent", cancellable = true)

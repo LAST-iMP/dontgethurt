@@ -1,0 +1,9 @@
+{
+  "values": [
+    "dgh:health_care_bag",
+    "dgh:surgery_tool_bag",
+    "dgh:limb_ref_beg",
+    "dgh:auto_use_bag",
+    "dgh:medicine_bag"
+  ]
+}

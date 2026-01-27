@@ -1,11 +1,12 @@
 package com.lastimp.dgh.network;
 
-import com.lastimp.dgh.api.enums.KeyPressedType;
+import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.enums.OperationType;
+import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
-import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
 import com.lastimp.dgh.source.core.menu.BagMenu;
 import com.lastimp.dgh.source.core.menu.HealthMenu;
@@ -16,7 +17,6 @@ import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -31,8 +31,8 @@ public class ServerPayloadHandler {
             var target = Utils.getLivingWithHealth(sender.serverLevel(), uuid);
             if (target == null) return;
 
-            HealthCapability.getAndApply(target, health -> Network.CLIENT_INSTANCE.send(
-                    PacketDistributor.PLAYER.with(context::getSender),
+            HealthCapability.getAndApply(target, health -> Common.sendToPlayer(
+                    context.getSender(),
                     MyReadAllConditionData.getInstance(uuid, target.getId(), health.serializeNBT(), OperationType.valueOf(data.oper()))
             ));
         });
@@ -42,9 +42,8 @@ public class ServerPayloadHandler {
     public static void handleClientPress(final MyKeyPressedData data, final Supplier<NetworkEvent.Context> ctx) {
         var context = ctx.get();
         context.enqueueWork(() -> {
-            KeyPressedType key = KeyPressedType.valueOf(data.key());
             ServerPlayer player = ctx.get().getSender();
-            switch (key) {
+            switch (data.key()) {
                 case KEY_HEALTH_MENU:
                     MenuOpenWrapper.openHealthMenu(player, player.getUUID(), false);
                     break;
@@ -63,6 +62,14 @@ public class ServerPayloadHandler {
                                         + String.format("%.1f", player.position().z) + ")需要救助"
                         ));
                     });
+                    break;
+                case HEALTH_SCREEN_COMPONENT_SELECTION:
+                    if (player.containerMenu instanceof HealthMenu healthMenu) {
+                        HealthCapability.getAndApply(player, h -> {
+                            var component = BodyComponents.values()[Math.abs(data.index())];
+                            healthMenu.setOrganActive(data.index() > 0, (AbstractVisibleBody) h.getComponent(component));
+                        });
+                    }
                     break;
             }
         });

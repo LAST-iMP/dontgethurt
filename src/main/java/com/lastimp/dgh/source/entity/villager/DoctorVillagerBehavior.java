@@ -101,8 +101,6 @@ public class DoctorVillagerBehavior extends Behavior<Villager> {
     private boolean villagerReady(Villager villager, GlobalPos sitePos) {
         //是医生
         if (villager.getVillagerData().getProfession() != ModVillagers.DOCTOR_MAKER.get()) return false;
-        //工作时间
-        if (villager.getBrain().getSchedule().getActivityAt((int) (villager.level().dayTime() % 24000)) != Activity.WORK) return false;
         //有工作站
         return sitePos != null && sitePos.dimension() == villager.level().dimension();
     }

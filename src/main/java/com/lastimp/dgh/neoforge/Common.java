@@ -1,5 +1,6 @@
 package com.lastimp.dgh.neoforge;
 
+import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.core.capability.InjuryRecord;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
@@ -7,6 +8,9 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +26,18 @@ public class Common {
 
     public static ResourceLocation ResourceBySeperator(String path, char seperator) {
         return ResourceLocation.bySeparator(path, seperator);
+    }
+
+    public static <MSG> void sendToServer(MSG payload) {
+        Network.SERVER_INSTANCE.sendToServer(payload);
+    }
+
+    public static <MSG> void sendToPlayer(ServerPlayer player, MSG payload) {
+        Network.CLIENT_INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), payload);
+    }
+
+    public static <MSG> void sendToPlayersNear(ServerLevel level, ServerPlayer excluded, double x, double y, double z, double radius, MSG payload) {
+        Network.CLIENT_INSTANCE.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(excluded, x, y, z, radius, level.dimension())), payload);
     }
 
     public static CompoundTag getBookTag(Component title, Component author, List<InjuryRecord> recordList) {

@@ -1,0 +1,16 @@
+{
+  "values": [
+    "minecraft:potion",
+    "dgh:blood_pack",
+    "dgh:blood_pack_empty",
+    "dgh:morphine",
+    "dgh:naloxone",
+    "dgh:adrenaline",
+    "dgh:antibiotics",
+    "dgh:mannitol",
+    "dgh:food_consumer",
+    "dgh:fentanyl",
+    "dgh:hyperzine",
+    "dgh:hardener"
+  ]
+}

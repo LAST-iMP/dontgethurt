@@ -5,29 +5,29 @@ import com.lastimp.dgh.api.enums.KeyPressedType;
 import net.minecraft.network.FriendlyByteBuf;
 
 public class MyKeyPressedData {
-    private String key;
+    private KeyPressedType key;
     private int index;
 
     public MyKeyPressedData(FriendlyByteBuf buffer) {
-        this.key = buffer.readUtf();
+        this.key = KeyPressedType.valueOf(buffer.readUtf());
         this.index = buffer.readInt();
     }
 
-    public MyKeyPressedData(String key, int index) {
+    public MyKeyPressedData(KeyPressedType key, int index) {
         this.key = key;
         this.index = index;
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeUtf(this.key);
+        buf.writeUtf(this.key.name());
         buf.writeInt(this.index);
     }
 
     public static MyKeyPressedData getInstance(KeyPressedType key, int index) {
-        return new MyKeyPressedData(key.name(), index);
+        return new MyKeyPressedData(key, index);
     }
 
-    public String key() {
+    public KeyPressedType key() {
         return key;
     }
 

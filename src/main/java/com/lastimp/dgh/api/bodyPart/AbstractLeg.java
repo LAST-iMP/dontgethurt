@@ -2,6 +2,7 @@ package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,13 +28,18 @@ public abstract class AbstractLeg extends AbstractExtremities{
     private UUID uuid_bone_wood;
     private UUID uuid_bone_netherite;
 
-    public AbstractLeg() {
-        super();
-    }
-
     @Override
     public int slowDownLevel(HealthCapability health) {
         return super.slowDownLevel(health) + (this.available(health)? 0 : 8);
+    }
+
+    @Override
+    protected void initOrgan() {
+        super.initOrgan();
+        this.organ().setValidator((slot, stack) -> {
+            if (stack.is(ModTags.ORGAN_LEG)) return true;
+            return false;
+        });
     }
 
     @Override

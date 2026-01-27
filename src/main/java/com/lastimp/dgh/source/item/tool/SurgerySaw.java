@@ -11,16 +11,21 @@ import com.lastimp.dgh.source.core.dyingSystem.DyingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
 import com.lastimp.dgh.source.register.ModItems;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.level.Level;
+
+import java.util.List;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
@@ -108,7 +113,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
     }
 
     private boolean sawHead(LivingEntity source, LivingEntity entity) {
-        if (!(entity instanceof Player player)) {
+        if (!(entity instanceof ServerPlayer player)) {
             DyingHandler.setLivingDead(entity);
         } else {
             ItemStack head = new ItemStack(Items.PLAYER_HEAD);
@@ -117,5 +122,19 @@ public class SurgerySaw extends AbstractPartlyHealItem {
             PlayerDyingHandler.setPlayerDead(player);
         }
         return true;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.add(Component.literal("治疗"));
+        tooltipComponents.add(Component.literal("·骨折").withStyle(ChatFormatting.BLUE));
+        tooltipComponents.add(Component.literal("·骨损伤").withStyle(ChatFormatting.BLUE));
+        tooltipComponents.add(Component.literal("·骨坏死").withStyle(ChatFormatting.BLUE));
+        tooltipComponents.add(Component.literal("需要"));
+        tooltipComponents.add(Component.literal("·皮肤牵开").withStyle(ChatFormatting.GREEN));
+        tooltipComponents.add(Component.literal("造成"));
+        tooltipComponents.add(Component.literal("·骨锯开").withStyle(ChatFormatting.RED));
+        tooltipComponents.add(Component.literal("·死亡（头）").withStyle(ChatFormatting.RED));
+        tooltipComponents.add(Component.literal("·创伤性休克").withStyle(ChatFormatting.RED));
     }
 }

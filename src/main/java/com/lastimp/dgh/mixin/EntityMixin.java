@@ -14,7 +14,7 @@ public class EntityMixin {
     @Inject(method = "isEffectiveAi", at = @At("RETURN"), cancellable = true)
     private void isEffectiveAi(CallbackInfoReturnable<Boolean> cir) {
         if ((Entity) (Object)this instanceof Mob mob) {
-            cir.setReturnValue(cir.getReturnValue() && !HealthCapability.isDying(mob));
+            cir.setReturnValue(cir.getReturnValue() && !HealthCapability.isDown(mob));
         }
     }
 
