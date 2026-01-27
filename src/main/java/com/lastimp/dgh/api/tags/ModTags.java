@@ -25,6 +25,24 @@ public class ModTags {
     public static final TagKey<Item> OXYGEN_SUPPLIERS = ItemTags.create(Common.ResourceLocation("c", "oxygen_suppliers"));
     public static final TagKey<Item> AUTOPULSE = ItemTags.create(Common.ResourceLocation("c", "autopulse"));
 
+    public static final TagKey<Item> ORGAN = ItemTags.create(Common.ResourceLocation("c", "organ"));
+    public static final TagKey<Item> ORGAN_HEAD = ItemTags.create(Common.ResourceLocation("c", "organ_head"));
+    public static final TagKey<Item> ORGAN_TORSO = ItemTags.create(Common.ResourceLocation("c", "organ_torso"));
+    public static final TagKey<Item> ORGAN_LEG = ItemTags.create(Common.ResourceLocation("c", "organ_leg"));
+    public static final TagKey<Item> ORGAN_ARM = ItemTags.create(Common.ResourceLocation("c", "organ_arm"));
+
+    public static final TagKey<Item> BRAIN = ItemTags.create(Common.ResourceLocation("c", "brain"));
+    public static final TagKey<Item> EYE = ItemTags.create(Common.ResourceLocation("c", "eye"));
+    public static final TagKey<Item> HEART = ItemTags.create(Common.ResourceLocation("c", "heart"));
+    public static final TagKey<Item> KIDNEY = ItemTags.create(Common.ResourceLocation("c", "kidney"));
+    public static final TagKey<Item> LIVER = ItemTags.create(Common.ResourceLocation("c", "liver"));
+    public static final TagKey<Item> LUNGS = ItemTags.create(Common.ResourceLocation("c", "lungs"));
+    public static final TagKey<Item> MUSCLE = ItemTags.create(Common.ResourceLocation("c", "muscle"));
+    public static final TagKey<Item> NEURO = ItemTags.create(Common.ResourceLocation("c", "neuro"));
+    public static final TagKey<Item> SKIN = ItemTags.create(Common.ResourceLocation("c", "skin"));
+    public static final TagKey<Item> STOMACH = ItemTags.create(Common.ResourceLocation("c", "stomach"));
+    public static final TagKey<Item> SPINAL_CORD = ItemTags.create(Common.ResourceLocation("c", "spinal_cord"));
+
     private static final Set<TagKey<Item>> shearSet = new HashSet<>();
     private static final Set<TagKey<Item>> healthScreenAvaItem = new HashSet<>();
 

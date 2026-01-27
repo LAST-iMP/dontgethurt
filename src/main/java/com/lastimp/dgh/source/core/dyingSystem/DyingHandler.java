@@ -29,7 +29,7 @@ public class DyingHandler {
         if (!HealthCapability.has(livingEntity)) return;
 
         if (!event.getEntity().level().isClientSide) {
-            if (HealthCapability.isDying(livingEntity)) {
+            if (HealthCapability.isDown(livingEntity)) {
                 if (livingEntity.isSleeping()) livingEntity.stopSleeping();
                 livingEntity.stopUsingItem();
             }
@@ -54,7 +54,8 @@ public class DyingHandler {
                 source = lastDamageSource.getEntity();
                 directSource = lastDamageSource.getDirectEntity();
             }
-            entity.hurt(new DamageSource(getKillerDamageType(entity, h), source, directSource),entity.getMaxHealth() * 10000);
+            h.addOriginOrganOnDeath(entity);
+            entity.hurt(new DamageSource(getKillerDamageType(entity, h), source, directSource),1);
         });
     }
 

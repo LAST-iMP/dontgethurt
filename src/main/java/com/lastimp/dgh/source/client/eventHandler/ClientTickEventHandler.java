@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.Mod;
 public class ClientTickEventHandler {
     @SubscribeEvent
     public static void onInputTick(TickEvent.PlayerTickEvent event) {
-        if (HealthCapability.isDying(event.player))
+        if (HealthCapability.isDown(event.player) || HealthCapability.isFootLostDown(event.player))
             event.player.setPose(Pose.SWIMMING);
     }
 }

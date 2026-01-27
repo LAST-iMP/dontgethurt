@@ -1,11 +1,17 @@
 package com.lastimp.dgh.api.bodyPart;
 
+import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.source.core.menu.component.DynamicValidItemHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.UnknownNullability;
@@ -21,6 +27,13 @@ import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.DontGetHurt.EPS;
 
 public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
+    public static final int ORGAN_1_START = 0;
+    public static final int ORGAN_1_END = 12;
+    public static final int ORGAN_2_START = 12;
+    public static final int ORGAN_2_END = 24;
+    public static final int ORGAN_3_START = 24;
+    public static final int ORGAN_3_END = 36;
+    private final DynamicValidItemHandler organ = new DynamicValidItemHandler(36, 64);
 
     private final HashMap<ResourceLocation, ConditionState> state = new HashMap<>();
     private static final HashMap<String, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> handlers = new LinkedHashMap<>();
@@ -29,6 +42,8 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         for (var condition : this.getBodyConditions()) {
             state.put(condition, new ConditionState(BodyCondition.get(condition).defaultValue()));
         }
+        this.initOrgan();
+        this.addOriginOrgan(null, true);
     }
 
     public static void addHandler(String ID, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>> handler) {
@@ -42,6 +57,39 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     public abstract String getShortID();
 
     public abstract Component getComponent();
+
+    public abstract void addOriginOrgan(LivingEntity livingEntity, boolean newEntity);
+
+    public DynamicValidItemHandler organ() {
+        return this.organ;
+    }
+
+    protected void initOrgan() {
+        this.organ.addAllowed(ModTags.ORGAN);
+    }
+
+    public int countOrganMatch(TagKey<Item> key) {
+        int count = 0;
+        for (var organ : this.organ) {
+            if (organ.is(key)) count++;
+        }
+        return count;
+    }
+
+    protected void insertOrganIfMissing(int start, int end, LivingEntity livingEntity, TagKey<Item> tag, ItemStack defaultItem) {
+        insertOrganIfMissing(start, end, 1, livingEntity, tag, defaultItem);
+    }
+
+    protected void insertOrganIfMissing(int start, int end, int require, LivingEntity livingEntity, TagKey<Item> tag, ItemStack defaultItem) {
+        for (int i = 0; i < require; i++) {
+            if (this.countOrganMatch(tag) < i + 1 && start + i < end) {
+                var remaining = this.organ().insertTo(start + i, end, defaultItem);
+                if (!remaining.isEmpty() && livingEntity != null) {
+                    Utils.drop(remaining, livingEntity);
+                }
+            }
+        }
+    }
 
     public ConditionState getCondition(ResourceLocation key) {
         return state.get(key);
@@ -105,9 +153,19 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     }
 
     public AbstractBody updatePost(HealthCapability health, LivingEntity entity) {
+        this.updateOrgan(health, entity);
         this.selfHealing();
         this.updateDisplayValue(health);
         return this;
+    }
+
+    private void updateOrgan(HealthCapability health, LivingEntity entity) {
+        for (int i = 0; i < this.organ.getSlots(); i++) {
+            var stack = this.organ().getStackInSlot(i);
+            if (stack.isEmpty()) continue;
+            stack = ((AbstractOrgan)stack.getItem()).update(stack, health, this, entity);
+            this.organ().setStackInSlot(i, stack);
+        }
     }
 
     public abstract float updateVitalityLost(HealthCapability health, LivingEntity entity);
@@ -160,6 +218,22 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         return false;
     }
 
+    public void healingAll(boolean healPain) {
+        this.getBodyConditions().forEach(key -> {
+            var condition = BodyCondition.get(key);
+            if (condition.isInjury() || (condition.isPain() && healPain)) {
+                this.setConditionValue(key, condition.defaultValue());
+                this.setConditionHidden(key, condition.defaultValue());
+            }
+        });
+    }
+
+    public CompoundTag deathSerializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.put("organ", this.organ.serializeNBT());
+        return tag;
+    }
+
     @Override
     public @UnknownNullability CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
@@ -169,12 +243,16 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
             if (state.isDefault(BodyCondition.get(key))) continue;
             tag.put(key.toString(), state.serializeNBT());
         }
+        tag.put("organ", this.organ.serializeNBT());
         return tag;
+    }
+
+    public void respawnDeserializeNBT(CompoundTag nbt) {
+        this.organ.deserializeNBT(nbt.getCompound("organ"));
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        if (nbt == null) return;
         for (var key : this.getBodyConditions()) {
             if (nbt.contains(key.toString())) {
                 state.get(key).deserializeNBT(nbt.getCompound(key.toString()));
@@ -182,6 +260,7 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
                 state.put(key, new ConditionState(BodyCondition.get(key).defaultValue()));
             }
         }
+        this.organ.deserializeNBT(nbt.getCompound("organ"));
     }
 
     public static <T extends AbstractBody> AbstractBody buildFromNBT(CompoundTag nbt, Supplier<T> constructor) {

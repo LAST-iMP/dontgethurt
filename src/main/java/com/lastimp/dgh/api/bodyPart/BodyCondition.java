@@ -257,7 +257,7 @@ public class BodyCondition {
     public static final ResourceLocation BRAIN_DAMAGE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "brain_damage"),
             (name) -> create(name)
                     .setValues(0.0f, 0.0f, 2.1f)
-                    .setHealing(0.001f, 2.1f).isInjury().build()
+                    .setHealing(0.001f, 0).isInjury().build()
     );
     public static final ResourceLocation COMA = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "coma"),
             (name) -> create(name).setHealing(0.2f, 1.0f).eyeVisible().isInjury().build()

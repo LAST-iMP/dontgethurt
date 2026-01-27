@@ -148,8 +148,6 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
                 .add(ModItems.MEDICAL_STENT.getKey())
                 .add(ModItems.DRAINAGE.getKey())
                 .add(ModItems.OXYGEN_MASK.getKey())
-                .add(ModItems.HUMAN_HAND.getKey())
-                .add(ModItems.HUMAN_LEG.getKey())
                 .add(ModItems.SUTURE.getKey())
                 .add(ModItems.AUTO_USE_BAG.getKey())
                 .add(ModItems.AED.getKey());
@@ -160,7 +158,76 @@ public class ModItemTagsProvider extends TagsProvider<Item> {
 
         this.tag(ModTags.MEDICAL_LIMBS)
                 .add(ModItems.HUMAN_HAND.getKey())
-                .add(ModItems.HUMAN_LEG.getKey());
+                .add(ModItems.HUMAN_LEG.getKey())
+                .add(ModItems.BRAIN.getKey())
+                .add(ModItems.EYE.getKey())
+                .add(ModItems.SPINAL_CORD.getKey())
+                .add(ModItems.HEART.getKey())
+                .add(ModItems.KIDNEY.getKey())
+                .add(ModItems.LIVER.getKey())
+                .add(ModItems.LUNGS.getKey())
+                .add(ModItems.STOMACH.getKey())
+                .add(ModItems.MUSCLE.getKey())
+                .add(ModItems.NEURO.getKey())
+                .add(ModItems.SKIN.getKey());
+
+        this.tag(ModTags.ORGAN)
+                .add(ModItems.BRAIN.getKey())
+                .add(ModItems.EYE.getKey())
+                .add(ModItems.SPINAL_CORD.getKey())
+                .add(ModItems.HEART.getKey())
+                .add(ModItems.KIDNEY.getKey())
+                .add(ModItems.LIVER.getKey())
+                .add(ModItems.LUNGS.getKey())
+                .add(ModItems.STOMACH.getKey())
+                .add(ModItems.MUSCLE.getKey())
+                .add(ModItems.NEURO.getKey())
+                .add(ModItems.SKIN.getKey());
+
+        this.tag(ModTags.ORGAN_HEAD)
+                .add(ModItems.BRAIN.getKey())
+                .add(ModItems.EYE.getKey())
+                .add(ModItems.SPINAL_CORD.getKey());
+
+        this.tag(ModTags.ORGAN_TORSO)
+                .add(ModItems.HEART.getKey())
+                .add(ModItems.KIDNEY.getKey())
+                .add(ModItems.LIVER.getKey())
+                .add(ModItems.LUNGS.getKey())
+                .add(ModItems.STOMACH.getKey());
+
+        this.tag(ModTags.ORGAN_LEG)
+                .add(ModItems.MUSCLE.getKey())
+                .add(ModItems.NEURO.getKey())
+                .add(ModItems.SKIN.getKey());
+
+        this.tag(ModTags.ORGAN_ARM)
+                .add(ModItems.MUSCLE.getKey())
+                .add(ModItems.NEURO.getKey())
+                .add(ModItems.SKIN.getKey());
+
+        this.tag(ModTags.BRAIN)
+                .add(ModItems.BRAIN.getKey());
+        this.tag(ModTags.EYE)
+                .add(ModItems.EYE.getKey());
+        this.tag(ModTags.HEART)
+                .add(ModItems.HEART.getKey());
+        this.tag(ModTags.KIDNEY)
+                .add(ModItems.KIDNEY.getKey());
+        this.tag(ModTags.LIVER)
+                .add(ModItems.LIVER.getKey());
+        this.tag(ModTags.LUNGS)
+                .add(ModItems.LUNGS.getKey());
+        this.tag(ModTags.MUSCLE)
+                .add(ModItems.MUSCLE.getKey());
+        this.tag(ModTags.NEURO)
+                .add(ModItems.NEURO.getKey());
+        this.tag(ModTags.SKIN)
+                .add(ModItems.SKIN.getKey());
+        this.tag(ModTags.STOMACH)
+                .add(ModItems.STOMACH.getKey());
+        this.tag(ModTags.SPINAL_CORD)
+                .add(ModItems.SPINAL_CORD.getKey());
 
         this.tag(ModTags.MEDICAL_TOOLS_SMALL_BAGS)
                 .add(ModItems.HEALTH_CARE_BAG.getKey())

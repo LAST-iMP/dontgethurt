@@ -3,7 +3,6 @@ package com.lastimp.dgh.source.client.gui.screen;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
-import com.lastimp.dgh.network.message.Network;
 import com.lastimp.dgh.source.client.ClientAccessor;
 import com.lastimp.dgh.source.core.menu.BagMenu;
 import net.minecraft.client.Minecraft;
@@ -42,7 +41,7 @@ public class MedicineBagScreen extends AbstractContainerScreen<BagMenu> {
 
     private void addDirectUseButton(int index, int x, int y, int width, int height) {
         var button = Button.builder(Component.empty(), (b) -> {
-            Network.SERVER_INSTANCE.sendToServer(MyHealingItemUseData.getInstance(
+            Common.sendToServer(MyHealingItemUseData.getInstance(
                     ClientAccessor.getPlayerOrThrow().getUUID(), index + 36, TORSO
             ));
         }).bounds(this.leftPos + x, this.topPos + y, width, height).build();

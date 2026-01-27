@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh.source.core.bodyPart;
 
+import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
@@ -9,6 +10,7 @@ import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import com.lastimp.dgh.source.register.ModEffects;
+import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -38,6 +40,8 @@ public class Torso extends AbstractVisibleBody {
 
     private int nextPneumothoraxTick = 1800;
 
+    private int heartNum = 1;
+
     public static void addCondition(Collection<ResourceLocation> key) {
         uniqueConditions.addAll(key);
     }
@@ -64,6 +68,38 @@ public class Torso extends AbstractVisibleBody {
     @Override
     public Component getComponent() {
         return Component.literal("胸口");
+    }
+
+    @Override
+    protected void initOrgan() {
+        super.initOrgan();
+        this.organ().setValidator((slot, stack) -> {
+            if (stack.is(ModTags.ORGAN_TORSO)) return true;
+            return false;
+        });
+    }
+
+    @Override
+    public void addOriginOrgan(LivingEntity livingEntity, boolean newEntity) {
+        this.insertOrganIfMissing(0, ORGAN_1_END, livingEntity, ModTags.HEART, ModItems.HEART.get().getDefaultInstance());
+        this.insertOrganIfMissing(1, ORGAN_1_END, livingEntity, ModTags.LUNGS, ModItems.LUNGS.get().getDefaultInstance());
+        this.insertOrganIfMissing(2, ORGAN_1_END, livingEntity, ModTags.STOMACH, ModItems.STOMACH.get().getDefaultInstance());
+        this.insertOrganIfMissing(3, ORGAN_1_END, livingEntity, ModTags.LIVER, ModItems.LIVER.get().getDefaultInstance());
+        if (!newEntity)
+            this.insertOrganIfMissing(4, ORGAN_1_END, livingEntity, ModTags.KIDNEY, ModItems.KIDNEY.get().getDefaultInstance());
+        else
+            this.insertOrganIfMissing(4, ORGAN_1_END, 2, livingEntity, ModTags.KIDNEY, ModItems.KIDNEY.get().getDefaultInstance());
+    }
+
+    @Override
+    public AbstractBody updatePre(HealthCapability health, LivingEntity entity) {
+        super.updatePre(health, entity);
+        this.heartNum = 0;
+        for (var organStack : this.organ()) {
+            if (organStack.is(ModItems.HEART.get()) && organStack.getDamageValue() < organStack.getMaxDamage())
+                this.heartNum++;
+        }
+        return this;
     }
 
     @Override

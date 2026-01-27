@@ -144,7 +144,7 @@ public class HealthMenu extends AbstractContainerMenu {
         if (this.bagStack != null && !player.getInventory().contains(this.bagStack)) {
             this.closeBag();
         }
-        return !HealthCapability.isDying(player) || player.hasEffect(ModEffects.ADRENALINE_EFFECT.get());
+        return !HealthCapability.isDown(player) || player.hasEffect(ModEffects.ADRENALINE_EFFECT.get());
     }
 
     // 添加玩家背包的slot和热键的栏的slot

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "g": {
+      "tag": "forge:string"
+    },
+    "w": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "pattern": [
+    "wgw",
+    "w w",
+    "wgw"
+  ],
+  "result": {
+    "item": "dgh:clamp"
+  },
+  "show_notification": true
+}

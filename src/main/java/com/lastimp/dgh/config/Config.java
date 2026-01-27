@@ -22,6 +22,10 @@ public class Config {
             .comment("启用伤口治疗，关闭生命盾")
             .define("TRADITION_HEALING", false);
 
+    public static final ForgeConfigSpec.DoubleValue HEALTH_SHIELD_REDU = BUILDER
+            .comment("生命盾衰减率(越大越慢)")
+            .defineInRange("HEALTH_SHIELD_REDU", 60f, 1, Float.MAX_VALUE);
+
     public static final ForgeConfigSpec.DoubleValue HEALING_FACTOR = BUILDER
             .comment("回血系数")
             .defineInRange("HEALING_FACTOR", 0.5f, 0, 1000);
@@ -142,8 +146,18 @@ public class Config {
             .comment("受限的部位生命损伤")
             .define("LIMITED_BODY_PART_VITALITY_LOST", true);
 
+    public static final ForgeConfigSpec.BooleanValue ENABLE_LIVING_EFFECT = BUILDER
+            .comment("启用长生久视buff")
+            .define("ENABLE_LIVING_EFFECT", true);
+
+    public static final ForgeConfigSpec.BooleanValue ENABLE_SELF_SUICIDE = BUILDER
+            .comment("启用放弃治疗")
+            .define("ENABLE_SELF_SUICIDE", true);
+
+
     public static float body_life_factor;
     public static boolean tradition_healing;
+    public static float health_shield_redu;
     public static float healing_factor;
     public static float bandage_acc;
     public static float burn_bleed_ratio;
@@ -181,6 +195,8 @@ public class Config {
     public static boolean player_down_moving;
     public static int damage_part_strick_level;
     public static boolean limited_body_part_vitality_lost;
+    public static boolean enable_living_effect;
+    public static boolean enable_self_suicide;
 
     // 构建配置
     public static final ForgeConfigSpec SPEC = BUILDER.pop().build();
@@ -189,6 +205,7 @@ public class Config {
     static void onLoad(final ModConfigEvent event) {
         body_life_factor = (float) (double)BODY_LIFE_FACTOR.get();
         tradition_healing = TRADITION_HEALING.get();
+        health_shield_redu = (float) (double) HEALTH_SHIELD_REDU.get();
         healing_factor = (float) (double)HEALING_FACTOR.get();
         bandage_acc = (float) (double)BANDAGE_ACC.get();
         burn_bleed_ratio = (float) (double) BURN_BLEED_RATIO.get();
@@ -224,6 +241,8 @@ public class Config {
         player_down_moving = PLAYER_DOWN_MOVING.get();
         damage_part_strick_level = DAMAGE_PART_STRICK_LEVEL.get();
         limited_body_part_vitality_lost = LIMITED_BODY_PART_VITALITY_LOST.get();
+        enable_living_effect = ENABLE_LIVING_EFFECT.get();
+        enable_self_suicide = ENABLE_SELF_SUICIDE.get();
         BodyCondition.init();
     }
 

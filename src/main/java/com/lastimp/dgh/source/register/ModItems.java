@@ -4,6 +4,7 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.source.item.limbs.HumanHand;
 import com.lastimp.dgh.source.item.limbs.HumanLeg;
+import com.lastimp.dgh.source.item.organs.*;
 import com.lastimp.dgh.source.item.tool.*;
 import com.lastimp.dgh.source.item.medicine.*;
 import net.minecraft.world.item.*;
@@ -27,495 +28,384 @@ public class ModItems {
     public static final HashSet<RegistryObject<?>> ITEMS_SET = new HashSet<>();
 
     public static final RegistryObject<Item> OPERATING_BED_BLOCK_ITEM = registerItem(
-            "operating_bed",
-            () -> new BedItem(
+            "operating_bed", () -> new BedItem(
                     OPERATING_BED_BLOCK.get(),
-                    new Item.Properties()
-                            .stacksTo(1)
-            )
-    );
+                    new Item.Properties().stacksTo(1)
+            ));
 
     public static final RegistryObject<Item> HEALTH_SCANNER = registerItem(
-            "health_scanner",
-            () -> new HealthScanner(
-                    new Item.Properties()
-                            .stacksTo(1)
-            )
-    );
+            "health_scanner", () -> new HealthScanner(
+                    new Item.Properties().stacksTo(1)
+            ));
 
     public static final RegistryObject<Item> BLOOD_PACK = registerItem(
-            "blood_pack",
-            () -> new BloodPacks(
-                    new Item.Properties()
-                            .stacksTo(16)
-            )
-    );
+            "blood_pack", () -> new BloodPacks(
+                    new Item.Properties().stacksTo(16)
+            ));
 
     public static final RegistryObject<Item> BLOOD_PACK_EMPTY = registerItem(
-            "blood_pack_empty",
-            () -> new BloodPacksEmpty(
-                    new Item.Properties()
-                            .stacksTo(16)
-            )
-    );
+            "blood_pack_empty", () -> new BloodPacksEmpty(
+                    new Item.Properties().stacksTo(16)
+            ));
 
     public static final RegistryObject<Item> BLOOD_SCANNER = registerItem(
-            "blood_scanner",
-            () -> new BloodScanner(
-                    new Item.Properties()
-                            .stacksTo(1)
-            )
-    );
+            "blood_scanner", () -> new BloodScanner(
+                    new Item.Properties().stacksTo(1)
+            ));
 
     public static final RegistryObject<Item> BANDAGE = registerItem(
-            "bandage",
-            () -> new Bandages(
-                    new Item.Properties()
-                            .stacksTo(64)
-            )
-    );
+            "bandage", () -> new Bandages(
+                    new Item.Properties().stacksTo(64)
+            ));
 
     public static final RegistryObject<Item> MORPHINE = registerItem(
-            "morphine",
-            () -> new Morphine(
-                    new Item.Properties()
-                            .stacksTo(16)
-            )
-    );
+            "morphine", () -> new Morphine(
+                    new Item.Properties().stacksTo(16)
+            ));
 
     public static final RegistryObject<Item> GYPSUM = registerItem(
-            "gypsum",
-            () -> new Gypsum(
-                    new Item.Properties()
-                            .stacksTo(16)
-            )
-    );
+            "gypsum", () -> new Gypsum(
+                    new Item.Properties().stacksTo(16)
+            ));
 
     public static final RegistryObject<Item> SUTURE = registerItem(
-            "suture",
-            () -> new Sutures(
-                    new Item.Properties()
-                            .stacksTo(64)
-            )
-    );
+            "suture", () -> new Sutures(
+                    new Item.Properties().stacksTo(64)
+            ));
 
     public static final RegistryObject<Item> HEALTH_CARE_BAG = registerItem(
-            "health_care_bag",
-            () -> new HealthCareBag(
-                    new Item.Properties()
-                            .stacksTo(1)
-            )
-    );
+            "health_care_bag", () -> new HealthCareBag(
+                    new Item.Properties().stacksTo(1)
+            ));
 
     public static final RegistryObject<Item> SURGERY_TOOL_BAG = registerItem(
-            "surgery_tool_bag",
-            SurgeryToolBag::new,
-            new Item.Properties()
-                    .stacksTo(1)
+            "surgery_tool_bag", SurgeryToolBag::new,
+            new Item.Properties().stacksTo(1)
     );
 
     public static final RegistryObject<Item> LIMB_REF_BEG = registerItem(
-            "limb_ref_beg",
-            LimbRefBeg::new,
-            new Item.Properties()
-                    .stacksTo(1)
-    );
+            "limb_ref_beg", LimbRefBeg::new,
+            new Item.Properties().stacksTo(1));
 
     public static final RegistryObject<Item> WOOD_WRENCH = registerItem(
-            "wood_wrench",
-            () -> new WoodWrench(
-                    new Item.Properties()
-                            .stacksTo(1)
+            "wood_wrench", () -> new WoodWrench(
+                    new Item.Properties().stacksTo(1)
                             .durability(60)
-            )
-    );
+            ));
 
     public static final RegistryObject<Item> SCALPEL = registerItem(
-            "scalpel",
-            Scalpel::new,
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(300)
+            "scalpel", Scalpel::new,
+            new Item.Properties().stacksTo(1).durability(300)
     );
 
     public static final RegistryObject<Item> HEMOSTAT = registerItem(
-            "hemostat",
-            Hemostat::new,
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(300)
-
+            "hemostat", Hemostat::new,
+            new Item.Properties().stacksTo(1).durability(300)
     );
 
     public static final RegistryObject<Item> RETRACTOR = registerItem(
-            "retractor",
-            Retractor::new,
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(300)
+            "retractor", Retractor::new,
+            new Item.Properties().stacksTo(1).durability(300)
     );
 
     public static final RegistryObject<Item> SURGICAL_DRILL = registerItem(
-            "surgical_drill",
-            SurgicalDrill::new,
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(300)
+            "surgical_drill", SurgicalDrill::new,
+            new Item.Properties().stacksTo(1).durability(300)
     );
 
     public static final RegistryObject<Item> TWEEZER = registerItem(
-            "tweezer",
-            Tweezer::new,
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(300)
+            "tweezer", Tweezer::new,
+            new Item.Properties().stacksTo(1).durability(300)
     );
 
     public static final RegistryObject<Item> BONE_IMPLANTS = registerItem(
-            "bone_implants",
-            BoneImplants::new,
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(8)
+            "bone_implants", BoneImplants::new,
+            new Item.Properties().stacksTo(1).durability(8)
     );
 
     public static final RegistryObject<Item> BONE_IMPLANTS_WOOD = registerItem(
-            "bone_implants_wood",
-            (properties) -> new BoneImplants(properties, BodyCondition.BONE_WOOD),
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(8)
+            "bone_implants_wood", (properties) -> new BoneImplants(properties, BodyCondition.BONE_WOOD),
+            new Item.Properties().stacksTo(1).durability(8)
     );
 
     public static final RegistryObject<Item> BONE_IMPLANTS_STONE = registerItem(
-            "bone_implants_stone",
-            (properties) -> new BoneImplants(properties, BodyCondition.BONE_STONE),
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(8)
+            "bone_implants_stone", (properties) -> new BoneImplants(properties, BodyCondition.BONE_STONE),
+            new Item.Properties().stacksTo(1).durability(8)
     );
 
     public static final RegistryObject<Item> BONE_IMPLANTS_COPPER = registerItem(
-            "bone_implants_copper",
-            (properties) -> new BoneImplants(properties, BodyCondition.BONE_COPPER),
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(8)
+            "bone_implants_copper", (properties) -> new BoneImplants(properties, BodyCondition.BONE_COPPER),
+            new Item.Properties().stacksTo(1).durability(8)
     );
 
     public static final RegistryObject<Item> BONE_IMPLANTS_IRON = registerItem(
-            "bone_implants_iron",
-            (properties) -> new BoneImplants(properties, BodyCondition.BONE_IRON),
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(8)
+            "bone_implants_iron", (properties) -> new BoneImplants(properties, BodyCondition.BONE_IRON),
+            new Item.Properties().stacksTo(1).durability(8)
     );
 
     public static final RegistryObject<Item> BONE_IMPLANTS_GOLD = registerItem(
-            "bone_implants_gold",
-            (properties) -> new BoneImplants(properties, BodyCondition.BONE_GOLD),
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(8)
+            "bone_implants_gold", (properties) -> new BoneImplants(properties, BodyCondition.BONE_GOLD),
+            new Item.Properties().stacksTo(1).durability(8)
     );
 
     public static final RegistryObject<Item> BONE_IMPLANTS_DIMOND = registerItem(
-            "bone_implants_dimond",
-            (properties) -> new BoneImplants(properties, BodyCondition.BONE_DIMOND),
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(8)
+            "bone_implants_dimond", (properties) -> new BoneImplants(properties, BodyCondition.BONE_DIMOND),
+            new Item.Properties().stacksTo(1).durability(8)
     );
 
     public static final RegistryObject<Item> BONE_IMPLANTS_NETHERITE = registerItem(
-            "bone_implants_netherite",
-            (properties) -> new BoneImplants(properties, BodyCondition.BONE_NETHERITE),
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(8)
+            "bone_implants_netherite", (properties) -> new BoneImplants(properties, BodyCondition.BONE_NETHERITE),
+            new Item.Properties().stacksTo(1).durability(8)
     );
 
     public static final RegistryObject<Item> SURGERY_SAW = registerItem(
-            "surgery_saw",
-            SurgerySaw::new,
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(300)
+            "surgery_saw", SurgerySaw::new,
+            new Item.Properties().stacksTo(1).durability(300)
     );
 
     public static final RegistryObject<Item> BONE_NATURAL = registerItem(
-            "bone_natural",
-            (properties) -> new SurgeryBones(properties, null),
-            new Item.Properties()
-                    .stacksTo(16)
+            "bone_natural", (properties) -> new SurgeryBones(properties, null),
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> BONE_WOOD = registerItem(
-            "bone_wood",
-            (properties) -> new SurgeryBones(properties, BodyCondition.BONE_WOOD),
-            new Item.Properties()
-                    .stacksTo(16)
+            "bone_wood", (properties) -> new SurgeryBones(properties, BodyCondition.BONE_WOOD),
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> BONE_STONE = registerItem(
-            "bone_stone",
-            (properties) -> new SurgeryBones(properties, BodyCondition.BONE_STONE),
-            new Item.Properties()
-                    .stacksTo(16)
+            "bone_stone", (properties) -> new SurgeryBones(properties, BodyCondition.BONE_STONE),
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> BONE_COPPER = registerItem(
-            "bone_copper",
-            (properties) -> new SurgeryBones(properties, BodyCondition.BONE_COPPER),
-            new Item.Properties()
-                    .stacksTo(16)
+            "bone_copper", (properties) -> new SurgeryBones(properties, BodyCondition.BONE_COPPER),
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> BONE_IRON = registerItem(
-            "bone_iron",
-            (properties) -> new SurgeryBones(properties, BodyCondition.BONE_IRON),
-            new Item.Properties()
-                    .stacksTo(16)
+            "bone_iron", (properties) -> new SurgeryBones(properties, BodyCondition.BONE_IRON),
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> BONE_GOLD = registerItem(
-            "bone_gold",
-            (properties) -> new SurgeryBones(properties, BodyCondition.BONE_GOLD),
-            new Item.Properties()
-                    .stacksTo(16)
+            "bone_gold", (properties) -> new SurgeryBones(properties, BodyCondition.BONE_GOLD),
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> BONE_DIMOND = registerItem(
-            "bone_dimond",
-            (properties) -> new SurgeryBones(properties, BodyCondition.BONE_DIMOND),
-            new Item.Properties()
-                    .stacksTo(16)
+            "bone_dimond", (properties) -> new SurgeryBones(properties, BodyCondition.BONE_DIMOND),
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> BONE_NETHERITE = registerItem(
-            "bone_netherite",
-            (properties) -> new SurgeryBones(properties, BodyCondition.BONE_NETHERITE),
-            new Item.Properties()
-                    .stacksTo(16)
+            "bone_netherite", (properties) -> new SurgeryBones(properties, BodyCondition.BONE_NETHERITE),
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> NALOXONE = registerItem(
-            "naloxone",
-            Naloxone::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            "naloxone", Naloxone::new,
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> MEDICAL_STENT = registerItem(
-            "medical_stent",
-            MedicalStent::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            "medical_stent", MedicalStent::new,
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> TOURNIQUET = registerItem(
-            "tourniquet",
-            Tourniquet::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            "tourniquet", Tourniquet::new,
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> NEEDLE = registerItem(
-            "needle",
-            Needle::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            "needle", Needle::new,
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> DRAINAGE = registerItem(
-            "drainage",
-            Drainage::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            "drainage", Drainage::new,
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> ADRENALINE = registerItem(
-            "adrenaline",
-            Adrenaline::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            "adrenaline", Adrenaline::new,
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> OXYGEN_MASK = registerItem(
-            "oxygen_mask",
-            OxygenMask::new,
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(400)
+            "oxygen_mask", OxygenMask::new,
+            new Item.Properties().stacksTo(1).durability(400)
     );
 
     public static final RegistryObject<Item> ANTIBIOTIC_OINTMENT = registerItem(
-            "antibiotic_ointment",
-            AntibioticOintment::new,
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(4)
-                    .setNoRepair()
+            "antibiotic_ointment", AntibioticOintment::new,
+            new Item.Properties().stacksTo(1).durability(4).setNoRepair()
     );
 
     public static final RegistryObject<Item> ANTISEPTIC_SPRAYER = registerItem(
-            "antiseptic_sprayer",
-            AntisepticSprayer::new,
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(10)
+            "antiseptic_sprayer", AntisepticSprayer::new,
+            new Item.Properties().stacksTo(1).durability(10)
     );
 
     public static final RegistryObject<Item> ANTISEPTIC = registerItem(
-            "antiseptic",
-            Item::new,
-            new Item.Properties()
-                    .stacksTo(64)
+            "antiseptic", Item::new,
+            new Item.Properties().stacksTo(64)
     );
 
     public static final RegistryObject<Item> AUTOPULSE = registerItem(
-            "autopulse",
-            Autopulse::new,
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(400)
+            "autopulse", Autopulse::new,
+            new Item.Properties().stacksTo(1).durability(400)
     );
 
     public static final RegistryObject<Item> ANTIBIOTICS = registerItem(
-            "antibiotics",
-            Antibiotics::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            "antibiotics", Antibiotics::new,
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> HUMAN_HAND = registerItem(
-            "human_hand",
-            HumanHand::new,
-            new Item.Properties()
-                    .stacksTo(1)
+            "human_hand", HumanHand::new,
+            new Item.Properties().stacksTo(1)
     );
 
     public static final RegistryObject<Item> HUMAN_LEG = registerItem(
-            "human_leg",
-            HumanLeg::new,
-            new Item.Properties()
-                    .stacksTo(1)
+            "human_leg", HumanLeg::new,
+            new Item.Properties().stacksTo(1)
     );
 
     public static final RegistryObject<Item> PLASTIC_SKIN = registerItem(
-            "plastic_skin",
-            PlasticSkin::new,
-            new Item.Properties()
-                    .stacksTo(64)
+            "plastic_skin", PlasticSkin::new,
+            new Item.Properties().stacksTo(64)
     );
 
     public static final RegistryObject<Item> ANTIBIOTIC_GLUE = registerItem(
-            "antibiotic_glue",
-            AntibioticGlue::new,
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(4)
+            "antibiotic_glue", AntibioticGlue::new,
+            new Item.Properties().stacksTo(1).durability(4)
     );
 
     public static final RegistryObject<Item> STASIS_BAG = registerItem(
-            "stasis_bag",
-            StasisBag::new,
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(400)
+            "stasis_bag", StasisBag::new,
+            new Item.Properties().stacksTo(1).durability(400)
     );
 
     public static final RegistryObject<Item> WALKING_STICK = registerItem(
-            "walking_stick",
-            Item::new,
-            new Item.Properties()
-                    .stacksTo(2)
+            "walking_stick", Item::new,
+            new Item.Properties().stacksTo(2)
     );
 
     public static final RegistryObject<Item> STRETCHER = registerItem(
-            "stretcher",
-            StretcherItem::new,
-            new Item.Properties()
-                    .stacksTo(1)
+            "stretcher", StretcherItem::new,
+            new Item.Properties().stacksTo(1)
     );
 
     public static final RegistryObject<Item> MANNITOL = registerItem(
-            "mannitol",
-            Mannitol::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            "mannitol", Mannitol::new,
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> AUTO_USE_BAG = registerItem(
-            "auto_use_bag",
-            AutoUseBag::new,
-            new Item.Properties()
-                    .stacksTo(1)
+            "auto_use_bag", AutoUseBag::new,
+            new Item.Properties().stacksTo(1)
     );
 
     public static final RegistryObject<Item> MEDICINE_BAG = registerItem(
-            "medicine_bag",
-            MedicineBag::new,
-            new Item.Properties()
-                    .stacksTo(1)
+            "medicine_bag", MedicineBag::new,
+            new Item.Properties().stacksTo(1)
     );
 
     public static final RegistryObject<Item> HERB_BANDAGE = registerItem(
-            "herb_bandage",
-            HerbBandage::new,
-            new Item.Properties()
-                    .stacksTo(64)
+            "herb_bandage", HerbBandage::new,
+            new Item.Properties().stacksTo(64)
     );
 
     public static final RegistryObject<Item> CLAMP = registerItem(
-            "clamp",
-            Clamp::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            "clamp", Clamp::new,
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> GRASS_STRING = registerItem(
-            "grass_string",
-            Item::new,
-            new Item.Properties()
-                    .stacksTo(64)
+            "grass_string", Item::new,
+            new Item.Properties().stacksTo(64)
     );
 
     public static final RegistryObject<Item> AED = registerItem(
-            "aed",
-            AED::new,
-            new Item.Properties()
-                    .stacksTo(1)
-                    .durability(20)
-                    .setNoRepair()
+            "aed", AED::new,
+            new Item.Properties().stacksTo(1).durability(20).setNoRepair()
     );
 
     public static final RegistryObject<Item> FOOD_CONSUMER = registerItem(
-            "food_consumer",
-            FoodConsumer::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            "food_consumer", FoodConsumer::new,
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> FENTANYL = registerItem(
-            "fentanyl",
-            Fentanyl::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            "fentanyl", Fentanyl::new,
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> HYPERZINE = registerItem(
-            "hyperzine",
-            Hyperzine::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            "hyperzine", Hyperzine::new,
+            new Item.Properties().stacksTo(16)
     );
 
     public static final RegistryObject<Item> HARDENER = registerItem(
-            "hardener",
-            Hardener::new,
-            new Item.Properties()
-                    .stacksTo(16)
+            "hardener", Hardener::new,
+            new Item.Properties().stacksTo(16)
+    );
+
+    public static final RegistryObject<Item> BRAIN = registerItem(
+            "brain", Brain::new,
+            new Item.Properties().stacksTo(1)
+    );
+
+    public static final RegistryObject<Item> EYE = registerItem(
+            "eye", Eye::new,
+            new Item.Properties().stacksTo(1)
+    );
+
+    public static final RegistryObject<Item> HEART = registerItem(
+            "heart", Heart::new,
+            new Item.Properties().stacksTo(1)
+    );
+
+    public static final RegistryObject<Item> KIDNEY = registerItem(
+            "kidney", Kidney::new,
+            new Item.Properties().stacksTo(1)
+    );
+
+    public static final RegistryObject<Item> LIVER = registerItem(
+            "liver", Liver::new,
+            new Item.Properties().stacksTo(1)
+    );
+
+    public static final RegistryObject<Item> LUNGS = registerItem(
+            "lungs", Lungs::new,
+            new Item.Properties().stacksTo(1)
+    );
+
+    public static final RegistryObject<Item> MUSCLE = registerItem(
+            "muscle", Muscle::new,
+            new Item.Properties().stacksTo(1)
+    );
+
+    public static final RegistryObject<Item> NEURO = registerItem(
+            "neuro", Neuro::new,
+            new Item.Properties().stacksTo(1)
+    );
+
+    public static final RegistryObject<Item> SKIN = registerItem(
+            "skin", Skin::new,
+            new Item.Properties().stacksTo(1)
+    );
+
+    public static final RegistryObject<Item> SPINAL_CORD = registerItem(
+            "spinal_cord", SpinalCord::new,
+            new Item.Properties().stacksTo(1)
+    );
+
+    public static final RegistryObject<Item> STOMACH = registerItem(
+            "stomach", Stomach::new,
+            new Item.Properties().stacksTo(1)
     );
 
     public static void register(IEventBus eventBus) {

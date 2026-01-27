@@ -1,6 +1,17 @@
 {
   "values": [
     "dgh:human_hand",
-    "dgh:human_leg"
+    "dgh:human_leg",
+    "dgh:brain",
+    "dgh:eye",
+    "dgh:spinal_cord",
+    "dgh:heart",
+    "dgh:kidney",
+    "dgh:liver",
+    "dgh:lungs",
+    "dgh:stomach",
+    "dgh:muscle",
+    "dgh:neuro",
+    "dgh:skin"
   ]
 }

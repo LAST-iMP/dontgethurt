@@ -3,9 +3,10 @@ package com.lastimp.dgh.source.client.gui.screen;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
-import com.lastimp.dgh.network.message.Network;
+import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.source.client.ClientAccessor;
 import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.client.gui.component.HealthComponentWidget;
@@ -96,10 +97,12 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
                 this.leftPos + x, this.topPos + y, width, height,
                 Component.literal(idx.toString()),
                 (button) -> {
-                    this.onOrgan = this.selectedComponent == idx && healthData != null && healthData.getComponent(idx).abnormal(RETRACTED_SKIN) && !this.onOrgan;
-                    this.selectedComponent = idx;
-                    if (healthData != null)
-                        this.menu.setOrganActive(this.onOrgan, (AbstractVisibleBody) healthData.getComponent(idx));
+                    if (healthData != null) {
+                        boolean onOrgan = this.selectedComponent == idx && healthData.getComponent(idx).abnormal(RETRACTED_SKIN) && !this.onOrgan;
+                        onOrgan &= this.getMenu().targetEntity.equals(ClientAccessor.getPlayerOrThrow().getUUID());
+                        this.setOnOrgan(onOrgan);
+                        this.selectedComponent = idx;
+                    }
                 },
                 idx, resource, resourceLighted
         );
@@ -117,7 +120,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
 
     protected void addHandPulseWidget(int x, int y, int width, int height) {
         var button = Button.builder(Component.empty(), (b) -> {
-            Network.SERVER_INSTANCE.sendToServer(MyHealingItemUseData.getInstance(
+            Common.sendToServer(MyHealingItemUseData.getInstance(
                     this.menu.targetEntity, MyHealingItemUseData.HAND_PULSE, TORSO
             ));
         }).bounds(this.leftPos + x, this.topPos + y, width, height).build();
@@ -252,12 +255,16 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
             return;
         }
         var target = ClientAccessor.getLiving(mc.level, this.menu.targetEntity, mc.player.getEyePosition(), 40);
-        if (target == null || target.isDeadOrDying() || (HealthCapability.isDying(ClientAccessor.getPlayerOrThrow()) && !ClientAccessor.getPlayerOrThrow().hasEffect(ModEffects.ADRENALINE_EFFECT.get()))) {
+        if (target == null || target.isDeadOrDying() || (HealthCapability.isDown(ClientAccessor.getPlayerOrThrow()) && !ClientAccessor.getPlayerOrThrow().hasEffect(ModEffects.ADRENALINE_EFFECT.get()))) {
             GuiOpenWrapper.closeScreen();
-        } else {
-            Network.SERVER_INSTANCE.sendToServer(MyReadAllConditionData.getInstance(
-                    this.menu.targetEntity, 0, null, HEALTH_SCANN
-            ));
+            return;
+        }
+        Common.sendToServer(MyReadAllConditionData.getInstance(
+                this.menu.targetEntity, 0, null, HEALTH_SCANN
+        ));
+
+        if (healthData != null && (this.selectedComponent == null || !healthData.getComponent(this.selectedComponent).abnormal(RETRACTED_SKIN)) && this.onOrgan) {
+            this.setOnOrgan(false);
         }
 
         this.playSound();
@@ -295,6 +302,16 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
     public void setHealthData(HealthCapability healthData) {
         HealthScreen.healthData = healthData;
         if (healthData != null) this.menu.setEquipments(healthData);
+    }
+
+    private void setOnOrgan(boolean onOrgan) {
+        this.onOrgan = onOrgan;
+        this.menu.setOrganActive(onOrgan, (AbstractVisibleBody) healthData.getComponent(this.selectedComponent));
+
+        int componentIndex = this.selectedComponent != null ? onOrgan ? this.selectedComponent.ordinal() : -this.selectedComponent.ordinal() : 0;
+        Common.sendToServer(MyKeyPressedData.getInstance(
+                KeyPressedType.HEALTH_SCREEN_COMPONENT_SELECTION, componentIndex
+        ));
     }
 
     public BodyComponents getSelectedComponent() {

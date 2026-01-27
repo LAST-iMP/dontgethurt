@@ -13,17 +13,18 @@ import static com.lastimp.dgh.api.bodyPart.BodyCondition.HARDENER;
 import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 
 public class OpenWoundHandler {
-    public static void handle(DamageSource source, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
+    public static boolean handle(DamageSource source, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
         float resist = body.getConditionValue(OPEN_WOUND_RES) * Config.resistance_max;
         resist += health.getComponent(BLOOD).getConditionValue(HARDENER) / 2;
         damageAmount *= (1.0f - Math.min(1, resist));
         body.injury(OPEN_WOUND, damageAmount);
         if (body.abnormal(CLAMP_PLATE)) body.setConditionValue(CLAMP_PLATE, BodyCondition.get(CLAMP_PLATE).defaultValue());
         health.addDirectInjury(source.getEntity(), body.getComponent(), Component.literal("撕裂伤"), damageAmount);
+        return damageAmount > 0;
     }
 
     public static void handleEntityAttack(DamageSource source, LivingEntity entity, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
-        handle(source, health, body, damageAmount);
+        if (!handle(source, health, body, damageAmount)) return;
         float damage = body.getConditionValue(OPEN_WOUND) + body.getConditionHidden(OPEN_WOUND);
         FollowInjuryHandler.fractionHandler(body, health, damage);
         FollowInjuryHandler.pneumothoraxHandler(body, health);
@@ -32,7 +33,7 @@ public class OpenWoundHandler {
     }
 
     public static void handleExplosion(DamageSource source, LivingEntity entity, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
-        handle(source, health, body, damageAmount);
+        if (!handle(source, health, body, damageAmount)) return;
         float damage = body.getConditionValue(OPEN_WOUND) + body.getConditionHidden(OPEN_WOUND);
         FollowInjuryHandler.fractionHandler(body, health, damage, Config.baseFractureThreshold, 0.9f - Config.baseFractureThreshold, 0.1f, 1.0f, 0);
         FollowInjuryHandler.pneumothoraxHandler(body, health);

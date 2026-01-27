@@ -6,7 +6,6 @@ import com.lastimp.dgh.source.core.bodyPart.Head;
 import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import com.lastimp.dgh.source.core.menu.component.DynamicItemHandler;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import com.lastimp.dgh.source.register.ModEffects;
 import net.minecraft.nbt.CompoundTag;
@@ -27,7 +26,6 @@ import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 
 public abstract class AbstractVisibleBody extends AbstractBody {
-    private final DynamicItemHandler organ = new DynamicItemHandler(36, 64);
     private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
     private static List<ResourceLocation> ANY_BODY_CONDITIONS;
     private float nextTickBleed;
@@ -57,10 +55,6 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         return ANY_BODY_CONDITIONS;
     }
 
-    public DynamicItemHandler organ() {
-        return this.organ;
-    }
-
     @Override
     public AbstractBody update(HealthCapability health, LivingEntity entity) {
         super.update(health, entity);
@@ -78,17 +72,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         updateBoneEffect(entity);
         handleBoneDamage(health);
         handleBoneDeath();
-        updateOrgan(health, entity);
         return this;
-    }
-
-    private void updateOrgan(HealthCapability health, LivingEntity entity) {
-        for (int i = 0; i < this.organ.getSlots(); i++) {
-            var stack = this.organ().getStackInSlot(i);
-            if (stack.isEmpty()) continue;
-            stack = ((AbstractOrgan)stack.getItem()).update(stack, health, this, entity);
-            this.organ().setStackInSlot(i, stack);
-        }
     }
 
     @Override
@@ -552,14 +536,12 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     public @UnknownNullability CompoundTag serializeNBT() {
         var nbt = super.serializeNBT();
         nbt.putInt("nextFractureTick", this.nextFractureTick);
-        nbt.put("organ", this.organ.serializeNBT());
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         this.nextFractureTick = nbt.getInt("nextFractureTick");
-        this.organ.deserializeNBT(nbt.getCompound("organ"));
         super.deserializeNBT(nbt);
     }
 }

@@ -14,9 +14,7 @@ public enum BodyComponents {
     HEAD,
     TORSO,
 
-    BLOOD,
-
-    WHOLE_BODY;
+    BLOOD;
 
     public static final List<BodyComponents> VISIBLE_BODIES = List.of(
             HEAD, TORSO, LEFT_ARM, RIGHT_ARM, LEFT_LEG, RIGHT_LEG

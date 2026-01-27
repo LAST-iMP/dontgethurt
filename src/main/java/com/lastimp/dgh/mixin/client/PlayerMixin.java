@@ -17,7 +17,7 @@ public class PlayerMixin {
     @Inject(at = @At("HEAD"), method = "updatePlayerPose", cancellable = true)
     private void incapacitatedUpdatePlayerPose(CallbackInfo ci){
         Player player = (Player)(Object)this;
-        if (HealthCapability.has(player) && HealthCapability.isDying(player)) {
+        if (HealthCapability.isDown(player) || HealthCapability.isFootLostDown(player)) {
             if (player.getVehicle() != null) return;
             ci.cancel();
         }

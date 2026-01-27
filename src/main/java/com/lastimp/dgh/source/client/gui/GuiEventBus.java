@@ -2,6 +2,7 @@ package com.lastimp.dgh.source.client.gui;
 
 import com.google.common.collect.ImmutableSet;
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.mixin.client.LocalPlayerAccessor;
 import com.lastimp.dgh.mixin.client.MinecraftAccessor;
 import com.lastimp.dgh.source.client.ClientAccessor;
@@ -39,7 +40,7 @@ public class GuiEventBus {
     @SubscribeEvent
     public static void screenOpen(ScreenEvent.Opening event) {
         Player player = Minecraft.getInstance().player;
-        if (player == null || !HealthCapability.isDying(player)) return;
+        if (player == null || !HealthCapability.isDown(player)) return;
 
         var newScreen = event.getNewScreen();
         if (event.getCurrentScreen() == null) {
@@ -58,7 +59,7 @@ public class GuiEventBus {
     @SubscribeEvent
     public static void onGuiRender(RenderGuiEvent.Pre event) {
         ClientAccessor.getPlayer().ifPresent(player -> {
-            if (HealthCapability.isDying(player)) {
+            if (HealthCapability.isDown(player)) {
                 player.setPose(Pose.SWIMMING);
                 ((LocalPlayerAccessor) player).setHandsBusy(true);
                 ((MinecraftAccessor) Minecraft.getInstance()).setMissTime(2);
@@ -104,10 +105,12 @@ public class GuiEventBus {
                         Component.literal("按下鼠标求救"),
                         graphics.guiWidth() / 2, graphics.guiHeight() / 2 - 50, 0xFFFFFFFF
                 );
-                graphics.drawCenteredString(mc.font,
-                        Component.literal("按住").append(KeyBinding.GIVE_UP.getTranslatedKeyMessage()).append("键5秒放弃治疗"),
-                        graphics.guiWidth() / 2, graphics.guiHeight() / 2 + 15 - 50, 0xFFFFFFFF
-                );
+                if (Config.enable_self_suicide) {
+                    graphics.drawCenteredString(mc.font,
+                            Component.literal("按住").append(KeyBinding.GIVE_UP.getTranslatedKeyMessage()).append("键5秒放弃治疗"),
+                            graphics.guiWidth() / 2, graphics.guiHeight() / 2 + 15 - 50, 0xFFFFFFFF
+                    );
+                }
             }
         });
     }

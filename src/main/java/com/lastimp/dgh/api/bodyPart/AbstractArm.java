@@ -2,6 +2,7 @@ package com.lastimp.dgh.api.bodyPart;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
+import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,6 +34,15 @@ public abstract class AbstractArm extends AbstractExtremities{
     public AbstractBody update(HealthCapability health, LivingEntity entity) {
         super.update(health, entity);
         return this;
+    }
+
+    @Override
+    protected void initOrgan() {
+        super.initOrgan();
+        this.organ().setValidator((slot, stack) -> {
+            if (stack.is(ModTags.ORGAN_ARM)) return true;
+            return false;
+        });
     }
 
     @Override

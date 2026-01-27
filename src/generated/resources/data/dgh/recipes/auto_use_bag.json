@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": {
+      "tag": "minecraft:stone_buttons"
+    },
+    "g": {
+      "item": "minecraft:trapped_chest"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "iii",
+    "bgb",
+    "rir"
+  ],
+  "result": {
+    "item": "dgh:auto_use_bag"
+  },
+  "show_notification": true
+}

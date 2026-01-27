@@ -85,10 +85,10 @@ public class InjuryEventHandler {
             BulletsInjuryHandler.handleBullet(event.getSource(), damageAmount, livingEntity, event);
         } else if (source.is(DamageTypes.STARVE)) {
             handleStarveDamage(event.getSource(), damageAmount, livingEntity, event);
-        } else if (source.getEntity() != null && source.getEntity() instanceof LivingEntity) {
-            handleEntityAttack(event.getSource(), damageAmount, livingEntity, event);
         } else if (source.is(DamageTypes.INDIRECT_MAGIC) || source.is(DamageTypes.MAGIC)) {
             handleMagicDamage(event.getSource(), damageAmount, livingEntity, event);
+        } else if (source.getEntity() != null && source.getEntity() instanceof LivingEntity) {
+            handleEntityAttack(event.getSource(), damageAmount, livingEntity, event);
         }  else if (!source.is(DamageTypes.GENERIC_KILL)) {
             handleDefaultDamage(event.getSource(), damageAmount, livingEntity, event);
         }
@@ -166,7 +166,7 @@ public class InjuryEventHandler {
     public static void handleMagicDamage(DamageSource source, float damageAmount, LivingEntity entity, LivingDamageEvent event) {
         HealthCapability.getAndApply(entity, h -> {
             var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(INJURY_WEIGHT)));
-            InternalInjuryHandler.handleBluntTrauma(source, entity, h, (AbstractVisibleBody) body, damageAmount);
+            InternalInjuryHandler.handle(source, h, (AbstractVisibleBody) body, damageAmount * 1.5f);
         });
         event.setAmount(0f);
     }
