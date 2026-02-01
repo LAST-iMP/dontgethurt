@@ -1,12 +1,12 @@
 
 package com.lastimp.dgh.api.bodyPart;
 
+import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Head;
-import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
@@ -71,11 +71,9 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         handleInternalInjury(entity);
         handleOpenWound(entity);
         handlePassThrough(entity);
-        handleInfection();
         handleFracture(health);
         handleSurgery(health);
-        handleBleeding(health);
-        handleArterialBleeding(health);
+        handleBleeding();
         updateBoneEffect(entity);
         handleBoneDamage(health);
         handleBoneDeath();
@@ -162,7 +160,6 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         if (!this.abnormalWithHidden(BURN)) return;
         this.handleBandageAcc(BURN, Config.bandage_acc);
         this.handleCover(BURN);
-        this.handleFoodAcc(entity, BURN, 1.0f);
         this.handleInjuryInfection(BURN);
         this.handleCombatStimulant(entity, BURN);
 
@@ -172,7 +169,6 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void handleInternalInjury(LivingEntity entity) {
         if (!this.abnormalWithHidden(INTERNAL_INJURY)) return;
-        this.handleFoodAcc(entity, INTERNAL_INJURY, 1.0f);
         this.handleCombatStimulant(entity, INTERNAL_INJURY);
 
         this.nextTickBleed += this.getCondition(INTERNAL_INJURY).getValue() * Config.internal_bleed_ratio;
@@ -182,7 +178,6 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         if (!this.abnormalWithHidden(OPEN_WOUND)) return;
         this.handleBandageAcc(OPEN_WOUND, Config.bandage_acc);
         this.handleCover(OPEN_WOUND);
-        this.handleFoodAcc(entity, OPEN_WOUND, 1.0f);
         this.handleInjuryInfection(OPEN_WOUND);
         this.handleCombatStimulant(entity, OPEN_WOUND);
 
@@ -194,7 +189,6 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         if (!this.abnormalWithHidden(PASS_THROUGH)) return;
         this.handleBandageAcc(PASS_THROUGH, Config.bandage_acc);
         this.handleCover(PASS_THROUGH);
-        this.handleFoodAcc(entity, PASS_THROUGH, 1.0f);
         this.handleInjuryInfection(PASS_THROUGH);
         this.handleCombatStimulant(entity, PASS_THROUGH);
 
@@ -219,38 +213,38 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
     }
 
-    protected void handleFoodAcc(LivingEntity entity, ResourceLocation condition, float acc) {
+    public void handleFoodAcc(LivingEntity entity, ResourceLocation condition, float acc, float consume) {
         if (!this.abnormalWithHidden(condition)) return;
         if (!(entity instanceof ServerPlayer player)) return;
 
         var food = player.getFoodData();
-        if (food.getFoodLevel() < 19) return;
-        var state = this.getCondition(condition);
-        if (BodyCondition.get(condition).healingTS() < state.getTotalValue()) return;
+        if (food.getFoodLevel() < 16) return;
 
         if (this.abnormalOnlyHidden(condition)) {
             this.healingHidden(condition, - BodyCondition.get(condition).healingSpeed() * DELTA * acc);
         } else {
             this.healing(condition, - BodyCondition.get(condition).healingSpeed() * DELTA * acc);
         }
+        food.addExhaustion(consume);
     }
 
     private void handleInjuryInfection(ResourceLocation condition) {
         ConditionState state = this.getCondition(condition);
+        float factor = this.countOrganMatch(ModTags.SKIN) > 0 ? 1 : 3;
         if (isBadBandaged()) {
-            this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * DELTA * 4 * state.getTotalValue());
+            this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * DELTA * 3 * state.getTotalValue() * factor);
         } else if (!isBandaged() && !isHerbed()) {
-            this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * DELTA * state.getTotalValue());
+            this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * DELTA * state.getTotalValue() * factor);
         }
     }
 
-    private void handleInfection() {
+    public void cureInfection(float factor) {
         if (this.abnormal(OINTMENT))
-            this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * 3 * DELTA);
+            this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * 3 * DELTA * factor);
         else if (this.isBandaged() || isHerbed())
-            this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * 2 * DELTA);
+            this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * 2 * DELTA * factor);
         else if (!this.isBadBandaged())
-            this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * DELTA);
+            this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * DELTA * factor);
     }
 
     private void handleCombatStimulant(LivingEntity entity, ResourceLocation condition) {
@@ -279,10 +273,6 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         Head head = (Head) health.getComponent(HEAD);
         float factor = health.safeSurgery() ? 0.1f : 1;
         if (this.abnormal(SURGERY_INCISION)) {
-            if (!this.abnormal(CLAMPED_BLEEDING)) {
-                Blood blood = (Blood) health.getComponent(BLOOD);
-                blood.addConditionValue(BLOOD_LOSS, 0.007f * DELTA);
-            }
             head.injury(TRAUMATIC_SHOCK, 0.02f * DELTA * factor);
         }
         if (this.abnormal(RETRACTED_SKIN))
@@ -293,20 +283,8 @@ public abstract class AbstractVisibleBody extends AbstractBody {
             head.injury(TRAUMATIC_SHOCK, 0.015f * DELTA * factor);
     }
 
-    private void handleBleeding(HealthCapability health) {
-        if (this.abnormal(CLAMPED_BLEEDING))
-            this.nextTickBleed = 0;
+    private void handleBleeding() {
         this.getCondition(BLEED).setValue(this.nextTickBleed);
-
-        Blood blood = (Blood) health.getComponent(BLOOD);
-        blood.addConditionValue(BLOOD_LOSS, this.nextTickBleed * DELTA * Config.bleed_volume_ratio);
-    }
-
-    private void handleArterialBleeding(HealthCapability health) {
-        if (this.abnormal(ARTERIAL_BLEEDING) && !this.abnormal(CLAMPED_ARTERIES)) {
-            var blood = health.getComponent(BLOOD);
-            blood.injury(BLOOD_LOSS, Config.fractureBloodRatio * DELTA);
-        }
     }
 
     public boolean canHurtBone() {
@@ -323,6 +301,9 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
         if (blood.abnormal(SEPSIS)) {
             this.injury(BONE_DAMAGE, blood.getConditionValue(SEPSIS) * 2 * BodyCondition.get(BONE_DAMAGE).healingSpeed() * DELTA);
+        }
+        if (!health.haveKidney()) {
+            this.injury(BONE_DAMAGE, blood.getConditionValue(SEPSIS) * 4 * BodyCondition.get(BONE_DAMAGE).healingSpeed() * DELTA);
         }
     }
 

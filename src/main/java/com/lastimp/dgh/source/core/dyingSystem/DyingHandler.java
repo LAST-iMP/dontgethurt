@@ -4,23 +4,30 @@ import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.tags.ModDamageType;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_LOSS;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BURN;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.INTERNAL_INJURY;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.OPEN_WOUND;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 @EventBusSubscriber(modid = DontGetHurt.MODID)
@@ -29,18 +36,51 @@ public class DyingHandler {
     public static void onEntityTick(EntityTickEvent.Pre event) {
         if (event.getEntity().level().isClientSide) return;
         if (!(event.getEntity() instanceof LivingEntity livingEntity)) return;
-        if (livingEntity instanceof Player) return;
         if (!HealthCapability.has(livingEntity)) return;
 
         if (!event.getEntity().level().isClientSide) {
             if (HealthCapability.isDown(livingEntity)) {
+                if (livingEntity instanceof Player player && player.isFallFlying()) player.stopFallFlying();
                 if (livingEntity.isSleeping()) livingEntity.stopSleeping();
                 livingEntity.stopUsingItem();
             }
         }
     }
 
+    @SubscribeEvent
+    public static void onLivingDeath(LivingDeathEvent event) {
+        var entity = event.getEntity();
+        if (!HealthCapability.has(entity)) return;
+        HealthCapability.getAndApply(entity, h -> {
+            h.addOriginOrganOnDeath(entity);
+            h.deserializeNBT(entity.registryAccess(), h.deathSerializeNBT(entity.registryAccess()));
+        });
+
+        if (!(event.getEntity() instanceof Player player)) return;
+        var data = player.getPersistentData();
+        var persistedTag = data.getCompound(Player.PERSISTED_NBT_TAG);
+        HealthCapability.getAndApply(player, h ->
+                persistedTag.put(HealthCapability.HEALTH_RECORD, h.deathSerializeNBT(entity.registryAccess()))
+        );
+        data.put(Player.PERSISTED_NBT_TAG, persistedTag);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        var player = event.getEntity();
+        var data = player.getPersistentData();
+        var persistedTag = data.getCompound(Player.PERSISTED_NBT_TAG);
+        HealthCapability.getAndApply(player, newHealth ->
+                newHealth.respawnDeserializeNBT(player.registryAccess(), persistedTag.getCompound(HealthCapability.HEALTH_RECORD))
+        );
+        persistedTag.remove(HealthCapability.HEALTH_RECORD);
+        data.put(Player.PERSISTED_NBT_TAG, persistedTag);
+    }
+
     public static void setLivingDead(LivingEntity entity) {
+        if (entity instanceof ServerPlayer player) {
+            if (checkTotemDeathProtection(player)) return;
+        }
         HealthCapability.getAndApply(entity, h -> {
             if (!h.oxygenMask().getStackInSlot(0).isEmpty()) {
                 Utils.drop(h.oxygenMask().getStackInSlot(0), entity);
@@ -58,7 +98,7 @@ public class DyingHandler {
                 source = lastDamageSource.getEntity();
                 directSource = lastDamageSource.getDirectEntity();
             }
-            h.addOriginOrganOnDeath(entity);
+            entity.setHealth(0.05f);
             entity.hurt(new DamageSource(getKillerDamageType(entity, h), source, directSource),1);
         });
     }
@@ -110,5 +150,34 @@ public class DyingHandler {
             return damageType.getOrThrow(ModDamageType.OPEN_WOUND_DAMAGE);
         }
         return damageType.getOrThrow(ModDamageType.INTERNAL_INJURY_DAMAGE);
+    }
+
+    private static boolean checkTotemDeathProtection(ServerPlayer player) {
+        ItemStack itemstack = null;
+        for (InteractionHand interactionhand : InteractionHand.values()) {
+            ItemStack itemstack1 = player.getItemInHand(interactionhand);
+            DamageSource source = player.level().damageSources().genericKill();
+            if (itemstack1.is(Items.TOTEM_OF_UNDYING) && CommonHooks.onLivingUseTotem(player, source, itemstack1, interactionhand)) {
+                itemstack = itemstack1.copy();
+                itemstack1.shrink(1);
+                break;
+            }
+        }
+        if (itemstack == null) return false;
+
+        if (player instanceof ServerPlayer serverplayer) {
+            serverplayer.awardStat(Stats.ITEM_USED.get(Items.TOTEM_OF_UNDYING), 1);
+            CriteriaTriggers.USED_TOTEM.trigger(serverplayer, itemstack);
+            player.gameEvent(GameEvent.ITEM_INTERACT_FINISH);
+        }
+
+        HealthCapability.getAndApply(player, h -> h.healingAll(true));
+        player.setHealth(player.getMaxHealth());
+        player.removeEffectsCuredBy(net.neoforged.neoforge.common.EffectCures.PROTECTED_BY_TOTEM);
+        player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
+        player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
+        player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
+        player.level().broadcastEntityEvent(player, (byte)35);
+        return true;
     }
 }

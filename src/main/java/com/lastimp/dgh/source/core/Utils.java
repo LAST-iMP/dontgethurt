@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -88,6 +89,14 @@ public abstract class Utils {
             if (HealthCapability.has(livingEntity))
                 return livingEntity;
         return null;
+    }
+
+    public static boolean checkPlayerInvincible(ServerPlayer player) {
+        return player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative() || player.isSpectator();
+    }
+
+    public static float sqrtFactor(float x, float q) {
+        return (float) ((1 + q) * x / (q + Math.sqrt(x)));
     }
 
     public static float randomBetween(float min, float max) {

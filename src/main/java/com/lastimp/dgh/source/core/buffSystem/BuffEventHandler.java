@@ -39,10 +39,7 @@ public class BuffEventHandler {
     }
 
     private static void updateDyingEffects(LivingEntity entity) {
-        var isDown = HealthCapability.isDown(entity) || HealthCapability.isFootLostDown(entity);
         var isDying = HealthCapability.isDying(entity);
-        if (isDying || isDown)
-            entity.addEffect(new MobEffectInstance(MobEffects.JUMP, 19, -10));
         if (isDying && Config.player_glowing)
             entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 19));
     }

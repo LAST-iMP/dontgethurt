@@ -21,7 +21,6 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -29,6 +28,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -132,16 +132,7 @@ public class ClientInputEventHandler {
     }
 
     @SubscribeEvent
-    public static void playerTick(PlayerTickEvent.Pre event) {
-        if (HealthCapability.isDown(event.getEntity()) || HealthCapability.isFootLostDown(event.getEntity()))
-            event.getEntity().setPose(Pose.SWIMMING);
-    }
-
-    @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Post event) {
-        if (HealthCapability.isDown(event.getEntity()) || HealthCapability.isFootLostDown(event.getEntity()))
-            event.getEntity().setPose(Pose.SWIMMING);
-
         ClientAccessor.getPlayer().ifPresent(player -> {
             if (!event.getEntity().getUUID().equals(player.getUUID()) || !Config.enable_self_suicide) return;
 
@@ -155,6 +146,13 @@ public class ClientInputEventHandler {
             }
         });
         callForHelpTick--;
+    }
+
+    @SubscribeEvent
+    public static void onMovementInput(MovementInputUpdateEvent event) {
+        if (HealthCapability.isDown(event.getEntity())) {
+            event.getInput().jumping = false;
+        }
     }
 
     @SubscribeEvent

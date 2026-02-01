@@ -128,7 +128,7 @@ public class InjuryEventHandler {
     public static void handleDrowning(DamageSource source, LivingEntity entity, LivingDamageEvent.Pre event) {
         HealthCapability.getAndApply(entity, h -> {
             Blood blood = (Blood) h.getComponent(BLOOD);
-            blood.injury(OXYGEN, BodyCondition.get(OXYGEN).healingSpeed());
+            blood.injury(OXYGEN, BodyCondition.get(OXYGEN).healingSpeed() * h.bloodOxygenFactor());
             h.addDirectInjury(source.getEntity(), blood.getComponent(), BodyCondition.get(OXYGEN).getComponent(), BodyCondition.get(OXYGEN).healingSpeed());
         });
         event.setNewDamage(0f);

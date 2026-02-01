@@ -45,7 +45,7 @@ public class DynamicItemHandler implements IItemHandlerModifiable, INBTSerializa
     public ItemStack insertItem(int i, ItemStack itemStack, boolean simulate) {
         if (!isItemValid(i, itemStack)) return itemStack;
         if (!simulate) {
-            stacks[i] = itemStack.copyWithCount(1);
+            this.setStackInSlot(i, itemStack.copyWithCount(1));
         }
         return ItemStack.EMPTY;
     }

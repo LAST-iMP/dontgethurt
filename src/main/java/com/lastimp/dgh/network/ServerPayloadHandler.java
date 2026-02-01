@@ -8,7 +8,7 @@ import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
 import com.lastimp.dgh.network.message.MyKeyPressedData;
 import com.lastimp.dgh.network.message.MyReadAllConditionData;
-import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
+import com.lastimp.dgh.source.core.dyingSystem.DyingHandler;
 import com.lastimp.dgh.source.core.menu.BagMenu;
 import com.lastimp.dgh.source.core.menu.HealthMenu;
 import com.lastimp.dgh.source.core.Utils;
@@ -17,7 +17,6 @@ import com.lastimp.dgh.source.core.healingSystem.HealingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.UUID;
@@ -53,7 +52,7 @@ public class ServerPayloadHandler {
                             MenuOpenWrapper.openMenu(player.getInventory().getItem(data.index()), player);
                             break;
                         case GIVE_UP:
-                            PlayerDyingHandler.setPlayerDead(player);
+                            DyingHandler.setLivingDead(player);
                             break;
                         case CALL_FOR_HELP:
                             player.getServer().getPlayerList().getPlayers().forEach(p -> {

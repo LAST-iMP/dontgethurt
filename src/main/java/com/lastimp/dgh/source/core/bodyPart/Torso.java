@@ -45,6 +45,7 @@ public class Torso extends AbstractVisibleBody {
 
     private boolean heartStable = true;
     private int nextPneumothoraxTick = 1800;
+    private int additionAir = 0;
 
     public static void addCondition(Collection<ResourceLocation> key) {
         uniqueConditions.addAll(key);
@@ -77,10 +78,7 @@ public class Torso extends AbstractVisibleBody {
     @Override
     protected void initOrgan() {
         super.initOrgan();
-        this.organ().setValidator((slot, stack) -> {
-            if (stack.is(ModTags.ORGAN_TORSO)) return true;
-            return false;
-        });
+        this.organ().addAllowed(ModTags.ORGAN_TORSO);
     }
 
     @Override
@@ -100,10 +98,15 @@ public class Torso extends AbstractVisibleBody {
         super.update(health, entity);
         this.handleAnalgesia(entity);
         this.handleRespiratoryArrest(health);
-        this.handleAorticRupture(health);
         this.handlePneumothorax();
         this.handleFibrillation(health, entity);
         return this;
+    }
+
+    @Override
+    protected void updateOrgan(HealthCapability health, LivingEntity entity) {
+        this.additionAir = 0;
+        super.updateOrgan(health, entity);
     }
 
     @Override
@@ -123,6 +126,11 @@ public class Torso extends AbstractVisibleBody {
 
         updateWoodBoneEffect();
         updateNetheriteBoneEffect();
+    }
+
+    @Override
+    public int organ1BaseLevel() {
+        return 6;
     }
 
     private void updateWoodBoneEffect() {
@@ -173,16 +181,10 @@ public class Torso extends AbstractVisibleBody {
                 blood.getConditionValue(OXYGEN) > 0.7 ||
                 head.getConditionValue(TRAUMATIC_SHOCK) > 0.3 ||
                 head.getConditionValue(BRAIN_DAMAGE) > 1 ||
-                blood.getConditionValue(OPIATE_OVERDOSE) > 0.5
+                blood.getConditionValue(OPIATE_OVERDOSE) > 0.5 ||
+                this.countOrganMatch(ModTags.LUNGS) < 1
         ) {
             this.injury(RESPIRATORY_ARREST, BodyCondition.get(RESPIRATORY_ARREST).maxValue());
-        }
-    }
-
-    private void handleAorticRupture(HealthCapability health) {
-        if (this.abnormal(AORTIC_RUPTURE)) {
-            var blood = health.getComponent(BLOOD);
-            blood.injury(BLOOD_LOSS, Config.fractureBloodRatio * 3 * DELTA);
         }
     }
 
@@ -294,4 +296,11 @@ public class Torso extends AbstractVisibleBody {
         return heartStable;
     }
 
+    public int additionAir() {
+        return additionAir;
+    }
+
+    public void setAdditionAir(int additionAir) {
+        this.additionAir = additionAir;
+    }
 }

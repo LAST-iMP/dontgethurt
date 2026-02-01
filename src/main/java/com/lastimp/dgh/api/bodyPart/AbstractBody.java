@@ -35,10 +35,14 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     public static final int ORGAN_2_END = 24;
     public static final int ORGAN_3_START = 24;
     public static final int ORGAN_3_END = 36;
-    private final DynamicValidItemHandler organ = new DynamicValidItemHandler(36, 64);
-
-    private final HashMap<ResourceLocation, ConditionState> state = new HashMap<>();
     private static final HashMap<String, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> handlers = new LinkedHashMap<>();
+
+    private final DynamicValidItemHandler organ = new DynamicValidItemHandler(36, 64);
+    private final HashMap<ResourceLocation, ConditionState> state = new HashMap<>();
+
+    private int organ1Level = 0;
+    private int organ2Level = 0;
+    private int organ3Level = 0;
 
     public AbstractBody() {
         for (var condition : this.getBodyConditions()) {
@@ -67,6 +71,16 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     }
 
     protected void initOrgan() {
+        this.organ.setValidator((index, itemStack) -> {
+            if (index < ORGAN_1_END) {
+                return index < this.organ1Level();
+            } else if (index < ORGAN_2_END) {
+                return index - ORGAN_2_START < organ2Level();
+            } else if (index < ORGAN_3_END) {
+                return index - ORGAN_3_START < organ3Level();
+            }
+            return false;
+        });
         this.organ.addAllowed(ModTags.ORGAN);
     }
 
@@ -84,8 +98,8 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     protected void insertOrganIfMissing(int start, int end, int require, LivingEntity livingEntity, TagKey<Item> tag, ItemStack defaultItem) {
         for (int i = 0; i < require; i++) {
-            if (this.countOrganMatch(tag) < i + 1 && start + i < end) {
-                var remaining = this.organ().insertTo(start + i, end, defaultItem);
+            if (this.countOrganMatch(tag) < i + 1) {
+                var remaining = this.organ().insertTo(start, end, defaultItem);
                 if (!remaining.isEmpty() && livingEntity != null) {
                     Utils.drop(remaining, livingEntity);
                 }
@@ -161,7 +175,8 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         return this;
     }
 
-    private void updateOrgan(HealthCapability health, LivingEntity entity) {
+    protected void updateOrgan(HealthCapability health, LivingEntity entity) {
+        this.resetOrganAdditionLevel();
         for (int i = 0; i < this.organ.getSlots(); i++) {
             var stack = this.organ().getStackInSlot(i);
             if (stack.isEmpty()) continue;
@@ -181,14 +196,10 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         }
     }
 
-    protected List<ResourceLocation> getNoHealingConditions() {
-        return List.of();
-    }
-
     private void selfHealing() {
         for (var key : this.getBodyConditions()) {
+            if (!BodyCondition.selfHealing.contains(key)) continue;
             if (!this.abnormal(key)) continue;
-            if (this.getNoHealingConditions().contains(key)) continue;
             var condition = BodyCondition.get(key);
             if (this.getConditionValue(key) < condition.healingTS() + EPS)
                 this.healing(key, - condition.healingSpeed() * DELTA);
@@ -246,6 +257,9 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
             tag.put(key.toString(), state.serializeNBT(provider));
         }
         tag.put("organ", this.organ.serializeNBT(provider));
+        tag.putInt("organ1Level", this.organ1Level);
+        tag.putInt("organ2Level", this.organ2Level);
+        tag.putInt("organ3Level", this.organ3Level);
         return tag;
     }
 
@@ -263,11 +277,68 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
             }
         }
         this.organ.deserializeNBT(provider, nbt.getCompound("organ"));
+        this.organ1Level = nbt.getInt("organ1Level");
+        this.organ2Level = nbt.getInt("organ2Level");
+        this.organ3Level = nbt.getInt("organ3Level");
     }
 
     public static <T extends AbstractBody> AbstractBody buildFromNBT(HolderLookup.Provider provider, CompoundTag nbt, Supplier<T> constructor) {
         T body = constructor.get();
         body.deserializeNBT(provider, nbt);
         return body;
+    }
+
+    protected int organ1BaseLevel() {
+        return 2;
+    }
+
+    protected int organ2BaseLevel() {
+        return 0;
+    }
+
+    protected int organ3BaseLevel() {
+        return 0;
+    }
+
+    public int organ1AdditionLevel() {
+        return organ1Level;
+    }
+
+    public void resetOrganAdditionLevel() {
+        this.setOrgan1AdditionLevel(0);
+        this.setOrgan2AdditionLevel(0);
+        this.setOrgan3AdditionLevel(0);
+    }
+
+    public void setOrgan1AdditionLevel(int organ1Level) {
+        this.organ1Level = organ1Level;
+    }
+
+    public int organ2AdditionLevel() {
+        return organ2Level;
+    }
+
+    public void setOrgan2AdditionLevel(int organ2Level) {
+        this.organ2Level = organ2Level;
+    }
+
+    public int organ3AdditionLevel() {
+        return organ3Level;
+    }
+
+    public void setOrgan3AdditionLevel(int organ3Level) {
+        this.organ3Level = organ3Level;
+    }
+
+    public final int organ1Level() {
+        return this.organ1AdditionLevel() + this.organ1BaseLevel();
+    }
+
+    public final int organ2Level() {
+        return this.organ2AdditionLevel() + this.organ2BaseLevel();
+    }
+
+    public final int organ3Level() {
+        return this.organ3AdditionLevel() + this.organ3BaseLevel();
     }
 }

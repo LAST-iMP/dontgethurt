@@ -31,10 +31,7 @@ public abstract class AbstractLeg extends AbstractExtremities{
     @Override
     protected void initOrgan() {
         super.initOrgan();
-        this.organ().setValidator((slot, stack) -> {
-            if (stack.is(ModTags.ORGAN_LEG)) return true;
-            return false;
-        });
+        this.organ().addAllowed(ModTags.ORGAN_LEG);
     }
 
     @Override

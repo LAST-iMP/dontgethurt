@@ -2,6 +2,7 @@ package com.lastimp.dgh.mixin;
 
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,6 +23,14 @@ public class EntityMixin {
     private void isControlledByLocalInstance(CallbackInfoReturnable<Boolean> cir) {
         if ((Entity) (Object) this instanceof Mob mob && !(mob.getControllingPassenger() instanceof Player)) {
             cir.setReturnValue(!mob.level().isClientSide() && !mob.isNoAi());
+        }
+    }
+
+    @Inject(method = "getMaxAirSupply", at = @At("RETURN"), cancellable = true)
+    private void getMaxAirSupply(CallbackInfoReturnable<Integer> cir) {
+        if ((Entity) (Object)this instanceof LivingEntity livingEntity) {
+            if (livingEntity.getEntityData() == null) return;
+            HealthCapability.getAndApply(livingEntity, h -> cir.setReturnValue(h.maxAirSupply()));
         }
     }
 }

@@ -58,9 +58,14 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
     @Override
     public void addOriginOrgan(LivingEntity livingEntity, boolean newEntity) {
         if (!newEntity) return;
-        this.insertOrganIfMissing(0, ORGAN_1_END, livingEntity, ModTags.SKIN, ModItems.SKIN.get().getDefaultInstance());
-        this.insertOrganIfMissing(1, ORGAN_1_END, livingEntity, ModTags.MUSCLE, ModItems.MUSCLE.get().getDefaultInstance());
-        this.insertOrganIfMissing(2, ORGAN_1_END, livingEntity, ModTags.NEURO, ModItems.NEURO.get().getDefaultInstance());
+        this.insertOrganIfMissing(0, ORGAN_1_END, livingEntity, ModTags.NEURO, ModItems.NEURO.get().getDefaultInstance());
+        this.insertOrganIfMissing(1, ORGAN_1_END, livingEntity, ModTags.SKIN, ModItems.SKIN.get().getDefaultInstance());
+        this.insertOrganIfMissing(2, ORGAN_1_END, livingEntity, ModTags.MUSCLE, ModItems.MUSCLE.get().getDefaultInstance());
+    }
+
+    @Override
+    public int organ1BaseLevel() {
+        return 2;
     }
 
     public boolean available(HealthCapability health) {

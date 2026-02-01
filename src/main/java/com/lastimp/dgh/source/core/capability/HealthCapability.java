@@ -24,6 +24,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -60,9 +61,11 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     private int autoPulseCoolDown = 0;
     private boolean abnormal = true;
     public LivingEntity currentHealer = null;
+    private boolean haveKidney = true;
 
     private int armBreak = 0;
     private int availableEye = 2;
+    private int maxAirSupply = 300;
     private boolean leftArmVisible = true;
     private boolean rightArmVisible = true;
     private boolean leftLegVisible = true;
@@ -92,7 +95,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     }
 
     public static <T> T getAndApply(LivingEntity entity, Function<HealthCapability, T> function, T orElse) {
-        var result = HealthCapability.get(entity).map(function::apply).orElse(orElse);
+        var result = HealthCapability.get(entity).map(function).orElse(orElse);
         entity.syncData(ModCapabilities.HEALTH);
         return result;
     }
@@ -185,12 +188,14 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.outerHealing = Math.max(0, this.outerHealing - this.outerHealingDelta);
         this.outerHealingDelta = this.outerHealing <= 0 ? 0 : this.outerHealingDelta + 1.0f / Config.health_shield_redu / 20;
         this.isInfected = this.body.isInfected();
+        this.haveKidney = this.getComponent(TORSO).countOrganMatch(ModTags.KIDNEY) > 1;
 
         this.leftArmVisible = updateIfDirty(AbstractExtremities.visible(this, LEFT_ARM), this.leftArmVisible);
         this.rightArmVisible = updateIfDirty(AbstractExtremities.visible(this, RIGHT_ARM), this.rightArmVisible);
         this.leftLegVisible = updateIfDirty(AbstractExtremities.visible(this, LEFT_LEG), this.leftLegVisible);
         this.rightLegVisible = updateIfDirty(AbstractExtremities.visible(this, RIGHT_LEG), this.rightLegVisible);
         this.availableEye = updateIfDirty(this.getComponent(HEAD).countOrganMatch(ModTags.EYE), this.availableEye);
+        this.maxAirSupply = updateIfDirty(((Torso)this.getComponent(TORSO)).additionAir() + 150, this.maxAirSupply);
         this.abnormal = this.body.abnormal();
         if (!this.abnormal) {
             this.directInjury.clear();
@@ -264,6 +269,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         tag.putBoolean("leftLegVisible", this.leftLegVisible);
         tag.putBoolean("rightLegVisible", this.rightLegVisible);
         tag.putBoolean("isDown", this.isDown);
+        tag.putInt("maxAirSupply", this.maxAirSupply);
         return tag;
     }
 
@@ -310,6 +316,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.leftLegVisible = nbt.getBoolean("leftLegVisible");
         this.rightLegVisible = nbt.getBoolean("rightLegVisible");
         this.isDown = nbt.getBoolean("isDown");
+        this.maxAirSupply = nbt.getInt("maxAirSupply");
     }
 
     public void respawnDeserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
@@ -319,7 +326,6 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        if (nbt == null) return;
         this.body.deserializeNBT(provider, nbt.getCompound("body"));
         this.vitality = nbt.getFloat("playerVitality");
         this.livingTick = nbt.getLong("livingTick");
@@ -354,18 +360,17 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     }
 
     public static boolean isFootLostDown(LivingEntity entity) {
-        return HealthCapability.getAndApply(entity, h -> {
-            return !h.rightLegVisible && !h.leftLegVisible;
-        }, false);
+        return HealthCapability.getAndApply(entity, h -> !h.rightLegVisible && !h.leftLegVisible, false);
     }
 
     public static boolean isDown(LivingEntity entity) {
-        if (isDying(entity)) return true;
-        if (entity.hasEffect(ModEffects.ANALGESIA_POISON_EFFECT)) return true;
         return HealthCapability.getAndApply(entity, h -> {
             if (entity.level().isClientSide()){
                 return h.isDown;
             } else {
+                if (entity instanceof ServerPlayer player && Utils.checkPlayerInvincible(player)) return false;
+                if (isDying(entity)) return true;
+                if (entity.hasEffect(ModEffects.ANALGESIA_POISON_EFFECT)) return true;
                 if (h.getComponent(HEAD).getConditionValue(COMA) > 0.5f) return true;
                 if (h.isFrozen()) return true;
                 return false;
@@ -375,6 +380,14 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     public static boolean isDying(LivingEntity entity) {
         return entity.getHealth() < 0.05 && !entity.isDeadOrDying();
+    }
+
+    public float bloodOxygenFactor() {
+        return 300.f / this.maxAirSupply;
+    }
+
+    public boolean canEat() {
+        return this.getComponent(TORSO).countOrganMatch(ModTags.STOMACH) > 0;
     }
 
     public boolean safeSurgery() {
@@ -423,6 +436,10 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         return this.isInfected;
     }
 
+    public boolean haveKidney() {
+        return haveKidney;
+    }
+
     public DynamicItemHandler oxygenMask() {
         return oxygenMask;
     }
@@ -461,6 +478,10 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     public UUID lastHealer() {
         return lastHealer;
+    }
+
+    public int maxAirSupply() {
+        return this.maxAirSupply;
     }
 
     public boolean isFrozen() {
