@@ -4,7 +4,8 @@
   "refmap": "dgh.refmap.json",
   "mixins": [
     "LivingEntityMixin",
-    "EntityMixin"
+    "EntityMixin",
+    "PlayerMixin"
   ],
   "client": [
     "client.LocalPlayerAccessor",

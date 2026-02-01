@@ -4,12 +4,11 @@ package com.lastimp.dgh.source.core.healingSystem;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.config.HealthLivingEntityList;
+import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.dyingSystem.DyingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -29,10 +28,10 @@ public class HealingEventHandler {
 
         HealthCapability.getAndApply(livingEntity, h -> {
             h = h.update(livingEntity);
-            if (!(livingEntity instanceof ServerPlayer player)) {
-                updateLivingHealth(h, livingEntity);
+            if (livingEntity instanceof ServerPlayer player && Utils.checkPlayerInvincible(player)) {
+                player.setHealth(player.getMaxHealth());
             } else {
-                updatePlayerHealth(h, player);
+                updateLivingHealth(h, livingEntity);
             }
             h.SYNIfDirty(livingEntity);
         });
@@ -47,20 +46,6 @@ public class HealingEventHandler {
             entity.setHealth(0.01f);
         } else if (!entity.isDeadOrDying()){
             DyingHandler.setLivingDead(entity);
-        }
-    }
-
-    private static void updatePlayerHealth(HealthCapability health, ServerPlayer player) {
-        float maxHealth = getHealthWithOuterHealing(health, player);
-        if (player.level().getDifficulty() == Difficulty.PEACEFUL || player.gameMode.isCreative() || player.isSpectator()) {
-            player.setHealth(player.getMaxHealth());
-        } else if (maxHealth > 0) {
-            if ((int)maxHealth != (int)player.getHealth())
-                player.setHealth(maxHealth);
-        } else if (canLieDown(maxHealth, player)) {
-            player.setHealth(0.01f);
-        } else if (!player.isDeadOrDying()){
-            PlayerDyingHandler.setPlayerDead(player);
         }
     }
 

@@ -49,16 +49,13 @@ public class Head extends AbstractVisibleBody {
     @Override
     protected void initOrgan() {
         super.initOrgan();
-        this.organ().setValidator((slot, stack) -> {
-            if (stack.is(ModTags.ORGAN_HEAD)) return true;
-            return false;
-        });
+        this.organ().addAllowed(ModTags.ORGAN_HEAD);
     }
 
     @Override
     public void addOriginOrgan(LivingEntity livingEntity, boolean newEntity) {
-        this.insertOrganIfMissing(0, ORGAN_1_END, livingEntity, ModTags.BRAIN, ModItems.BRAIN.get().getDefaultInstance());
-        this.insertOrganIfMissing(1, ORGAN_1_END, livingEntity, ModTags.SPINAL_CORD, ModItems.SPINAL_CORD.get().getDefaultInstance());
+        this.insertOrganIfMissing(0, ORGAN_1_END, livingEntity, ModTags.SPINAL_CORD, ModItems.SPINAL_CORD.get().getDefaultInstance());
+        this.insertOrganIfMissing(1, ORGAN_1_END, livingEntity, ModTags.BRAIN, ModItems.BRAIN.get().getDefaultInstance());
         if (!newEntity)
             this.insertOrganIfMissing(2, ORGAN_1_END, livingEntity, ModTags.EYE, ModItems.EYE.get().getDefaultInstance());
         else
@@ -108,6 +105,11 @@ public class Head extends AbstractVisibleBody {
         return Config.baseFractureThreshold + 0.2f;
     }
 
+    @Override
+    public int organ1BaseLevel() {
+        return 4;
+    }
+
     private void handleWithdraw(HealthCapability health) {
         if (!this.abnormal(WITHDRAW)) return;
 
@@ -143,6 +145,9 @@ public class Head extends AbstractVisibleBody {
         }
         if (this.countOrganMatch(ModTags.BRAIN) < 1) {
             brain_damage += 0.1f;
+        }
+        if (!health.haveKidney()) {
+            brain_damage += 0.002f;
         }
         //更新 自然回复
         if (brain_damage > 0) {

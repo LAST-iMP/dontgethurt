@@ -29,6 +29,12 @@ public class DynamicValidItemHandler extends DynamicItemHandler implements Itera
         return super.isItemValid(slot, stack);
     }
 
+    @Override
+    public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (!this.isItemValid(slot, this.getStackInSlot(slot))) return ItemStack.EMPTY;
+        return super.extractItem(slot, amount, simulate);
+    }
+
     public ItemStack insertTo(int begin, int end, ItemStack stack) {
         for (int i = begin; i < end && i < this.getSlots(); i++) {
             var old = this.getStackInSlot(i);
@@ -39,9 +45,16 @@ public class DynamicValidItemHandler extends DynamicItemHandler implements Itera
         return stack;
     }
 
-    public void clear() {
-        for (int i = 0; i < this.getSlots(); i++) {
-            this.setStackInSlot(i, ItemStack.EMPTY);
+    public void reorder(int begin, int end) {
+        int notEmpty = begin;
+        for (int empty = begin; empty < end && empty < this.getSlots() && notEmpty < end && notEmpty < this.getSlots(); empty++) {
+            if (!this.getStackInSlot(empty).isEmpty()) continue;
+            for (notEmpty = Math.max(empty + 1, notEmpty); notEmpty < end && notEmpty < this.getSlots(); notEmpty++) {
+                var target = this.getStackInSlot(notEmpty);
+                if (target.isEmpty()) continue;
+                this.setStackInSlot(empty, target);
+                this.setStackInSlot(notEmpty, ItemStack.EMPTY);
+            }
         }
     }
 }

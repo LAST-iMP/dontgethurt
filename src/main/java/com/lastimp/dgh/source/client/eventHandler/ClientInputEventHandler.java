@@ -26,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -146,6 +147,13 @@ public class ClientInputEventHandler {
             }
         });
         callForHelpTick--;
+    }
+
+    @SubscribeEvent
+    public static void onMovementInput(MovementInputUpdateEvent event) {
+        if (HealthCapability.isDown(event.getEntity())) {
+            event.getInput().jumping = false;
+        }
     }
 
     @SubscribeEvent

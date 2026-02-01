@@ -39,10 +39,7 @@ public abstract class AbstractArm extends AbstractExtremities{
     @Override
     protected void initOrgan() {
         super.initOrgan();
-        this.organ().setValidator((slot, stack) -> {
-            if (stack.is(ModTags.ORGAN_ARM)) return true;
-            return false;
-        });
+        this.organ().addAllowed(ModTags.ORGAN_ARM);
     }
 
     @Override

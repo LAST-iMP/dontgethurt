@@ -1,6 +1,5 @@
 package com.lastimp.dgh.source.core.menu.component;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -45,7 +44,7 @@ public class DynamicItemHandler implements IItemHandlerModifiable, INBTSerializa
     public ItemStack insertItem(int i, ItemStack itemStack, boolean simulate) {
         if (!isItemValid(i, itemStack)) return itemStack;
         if (!simulate) {
-            stacks[i] = itemStack.copyWithCount(1);
+            this.setStackInSlot(i, itemStack.copyWithCount(1));
         }
         return ItemStack.EMPTY;
     }

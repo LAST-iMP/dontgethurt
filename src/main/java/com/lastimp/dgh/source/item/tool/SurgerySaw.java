@@ -9,7 +9,6 @@ import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.dyingSystem.DyingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import com.lastimp.dgh.source.core.dyingSystem.PlayerDyingHandler;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -113,14 +112,12 @@ public class SurgerySaw extends AbstractPartlyHealItem {
     }
 
     private boolean sawHead(LivingEntity source, LivingEntity entity) {
-        if (!(entity instanceof ServerPlayer player)) {
-            DyingHandler.setLivingDead(entity);
-        } else {
+        if (entity instanceof ServerPlayer player) {
             ItemStack head = new ItemStack(Items.PLAYER_HEAD);
             head.getOrCreateTag().put("SkullOwner", NbtUtils.writeGameProfile(new CompoundTag(), player.getGameProfile()));
             Utils.drop(head, source);
-            PlayerDyingHandler.setPlayerDead(player);
         }
+        DyingHandler.setLivingDead(entity);
         return true;
     }
 

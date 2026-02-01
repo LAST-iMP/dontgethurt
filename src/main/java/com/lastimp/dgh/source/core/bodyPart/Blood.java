@@ -28,13 +28,9 @@ public class Blood extends AbstractBody {
     private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
     private static List<ResourceLocation> BLOOD_CONDITIONS;
 
-    public Blood() {
-        super();
-    }
-
-    public Blood(Void v) {
-        this();
-    }
+    private float bloodLost;
+    private boolean oxygenLost;
+    private float sepsis;
 
     public static void addCondition(Collection<ResourceLocation> key) {
         uniqueConditions.addAll(key);
@@ -104,13 +100,23 @@ public class Blood extends AbstractBody {
     }
 
     private void handleBloodVolume(HealthCapability health) {
-        if (!this.abnormalWithHidden(BLOOD_LOSS)) return;
-        var value = this.getConditionValue(BLOOD_LOSS);
+        this.bloodLost = 0;
+        for (var component : VISIBLE_BODIES) {
+            AbstractVisibleBody body = (AbstractVisibleBody) health.getComponent(component);
+            if (body.abnormal(SURGERY_INCISION) && !body.abnormal(CLAMPED_BLEEDING))
+                this.bloodLost += 0.007f;
+            if (body.abnormal(ARTERIAL_BLEEDING) && !body.abnormal(CLAMPED_ARTERIES))
+                this.bloodLost += Config.fractureBloodRatio;
+            if (body instanceof Torso torso && torso.abnormal(AORTIC_RUPTURE))
+                this.bloodLost += Config.fractureBloodRatio * 3;
+            if (body.abnormal(BLEED))
+                this.bloodLost += body.getConditionValue(BLEED) * Config.bleed_volume_ratio;
+        }
+        this.injury(BLOOD_LOSS, this.bloodLost * DELTA);
 
-        if (this.isBleeding(health)) return;
-        var bloodLoss = BodyCondition.get(BLOOD_LOSS);
-        if (value > bloodLoss.defaultValue() + EPS)
-            this.healing(BLOOD_LOSS, -bloodLoss.healingSpeed() * DELTA);
+        float blood_loss_healing = BodyCondition.get(BLOOD_LOSS).healingSpeed();
+        blood_loss_healing = Math.max(0, blood_loss_healing - bloodLost * 2);
+        this.healing(BLOOD_LOSS, -blood_loss_healing * DELTA);
     }
 
     private boolean isBleeding(HealthCapability health) {
@@ -123,7 +129,7 @@ public class Blood extends AbstractBody {
     }
 
     private void handleOxygen(HealthCapability health, LivingEntity entity) {
-        boolean oxygenLost = false;
+        this.oxygenLost = false;
         var bloodLoss = this.getConditionValue(BLOOD_LOSS);
         if (bloodLoss > 0.4) {
             if (this.getConditionValue(OXYGEN) < (bloodLoss - 0.4f)) {
@@ -176,6 +182,7 @@ public class Blood extends AbstractBody {
     }
 
     private void handleSepsis(HealthCapability health) {
+        this.sepsis = 0;
         float infection = 0;
         float gangrene = 0;
         float foreign_object = 0;
@@ -186,20 +193,10 @@ public class Blood extends AbstractBody {
                 gangrene += extremities.getConditionValue(GANGRENE);
             foreign_object += body.getConditionValue(FOREIGN_OBJECT);
         }
-        Blood blood = (Blood) health.getComponent(BLOOD);
-        if (infection > 0.5f) {
-            blood.addConditionValue(SEPSIS, 2 * infection * BodyCondition.get(SEPSIS).healingSpeed() * DELTA);
-        }
-        if (gangrene > 0.15f) {
-            blood.addConditionValue(SEPSIS, 2 * gangrene * BodyCondition.get(SEPSIS).healingSpeed() * DELTA);
-        }
-        if (foreign_object > 0.15f) {
-            blood.addConditionValue(SEPSIS, 2 * foreign_object * BodyCondition.get(SEPSIS).healingSpeed() * DELTA);
-        }
-
-        if (this.abnormal(ANTIBIOTICS) && this.getConditionValue(OXYGEN) < 0.3f && this.getConditionValue(BLOOD_PRESSURE) > 0.7f) {
-            this.healing(SEPSIS, -BodyCondition.get(SEPSIS).healingSpeed() * DELTA * 2);
-        }
+        this.sepsis += infection * BodyCondition.get(SEPSIS).healingSpeed() / 0.5f;
+        this.sepsis += gangrene * BodyCondition.get(SEPSIS).healingSpeed() / 0.15f;
+        this.sepsis += foreign_object * BodyCondition.get(SEPSIS).healingSpeed() / 0.15f;
+        health.getComponent(BLOOD).injury(SEPSIS, this.sepsis * DELTA);
     }
 
     private void handleCombatStimulant(HealthCapability health, LivingEntity entity) {
@@ -207,5 +204,17 @@ public class Blood extends AbstractBody {
         this.healing(BLOOD_LOSS, -0.02f * DELTA);
         var head = health.getComponent(HEAD);
         head.healing(WITHDRAW, -0.02f * DELTA);
+    }
+
+    public float bloodLost() {
+        return this.bloodLost;
+    }
+
+    public boolean oxygenLost() {
+        return oxygenLost;
+    }
+
+    public float sepsis() {
+        return sepsis;
     }
 }

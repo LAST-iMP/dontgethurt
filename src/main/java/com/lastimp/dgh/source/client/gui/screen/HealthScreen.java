@@ -50,6 +50,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
     protected static final ResourceLocation HUD_HEART_BEAT_ACC = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud_acc.png");
     protected static final ResourceLocation HUD_HEART_BEAT_ACC2 = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud_acc2.png");
     protected static final ResourceLocation HUD_HEART_BEAT_STOP = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/heart_beat_hud_stop.png");
+    protected static final ResourceLocation SLOT_DISABLE_MASK = Common.ResourceLocation(DontGetHurt.MODID, "textures/gui/slot_disable_mask.png");
 
     protected static final int PANEL_WIDTH = 256;   // 面板宽度
     protected static final int PANEL_HEIGHT = 215;  // 面板高度
@@ -210,6 +211,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
 
         guiGraphics.blit(this.getHudBackground(), panelX, panelY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT);
         this.renderHeartBeat(guiGraphics);
+        this.renderDisableSlots(guiGraphics);
     }
 
     @Override
@@ -242,9 +244,38 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
             guiGraphics.setColor(0.0F, (float) i / max_width, 0.0F, 1.0F);
             guiGraphics.blit(heartBeat, panelX + location, panelY, 0, location, 0, 1, HEART_BEAT_HEIGHT, HEART_BEAT_WIDTH, HEART_BEAT_HEIGHT);
         }
-
         guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.disableBlend();
+    }
+
+    protected void renderDisableSlots(GuiGraphics guiGraphics) {
+        if (this.menu.getBag() == null) {
+            for (int row = 0; row < 9; row++) {
+                guiGraphics.blit(SLOT_DISABLE_MASK, this.leftPos + 233, this.topPos + 21 + row * 18, 0, 0, 18, 18, 18, 18);
+            }
+        }
+        if (this.onOrgan) {
+            for (int row = 0; row < 2; ++row) {
+                for (int col = 0; col < 6; ++col) {
+                    int index = row * 6 + col + 1;
+                    if (index > healthData.getComponent(this.selectedComponent).organ1Level())
+                        renderDisableSlot(guiGraphics, this.leftPos + 103 + col * 18, this.topPos + 11 + row * 18);
+                    if (index > healthData.getComponent(this.selectedComponent).organ2Level())
+                        renderDisableSlot(guiGraphics, this.leftPos + 103 + col * 18, this.topPos + 48 + row * 18);
+                    if (index > healthData.getComponent(this.selectedComponent).organ3Level())
+                        renderDisableSlot(guiGraphics, this.leftPos + 103 + col * 18, this.topPos + 85 + row * 18);
+                }
+            }
+        }
+    }
+
+    private void renderDisableSlot(GuiGraphics guiGraphics, int x, int y) {
+        guiGraphics.blit(SLOT_DISABLE_MASK, x, y,
+                0,      // blitOffset
+                0f, 0f, // uOffset, vOffset
+                18, 18, // regionWidth, regionHeight = 整个纹理
+                18, 18  // textureWidth, textureHeight
+        );
     }
 
     @Override

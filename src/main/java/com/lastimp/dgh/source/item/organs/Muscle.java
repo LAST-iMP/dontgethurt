@@ -1,9 +1,45 @@
 package com.lastimp.dgh.source.item.organs;
 
+import com.lastimp.dgh.api.bodyPart.AbstractBody;
 import com.lastimp.dgh.api.bodyPart.AbstractOrgan;
+import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.api.tags.ModTags;
+import com.lastimp.dgh.source.core.Utils;
+import com.lastimp.dgh.source.core.capability.HealthCapability;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+
+import java.util.List;
+
+import static com.lastimp.dgh.DontGetHurt.DELTA;
+import static com.lastimp.dgh.api.bodyPart.BodyCondition.INTERNAL_INJURY;
 
 public class Muscle extends AbstractOrgan {
     public Muscle(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public ItemStack update(ItemStack stack, HealthCapability health, AbstractBody body, LivingEntity entity) {
+        AbstractVisibleBody visibleBody = (AbstractVisibleBody) body;
+        int num = visibleBody.countOrganMatch(ModTags.MUSCLE);
+        float factor = Utils.sqrtFactor(num, 1f) / num;
+
+        var condition = BodyCondition.get(INTERNAL_INJURY);
+        if (body.abnormal(INTERNAL_INJURY) && body.getConditionValue(INTERNAL_INJURY) < condition.healingTS() * num * factor) {
+            body.healing(INTERNAL_INJURY, -BodyCondition.get(INTERNAL_INJURY).healingSpeed() * DELTA * factor);
+        }
+        return stack;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.add(Component.literal("提供"));
+        tooltipComponents.add(Component.literal("·基础内伤恢复").withStyle(ChatFormatting.BLUE));
     }
 }
