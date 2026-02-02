@@ -55,6 +55,11 @@ public class Blood extends AbstractBody {
     }
 
     @Override
+    public BodyComponents getBodyType() {
+        return BLOOD;
+    }
+
+    @Override
     public Component getComponent() {
         return Component.literal("血液");
     }

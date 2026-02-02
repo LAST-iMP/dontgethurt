@@ -4,7 +4,7 @@ import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.core.damageSystem.InjuryEventHandler;
-import com.lastimp.dgh.source.core.damageSystem.PassThroughHandler;
+import com.lastimp.dgh.source.core.damageSystem.subHandler.PassThroughHandler;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;

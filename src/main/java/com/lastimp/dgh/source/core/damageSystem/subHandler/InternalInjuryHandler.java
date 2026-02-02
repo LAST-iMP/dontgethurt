@@ -1,32 +1,20 @@
-package com.lastimp.dgh.source.core.damageSystem;
+package com.lastimp.dgh.source.core.damageSystem.subHandler;
 
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.source.core.damageSystem.FollowInjuryHandler;
+import com.lastimp.dgh.source.core.damageSystem.InjuryHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.HARDENER;
-import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 
 public abstract class InternalInjuryHandler {
     public static boolean handle(DamageSource source, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
-        float block = Math.min(damageAmount, body.getConditionHidden(INTERNAL_RES));
-        damageAmount -= block;
-        body.addConditionHidden(INTERNAL_RES, -block);
-
-        float resist = body.getConditionValue(INTERNAL_RES) * Config.resistance_max;
-        resist += health.getComponent(BLOOD).getConditionValue(HARDENER) / 2;
-        damageAmount *= (1.0f - Math.min(1, resist));
-
-        body.injury(INTERNAL_INJURY, damageAmount);
-        if (body.abnormal(CLAMP_PLATE)) body.setConditionValue(CLAMP_PLATE, BodyCondition.get(CLAMP_PLATE).defaultValue());
-        health.addDirectInjury(source.getEntity(), body.getComponent(), Component.literal("内伤"), damageAmount);
-        return damageAmount > 0;
+        return InjuryHandler.handle(source.getEntity(), health, body, INTERNAL_INJURY, INTERNAL_RES, Component.literal("内伤"), damageAmount);
     }
 
     public static void handleBluntTrauma(DamageSource source, LivingEntity entity, HealthCapability health, AbstractVisibleBody body, float damageAmount) {

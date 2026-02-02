@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh.source.core.damageSystem;
 
+import com.lastimp.dgh.api.event.EventHooks;
 import com.lastimp.dgh.compact.TaZC.BulletsInjuryHandler;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
@@ -12,6 +13,11 @@ import com.lastimp.dgh.config.HealthLivingEntityList;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Blood;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.source.core.damageSystem.subHandler.BurnHandler;
+import com.lastimp.dgh.source.core.damageSystem.subHandler.InternalInjuryHandler;
+import com.lastimp.dgh.source.core.damageSystem.subHandler.OpenWoundHandler;
+import com.lastimp.dgh.source.core.damageSystem.subHandler.PassThroughHandler;
+import net.minecraft.network.chat.Component;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -68,6 +74,9 @@ public class InjuryEventHandler {
             else
                 damageAmount *= HealthLivingEntityList.getEntityDownResist(livingEntity.getType(), HealthLivingEntityList.ENV_RESIST);
         }
+
+        var dghHealthDamageEvent = EventHooks.fireDghHealthDamageEvent(source, event.getAmount(), damageAmount);
+        damageAmount = dghHealthDamageEvent.newDamage();
 
         if (source.is(DamageTypeTags.IS_FALL)) {
             handleFalling(event.getSource(), damageAmount, livingEntity, event);
@@ -128,8 +137,7 @@ public class InjuryEventHandler {
     public static void handleDrowning(DamageSource source, LivingEntity entity, LivingDamageEvent event) {
         HealthCapability.getAndApply(entity, h -> {
             Blood blood = (Blood) h.getComponent(BLOOD);
-            blood.injury(OXYGEN, BodyCondition.get(OXYGEN).healingSpeed() * h.bloodOxygenFactor());
-            h.addDirectInjury(source.getEntity(), blood.getComponent(), BodyCondition.get(OXYGEN).getComponent(), BodyCondition.get(OXYGEN).healingSpeed());
+            InjuryHandler.handleDirect(source.getEntity(), h, blood, OXYGEN, Component.literal("低血氧"), BodyCondition.get(OXYGEN).healingSpeed() * h.bloodOxygenFactor());
         });
         event.setAmount(0f);
     }

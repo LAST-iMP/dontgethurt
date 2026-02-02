@@ -2,6 +2,7 @@
 package com.lastimp.dgh.source.core.bodyPart;
 
 import com.lastimp.dgh.api.bodyPart.AbstractArm;
+import com.lastimp.dgh.api.enums.BodyComponents;
 import net.minecraft.network.chat.Component;
 
 public class RightArm extends AbstractArm {
@@ -10,6 +11,11 @@ public class RightArm extends AbstractArm {
     @Override
     public String getShortID() {
         return ID;
+    }
+
+    @Override
+    public BodyComponents getBodyType() {
+        return BodyComponents.RIGHT_ARM;
     }
 
     @Override

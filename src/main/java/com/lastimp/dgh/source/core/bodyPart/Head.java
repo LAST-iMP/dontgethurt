@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh.source.core.bodyPart;
 
+import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.api.bodyPart.AbstractBody;
@@ -18,10 +19,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
-import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
-import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.BRAIN_DAMAGE;
+import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public class Head extends AbstractVisibleBody {
     private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
@@ -39,6 +39,11 @@ public class Head extends AbstractVisibleBody {
     @Override
     public String getShortID() {
         return "E3CC1481-FF2D-4F65-AFCC";
+    }
+
+    @Override
+    public BodyComponents getBodyType() {
+        return HEAD;
     }
 
     @Override
