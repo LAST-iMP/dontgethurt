@@ -339,7 +339,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
         this.onOrgan = onOrgan;
         this.menu.setOrganActive(onOrgan, (AbstractVisibleBody) healthData.getComponent(this.selectedComponent));
 
-        int componentIndex = this.selectedComponent != null ? onOrgan ? this.selectedComponent.ordinal() : -this.selectedComponent.ordinal() : 0;
+        int componentIndex = this.selectedComponent != null ? onOrgan ? (this.selectedComponent.ordinal() + 1) : -(this.selectedComponent.ordinal() + 1) : 0;
         Common.sendToServer(MyKeyPressedData.getInstance(
                 KeyPressedType.HEALTH_SCREEN_COMPONENT_SELECTION, componentIndex
         ));
