@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
+import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 
@@ -29,17 +30,17 @@ public class Stomach extends AbstractOrgan {
     public ItemStack update(ItemStack stack, HealthCapability health, AbstractBody body, LivingEntity entity) {
         Torso torso = (Torso) health.getComponent(TORSO);
         int num = torso.countOrganMatch(ModTags.STOMACH);
-        float factor = Utils.sqrtFactor(num, 1f) / num;
+        float factor = Utils.sqrtFactor(num, 1f) / num * 9;
 
         BodyComponents.VISIBLE_BODIES.stream().map(health::getComponent).forEach(visibleBody -> {
             if (visibleBody.abnormalWithHidden(BURN))
-                ((AbstractVisibleBody) visibleBody).handleFoodAcc(entity, BURN, factor, 1.5f);
+                ((AbstractVisibleBody) visibleBody).handleFoodAcc(entity, BURN, factor, 1.5f * DELTA);
             if (visibleBody.abnormalWithHidden(OPEN_WOUND))
-                ((AbstractVisibleBody) visibleBody).handleFoodAcc(entity, OPEN_WOUND, factor, 1.5f);
+                ((AbstractVisibleBody) visibleBody).handleFoodAcc(entity, OPEN_WOUND, factor, 1.5f * DELTA);
             if (visibleBody.abnormalWithHidden(PASS_THROUGH))
-                ((AbstractVisibleBody) visibleBody).handleFoodAcc(entity, PASS_THROUGH, factor, 3);
+                ((AbstractVisibleBody) visibleBody).handleFoodAcc(entity, PASS_THROUGH, factor, 3 * DELTA);
             if (visibleBody.abnormalWithHidden(INTERNAL_INJURY))
-                ((AbstractVisibleBody) visibleBody).handleFoodAcc(entity, INTERNAL_INJURY, factor, 1);
+                ((AbstractVisibleBody) visibleBody).handleFoodAcc(entity, INTERNAL_INJURY, factor, 1 * DELTA);
         });
         return stack;
     }
