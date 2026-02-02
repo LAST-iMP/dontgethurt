@@ -19,7 +19,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -62,7 +61,6 @@ public class GuiEventBus {
     public static void onGuiRender(RenderGuiEvent.Pre event) {
         ClientAccessor.getPlayer().ifPresent(player -> {
             if (HealthCapability.isDown(player)) {
-                player.setPose(Pose.SWIMMING);
                 ((LocalPlayerAccessor) player).setHandsBusy(true);
                 ((MinecraftAccessor) Minecraft.getInstance()).setMissTime(2);
                 onDying = true;

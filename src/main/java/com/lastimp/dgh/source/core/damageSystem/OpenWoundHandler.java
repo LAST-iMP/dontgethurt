@@ -14,6 +14,10 @@ import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 
 public class OpenWoundHandler {
     public static boolean handle(DamageSource source, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
+        float block = Math.min(damageAmount, body.getConditionHidden(OPEN_WOUND_RES));
+        damageAmount -= block;
+        body.addConditionHidden(OPEN_WOUND_RES, -block);
+
         float resist = body.getConditionValue(OPEN_WOUND_RES) * Config.resistance_max;
         resist += health.getComponent(BLOOD).getConditionValue(HARDENER) / 2;
         damageAmount *= (1.0f - Math.min(1, resist));

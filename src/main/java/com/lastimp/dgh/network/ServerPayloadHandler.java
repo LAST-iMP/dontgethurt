@@ -66,7 +66,10 @@ public class ServerPayloadHandler {
                 case HEALTH_SCREEN_COMPONENT_SELECTION:
                     if (player.containerMenu instanceof HealthMenu healthMenu) {
                         HealthCapability.getAndApply(player, h -> {
-                            var component = BodyComponents.values()[Math.abs(data.index())];
+                            var component = BodyComponents.HEAD;
+                            if (data.index() != 0) {
+                                component = BodyComponents.values()[Math.abs(data.index()) - 1];
+                            }
                             healthMenu.setOrganActive(data.index() > 0, (AbstractVisibleBody) h.getComponent(component));
                         });
                     }

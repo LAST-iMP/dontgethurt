@@ -74,8 +74,8 @@ public class WholeBody implements INBTSerializable<CompoundTag> {
         return Mth.clamp(slowDown, 0, 19);
     }
 
-    public void addOriginOrganOnDeath(LivingEntity livingEntity) {
-        VISIBLE_BODIES.stream().map(this::getComponent).forEach(body -> body.addOriginOrgan(livingEntity, false));
+    public void addOriginOrgan(LivingEntity livingEntity, boolean newEntity) {
+        VISIBLE_BODIES.stream().map(this::getComponent).forEach(body -> body.addOriginOrgan(livingEntity, newEntity));
     }
 
     public void healingAll(boolean healPain) {
