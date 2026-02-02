@@ -1,7 +1,7 @@
 package com.lastimp.dgh.source.item.tool;
 
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 
 public class Scalpel extends AbstractPartlyHealItem {
     private static final Set<ResourceLocation> discover = new HashSet<>();
@@ -32,13 +32,13 @@ public class Scalpel extends AbstractPartlyHealItem {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             if (body.abnormal(SURGERY_INCISION)) return false;
 
-            body.setConditionValue(SURGERY_INCISION, BodyCondition.get(SURGERY_INCISION).maxValue());
+            body.setConditionValue(SURGERY_INCISION, ConditionAccessor.get(SURGERY_INCISION).maxValue());
             if (body.abnormal(HERB_BANDAGED))
                 body.injury(INFECTION, 0.25f);
 
             for (var key : discover) {
                 body.setConditionValue(key, body.getConditionHidden(key) + body.getConditionValue(key));
-                body.setConditionHidden(key, BodyCondition.get(key).defaultValue());
+                body.setConditionHidden(key, ConditionAccessor.get(key).defaultValue());
             }
             return true;
         }, false);

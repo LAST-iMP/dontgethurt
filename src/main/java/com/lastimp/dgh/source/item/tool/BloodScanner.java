@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh.source.item.tool;
 
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.source.core.bodyPart.Blood;
@@ -14,8 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.bloodConditions;
 
 public class BloodScanner extends AbstractHealingItem {
     public BloodScanner(Properties properties) {
@@ -45,7 +44,7 @@ public class BloodScanner extends AbstractHealingItem {
     public static void scanHealth(Player player, HealthCapability health, String name) {
         Blood blood = (Blood) health.getComponent(BodyComponents.BLOOD);
         boolean hasAbnormal = false;
-        for (var condition : bloodConditions) {
+        for (var condition : ConditionAccessor.bloodConditions) {
             float value = blood.getConditionValue(condition);
             if (blood.abnormal(condition)) {
                 if (!hasAbnormal)

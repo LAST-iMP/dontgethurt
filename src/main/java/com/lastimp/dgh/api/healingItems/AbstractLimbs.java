@@ -1,15 +1,14 @@
 package com.lastimp.dgh.api.healingItems;
 
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.RETRACTED_SKIN;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.SURGICAL_AMPUTATION;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.RETRACTED_SKIN;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.SURGICAL_AMPUTATION;
 
 public abstract class AbstractLimbs extends AbstractPartlyHealItem {
     public AbstractLimbs(Properties properties) {
@@ -22,7 +21,7 @@ public abstract class AbstractLimbs extends AbstractPartlyHealItem {
             AbstractVisibleBody body = (AbstractVisibleBody) h.getComponent(component);
             if (!body.abnormal(SURGICAL_AMPUTATION)) return false;
             if (!body.abnormal(RETRACTED_SKIN)) return false;
-            body.healing(SURGICAL_AMPUTATION, -BodyCondition.get(SURGICAL_AMPUTATION).maxValue());
+            body.healing(SURGICAL_AMPUTATION, -ConditionAccessor.get(SURGICAL_AMPUTATION).maxValue());
             this.addLimb(h, body);
             return true;
         }, false);

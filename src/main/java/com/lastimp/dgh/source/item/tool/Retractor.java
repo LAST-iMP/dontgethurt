@@ -1,7 +1,7 @@
 package com.lastimp.dgh.source.item.tool;
 
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -14,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.CLAMPED_BLEEDING;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.RETRACTED_SKIN;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.CLAMPED_BLEEDING;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.RETRACTED_SKIN;
 
 public class Retractor extends AbstractPartlyHealItem {
     public Retractor(Properties properties) {
@@ -29,7 +29,7 @@ public class Retractor extends AbstractPartlyHealItem {
             if (!body.abnormal(CLAMPED_BLEEDING)) return false;
             if (body.abnormal(RETRACTED_SKIN)) return false;
 
-            body.setConditionValue(RETRACTED_SKIN, BodyCondition.get(RETRACTED_SKIN).maxValue());
+            body.setConditionValue(RETRACTED_SKIN, ConditionAccessor.get(RETRACTED_SKIN).maxValue());
             return true;
         }, false);
     }

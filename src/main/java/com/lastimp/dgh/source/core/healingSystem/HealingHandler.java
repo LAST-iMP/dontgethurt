@@ -1,6 +1,6 @@
 package com.lastimp.dgh.source.core.healingSystem;
 
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
@@ -28,8 +28,8 @@ import oshi.util.tuples.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BRAIN_DAMAGE;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BRAIN_DAMAGE;
 import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
 
 public class HealingHandler {

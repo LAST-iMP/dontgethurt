@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
 

@@ -1,7 +1,7 @@
 
 package com.lastimp.dgh.source.core.bodyPart;
 
-import com.lastimp.dgh.api.bodyPart.AbstractArm;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractArm;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import net.minecraft.network.chat.Component;
 

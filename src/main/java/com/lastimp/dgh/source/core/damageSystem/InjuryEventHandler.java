@@ -1,12 +1,12 @@
 
 package com.lastimp.dgh.source.core.damageSystem;
 
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.event.EventHooks;
 import com.lastimp.dgh.compact.TaZC.BulletsInjuryHandler;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModDamageType;
 import com.lastimp.dgh.config.HealthLivingEntityList;
@@ -28,7 +28,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.LEGS;
 
@@ -137,7 +137,7 @@ public class InjuryEventHandler {
     public static void handleDrowning(DamageSource source, LivingEntity entity, LivingDamageEvent.Pre event) {
         HealthCapability.getAndApply(entity, h -> {
             Blood blood = (Blood) h.getComponent(BLOOD);
-            InjuryHandler.handleDirect(source.getEntity(), h, blood, OXYGEN, Component.literal("低血氧"), BodyCondition.get(OXYGEN).healingSpeed() * h.bloodOxygenFactor());
+            InjuryHandler.handleDirect(source.getEntity(), h, blood, OXYGEN, Component.literal("低血氧"), ConditionAccessor.get(OXYGEN).healingSpeed() * h.bloodOxygenFactor());
         });
         event.setNewDamage(0f);
     }

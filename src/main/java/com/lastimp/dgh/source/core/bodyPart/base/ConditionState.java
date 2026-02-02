@@ -1,5 +1,5 @@
 
-package com.lastimp.dgh.api.bodyPart;
+package com.lastimp.dgh.source.core.bodyPart.base;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;

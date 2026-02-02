@@ -15,8 +15,8 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_LOSS;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BLOOD_LOSS;
 
 
 @EventBusSubscriber(modid = DontGetHurt.MODID)

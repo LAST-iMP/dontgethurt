@@ -1,6 +1,7 @@
-package com.lastimp.dgh.api.bodyPart;
+package com.lastimp.dgh.source.core.bodyPart.base;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -12,8 +13,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import static com.lastimp.dgh.DontGetHurt.EPS;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BONE_NETHERITE;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BONE_WOOD;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BONE_NETHERITE;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BONE_WOOD;
 
 public abstract class AbstractLeg extends AbstractExtremities{
     private AttributeInstance move_speed;
@@ -49,7 +50,7 @@ public abstract class AbstractLeg extends AbstractExtremities{
         if (uuid_bone_wood == null)
             uuid_bone_wood = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_WOOD);
 
-        if (this.getConditionHidden(BONE_WOOD) > BodyCondition.get(BONE_WOOD).maxValue() - EPS) {
+        if (this.getConditionHidden(BONE_WOOD) > ConditionAccessor.get(BONE_WOOD).maxValue() - EPS) {
             if (move_speed != null && move_speed.getModifier(uuid_bone_wood) == null)
                 move_speed.addPermanentModifier(new AttributeModifier(
                         uuid_bone_wood,
@@ -66,7 +67,7 @@ public abstract class AbstractLeg extends AbstractExtremities{
         if (uuid_bone_netherite == null)
             uuid_bone_netherite = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
 
-        if (this.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS) {
+        if (this.getConditionHidden(BONE_NETHERITE) > ConditionAccessor.get(BONE_NETHERITE).maxValue() - EPS) {
             if (jump_strength != null && jump_strength.getModifier(uuid_bone_netherite) == null)
                 jump_strength.addPermanentModifier(new AttributeModifier(
                         uuid_bone_netherite,

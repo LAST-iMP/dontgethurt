@@ -1,6 +1,7 @@
 
-package com.lastimp.dgh.api.bodyPart;
+package com.lastimp.dgh.source.core.bodyPart.base;
 
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.source.core.Utils;
@@ -47,7 +48,7 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     public AbstractBody() {
         for (var condition : this.getBodyConditions()) {
-            state.put(condition, new ConditionState(BodyCondition.get(condition).defaultValue()));
+            state.put(condition, new ConditionState(ConditionAccessor.get(condition).defaultValue()));
         }
         this.initOrgan();
         this.addOriginOrgan(null, true);
@@ -120,7 +121,7 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     public void setConditionValue(ResourceLocation key, float value) {
         ConditionState state = this.state.get(key);
-        BodyCondition condition = BodyCondition.get(key);
+        BodyCondition condition = ConditionAccessor.get(key);
         state.setValue(Mth.clamp(value, condition.minValue(), condition.maxValue()));
     }
 
@@ -135,7 +136,7 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     public void setConditionHidden(ResourceLocation key, float value) {
         ConditionState state = this.state.get(key);
-        BodyCondition condition = BodyCondition.get(key);
+        BodyCondition condition = ConditionAccessor.get(key);
         state.setHiddenValue(Mth.clamp(value, condition.minValue(), condition.maxValue()));
     }
 
@@ -201,9 +202,9 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     private void selfHealing() {
         for (var key : this.getBodyConditions()) {
-            if (!BodyCondition.selfHealing.contains(key)) continue;
+            if (!ConditionAccessor.selfHealing.contains(key)) continue;
             if (!this.abnormal(key)) continue;
-            var condition = BodyCondition.get(key);
+            var condition = ConditionAccessor.get(key);
             if (this.getConditionValue(key) < condition.healingTS() + EPS)
                 this.healing(key, - condition.healingSpeed() * DELTA);
         }
@@ -215,19 +216,19 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     public boolean abnormalOnlyHidden(ResourceLocation key) {
         if (!this.getBodyConditions().contains(key)) return false;
-        var condition = BodyCondition.get(key);
+        var condition = ConditionAccessor.get(key);
         return condition.abnormal(this.getCondition(key).getHiddenValue());
     }
 
     public boolean abnormal(ResourceLocation key) {
         if (!this.getBodyConditions().contains(key)) return false;
-        var condition = BodyCondition.get(key);
+        var condition = ConditionAccessor.get(key);
         return condition.abnormal(this.getConditionValue(key));
     }
 
     public boolean abnormal() {
         for (var key : this.state.keySet()) {
-            var condition = BodyCondition.get(key);
+            var condition = ConditionAccessor.get(key);
             if (condition.isInjury() || condition.isPain())
                 if (this.abnormalWithHidden(key)) return true;
         }
@@ -236,7 +237,7 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     public void healingAll(boolean healPain) {
         this.getBodyConditions().forEach(key -> {
-            var condition = BodyCondition.get(key);
+            var condition = ConditionAccessor.get(key);
             if (condition.isInjury() || (condition.isPain() && healPain)) {
                 this.setConditionValue(key, condition.defaultValue());
                 this.setConditionHidden(key, condition.defaultValue());
@@ -256,7 +257,7 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         for (Map.Entry<ResourceLocation, ConditionState> e : state.entrySet()) {
             var key = e.getKey();
             var state = e.getValue();
-            if (state.isDefault(BodyCondition.get(key))) continue;
+            if (state.isDefault(ConditionAccessor.get(key))) continue;
             tag.put(key.toString(), state.serializeNBT(provider));
         }
         tag.put("organ", this.organ.serializeNBT(provider));
@@ -276,7 +277,7 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
             if (nbt.contains(key.toString())) {
                 state.get(key).deserializeNBT(provider, nbt.getCompound(key.toString()));
             } else {
-                state.put(key, new ConditionState(BodyCondition.get(key).defaultValue()));
+                state.put(key, new ConditionState(ConditionAccessor.get(key).defaultValue()));
             }
         }
         this.organ.deserializeNBT(provider, nbt.getCompound("organ"));

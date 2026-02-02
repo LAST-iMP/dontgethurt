@@ -1,9 +1,9 @@
 
 package com.lastimp.dgh.source.core.capability;
 
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractExtremities;
 import com.lastimp.dgh.api.healingItems.AbstractHealingEquipment;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.config.Config;
@@ -37,9 +37,9 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_PRESSURE;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.OXYGEN;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BLOOD_PRESSURE;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.OXYGEN;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.OperationType.SYN;
 
@@ -227,7 +227,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.autoPulseCoolDown = 20;
         var blood = this.getComponent(BodyComponents.BLOOD);
         Torso torso = (Torso) this.getComponent(BodyComponents.TORSO);
-        blood.healing(OXYGEN, -BodyCondition.get(OXYGEN).healingSpeed());
+        blood.healing(OXYGEN, -ConditionAccessor.get(OXYGEN).healingSpeed());
         blood.healing(BLOOD_PRESSURE, Utils.randomBetween(0.01f, 0.1f));
         torso.addHeartRate(-Utils.randomBetween(0.01f, 0.2f));
     }

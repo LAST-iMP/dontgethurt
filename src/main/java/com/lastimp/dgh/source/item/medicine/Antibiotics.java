@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.ANTIBIOTICS;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.ANTIBIOTICS;
 
 public class Antibiotics extends AbstractDirectHealItems {
     public Antibiotics(Properties properties) {

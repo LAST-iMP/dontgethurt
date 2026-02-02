@@ -1,6 +1,7 @@
 
-package com.lastimp.dgh.api.bodyPart;
+package com.lastimp.dgh.source.core.bodyPart.base;
 
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
@@ -29,7 +30,7 @@ import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.DontGetHurt.EPS;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public abstract class AbstractVisibleBody extends AbstractBody {
@@ -135,13 +136,13 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void handleBandaged() {
         if (isBandaged()) {
-            var bandage = BodyCondition.get(BANDAGED);
+            var bandage = ConditionAccessor.get(BANDAGED);
             var factor = 0.25f;
             factor = this.abnormalWithHidden(OPEN_WOUND) || this.abnormalWithHidden(PASS_THROUGH) ? 1 : factor;
             factor = this.abnormalWithHidden(BURN) ? 2 : factor;
             this.addConditionValue(BANDAGED, - bandage.healingSpeed() * DELTA * factor);
             if (!isBandaged()) {
-                this.injury(BANDAGED_DIRTY, BodyCondition.get(BANDAGED_DIRTY).maxValue());
+                this.injury(BANDAGED_DIRTY, ConditionAccessor.get(BANDAGED_DIRTY).maxValue());
             }
         }
     }
@@ -152,7 +153,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
             this.injury(HERB_BANDAGED, -0.1f * DELTA);
         }
         if (this.abnormal(SURGERY_INCISION)) {
-            this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * 4 * DELTA);
+            this.injury(INFECTION, ConditionAccessor.get(INFECTION).healingSpeed() * 4 * DELTA);
         }
     }
 
@@ -198,10 +199,10 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     private void handleBandageAcc(ResourceLocation condition, float acc) {
         if (isBandaged()) {
-            this.healingHidden(condition, - BodyCondition.get(condition).healingSpeed() * DELTA * (isBadBandaged() ? 1.0f : acc));
+            this.healingHidden(condition, - ConditionAccessor.get(condition).healingSpeed() * DELTA * (isBadBandaged() ? 1.0f : acc));
         }
         if (isHerbed()) {
-            this.healingHidden(condition, - BodyCondition.get(condition).healingSpeed() * DELTA * (isBadBandaged() ? 1.0f : acc));
+            this.healingHidden(condition, - ConditionAccessor.get(condition).healingSpeed() * DELTA * (isBadBandaged() ? 1.0f : acc));
         }
     }
 
@@ -209,7 +210,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         ConditionState state = this.getCondition(condition);
         if (!isBandaged() && !isBadBandaged()) {
             this.setConditionValue(condition, state.getValue() + state.getHiddenValue());
-            state.setHiddenValue(BodyCondition.get(condition).defaultValue());
+            state.setHiddenValue(ConditionAccessor.get(condition).defaultValue());
         }
     }
 
@@ -221,9 +222,9 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         if (food.getFoodLevel() < 16) return;
 
         if (this.abnormalOnlyHidden(condition)) {
-            this.healingHidden(condition, - BodyCondition.get(condition).healingSpeed() * DELTA * acc);
+            this.healingHidden(condition, - ConditionAccessor.get(condition).healingSpeed() * DELTA * acc);
         } else {
-            this.healing(condition, - BodyCondition.get(condition).healingSpeed() * DELTA * acc);
+            this.healing(condition, - ConditionAccessor.get(condition).healingSpeed() * DELTA * acc);
         }
         food.addExhaustion(consume);
     }
@@ -232,19 +233,19 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         ConditionState state = this.getCondition(condition);
         float factor = this.countOrganMatch(ModTags.SKIN) > 0 ? 1 : 3;
         if (isBadBandaged()) {
-            this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * DELTA * 3 * state.getTotalValue() * factor);
+            this.injury(INFECTION, ConditionAccessor.get(INFECTION).healingSpeed() * DELTA * 3 * state.getTotalValue() * factor);
         } else if (!isBandaged() && !isHerbed()) {
-            this.injury(INFECTION, BodyCondition.get(INFECTION).healingSpeed() * DELTA * state.getTotalValue() * factor);
+            this.injury(INFECTION, ConditionAccessor.get(INFECTION).healingSpeed() * DELTA * state.getTotalValue() * factor);
         }
     }
 
     public void cureInfection(float factor) {
         if (this.abnormal(OINTMENT))
-            this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * 3 * DELTA * factor);
+            this.healing(INFECTION, -ConditionAccessor.get(INFECTION).healingSpeed() * 3 * DELTA * factor);
         else if (this.isBandaged() || isHerbed())
-            this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * 2 * DELTA * factor);
+            this.healing(INFECTION, -ConditionAccessor.get(INFECTION).healingSpeed() * 2 * DELTA * factor);
         else if (!this.isBadBandaged())
-            this.healing(INFECTION, -BodyCondition.get(INFECTION).healingSpeed() * DELTA * factor);
+            this.healing(INFECTION, -ConditionAccessor.get(INFECTION).healingSpeed() * DELTA * factor);
     }
 
     private void handleCombatStimulant(LivingEntity entity, ResourceLocation condition) {
@@ -262,11 +263,11 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
         Torso torso = (Torso) health.getComponent(TORSO);
         if (!this.abnormal(CLAMP_PLATE) && !torso.abnormal(ANALGESIA) && !this.isBandaged() && !this.isBadBandaged()) {
-            this.setConditionValue(INTENSE_PAIN, BodyCondition.get(INTENSE_PAIN).maxValue());
+            this.setConditionValue(INTENSE_PAIN, ConditionAccessor.get(INTENSE_PAIN).maxValue());
         }
 
         if (this.abnormal(PLASTER_CAST) && this.boneCrafted() == null)
-            this.healingHidden(FRACTURE, -BodyCondition.get(FRACTURE).healingSpeed() * DELTA);
+            this.healingHidden(FRACTURE, -ConditionAccessor.get(FRACTURE).healingSpeed() * DELTA);
     }
 
     private void handleSurgery(HealthCapability health) {
@@ -297,20 +298,20 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
         if (!this.canHurtBone()) return;
         if (blood.abnormal(OXYGEN)) {
-            this.injury(BONE_DAMAGE, blood.getConditionValue(OXYGEN) * 1.1f * BodyCondition.get(BONE_DAMAGE).healingSpeed() * DELTA);
+            this.injury(BONE_DAMAGE, blood.getConditionValue(OXYGEN) * 1.1f * ConditionAccessor.get(BONE_DAMAGE).healingSpeed() * DELTA);
         }
         if (blood.abnormal(SEPSIS)) {
-            this.injury(BONE_DAMAGE, blood.getConditionValue(SEPSIS) * 2 * BodyCondition.get(BONE_DAMAGE).healingSpeed() * DELTA);
+            this.injury(BONE_DAMAGE, blood.getConditionValue(SEPSIS) * 2 * ConditionAccessor.get(BONE_DAMAGE).healingSpeed() * DELTA);
         }
         if (!health.haveKidney()) {
-            this.injury(BONE_DAMAGE, blood.getConditionValue(SEPSIS) * 4 * BodyCondition.get(BONE_DAMAGE).healingSpeed() * DELTA);
+            this.injury(BONE_DAMAGE, blood.getConditionValue(SEPSIS) * 4 * ConditionAccessor.get(BONE_DAMAGE).healingSpeed() * DELTA);
         }
     }
 
     private void handleBoneDeath() {
         if (!this.canHurtBone()) return;
         if (this.getConditionValue(BONE_DAMAGE) > 0.9f) {
-            this.injury(BONE_DEATH, BodyCondition.get(BONE_DEATH).maxValue());
+            this.injury(BONE_DEATH, ConditionAccessor.get(BONE_DEATH).maxValue());
         }
 
         if (!this.abnormal(BONE_DEATH) || this.abnormalWithHidden(FRACTURE)) {
@@ -318,7 +319,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         } else {
             this.nextFractureTick--;
             if (this.nextFractureTick <= 0) {
-                this.injury(FRACTURE, BodyCondition.get(FRACTURE).maxValue());
+                this.injury(FRACTURE, ConditionAccessor.get(FRACTURE).maxValue());
             }
         }
     }
@@ -340,7 +341,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         if (uuid_bone_stone == null)
             uuid_bone_stone = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_STONE);
 
-        if (this.getConditionHidden(BONE_STONE) > BodyCondition.get(BONE_STONE).maxValue() - EPS) {
+        if (this.getConditionHidden(BONE_STONE) > ConditionAccessor.get(BONE_STONE).maxValue() - EPS) {
             if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_stone) == null)
                 knock_back_resist.addPermanentModifier(new AttributeModifier(
                         uuid_bone_stone,
@@ -365,7 +366,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         if (uuid_bone_copper == null)
             uuid_bone_copper = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_COPPER);
 
-        if (this.getConditionHidden(BONE_COPPER) > BodyCondition.get(BONE_COPPER).maxValue() - EPS) {
+        if (this.getConditionHidden(BONE_COPPER) > ConditionAccessor.get(BONE_COPPER).maxValue() - EPS) {
             if (armor != null && armor.getModifier(uuid_bone_copper) == null)
                 armor.addPermanentModifier(new AttributeModifier(
                         uuid_bone_copper,
@@ -390,7 +391,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         if (uuid_bone_iron == null)
             uuid_bone_iron = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_IRON);
 
-        if (this.getConditionHidden(BONE_IRON) > BodyCondition.get(BONE_IRON).maxValue() - EPS) {
+        if (this.getConditionHidden(BONE_IRON) > ConditionAccessor.get(BONE_IRON).maxValue() - EPS) {
             if (armor != null && armor.getModifier(uuid_bone_iron) == null)
                 armor.addPermanentModifier(new AttributeModifier(
                         uuid_bone_iron,
@@ -407,7 +408,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         if (uuid_bone_gold == null)
             uuid_bone_gold = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_GOLD);
 
-        if (this.getConditionHidden(BONE_GOLD) > BodyCondition.get(BONE_GOLD).maxValue() - EPS) {
+        if (this.getConditionHidden(BONE_GOLD) > ConditionAccessor.get(BONE_GOLD).maxValue() - EPS) {
             if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_gold) == null)
                 armor_toughness.addPermanentModifier(new AttributeModifier(
                         uuid_bone_gold,
@@ -424,7 +425,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         if (uuid_bone_dimond == null)
             uuid_bone_dimond = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_DIMOND);
 
-        if (this.getConditionHidden(BONE_DIMOND) > BodyCondition.get(BONE_DIMOND).maxValue() - EPS) {
+        if (this.getConditionHidden(BONE_DIMOND) > ConditionAccessor.get(BONE_DIMOND).maxValue() - EPS) {
             if (armor != null && armor.getModifier(uuid_bone_dimond) == null)
                 armor.addPermanentModifier(new AttributeModifier(
                         uuid_bone_dimond,
@@ -441,7 +442,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         if (uuid_bone_netherite == null)
             uuid_bone_netherite = Common.ResourceLocation(DontGetHurt.MODID, this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
 
-        if (this.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS) {
+        if (this.getConditionHidden(BONE_NETHERITE) > ConditionAccessor.get(BONE_NETHERITE).maxValue() - EPS) {
             if (armor != null && armor.getModifier(uuid_bone_netherite) == null)
                 armor.addPermanentModifier(new AttributeModifier(
                         uuid_bone_netherite,
@@ -499,7 +500,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     public ResourceLocation boneCrafted() {
-        for (var key : BodyCondition.bones.keySet()) {
+        for (var key : ConditionAccessor.bones.keySet()) {
             if (this.abnormalWithHidden(key))
                 return key;
         }

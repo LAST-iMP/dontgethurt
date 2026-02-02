@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_PRESSURE;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BLOOD_PRESSURE;
 import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 

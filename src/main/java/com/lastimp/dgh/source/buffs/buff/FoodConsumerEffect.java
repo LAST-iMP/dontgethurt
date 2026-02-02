@@ -8,7 +8,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 
 public class FoodConsumerEffect extends MobEffect {
     public FoodConsumerEffect(int color) {

@@ -2,7 +2,8 @@
 package com.lastimp.dgh.source.client.gui.screen;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.api.enums.KeyPressedType;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.network.message.MyHealingItemUseData;
@@ -12,9 +13,9 @@ import com.lastimp.dgh.source.client.gui.GuiOpenWrapper;
 import com.lastimp.dgh.source.client.gui.component.HealthComponentWidget;
 import com.lastimp.dgh.source.client.gui.component.HealthConditionWidget;
 import com.lastimp.dgh.source.core.menu.HealthMenu;
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.BodyCondition;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.HealthScanner;
@@ -37,7 +38,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.HashMap;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 import static com.lastimp.dgh.api.enums.OperationType.HEALTH_SCANN;
 import static com.lastimp.dgh.source.client.gui.component.HealthComponentWidget.*;
@@ -88,7 +89,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
 
         conditionWidgets.clear();
         for (var key : HealthScanner.healthScannerConditions()) {
-            addConditionWidget(BodyCondition.get(key));
+            addConditionWidget(ConditionAccessor.get(key));
         }
         this.addHandPulseWidget(210, 166, 17, 16);
     }
@@ -148,7 +149,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
             float pain = 0.0f;
             float comfort = 0.0f;
             for (var key : body.getBodyConditions()) {
-                var condition = BodyCondition.get(key);
+                var condition = ConditionAccessor.get(key);
                 if (!this.visibilityCheck(body, key)) continue;
                 float value = body.getCondition(key).getDisplayValue();
                 if (!condition.abnormal(value)) continue;
@@ -182,12 +183,12 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
             widget.setSeverity(bodyPart.getCondition(condition).getDisplayValue());
             if (condition == FRACTURE && (bodyPart instanceof AbstractVisibleBody visibleBody)) {
                 var bone = visibleBody.boneCrafted();
-                int color = bone == null ? BodyCondition.get(FRACTURE).color() : BodyCondition.get(bone).color();
+                int color = bone == null ? ConditionAccessor.get(FRACTURE).color() : ConditionAccessor.get(bone).color();
                 widget.setPortionColor(color);
-            } else if (injuryConditions.contains(condition)) {
+            } else if (ConditionAccessor.injuryConditions.contains(condition)) {
                 float addition = Math.max(0, bodyPart.getCondition(condition).getDisplayValue() - 1);
                 widget.setAdditionValueAndColor(addition, 0xFF7E0000);
-            } else if (resistConditions.contains(condition)) {
+            } else if (ConditionAccessor.resistConditions.contains(condition)) {
                 float addition = Math.max(0, bodyPart.getCondition(condition).getHiddenValue());
                 widget.setAdditionValueAndColor(addition, 0xFF99ffa3);
             }
@@ -204,8 +205,8 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
     protected boolean visibilityCheck(AbstractBody body, ResourceLocation key) {
         if (!HealthScanner.healthScannerConditions().contains(key)) return false;
         if (!this.menu.isDevice && !HealthScanner.eyesightConditions().contains(key)) return false;
-        if (resistConditions.contains(key) && body.abnormalWithHidden(key)) return true;
-        if (!BodyCondition.get(key).abnormal(body.getCondition(key).getDisplayValue())) return false;
+        if (ConditionAccessor.resistConditions.contains(key) && body.abnormalWithHidden(key)) return true;
+        if (!ConditionAccessor.get(key).abnormal(body.getCondition(key).getDisplayValue())) return false;
         return !this.onOrgan;
     }
 

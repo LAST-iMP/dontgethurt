@@ -1,9 +1,9 @@
 package com.lastimp.dgh.source.item.organs;
 
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractOrgan;
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractOrgan;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -16,7 +16,7 @@ import net.minecraft.world.item.TooltipFlag;
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 
 public class Muscle extends AbstractOrgan {
     public Muscle(Properties properties) {
@@ -29,9 +29,9 @@ public class Muscle extends AbstractOrgan {
         int num = visibleBody.countOrganMatch(ModTags.MUSCLE);
         float factor = Utils.sqrtFactor(num, 1f) / num;
 
-        var condition = BodyCondition.get(INTERNAL_INJURY);
+        var condition = ConditionAccessor.get(INTERNAL_INJURY);
         if (body.abnormal(INTERNAL_INJURY) && body.getConditionValue(INTERNAL_INJURY) < condition.healingTS() * num * factor) {
-            body.healing(INTERNAL_INJURY, -BodyCondition.get(INTERNAL_INJURY).healingSpeed() * DELTA * factor);
+            body.healing(INTERNAL_INJURY, -ConditionAccessor.get(INTERNAL_INJURY).healingSpeed() * DELTA * factor);
         }
         return stack;
     }

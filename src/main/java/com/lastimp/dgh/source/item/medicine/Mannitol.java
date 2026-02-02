@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BRAIN_DAMAGE;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BRAIN_DAMAGE;
 import static com.lastimp.dgh.api.enums.BodyComponents.HEAD;
 
 public class Mannitol extends AbstractDirectHealItems {

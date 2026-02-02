@@ -1,11 +1,11 @@
 
 package com.lastimp.dgh.source.core.bodyPart;
 
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.config.Config;
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractExtremities;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModEffects;
@@ -20,7 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public class Blood extends AbstractBody {
@@ -97,7 +97,7 @@ public class Blood extends AbstractBody {
     @Override
     public void healingAll(boolean healPain) {
         this.getBodyConditions().forEach(key -> {
-            var condition = BodyCondition.get(key);
+            var condition = ConditionAccessor.get(key);
             this.setConditionValue(key, condition.defaultValue());
             this.setConditionHidden(key, condition.defaultValue());
         });
@@ -118,7 +118,7 @@ public class Blood extends AbstractBody {
         }
         this.injury(BLOOD_LOSS, this.bloodLost * DELTA);
 
-        float blood_loss_healing = BodyCondition.get(BLOOD_LOSS).healingSpeed();
+        float blood_loss_healing = ConditionAccessor.get(BLOOD_LOSS).healingSpeed();
         blood_loss_healing = Math.max(0, blood_loss_healing - bloodLost * 2);
         this.healing(BLOOD_LOSS, -blood_loss_healing * DELTA);
     }
@@ -135,17 +135,17 @@ public class Blood extends AbstractBody {
         var bloodPressure = this.getConditionValue(BLOOD_PRESSURE);
         if (bloodPressure < 0.7) {
             if (this.getConditionValue(OXYGEN) < (0.7 - bloodPressure)) {
-                this.injury(OXYGEN, 0.5f * BodyCondition.get(OXYGEN).healingSpeed() * DELTA);
+                this.injury(OXYGEN, 0.5f * ConditionAccessor.get(OXYGEN).healingSpeed() * DELTA);
                 oxygenLost = true;
             }
         }
         var torso = health.getComponent(TORSO);
         if (torso.abnormal(HEARTRATE_STOP)) {
-            this.injury(OXYGEN, BodyCondition.get(OXYGEN).healingSpeed() * DELTA);
+            this.injury(OXYGEN, ConditionAccessor.get(OXYGEN).healingSpeed() * DELTA);
             oxygenLost = true;
         }
         if (!oxygenLost && !torso.abnormal(RESPIRATORY_ARREST) && torso.getConditionValue(PNEUMOTHORAX) < 0.1 && entity.getAirSupply() >= 2) {
-            this.healing(OXYGEN, -BodyCondition.get(OXYGEN).healingSpeed() * DELTA);
+            this.healing(OXYGEN, -ConditionAccessor.get(OXYGEN).healingSpeed() * DELTA);
             entity.setAirSupply(entity.getAirSupply() - 1);
         }
     }
@@ -169,10 +169,10 @@ public class Blood extends AbstractBody {
         if (torso.abnormal(HEARTRATE_IRREGULAR) && this.getConditionValue(BLOOD_PRESSURE) > 1.0 - torso.getConditionValue(HEARTRATE_IRREGULAR)) {
             this.injury(BLOOD_PRESSURE, -0.05f * DELTA);
         } else if (torso.abnormal(HEARTRATE_STOP)) {
-            this.setConditionValue(BLOOD_PRESSURE, BodyCondition.get(BLOOD_PRESSURE).minValue());
+            this.setConditionValue(BLOOD_PRESSURE, ConditionAccessor.get(BLOOD_PRESSURE).minValue());
         } else if (this.abnormal(BLOOD_PRESSURE)) {
-            int factor = (this.getConditionValue(BLOOD_PRESSURE) > BodyCondition.get(BLOOD_PRESSURE).defaultValue()) ? -1 : 1;
-            this.healing(BLOOD_PRESSURE, factor * BodyCondition.get(BLOOD_PRESSURE).healingSpeed() * DELTA);
+            int factor = (this.getConditionValue(BLOOD_PRESSURE) > ConditionAccessor.get(BLOOD_PRESSURE).defaultValue()) ? -1 : 1;
+            this.healing(BLOOD_PRESSURE, factor * ConditionAccessor.get(BLOOD_PRESSURE).healingSpeed() * DELTA);
         }
     }
 
@@ -188,9 +188,9 @@ public class Blood extends AbstractBody {
                 gangrene += extremities.getConditionValue(GANGRENE);
             foreign_object += body.getConditionValue(FOREIGN_OBJECT);
         }
-        this.sepsis += infection * BodyCondition.get(SEPSIS).healingSpeed() / 0.5f;
-        this.sepsis += gangrene * BodyCondition.get(SEPSIS).healingSpeed() / 0.15f;
-        this.sepsis += foreign_object * BodyCondition.get(SEPSIS).healingSpeed() / 0.15f;
+        this.sepsis += infection * ConditionAccessor.get(SEPSIS).healingSpeed() / 0.5f;
+        this.sepsis += gangrene * ConditionAccessor.get(SEPSIS).healingSpeed() / 0.15f;
+        this.sepsis += foreign_object * ConditionAccessor.get(SEPSIS).healingSpeed() / 0.15f;
         health.getComponent(BLOOD).injury(SEPSIS, this.sepsis * DELTA);
     }
 

@@ -1,7 +1,7 @@
 package com.lastimp.dgh.source.core.damageSystem;
 
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
 import com.lastimp.dgh.api.event.EventHooks;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -9,8 +9,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.CLAMP_PLATE;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.HARDENER;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.CLAMP_PLATE;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.HARDENER;
 import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 
 public class InjuryHandler {
@@ -37,7 +37,7 @@ public class InjuryHandler {
         damageAmount *= (1.0f - Math.min(1, event.resist()));
 
         body.injury(damageType, damageAmount);
-        if (body.abnormal(CLAMP_PLATE)) body.setConditionValue(CLAMP_PLATE, BodyCondition.get(CLAMP_PLATE).defaultValue());
+        if (body.abnormal(CLAMP_PLATE)) body.setConditionValue(CLAMP_PLATE, ConditionAccessor.get(CLAMP_PLATE).defaultValue());
         health.addDirectInjury(entity, body.getComponent(), name, damageAmount);
         return damageAmount > 0;
     }

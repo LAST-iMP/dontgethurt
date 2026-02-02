@@ -28,13 +28,6 @@ public class HealthConditionWidget extends AbstractWidget {
         this.visible = false;
     }
 
-    public HealthConditionWidget(int width, int height, Component message, ResourceLocation texture, int fgColor, int addColor) {
-        super(0, 0, width, height, message);
-        this.texture = texture;
-        this.fgColor = fgColor;
-        this.visible = false;
-    }
-
     public void setSeverity(float severity) {
         this.severity = Mth.clamp(severity, 0f, 2f);
         this.addValue = 0;

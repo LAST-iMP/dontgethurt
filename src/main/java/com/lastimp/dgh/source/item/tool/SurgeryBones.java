@@ -1,7 +1,7 @@
 package com.lastimp.dgh.source.item.tool;
 
-import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractExtremities;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 
 public class SurgeryBones extends AbstractPartlyHealItem {
     private final ResourceLocation boneType;
@@ -58,7 +58,7 @@ public class SurgeryBones extends AbstractPartlyHealItem {
             SurgerySaw.sawExcept(source, body, boneType, boneNumMax);
 
             if (this.boneType != null && body.getConditionValue(boneType) >= 0.99f) {
-                body.setConditionValue(SAWED_BONES, BodyCondition.get(SAWED_BONES).defaultValue());
+                body.setConditionValue(SAWED_BONES, ConditionAccessor.get(SAWED_BONES).defaultValue());
             }
             return true;
         }, false);

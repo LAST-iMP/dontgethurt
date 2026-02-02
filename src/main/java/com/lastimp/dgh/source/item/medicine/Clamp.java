@@ -1,8 +1,8 @@
 package com.lastimp.dgh.source.item.medicine;
 
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractExtremities;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.CLAMP_PLATE;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.CLAMP_PLATE;
 
 public class Clamp extends AbstractPartlyHealItem {
     public Clamp(Properties properties) {
@@ -29,7 +29,7 @@ public class Clamp extends AbstractPartlyHealItem {
             AbstractExtremities body = (AbstractExtremities) health.getComponent(component);
             if (body.abnormal(CLAMP_PLATE)) return false;
 
-            body.healing(CLAMP_PLATE, BodyCondition.get(CLAMP_PLATE).maxValue());
+            body.healing(CLAMP_PLATE, ConditionAccessor.get(CLAMP_PLATE).maxValue());
             return true;
         }, false);
     }
@@ -48,7 +48,7 @@ public class Clamp extends AbstractPartlyHealItem {
         return HealthCapability.getAndApply(target, health -> {
             AbstractBody body = health.getComponent(component);
             if (body.abnormal(CLAMP_PLATE)) {
-                body.setConditionValue(CLAMP_PLATE, BodyCondition.get(CLAMP_PLATE).defaultValue());
+                body.setConditionValue(CLAMP_PLATE, ConditionAccessor.get(CLAMP_PLATE).defaultValue());
             } else {
                 return false;
             }

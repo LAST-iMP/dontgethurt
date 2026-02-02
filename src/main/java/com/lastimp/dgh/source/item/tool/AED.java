@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BURN;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BURN;
 
 public class AED extends AbstractDirectHealItems {
     public AED(Properties properties) {

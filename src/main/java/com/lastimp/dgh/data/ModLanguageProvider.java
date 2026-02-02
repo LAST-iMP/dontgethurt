@@ -1,7 +1,7 @@
 
 package com.lastimp.dgh.data;
 
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.BodyCondition;
 import com.lastimp.dgh.source.client.hotkey.KeyBinding;
 import com.lastimp.dgh.source.register.ModEffects;
 import com.lastimp.dgh.source.register.ModItems;

@@ -1,7 +1,7 @@
 package com.lastimp.dgh.source.item.tool;
 
-import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractExtremities;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.Utils;
@@ -15,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.DISLOCATION;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.INTERNAL_INJURY;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.DISLOCATION;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.INTERNAL_INJURY;
 
 public class WoodWrench extends AbstractPartlyHealItem {
     public WoodWrench(Properties properties) {
@@ -31,7 +31,7 @@ public class WoodWrench extends AbstractPartlyHealItem {
             body.injury(INTERNAL_INJURY, 0.05f);
             if (Utils.randomCheck(0.2f, 0.0f, 1.0f, 0.0f, 1f))
                 return true;
-            body.healing(DISLOCATION, -BodyCondition.get(DISLOCATION).maxValue());
+            body.healing(DISLOCATION, -ConditionAccessor.get(DISLOCATION).maxValue());
             return true;
         }, false);
     }
