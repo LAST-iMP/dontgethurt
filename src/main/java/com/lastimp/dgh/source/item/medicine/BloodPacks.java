@@ -17,8 +17,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_LOSS;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BLOOD_PRESSURE;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BLOOD_LOSS;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BLOOD_PRESSURE;
 
 public class BloodPacks extends AbstractDirectHealItems {
 

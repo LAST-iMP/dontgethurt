@@ -1,8 +1,8 @@
 package com.lastimp.dgh.source.item.tool;
 
-import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractExtremities;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 
 public class SurgicalDrill extends AbstractPartlyHealItem {
     public SurgicalDrill(Properties properties) {
@@ -33,7 +33,7 @@ public class SurgicalDrill extends AbstractPartlyHealItem {
             if (body instanceof AbstractExtremities extremities)
                 if (extremities.abnormal(TRAUMATIC_AMPUTATION) || extremities.abnormal(SURGICAL_AMPUTATION)) return false;
 
-            body.setConditionValue(DRILLED_BONES, BodyCondition.get(DRILLED_BONES).maxValue());
+            body.setConditionValue(DRILLED_BONES, ConditionAccessor.get(DRILLED_BONES).maxValue());
             return true;
         }, false);
     }

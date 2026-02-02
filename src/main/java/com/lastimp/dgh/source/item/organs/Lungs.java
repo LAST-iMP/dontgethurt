@@ -1,8 +1,8 @@
 package com.lastimp.dgh.source.item.organs;
 
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractOrgan;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractOrgan;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Blood;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 
@@ -38,7 +38,7 @@ public class Lungs extends AbstractOrgan {
         float factor = Utils.sqrtFactor(num, 1f) / num;
 
         if (blood.abnormal(OXYGEN) && !blood.oxygenLost() && !torso.abnormal(RESPIRATORY_ARREST) && torso.getConditionValue(PNEUMOTHORAX) < 0.1 && entity.getAirSupply() >= 2) {
-            blood.healing(OXYGEN, -BodyCondition.get(OXYGEN).healingSpeed() * DELTA * factor * health.bloodOxygenFactor());
+            blood.healing(OXYGEN, -ConditionAccessor.get(OXYGEN).healingSpeed() * DELTA * factor * health.bloodOxygenFactor());
             entity.setAirSupply(entity.getAirSupply() - 1);
         }
         return stack;

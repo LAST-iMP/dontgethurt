@@ -1,12 +1,13 @@
 package com.lastimp.dgh.source.item.tool;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.api.bodyPart.*;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.bodyPart.Torso;
+import com.lastimp.dgh.source.core.bodyPart.base.*;
 import com.lastimp.dgh.source.core.dyingSystem.DyingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
@@ -26,7 +27,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 
 public class SurgerySaw extends AbstractPartlyHealItem {
     private static final ResourceLocation BONE_NATURAL = Common.ResourceLocation(DontGetHurt.MODID, "bone_natural");
@@ -67,18 +68,18 @@ public class SurgerySaw extends AbstractPartlyHealItem {
             returnFactor += body.getConditionValue(TRAUMATIC_AMPUTATION) + body.getConditionValue(SURGICAL_AMPUTATION);
         int boneReturn = (int) (boneNumMax * (1.0 - Math.min(1.0, returnFactor)));
 
-        body.setConditionValue(SAWED_BONES, BodyCondition.get(SAWED_BONES).maxValue());
-        body.setConditionValue(DRILLED_BONES, BodyCondition.get(DRILLED_BONES).defaultValue());
-        body.setConditionValue(FRACTURE, BodyCondition.get(FRACTURE).defaultValue());
-        body.setConditionValue(BONE_DAMAGE, BodyCondition.get(BONE_DAMAGE).defaultValue());
-        body.setConditionValue(BONE_DEATH, BodyCondition.get(BONE_DEATH).defaultValue());
+        body.setConditionValue(SAWED_BONES, ConditionAccessor.get(SAWED_BONES).maxValue());
+        body.setConditionValue(DRILLED_BONES, ConditionAccessor.get(DRILLED_BONES).defaultValue());
+        body.setConditionValue(FRACTURE, ConditionAccessor.get(FRACTURE).defaultValue());
+        body.setConditionValue(BONE_DAMAGE, ConditionAccessor.get(BONE_DAMAGE).defaultValue());
+        body.setConditionValue(BONE_DEATH, ConditionAccessor.get(BONE_DEATH).defaultValue());
 
         ResourceLocation boneKey = body.boneCrafted();
         if (boneKey == null) {
             Utils.drop(ModItems.BONE_NATURAL.get(), player, boneReturn);
         } else {
-            Utils.drop(BodyCondition.bones.get(boneKey).get(), player, boneReturn);
-            body.setConditionValue(boneKey, BodyCondition.get(boneKey).defaultValue());
+            Utils.drop(ConditionAccessor.bones.get(boneKey).get(), player, boneReturn);
+            body.setConditionValue(boneKey, ConditionAccessor.get(boneKey).defaultValue());
         }
         return true;
     }
@@ -91,23 +92,23 @@ public class SurgerySaw extends AbstractPartlyHealItem {
             Utils.drop(limb, player, 1);
         }
 
-        body.setConditionValue(SURGICAL_AMPUTATION, BodyCondition.get(SURGICAL_AMPUTATION).maxValue());
-        body.setConditionValue(TRAUMATIC_AMPUTATION, BodyCondition.get(TRAUMATIC_AMPUTATION).defaultValue());
+        body.setConditionValue(SURGICAL_AMPUTATION, ConditionAccessor.get(SURGICAL_AMPUTATION).maxValue());
+        body.setConditionValue(TRAUMATIC_AMPUTATION, ConditionAccessor.get(TRAUMATIC_AMPUTATION).defaultValue());
         return true;
     }
 
     public static void sawExcept(LivingEntity source, AbstractBody body, ResourceLocation exception, int maxAmount) {
         float returnFactor = body.getConditionValue(FRACTURE) + body.getConditionValue(BONE_DAMAGE) + body.getConditionValue(BONE_DEATH);
         int boneReturn = (int) (maxAmount * (1.0 - Math.min(1.0, returnFactor)));
-        for (var key : BodyCondition.bones.keySet()) {
+        for (var key : ConditionAccessor.bones.keySet()) {
             if (body.abnormal(key) && key != exception) {
-                Utils.drop(BodyCondition.bones.get(key).get(), source, (int)(boneReturn * body.getConditionValue(key)));
-                body.setConditionValue(key, BodyCondition.get(key).defaultValue());
+                Utils.drop(ConditionAccessor.bones.get(key).get(), source, (int)(boneReturn * body.getConditionValue(key)));
+                body.setConditionValue(key, ConditionAccessor.get(key).defaultValue());
             }
         }
         if (exception != null) {
             Utils.drop(ModItems.BONE_NATURAL.get(), source, (int)(boneReturn * (1.0f - body.getConditionValue(SAWED_BONES))));
-            body.setConditionValue(SAWED_BONES, BodyCondition.get(SAWED_BONES).maxValue());
+            body.setConditionValue(SAWED_BONES, ConditionAccessor.get(SAWED_BONES).maxValue());
         }
     }
 

@@ -1,7 +1,7 @@
 package com.lastimp.dgh.source.core.healingSystem;
 
-import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractExtremities;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractDirectHealItems;
 import com.lastimp.dgh.api.healingItems.AbstractHealingEquipment;
@@ -20,7 +20,7 @@ import net.minecraft.world.item.Items;
 
 import java.util.function.Consumer;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public abstract class AiHealer {

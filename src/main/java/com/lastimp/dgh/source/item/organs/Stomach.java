@@ -1,8 +1,9 @@
 package com.lastimp.dgh.source.item.organs;
 
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractOrgan;
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.config.Config;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractOrgan;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.source.core.Utils;
@@ -18,7 +19,7 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 
 public class Stomach extends AbstractOrgan {
@@ -30,7 +31,7 @@ public class Stomach extends AbstractOrgan {
     public ItemStack update(ItemStack stack, HealthCapability health, AbstractBody body, LivingEntity entity) {
         Torso torso = (Torso) health.getComponent(TORSO);
         int num = torso.countOrganMatch(ModTags.STOMACH);
-        float factor = Utils.sqrtFactor(num, 1f) / num * 9;
+        float factor = Utils.sqrtFactor(num, 1f) / num * Config.internal_food_healing;
 
         BodyComponents.VISIBLE_BODIES.stream().map(health::getComponent).forEach(visibleBody -> {
             if (visibleBody.abnormalWithHidden(BURN))

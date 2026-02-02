@@ -1,6 +1,6 @@
 package com.lastimp.dgh.source.buffs.debuff;
 
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.config.BlackList;
 import com.lastimp.dgh.source.core.bodyPart.Head;
@@ -10,7 +10,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.COMA;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.COMA;
 
 public class PulseEffect extends MobEffect {
     public PulseEffect(int color) {
@@ -38,7 +38,7 @@ public class PulseEffect extends MobEffect {
         if (HealthCapability.has(livingEntity)) {
             HealthCapability.getAndApply(livingEntity, h -> {
                 Head head = (Head) h.getComponent(BodyComponents.HEAD);
-                head.injury(COMA, BodyCondition.get(COMA).healingSpeed() * 1.5f);
+                head.injury(COMA, ConditionAccessor.get(COMA).healingSpeed() * 1.5f);
             });
         }
     }

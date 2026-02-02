@@ -1,5 +1,6 @@
 package com.lastimp.dgh.source.item.tool;
 
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.healingItems.AbstractHealingItem;
 import com.lastimp.dgh.source.core.menu.MenuOpenWrapper;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 
 public class HealthScanner extends AbstractHealingItem {
     private static List<ResourceLocation> HEALTH_SCANNER_CONDITIONS;
@@ -29,11 +30,11 @@ public class HealthScanner extends AbstractHealingItem {
     public static List<ResourceLocation> healthScannerConditions() {
         if (HEALTH_SCANNER_CONDITIONS == null) {
             HEALTH_SCANNER_CONDITIONS = new LinkedList<>();
-            HEALTH_SCANNER_CONDITIONS.addAll(injuryConditions);
-            HEALTH_SCANNER_CONDITIONS.addAll(surgeryConditions);
-            HEALTH_SCANNER_CONDITIONS.addAll(painConditions);
-            HEALTH_SCANNER_CONDITIONS.addAll(comfortConditions);
-            HEALTH_SCANNER_CONDITIONS.addAll(resistConditions);
+            HEALTH_SCANNER_CONDITIONS.addAll(ConditionAccessor.injuryConditions);
+            HEALTH_SCANNER_CONDITIONS.addAll(ConditionAccessor.surgeryConditions);
+            HEALTH_SCANNER_CONDITIONS.addAll(ConditionAccessor.painConditions);
+            HEALTH_SCANNER_CONDITIONS.addAll(ConditionAccessor.comfortConditions);
+            HEALTH_SCANNER_CONDITIONS.addAll(ConditionAccessor.resistConditions);
         }
         return HEALTH_SCANNER_CONDITIONS;
     }
@@ -43,7 +44,7 @@ public class HealthScanner extends AbstractHealingItem {
         if (EYESIGHT_CONDITIONS == null) {
             EYESIGHT_CONDITIONS = new LinkedList<>();
             for (var condition : HEALTH_SCANNER_CONDITIONS) {
-                if (eyeVisible.contains(condition))
+                if (ConditionAccessor.eyeVisible.contains(condition))
                     EYESIGHT_CONDITIONS.add(condition);
             }
         }

@@ -1,6 +1,6 @@
 package com.lastimp.dgh.network;
 
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.enums.OperationType;
 import com.lastimp.dgh.neoforge.Common;

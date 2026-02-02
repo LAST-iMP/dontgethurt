@@ -1,9 +1,9 @@
 
 package com.lastimp.dgh.source.item.medicine;
 
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractExtremities;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.bodyPart.Head;
@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 
 public class Sutures extends AbstractPartlyHealItem {
     private static final Set<ResourceLocation> cover = new HashSet<>();
@@ -45,16 +45,16 @@ public class Sutures extends AbstractPartlyHealItem {
                 success = true;
             }
             if (body.abnormal(SURGERY_INCISION)) {
-                body.setConditionValue(SURGERY_INCISION, BodyCondition.get(SURGERY_INCISION).defaultValue());
-                body.setConditionValue(CLAMPED_BLEEDING, BodyCondition.get(CLAMPED_BLEEDING).defaultValue());
+                body.setConditionValue(SURGERY_INCISION, ConditionAccessor.get(SURGERY_INCISION).defaultValue());
+                body.setConditionValue(CLAMPED_BLEEDING, ConditionAccessor.get(CLAMPED_BLEEDING).defaultValue());
                 success = true;
             }
             if (body.abnormal(RETRACTED_SKIN)) {
-                body.setConditionValue(RETRACTED_SKIN, BodyCondition.get(RETRACTED_SKIN).defaultValue());
-                body.setConditionValue(DRILLED_BONES, BodyCondition.get(DRILLED_BONES).defaultValue());
-                body.setConditionValue(CLAMPED_ARTERIES, BodyCondition.get(CLAMPED_ARTERIES).defaultValue());
+                body.setConditionValue(RETRACTED_SKIN, ConditionAccessor.get(RETRACTED_SKIN).defaultValue());
+                body.setConditionValue(DRILLED_BONES, ConditionAccessor.get(DRILLED_BONES).defaultValue());
+                body.setConditionValue(CLAMPED_ARTERIES, ConditionAccessor.get(CLAMPED_ARTERIES).defaultValue());
                 if (body instanceof AbstractExtremities || body instanceof Head)
-                    body.setConditionValue(ARTERIAL_BLEEDING, BodyCondition.get(ARTERIAL_BLEEDING).defaultValue());
+                    body.setConditionValue(ARTERIAL_BLEEDING, ConditionAccessor.get(ARTERIAL_BLEEDING).defaultValue());
                 success = true;
             }
 
@@ -64,7 +64,7 @@ public class Sutures extends AbstractPartlyHealItem {
                 }
                 for (var key : cover) {
                     body.setConditionHidden(key, body.getConditionValue(key) + body.getConditionHidden(key));
-                    body.setConditionValue(key, BodyCondition.get(key).defaultValue());
+                    body.setConditionValue(key, ConditionAccessor.get(key).defaultValue());
                 }
             }
             return success;

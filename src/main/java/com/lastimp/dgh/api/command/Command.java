@@ -1,8 +1,9 @@
 package com.lastimp.dgh.api.command;
 
 import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.enums.BodyComponents;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.BodyCondition;
 import com.lastimp.dgh.neoforge.Common;
 import com.lastimp.dgh.source.core.menu.MenuOpenWrapper;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -106,7 +107,7 @@ public class Command {
         CommandSourceStack source = context.getSource();
         source.sendSuccess(() -> {
                     var message = Component.empty();
-                    for (var condition : BodyCondition.conditions.keySet())
+                    for (var condition : ConditionAccessor.conditions.keySet())
                         message.append(condition + ", ");
                     return message;
                 },true
@@ -139,7 +140,7 @@ public class Command {
             if (!(entity instanceof LivingEntity livingEntity)) continue;
             if (!HealthCapability.has(livingEntity)) continue;
             source.sendSuccess(
-                    () -> Component.literal("已将实体" + livingEntity.getScoreboardName() + "的" + components + BodyCondition.get(condition) + "增加" + value),
+                    () -> Component.literal("已将实体" + livingEntity.getScoreboardName() + "的" + components + ConditionAccessor.get(condition) + "增加" + value),
                     true
             );
             HealthCapability.getAndApply(livingEntity, h ->
@@ -159,11 +160,11 @@ public class Command {
             if (!(entity instanceof LivingEntity livingEntity)) continue;
             if (!HealthCapability.has(livingEntity)) continue;
             source.sendSuccess(
-                    () -> Component.literal("已将实体" + livingEntity.getScoreboardName() + "的" + components + BodyCondition.get(condition) + "重置"),
+                    () -> Component.literal("已将实体" + livingEntity.getScoreboardName() + "的" + components + ConditionAccessor.get(condition) + "重置"),
                     true
             );
             HealthCapability.getAndApply(livingEntity, h ->
-                    h.getComponent(components).setConditionValue(condition, BodyCondition.get(condition).defaultValue()));
+                    h.getComponent(components).setConditionValue(condition, ConditionAccessor.get(condition).defaultValue()));
         }
         return 1;
     }
@@ -183,7 +184,7 @@ public class Command {
             HealthCapability.getAndApply(livingEntity, h -> {
                 var body = h.getComponent(components);
                 for (var condition : body.getBodyConditions()) {
-                    body.setConditionValue(condition, BodyCondition.get(condition).defaultValue());
+                    body.setConditionValue(condition, ConditionAccessor.get(condition).defaultValue());
                 }
             });
         }

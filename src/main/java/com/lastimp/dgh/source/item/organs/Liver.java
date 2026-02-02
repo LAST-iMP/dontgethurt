@@ -1,9 +1,9 @@
 package com.lastimp.dgh.source.item.organs;
 
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractOrgan;
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractOrgan;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.source.core.Utils;
@@ -21,7 +21,7 @@ import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.DontGetHurt.EPS;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.SEPSIS;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.SEPSIS;
 import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 
@@ -38,7 +38,7 @@ public class Liver extends AbstractOrgan {
         float factor = Utils.sqrtFactor(num, 0.5f) / num;
 
         if (blood.sepsis() <= EPS) {
-            blood.healing(SEPSIS, -BodyCondition.get(SEPSIS).healingSpeed() * DELTA * factor);
+            blood.healing(SEPSIS, -ConditionAccessor.get(SEPSIS).healingSpeed() * DELTA * factor);
         }
 
         BodyComponents.VISIBLE_BODIES.stream().map(health::getComponent).forEach(visibleBody ->

@@ -1,5 +1,5 @@
 
-package com.lastimp.dgh.api.bodyPart;
+package com.lastimp.dgh.source.core.bodyPart.base;
 
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModTags;
@@ -8,6 +8,7 @@ import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,8 +17,8 @@ import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.ANALGESIA;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.ANALGESIA;
 
 public abstract class AbstractExtremities extends AbstractVisibleBody {
     private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
@@ -109,7 +110,7 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
 
         Torso torso = (Torso) health.getComponent(TORSO);
         if (!this.abnormal(CLAMP_PLATE) && !torso.abnormal(ANALGESIA) && !this.isBandaged() && !this.isBadBandaged()) {
-            this.setConditionValue(INTENSE_PAIN, BodyCondition.get(INTENSE_PAIN).maxValue());
+            this.setConditionValue(INTENSE_PAIN, ConditionAccessor.get(INTENSE_PAIN).maxValue());
         }
     }
 
@@ -120,7 +121,7 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
             this.tourniquetTick = 0;
         }
         if (this.tourniquetTick >= 4800) {
-            this.injury(GANGRENE, BodyCondition.get(GANGRENE).healingSpeed() * 2 * DELTA);
+            this.injury(GANGRENE, ConditionAccessor.get(GANGRENE).healingSpeed() * 2 * DELTA);
         }
     }
 }

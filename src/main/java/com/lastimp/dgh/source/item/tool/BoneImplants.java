@@ -1,8 +1,8 @@
 package com.lastimp.dgh.source.item.tool;
 
-import com.lastimp.dgh.api.bodyPart.AbstractExtremities;
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractExtremities;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 
 public class BoneImplants extends AbstractPartlyHealItem {
     private final ResourceLocation boneType;
@@ -42,9 +42,9 @@ public class BoneImplants extends AbstractPartlyHealItem {
 
             if (body.abnormal(DRILLED_BONES)) {
                 if (body.boneCrafted() != boneType) return false;
-                body.healing(FRACTURE, -BodyCondition.get(FRACTURE).maxValue());
-                body.healing(BONE_DAMAGE, -BodyCondition.get(BONE_DAMAGE).maxValue());
-                body.healing(BONE_DEATH, -BodyCondition.get(BONE_DEATH).maxValue());
+                body.healing(FRACTURE, -ConditionAccessor.get(FRACTURE).maxValue());
+                body.healing(BONE_DAMAGE, -ConditionAccessor.get(BONE_DAMAGE).maxValue());
+                body.healing(BONE_DEATH, -ConditionAccessor.get(BONE_DEATH).maxValue());
                 return true;
             }
             return false;

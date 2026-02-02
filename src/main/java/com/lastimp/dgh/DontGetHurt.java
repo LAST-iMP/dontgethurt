@@ -1,7 +1,7 @@
 
 package com.lastimp.dgh;
 
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.BodyCondition;
 import com.lastimp.dgh.config.BlackList;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.config.HealthLivingEntityList;

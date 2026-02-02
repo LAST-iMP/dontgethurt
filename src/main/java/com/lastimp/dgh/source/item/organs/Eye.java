@@ -1,6 +1,6 @@
 package com.lastimp.dgh.source.item.organs;
 
-import com.lastimp.dgh.api.bodyPart.AbstractOrgan;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractOrgan;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;

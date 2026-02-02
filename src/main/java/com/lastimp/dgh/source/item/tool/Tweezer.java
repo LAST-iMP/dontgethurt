@@ -1,7 +1,7 @@
 package com.lastimp.dgh.source.item.tool;
 
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.Utils;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 
 public class Tweezer extends AbstractPartlyHealItem {
     public Tweezer(Properties properties) {
@@ -37,7 +37,7 @@ public class Tweezer extends AbstractPartlyHealItem {
                 body.healing(FOREIGN_OBJECT, -Mth.randomBetween(Utils.randomSource, 0.05f, 0.2f));
             } else {
                 body.injury(OPEN_WOUND, 0.05f);
-                body.setConditionValue(INTENSE_PAIN, BodyCondition.get(INTENSE_PAIN).maxValue());
+                body.setConditionValue(INTENSE_PAIN, ConditionAccessor.get(INTENSE_PAIN).maxValue());
             }
             return true;
         }, false);

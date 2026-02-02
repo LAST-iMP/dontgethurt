@@ -1,6 +1,6 @@
 package com.lastimp.dgh.source.core.menu;
 
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.BagItemCapabilityProvider;
 import com.lastimp.dgh.source.core.capability.HealthCapability;

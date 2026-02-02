@@ -4,9 +4,9 @@ package com.lastimp.dgh.source.core.bodyPart;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.config.Config;
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.item.tool.SurgeryBones;
@@ -25,8 +25,8 @@ import java.util.*;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
 import static com.lastimp.dgh.DontGetHurt.EPS;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.ANALGESIA;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.ANALGESIA;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public class Torso extends AbstractVisibleBody {
@@ -139,7 +139,7 @@ public class Torso extends AbstractVisibleBody {
         if (uuid_bone_wood == null)
             uuid_bone_wood = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_WOOD);
 
-        if (this.getConditionHidden(BONE_WOOD) > BodyCondition.get(BONE_WOOD).maxValue() - EPS) {
+        if (this.getConditionHidden(BONE_WOOD) > ConditionAccessor.get(BONE_WOOD).maxValue() - EPS) {
             if (fly_speed != null && fly_speed.getModifier(uuid_bone_wood) == null)
                 fly_speed.addPermanentModifier(new AttributeModifier(
                         uuid_bone_wood,
@@ -157,7 +157,7 @@ public class Torso extends AbstractVisibleBody {
         if (uuid_bone_netherite == null)
             uuid_bone_netherite = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
 
-        if (this.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS) {
+        if (this.getConditionHidden(BONE_NETHERITE) > ConditionAccessor.get(BONE_NETHERITE).maxValue() - EPS) {
             if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_netherite) == null)
                 knock_back_resist.addPermanentModifier(new AttributeModifier(
                         uuid_bone_netherite,
@@ -173,7 +173,7 @@ public class Torso extends AbstractVisibleBody {
 
     private void handleAnalgesia(LivingEntity entity) {
         if (entity.hasEffect(ModEffects.ADRENALINE_EFFECT.get()) && this.getConditionValue(ANALGESIA) < 0.05f) {
-            this.healing(ANALGESIA, BodyCondition.get(ANALGESIA).healingSpeed() * DELTA * 2);
+            this.healing(ANALGESIA, ConditionAccessor.get(ANALGESIA).healingSpeed() * DELTA * 2);
         }
     }
 
@@ -188,7 +188,7 @@ public class Torso extends AbstractVisibleBody {
                 blood.getConditionValue(OPIATE_OVERDOSE) > 0.5 ||
                 this.countOrganMatch(ModTags.LUNGS) < 1
         ) {
-            this.injury(RESPIRATORY_ARREST, BodyCondition.get(RESPIRATORY_ARREST).maxValue());
+            this.injury(RESPIRATORY_ARREST, ConditionAccessor.get(RESPIRATORY_ARREST).maxValue());
         }
     }
 
@@ -198,7 +198,7 @@ public class Torso extends AbstractVisibleBody {
         } else {
             nextPneumothoraxTick--;
             if (nextPneumothoraxTick <= 0) {
-                this.injury(PNEUMOTHORAX, BodyCondition.get(PNEUMOTHORAX).maxValue());
+                this.injury(PNEUMOTHORAX, ConditionAccessor.get(PNEUMOTHORAX).maxValue());
             }
         }
 
@@ -248,15 +248,15 @@ public class Torso extends AbstractVisibleBody {
         level = Math.min(Math.max(0f, level), 3f);
         if (level > 2) {
             this.setConditionValue(HEARTRATE_STOP, level - 2);
-            this.setConditionValue(HEARTRATE_IRREGULAR, BodyCondition.get(HEARTRATE_IRREGULAR).minValue());
-            this.setConditionValue(HEARTRATE_INCREASE, BodyCondition.get(HEARTRATE_INCREASE).minValue());
+            this.setConditionValue(HEARTRATE_IRREGULAR, ConditionAccessor.get(HEARTRATE_IRREGULAR).minValue());
+            this.setConditionValue(HEARTRATE_INCREASE, ConditionAccessor.get(HEARTRATE_INCREASE).minValue());
         } else if (level > 1) {
-            this.setConditionValue(HEARTRATE_STOP, BodyCondition.get(HEARTRATE_STOP).minValue());
+            this.setConditionValue(HEARTRATE_STOP, ConditionAccessor.get(HEARTRATE_STOP).minValue());
             this.setConditionValue(HEARTRATE_IRREGULAR, level - 1);
-            this.setConditionValue(HEARTRATE_INCREASE, BodyCondition.get(HEARTRATE_INCREASE).minValue());
+            this.setConditionValue(HEARTRATE_INCREASE, ConditionAccessor.get(HEARTRATE_INCREASE).minValue());
         } else {
-            this.setConditionValue(HEARTRATE_STOP, BodyCondition.get(HEARTRATE_STOP).minValue());
-            this.setConditionValue(HEARTRATE_IRREGULAR, BodyCondition.get(HEARTRATE_IRREGULAR).minValue());
+            this.setConditionValue(HEARTRATE_STOP, ConditionAccessor.get(HEARTRATE_STOP).minValue());
+            this.setConditionValue(HEARTRATE_IRREGULAR, ConditionAccessor.get(HEARTRATE_IRREGULAR).minValue());
             this.setConditionValue(HEARTRATE_INCREASE, level);
         }
     }

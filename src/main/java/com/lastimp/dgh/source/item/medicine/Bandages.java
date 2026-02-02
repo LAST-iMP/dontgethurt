@@ -1,8 +1,8 @@
 
 package com.lastimp.dgh.source.item.medicine;
 
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 
 public class Bandages extends AbstractPartlyHealItem {
 
@@ -34,7 +34,7 @@ public class Bandages extends AbstractPartlyHealItem {
             if (currCondition > 0.75f) return false;
 
             body.healing(BANDAGED, 0.5f);
-            body.setConditionValue(BANDAGED_DIRTY, BodyCondition.get(BANDAGED_DIRTY).defaultValue());
+            body.setConditionValue(BANDAGED_DIRTY, ConditionAccessor.get(BANDAGED_DIRTY).defaultValue());
 
             this.coverCondition(body, BURN);
             this.coverCondition(body, OPEN_WOUND);
@@ -46,16 +46,16 @@ public class Bandages extends AbstractPartlyHealItem {
 
     protected void coverCondition(AbstractBody body, ResourceLocation condition) {
         body.injuryHidden(condition, body.getConditionValue(condition));
-        body.setConditionValue(condition, BodyCondition.get(condition).defaultValue());
+        body.setConditionValue(condition, ConditionAccessor.get(condition).defaultValue());
     }
 
     public static boolean cut(LivingEntity target, BodyComponents component) {
         return HealthCapability.getAndApply(target, health -> {
             AbstractBody body = health.getComponent(component);
             if (body.abnormal(BANDAGED)) {
-                body.setConditionValue(BANDAGED, BodyCondition.get(BANDAGED).defaultValue());
+                body.setConditionValue(BANDAGED, ConditionAccessor.get(BANDAGED).defaultValue());
             } else if (body.abnormal(BANDAGED_DIRTY)) {
-                body.setConditionValue(BANDAGED_DIRTY, BodyCondition.get(BANDAGED_DIRTY).defaultValue());
+                body.setConditionValue(BANDAGED_DIRTY, ConditionAccessor.get(BANDAGED_DIRTY).defaultValue());
             } else {
                 return false;
             }

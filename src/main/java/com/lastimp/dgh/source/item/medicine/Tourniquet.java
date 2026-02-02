@@ -1,7 +1,7 @@
 package com.lastimp.dgh.source.item.medicine;
 
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.healingItems.AbstractPartlyHealItem;
 import com.lastimp.dgh.source.core.bodyPart.Head;
@@ -16,8 +16,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BRAIN_DAMAGE;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.CLAMPED_ARTERIES;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BRAIN_DAMAGE;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.CLAMPED_ARTERIES;
 
 public class Tourniquet extends AbstractPartlyHealItem {
     public Tourniquet(Properties properties) {
@@ -30,7 +30,7 @@ public class Tourniquet extends AbstractPartlyHealItem {
             AbstractBody body = health.getComponent(component);
             if (body.abnormal(CLAMPED_ARTERIES)) return false;
 
-            body.setConditionValue(CLAMPED_ARTERIES, BodyCondition.get(CLAMPED_ARTERIES).maxValue());
+            body.setConditionValue(CLAMPED_ARTERIES, ConditionAccessor.get(CLAMPED_ARTERIES).maxValue());
             if (body instanceof Head head) {
                 head.injury(BRAIN_DAMAGE, 0.15f);
                 entity.setAirSupply(0);
@@ -52,7 +52,7 @@ public class Tourniquet extends AbstractPartlyHealItem {
         return HealthCapability.getAndApply(target, health -> {
             AbstractBody body = health.getComponent(component);
             if (body.abnormal(CLAMPED_ARTERIES)) {
-                body.setConditionValue(CLAMPED_ARTERIES, BodyCondition.get(CLAMPED_ARTERIES).defaultValue());
+                body.setConditionValue(CLAMPED_ARTERIES, ConditionAccessor.get(CLAMPED_ARTERIES).defaultValue());
             } else {
                 return false;
             }

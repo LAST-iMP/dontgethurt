@@ -1,4 +1,4 @@
-package com.lastimp.dgh.api.bodyPart;
+package com.lastimp.dgh.source.core.bodyPart.base;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
@@ -13,12 +13,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 
 import java.util.UUID;
 
 import static com.lastimp.dgh.DontGetHurt.EPS;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BONE_NETHERITE;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BONE_WOOD;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BONE_NETHERITE;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BONE_WOOD;
 
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID)
 public abstract class AbstractArm extends AbstractExtremities{
@@ -55,7 +56,7 @@ public abstract class AbstractArm extends AbstractExtremities{
         if (uuid_bone_netherite == null)
             uuid_bone_netherite = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
 
-        if (this.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS) {
+        if (this.getConditionHidden(BONE_NETHERITE) > ConditionAccessor.get(BONE_NETHERITE).maxValue() - EPS) {
             if (attack_speed != null && attack_speed.getModifier(uuid_bone_netherite) == null)
                 attack_speed.addPermanentModifier(new AttributeModifier(
                         uuid_bone_netherite,
@@ -77,9 +78,9 @@ public abstract class AbstractArm extends AbstractExtremities{
             var left_arm = health.getComponent(BodyComponents.LEFT_ARM);
             var right_arm = health.getComponent(BodyComponents.RIGHT_ARM);
             int speed_up = 0;
-            if (left_arm.getConditionHidden(BONE_WOOD) > BodyCondition.get(BONE_WOOD).maxValue() - EPS)
+            if (left_arm.getConditionHidden(BONE_WOOD) > ConditionAccessor.get(BONE_WOOD).maxValue() - EPS)
                 speed_up++;
-            if (right_arm.getConditionHidden(BONE_WOOD) > BodyCondition.get(BONE_WOOD).maxValue() - EPS)
+            if (right_arm.getConditionHidden(BONE_WOOD) > ConditionAccessor.get(BONE_WOOD).maxValue() - EPS)
                 speed_up++;
             if (speed_up > 0) {
                 float original = event.getOriginalSpeed();

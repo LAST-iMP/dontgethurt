@@ -2,7 +2,6 @@
 package com.lastimp.dgh.config;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -12,7 +11,7 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 public class Config {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder()
             .comment("General settings")
-            .push("general_1.2.10");
+            .push("general_1.3.0");
 
     public static final ForgeConfigSpec.DoubleValue BODY_LIFE_FACTOR = BUILDER
             .comment("肢体血量系数")
@@ -47,7 +46,7 @@ public class Config {
             .defineInRange("OPEN_WOUND_BLEED_RATIO",0.8,0,10);
 
     public static final ForgeConfigSpec.DoubleValue INTERNAL_FOOD_HEALING = BUILDER
-            .comment("饱食度内伤恢复系数")
+            .comment("饱食度恢复系数")
             .defineInRange("INTERNAL_FOOD_HEALING",4.0,1.0, Float.MAX_VALUE);
 
     public static final ForgeConfigSpec.DoubleValue BLEED_VOLUME_RATIO = BUILDER

@@ -1,8 +1,8 @@
 package com.lastimp.dgh.source.item.organs;
 
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractOrgan;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractOrgan;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.source.core.Utils;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BRAIN_DAMAGE;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BRAIN_DAMAGE;
 
 public class Brain extends AbstractOrgan {
     public Brain(Properties properties) {
@@ -32,7 +32,7 @@ public class Brain extends AbstractOrgan {
         Head head = (Head) health.getComponent(BodyComponents.HEAD);
         int num = head.countOrganMatch(ModTags.BRAIN);
         float factor = Utils.sqrtFactor(num, 1f) / num;
-        head.healing(BRAIN_DAMAGE, -BodyCondition.get(BRAIN_DAMAGE).healingSpeed() * DELTA * factor);
+        head.healing(BRAIN_DAMAGE, -ConditionAccessor.get(BRAIN_DAMAGE).healingSpeed() * DELTA * factor);
         return stack;
     }
 

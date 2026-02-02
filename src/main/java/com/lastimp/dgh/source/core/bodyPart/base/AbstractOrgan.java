@@ -1,4 +1,4 @@
-package com.lastimp.dgh.api.bodyPart;
+package com.lastimp.dgh.source.core.bodyPart.base;
 
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.world.entity.LivingEntity;

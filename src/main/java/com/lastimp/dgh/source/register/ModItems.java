@@ -1,7 +1,7 @@
 package com.lastimp.dgh.source.register;
 
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.BodyCondition;
 import com.lastimp.dgh.source.item.limbs.HumanHand;
 import com.lastimp.dgh.source.item.limbs.HumanLeg;
 import com.lastimp.dgh.source.item.organs.*;

@@ -1,8 +1,8 @@
 package com.lastimp.dgh.source.item.organs;
 
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractOrgan;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractOrgan;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.source.core.Utils;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BONE_DAMAGE;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BONE_DAMAGE;
 import static com.lastimp.dgh.api.enums.BodyComponents.TORSO;
 
 public class Kidney extends AbstractOrgan {
@@ -33,7 +33,7 @@ public class Kidney extends AbstractOrgan {
         float factor = Utils.sqrtFactor(num / 2, 0.5f) / num;
 
         BodyComponents.VISIBLE_BODIES.stream().map(health::getComponent).forEach(visibleBody ->
-                visibleBody.healing(BONE_DAMAGE, -BodyCondition.get(BONE_DAMAGE).healingSpeed() * DELTA * factor)
+                visibleBody.healing(BONE_DAMAGE, -ConditionAccessor.get(BONE_DAMAGE).healingSpeed() * DELTA * factor)
         );
         return stack;
     }

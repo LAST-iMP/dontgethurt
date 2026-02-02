@@ -4,9 +4,9 @@ package com.lastimp.dgh.source.core.bodyPart;
 import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.config.Config;
-import com.lastimp.dgh.api.bodyPart.AbstractBody;
-import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractBody;
+import com.lastimp.dgh.source.core.bodyPart.base.AbstractVisibleBody;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.network.chat.Component;
@@ -19,8 +19,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import static com.lastimp.dgh.DontGetHurt.DELTA;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BRAIN_DAMAGE;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BRAIN_DAMAGE;
 import static com.lastimp.dgh.api.enums.BodyComponents.*;
 
 public class Head extends AbstractVisibleBody {
@@ -119,7 +119,7 @@ public class Head extends AbstractVisibleBody {
         if (!this.abnormal(WITHDRAW)) return;
 
         if (this.getConditionValue(WITHDRAW) > health.getComponent(BLOOD).getConditionValue(OPIATE_ADDICTED))
-            this.healing(WITHDRAW, -BodyCondition.get(WITHDRAW).healingSpeed() * DELTA);
+            this.healing(WITHDRAW, -ConditionAccessor.get(WITHDRAW).healingSpeed() * DELTA);
     }
 
     private void handleTraumaticShock(HealthCapability health) {
@@ -127,7 +127,7 @@ public class Head extends AbstractVisibleBody {
 
         var value = this.getConditionValue(TRAUMATIC_SHOCK);
         if (value > 0.3f)
-            health.getComponent(TORSO).injury(RESPIRATORY_ARREST, BodyCondition.get(RESPIRATORY_ARREST).maxValue());
+            health.getComponent(TORSO).injury(RESPIRATORY_ARREST, ConditionAccessor.get(RESPIRATORY_ARREST).maxValue());
         if (value > 0.1f)
             this.injury(BRAIN_DAMAGE, value * 0.01f * DELTA);
     }
@@ -163,7 +163,7 @@ public class Head extends AbstractVisibleBody {
     private void handleComa(HealthCapability health) {
         var torso = health.getComponent(TORSO);
         if (torso.abnormal(HEARTRATE_STOP)) {
-            this.injury(COMA, BodyCondition.get(COMA).maxValue());
+            this.injury(COMA, ConditionAccessor.get(COMA).maxValue());
         }
     }
 }

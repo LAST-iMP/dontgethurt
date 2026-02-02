@@ -1,4 +1,4 @@
-package com.lastimp.dgh.api.bodyPart;
+package com.lastimp.dgh.source.core.bodyPart.base;
 
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.api.enums.BodyComponents;
@@ -9,16 +9,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 
 import java.util.UUID;
 
 import static com.lastimp.dgh.DontGetHurt.EPS;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BONE_NETHERITE;
-import static com.lastimp.dgh.api.bodyPart.BodyCondition.BONE_WOOD;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BONE_NETHERITE;
+import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.BONE_WOOD;
 
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID)
 public abstract class AbstractLeg extends AbstractExtremities{
@@ -53,7 +53,7 @@ public abstract class AbstractLeg extends AbstractExtremities{
         if (uuid_bone_wood == null)
             uuid_bone_wood = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_WOOD);
 
-        if (this.getConditionHidden(BONE_WOOD) > BodyCondition.get(BONE_WOOD).maxValue() - EPS) {
+        if (this.getConditionHidden(BONE_WOOD) > ConditionAccessor.get(BONE_WOOD).maxValue() - EPS) {
             if (move_speed != null && move_speed.getModifier(uuid_bone_wood) == null)
                 move_speed.addPermanentModifier(new AttributeModifier(
                         uuid_bone_wood,
@@ -71,7 +71,7 @@ public abstract class AbstractLeg extends AbstractExtremities{
         if (uuid_bone_netherite == null)
             uuid_bone_netherite = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
 
-        if (this.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS) {
+        if (this.getConditionHidden(BONE_NETHERITE) > ConditionAccessor.get(BONE_NETHERITE).maxValue() - EPS) {
             if (jump_strength != null && jump_strength.getModifier(uuid_bone_netherite) == null)
                 jump_strength.addPermanentModifier(new AttributeModifier(
                         uuid_bone_netherite,
@@ -94,9 +94,9 @@ public abstract class AbstractLeg extends AbstractExtremities{
             var left_leg = health.getComponent(BodyComponents.LEFT_LEG);
             var right_leg = health.getComponent(BodyComponents.RIGHT_LEG);
             int safe_distance = 0;
-            if (left_leg.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS)
+            if (left_leg.getConditionHidden(BONE_NETHERITE) > ConditionAccessor.get(BONE_NETHERITE).maxValue() - EPS)
                 safe_distance++;
-            if (right_leg.getConditionHidden(BONE_NETHERITE) > BodyCondition.get(BONE_NETHERITE).maxValue() - EPS)
+            if (right_leg.getConditionHidden(BONE_NETHERITE) > ConditionAccessor.get(BONE_NETHERITE).maxValue() - EPS)
                 safe_distance++;
 
             float newDist = Math.max(0, event.getDistance() - safe_distance);

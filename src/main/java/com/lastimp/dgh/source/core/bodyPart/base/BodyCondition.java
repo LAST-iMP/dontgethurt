@@ -1,6 +1,5 @@
-package com.lastimp.dgh.api.bodyPart;
+package com.lastimp.dgh.source.core.bodyPart.base;
 
-import com.lastimp.dgh.api.event.DghBodyConditionRegisterEvent;
 import com.lastimp.dgh.api.event.EventHooks;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
@@ -14,44 +13,194 @@ import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.*;
 
 import java.util.*;
-import java.util.function.Function;
 
 import static com.lastimp.dgh.DontGetHurt.EPS;
+import static com.lastimp.dgh.api.bodyPart.ConditionAccessor.*;
 
 @Mod.EventBusSubscriber(modid = DontGetHurt.MODID)
 public class BodyCondition {
-    public static final Map<ResourceLocation, BodyCondition> conditions = new HashMap<>();
-    public static final List<ResourceLocation> bloodConditions = new LinkedList<>();
-    public static final List<ResourceLocation> injuryConditions = new LinkedList<>();
-    public static final List<ResourceLocation> surgeryConditions = new LinkedList<>();
-    public static final List<ResourceLocation> painConditions = new LinkedList<>();
-    public static final List<ResourceLocation> comfortConditions = new LinkedList<>();
-    public static final List<ResourceLocation> resistConditions = new LinkedList<>();
-    public static final Set<ResourceLocation> eyeVisible = new HashSet<>();
-    public static final Set<ResourceLocation> selfHealing = new HashSet<>();
-    public static final Map<ResourceLocation, RegistryObject<Item>> bones = new HashMap<>();
+    private static final String pathRoot = "textures/gui/sprites/container/condition_icons/";
+    private final ResourceLocation name;
+    public final ResourceLocation texture;
+    private float defaultValue = 0f;
+    private float minValue = 0f;
+    private float maxValue = 1.0f;
+    private float healingSpeed = 1.0f / Config.base_self_healing_time;
+    private float healingTS = 1.0f;
+    private int color = 0xFFFF0000;
+    private boolean isInjury = false;
+    private boolean isPain = false;
+    private boolean isComfort = false;
 
-    public static ResourceLocation addCondition(ResourceLocation name, Function<ResourceLocation, BodyCondition> func) {
-        conditions.put(name, func.apply(name));
-        return name;
+    private BodyCondition(ResourceLocation name) {
+        this.name = name;
+        this.texture = Common.ResourceLocation(name.getNamespace(), pathRoot + name.getPath() + ".png");
+    }
+
+    public boolean abnormal(float value) {
+        return defaultValue < value - EPS || defaultValue > value + EPS;
+    }
+
+    public boolean isInjury() {
+        return this.isInjury;
+    }
+
+    public boolean isPain() {
+        return this.isPain;
+    }
+
+    public boolean isComfort() {
+        return this.isComfort;
+    }
+
+    public int color() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public float healingSpeed() {
+        return healingSpeed;
+    }
+
+    public float defaultValue() {
+        return defaultValue;
+    }
+
+    public float healingTS() {
+        return healingTS;
+    }
+
+    public float maxValue() {
+        return maxValue;
+    }
+
+    public float minValue() {
+        return minValue;
+    }
+
+    public String name() {
+        return this.name.toString();
+    }
+
+    @Override
+    public String toString() {
+        return getComponent().getString();
+    }
+
+    public Component getComponent() {
+        return Component.translatable(this.name());
+    }
+
+    public static void init() {
+        var event = EventHooks.fireDghBodyConditionRegisterEvent();
+
+        AbstractVisibleBody.addCondition(event.visibleBody());
+        AbstractExtremities.addCondition(event.extremities());
+        AbstractArm.addCondition(event.arms());
+        AbstractLeg.addCondition(event.legs());
+        Head.addCondition(event.head());
+        Blood.addCondition(event.blood());
+        Torso.addCondition(event.torso());
+
+        event.underSkin().forEach(key -> {
+            Sutures.addCoverOnHeal(key);
+            Scalpel.addDiscoverOnHeal(key);
+        });
     }
 
     public static ConditionBuilder create(ResourceLocation name) {
         return new ConditionBuilder(new BodyCondition(name));
     }
 
-    public static BodyCondition get(ResourceLocation location) {
-        return conditions.get(location);
-    }
+    record ConditionBuilder(BodyCondition instance) {
+        public ConditionBuilder setValues(float defaultValue, float minValue, float maxValue) {
+            this.instance.defaultValue = defaultValue;
+            this.instance.minValue = minValue;
+            this.instance.maxValue = maxValue;
+            return this;
+        }
 
-    private BodyCondition(ResourceLocation name) {
-        this.name = name;
-        this.texture = Common.ResourceLocation(name.getNamespace(), pathRoot + name.getPath() + ".png");
+        public ConditionBuilder setHealing(float healingSpeed, float healingTS) {
+            this.instance.healingSpeed = healingSpeed;
+            this.instance.healingTS = healingTS;
+            return this;
+        }
+
+        public ConditionBuilder setHealing(float healingSpeed) {
+            return setHealing(healingSpeed, 0);
+        }
+
+        public ConditionBuilder setColor(int color) {
+            this.instance.color = color;
+            return this;
+        }
+
+        public ConditionBuilder isInjury() {
+            this.instance.isInjury = true;
+            injuryConditions.add(this.instance.name);
+            setColor(0xFFFF0000);
+            return this;
+        }
+
+        public ConditionBuilder isSurgery() {
+            this.instance.isPain = true;
+            surgeryConditions.add(this.instance.name);
+            setColor(0xFF89E9FF);
+            return this;
+        }
+
+        public ConditionBuilder isPain() {
+            this.instance.isPain = true;
+            painConditions.add(this.instance.name);
+            setColor(0xFFFFFF00);
+            return this;
+        }
+
+        public ConditionBuilder isComfort() {
+            this.instance.isComfort = true;
+            comfortConditions.add(this.instance.name);
+            setColor(0xFF00FF00);
+            return this;
+        }
+
+        public ConditionBuilder isResist() {
+            resistConditions.add(this.instance.name);
+            setColor(0xFFF4FFA7);
+            return this;
+        }
+
+        public ConditionBuilder isBone(RegistryObject<Item> bone) {
+            this.isSurgery();
+            bones.put(this.instance.name, bone);
+            return this;
+        }
+
+        public ConditionBuilder isBlood() {
+            this.instance.isPain = true;
+            bloodConditions.add(this.instance.name);
+            return this;
+        }
+
+        public ConditionBuilder eyeVisible() {
+            eyeVisible.add(this.instance.name);
+            return this;
+        }
+
+        public ConditionBuilder selfHealing() {
+            selfHealing.add(this.instance.name);
+            return this;
+        }
+
+        public BodyCondition build() {
+            return this.instance;
+        }
     }
 
     //肢体
@@ -316,269 +465,6 @@ public class BodyCondition {
             (name) -> create(name)
                     .setHealing(0.01f, 1.0f).isBlood().selfHealing().build()
     );
-
-    private static final String pathRoot = "textures/gui/sprites/container/condition_icons/";
-
-    private final ResourceLocation name;
-    public final ResourceLocation texture;
-
-    private float defaultValue = 0f;
-    private float minValue = 0f;
-    private float maxValue = 1.0f;
-
-    private float healingSpeed = 1.0f / Config.base_self_healing_time;
-    private float healingTS = 1.0f;
-
-    private int color = 0xFFFF0000;
-
-    private boolean isInjury = false;
-    private boolean isPain = false;
-    private boolean isComfort = false;
-
-    public boolean abnormal(float value) {
-        return defaultValue < value - EPS || defaultValue > value + EPS;
-    }
-
-    public boolean isInjury() {
-        return this.isInjury;
-    }
-
-    public boolean isPain() {
-        return this.isPain;
-    }
-
-    public boolean isComfort() {
-        return this.isComfort;
-    }
-
-    public int color() {
-        return color;
-    }
-
-    public void setColor(int color) {
-        this.color = color;
-    }
-
-    public float healingSpeed() {
-        return healingSpeed;
-    }
-
-    public float defaultValue() {
-        return defaultValue;
-    }
-
-    public float healingTS() {
-        return healingTS;
-    }
-
-    public float maxValue() {
-        return maxValue;
-    }
-
-    public float minValue() {
-        return minValue;
-    }
-
-    public String name() {
-        return this.name.toString();
-    }
-
-    @Override
-    public String toString() {
-        return getComponent().getString();
-    }
-
-    public Component getComponent() {
-        return Component.translatable(this.name());
-    }
-
-    record ConditionBuilder(BodyCondition instance) {
-        public ConditionBuilder setValues(float defaultValue, float minValue, float maxValue) {
-            this.instance.defaultValue = defaultValue;
-            this.instance.minValue = minValue;
-            this.instance.maxValue = maxValue;
-            return this;
-        }
-
-        public ConditionBuilder setHealing(float healingSpeed, float healingTS) {
-            this.instance.healingSpeed = healingSpeed;
-            this.instance.healingTS = healingTS;
-            return this;
-        }
-
-        public ConditionBuilder setHealing(float healingSpeed) {
-            return setHealing(healingSpeed, 0);
-        }
-
-        public ConditionBuilder setColor(int color) {
-            this.instance.color = color;
-            return this;
-        }
-
-        public ConditionBuilder isInjury() {
-            this.instance.isInjury = true;
-            injuryConditions.add(this.instance.name);
-            setColor(0xFFFF0000);
-            return this;
-        }
-
-        public ConditionBuilder isSurgery() {
-            this.instance.isPain = true;
-            surgeryConditions.add(this.instance.name);
-            setColor(0xFF89E9FF);
-            return this;
-        }
-
-        public ConditionBuilder isPain() {
-            this.instance.isPain = true;
-            painConditions.add(this.instance.name);
-            setColor(0xFFFFFF00);
-            return this;
-        }
-
-        public ConditionBuilder isComfort() {
-            this.instance.isComfort = true;
-            comfortConditions.add(this.instance.name);
-            setColor(0xFF00FF00);
-            return this;
-        }
-
-        public ConditionBuilder isResist() {
-            resistConditions.add(this.instance.name);
-            setColor(0xFFF4FFA7);
-            return this;
-        }
-
-        public ConditionBuilder isBone(RegistryObject<Item> bone) {
-            this.isSurgery();
-            bones.put(this.instance.name, bone);
-            return this;
-        }
-
-        public ConditionBuilder isBlood() {
-            this.instance.isPain = true;
-            bloodConditions.add(this.instance.name);
-            return this;
-        }
-
-        public ConditionBuilder eyeVisible() {
-            eyeVisible.add(this.instance.name);
-            return this;
-        }
-
-        public ConditionBuilder selfHealing() {
-            selfHealing.add(this.instance.name);
-            return this;
-        }
-
-        public BodyCondition build() {
-            return this.instance;
-        }
-    }
-
-    public static void init() {
-        var event = EventHooks.fireDghBodyConditionRegisterEvent();
-
-        AbstractVisibleBody.addCondition(event.visibleBody());
-        AbstractExtremities.addCondition(event.extremities());
-        AbstractArm.addCondition(event.arms());
-        AbstractLeg.addCondition(event.legs());
-        Head.addCondition(event.head());
-        Blood.addCondition(event.blood());
-        Torso.addCondition(event.torso());
-
-        event.underSkin().forEach(key -> {
-            Sutures.addCoverOnHeal(key);
-            Scalpel.addDiscoverOnHeal(key);
-        });
-    }
-
-    @SubscribeEvent
-    public static void registerCondition(DghBodyConditionRegisterEvent event) {
-        event.visibleBody().addAll(List.of(
-                SURGERY_INCISION,
-                CLAMPED_BLEEDING,
-                RETRACTED_SKIN,
-                DRILLED_BONES,
-                SAWED_BONES,
-
-                ARTERIAL_BLEEDING,
-
-                BURN,
-                INTERNAL_INJURY,
-                OPEN_WOUND,
-                PASS_THROUGH,
-                BLEED,
-                INFECTION,
-                FOREIGN_OBJECT,
-                BANDAGED,
-                HERB_BANDAGED,
-                BANDAGED_DIRTY,
-                OINTMENT,
-                CLAMPED_ARTERIES,
-
-                FRACTURE,
-                INTENSE_PAIN,
-                PLASTER_CAST,
-                CLAMP_PLATE,
-                BONE_DAMAGE,
-                BONE_DEATH,
-
-                BONE_WOOD,
-                BONE_STONE,
-                BONE_COPPER,
-                BONE_IRON,
-                BONE_GOLD,
-                BONE_DIMOND,
-                BONE_NETHERITE,
-
-                BURN_RES,
-                INTERNAL_RES,
-                OPEN_WOUND_RES
-        ));
-        event.extremities().addAll(List.of(
-                DISLOCATION,
-                GANGRENE,
-                SURGICAL_AMPUTATION,
-                TRAUMATIC_AMPUTATION
-        ));
-        event.head().addAll(List.of(
-                WITHDRAW,
-                TRAUMATIC_SHOCK,
-                BRAIN_DAMAGE,
-                COMA
-        ));
-        event.blood().addAll(List.of(
-                SEPSIS,
-                HEMOTRANSFUSION,
-                BLOOD_LOSS,
-                BLOOD_PRESSURE,
-                PH_LEVEL,
-                IMMUNITY,
-
-                OPIATE_OVERDOSE,
-                OPIATE_ADDICTED,
-                OXYGEN,
-                ANTIBIOTICS,
-                HARDENER
-        ));
-        event.torso().addAll(List.of(
-                ANALGESIA,
-                RESPIRATORY_ARREST,
-                AORTIC_RUPTURE,
-                HEARTRATE_INCREASE,
-                HEARTRATE_IRREGULAR,
-                HEARTRATE_STOP,
-                PNEUMOTHORAX,
-
-                PNEUMOTHORAX_NEEDLE
-        ));
-
-        event.underSkin().add(SAWED_BONES);
-        for (var key : bones.keySet()) {
-            event.underSkin().add(key);
-        }
-    }
 }
 
 
