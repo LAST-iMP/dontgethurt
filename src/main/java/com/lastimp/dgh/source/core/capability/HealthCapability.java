@@ -188,7 +188,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         this.outerHealing = Math.max(0, this.outerHealing - this.outerHealingDelta);
         this.outerHealingDelta = this.outerHealing <= 0 ? 0 : this.outerHealingDelta + 1.0f / Config.health_shield_redu / 20;
         this.isInfected = this.body.isInfected();
-        this.haveKidney = this.getComponent(TORSO).countOrganMatch(ModTags.KIDNEY) > 1;
+        this.haveKidney = this.getComponent(TORSO).countOrganMatch(ModTags.KIDNEY) > 0;
 
         this.leftArmVisible = updateIfDirty(AbstractExtremities.visible(this, LEFT_ARM), this.leftArmVisible);
         this.rightArmVisible = updateIfDirty(AbstractExtremities.visible(this, RIGHT_ARM), this.rightArmVisible);
@@ -241,7 +241,11 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     }
 
     public void addOriginOrganOnDeath(LivingEntity livingEntity) {
-        this.body.addOriginOrganOnDeath(livingEntity);
+        this.body.addOriginOrgan(livingEntity, false);
+    }
+
+    public void addOriginOrganFully(LivingEntity livingEntity) {
+        this.body.addOriginOrgan(livingEntity, true);
     }
 
     public boolean write(ItemStack stack, Component name, Component author) {

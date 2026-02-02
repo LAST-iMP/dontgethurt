@@ -17,7 +17,7 @@ public class FoodConsumerEffect extends MobEffect {
 
     @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
-        return duration % 40 == 0;
+        return duration % 60 == 0;
     }
 
     @Override
