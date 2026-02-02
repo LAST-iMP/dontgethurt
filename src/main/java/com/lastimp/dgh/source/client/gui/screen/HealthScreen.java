@@ -203,10 +203,12 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
     }
 
     protected boolean visibilityCheck(AbstractBody body, ResourceLocation key) {
+        if (this.onOrgan) return false;
         if (!HealthScanner.healthScannerConditions().contains(key)) return false;
         if (!this.menu.isDevice && !HealthScanner.eyesightConditions().contains(key)) return false;
+        if (ConditionAccessor.resistConditions.contains(key) && body.abnormalWithHidden(key)) return true;
         if (!ConditionAccessor.get(key).abnormal(body.getCondition(key).getDisplayValue())) return false;
-        return !this.onOrgan;
+        return true;
     }
 
     @Override
@@ -352,10 +354,6 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
 
     public BodyComponents getSelectedComponent() {
         return selectedComponent;
-    }
-
-    public void setSelectedComponent(BodyComponents component) {
-        this.selectedComponent = component;
     }
 
     @Override
