@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh.api.bodyPart;
 
+import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
@@ -61,6 +62,8 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     public abstract float getVitalityWeight();
 
     public abstract String getShortID();
+
+    public abstract BodyComponents getBodyType();
 
     public abstract Component getComponent();
 

@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh.source.core.bodyPart;
 
+import com.lastimp.dgh.api.enums.BodyComponents;
 import com.lastimp.dgh.api.tags.ModTags;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
@@ -68,6 +69,11 @@ public class Torso extends AbstractVisibleBody {
     @Override
     public String getShortID() {
         return "torso";
+    }
+
+    @Override
+    public BodyComponents getBodyType() {
+        return TORSO;
     }
 
     @Override

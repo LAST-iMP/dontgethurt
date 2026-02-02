@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh;
 
+import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.config.BlackList;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.config.HealthLivingEntityList;
@@ -54,6 +55,7 @@ public class DontGetHurt
             GameRules gameRules = level.getGameRules();
             gameRules.getRule(GameRules.RULE_NATURAL_REGENERATION).set(false, server);
         });
+        BodyCondition.init();
     }
 
 

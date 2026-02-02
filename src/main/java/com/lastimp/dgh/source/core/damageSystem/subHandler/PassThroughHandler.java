@@ -1,29 +1,19 @@
-package com.lastimp.dgh.source.core.damageSystem;
+package com.lastimp.dgh.source.core.damageSystem.subHandler;
 
 import com.lastimp.dgh.api.bodyPart.AbstractVisibleBody;
-import com.lastimp.dgh.api.bodyPart.BodyCondition;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.source.core.damageSystem.FollowInjuryHandler;
+import com.lastimp.dgh.source.core.damageSystem.InjuryHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 
 import static com.lastimp.dgh.api.bodyPart.BodyCondition.*;
-import static com.lastimp.dgh.api.enums.BodyComponents.BLOOD;
 
 public class PassThroughHandler {
     public static boolean handle(DamageSource source, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
-        float block = Math.min(damageAmount, body.getConditionHidden(OPEN_WOUND_RES));
-        damageAmount -= block;
-        body.addConditionHidden(OPEN_WOUND_RES, -block);
-
-        float resist = body.getConditionValue(OPEN_WOUND_RES) * Config.resistance_max;
-        resist += health.getComponent(BLOOD).getConditionValue(HARDENER) / 2;
-        damageAmount *= (1.0f - Math.min(1, resist));
-        body.injury(PASS_THROUGH, damageAmount);
-        if (body.abnormal(CLAMP_PLATE)) body.setConditionValue(CLAMP_PLATE, BodyCondition.get(CLAMP_PLATE).defaultValue());
-        health.addDirectInjury(source.getEntity(), body.getComponent(), Component.literal("贯穿伤"), damageAmount);
-        return damageAmount > 0;
+        return InjuryHandler.handle(source.getEntity(), health, body, PASS_THROUGH, OPEN_WOUND_RES, Component.literal("贯穿伤"), damageAmount);
     }
 
     public static void handleEntityAttack(DamageSource source, LivingEntity entity, HealthCapability health, AbstractVisibleBody body, float damageAmount) {

@@ -1,5 +1,7 @@
 package com.lastimp.dgh.api.bodyPart;
 
+import com.lastimp.dgh.api.event.DghBodyConditionRegisterEvent;
+import com.lastimp.dgh.api.event.EventHooks;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
@@ -12,7 +14,8 @@ import com.lastimp.dgh.source.item.tool.SurgeryBones;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.DeferredItem;
 
 import java.util.*;
@@ -20,8 +23,9 @@ import java.util.function.Function;
 
 import static com.lastimp.dgh.DontGetHurt.EPS;
 
+@EventBusSubscriber(modid = DontGetHurt.MODID)
 public class BodyCondition {
-    public static final Map<ResourceLocation, Lazy<BodyCondition>> conditions = new HashMap<>();
+    public static final Map<ResourceLocation, BodyCondition> conditions = new HashMap<>();
     public static final List<ResourceLocation> bloodConditions = new LinkedList<>();
     public static final List<ResourceLocation> injuryConditions = new LinkedList<>();
     public static final List<ResourceLocation> surgeryConditions = new LinkedList<>();
@@ -33,7 +37,7 @@ public class BodyCondition {
     public static final Map<ResourceLocation, DeferredItem<SurgeryBones>> bones = new HashMap<>();
 
     public static ResourceLocation addCondition(ResourceLocation name, Function<ResourceLocation, BodyCondition> func) {
-        conditions.put(name, Lazy.of(() -> func.apply(name)));
+        conditions.put(name, func.apply(name));
         return name;
     }
 
@@ -42,7 +46,7 @@ public class BodyCondition {
     }
 
     public static BodyCondition get(ResourceLocation location) {
-        return conditions.get(location).get();
+        return conditions.get(location);
     }
 
     private BodyCondition(ResourceLocation name) {
@@ -473,11 +477,25 @@ public class BodyCondition {
     }
 
     public static void init() {
-        for (var key : conditions.keySet()) {
-            conditions.get(key).get();
-        }
+        var event = EventHooks.fireDghBodyConditionRegisterEvent();
 
-        AbstractVisibleBody.addCondition(List.of(
+        AbstractVisibleBody.addCondition(event.visibleBody());
+        AbstractExtremities.addCondition(event.extremities());
+        AbstractArm.addCondition(event.arms());
+        AbstractLeg.addCondition(event.legs());
+        Head.addCondition(event.head());
+        Blood.addCondition(event.blood());
+        Torso.addCondition(event.torso());
+
+        event.underSkin().forEach(key -> {
+            Sutures.addCoverOnHeal(key);
+            Scalpel.addDiscoverOnHeal(key);
+        });
+    }
+
+    @SubscribeEvent
+    public static void registerCondition(DghBodyConditionRegisterEvent event) {
+        event.visibleBody().addAll(List.of(
                 SURGERY_INCISION,
                 CLAMPED_BLEEDING,
                 RETRACTED_SKIN,
@@ -518,22 +536,19 @@ public class BodyCondition {
                 INTERNAL_RES,
                 OPEN_WOUND_RES
         ));
-
-        AbstractExtremities.addCondition(List.of(
+        event.extremities().addAll(List.of(
                 DISLOCATION,
                 GANGRENE,
                 SURGICAL_AMPUTATION,
                 TRAUMATIC_AMPUTATION
         ));
-
-        Head.addCondition(List.of(
+        event.head().addAll(List.of(
                 WITHDRAW,
                 TRAUMATIC_SHOCK,
                 BRAIN_DAMAGE,
                 COMA
         ));
-
-        Blood.addCondition(List.of(
+        event.blood().addAll(List.of(
                 SEPSIS,
                 HEMOTRANSFUSION,
                 BLOOD_LOSS,
@@ -547,8 +562,7 @@ public class BodyCondition {
                 ANTIBIOTICS,
                 HARDENER
         ));
-
-        Torso.addCondition(List.of(
+        event.torso().addAll(List.of(
                 ANALGESIA,
                 RESPIRATORY_ARREST,
                 AORTIC_RUPTURE,
@@ -560,11 +574,9 @@ public class BodyCondition {
                 PNEUMOTHORAX_NEEDLE
         ));
 
-        Sutures.addCoverOnHeal(SAWED_BONES);
-        Scalpel.addDiscoverOnHeal(SAWED_BONES);
+        event.underSkin().add(SAWED_BONES);
         for (var key : bones.keySet()) {
-            Sutures.addCoverOnHeal(key);
-            Scalpel.addDiscoverOnHeal(key);
+            event.underSkin().add(key);
         }
     }
 }

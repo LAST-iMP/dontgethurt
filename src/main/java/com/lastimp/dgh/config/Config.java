@@ -242,7 +242,6 @@ public class Config {
         limited_body_part_vitality_lost = LIMITED_BODY_PART_VITALITY_LOST.getAsBoolean();
         enable_living_effect = ENABLE_LIVING_EFFECT.getAsBoolean();
         enable_self_suicide = ENABLE_SELF_SUICIDE.getAsBoolean();
-        BodyCondition.init();
     }
 
 }
