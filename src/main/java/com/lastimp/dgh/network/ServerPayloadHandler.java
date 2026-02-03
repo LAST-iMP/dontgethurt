@@ -54,14 +54,12 @@ public class ServerPayloadHandler {
                     DyingHandler.setLivingDead(player);
                     break;
                 case CALL_FOR_HELP:
-                    player.getServer().getPlayerList().getPlayers().forEach(p -> {
-                        p.sendSystemMessage(Component.literal(
-                                player.getScoreboardName() + "在("
-                                        + String.format("%.1f", player.position().x) + ", "
-                                        + String.format("%.1f", player.position().y) + ", "
-                                        + String.format("%.1f", player.position().z) + ")需要救助"
-                        ));
-                    });
+                    Utils.broadcastMessageToTeam(player, Component.literal(
+                            player.getScoreboardName() + "在("
+                                    + String.format("%.1f", player.position().x) + ", "
+                                    + String.format("%.1f", player.position().y) + ", "
+                                    + String.format("%.1f", player.position().z) + ")需要救助"
+                    ));
                     break;
                 case HEALTH_SCREEN_COMPONENT_SELECTION:
                     if (player.containerMenu instanceof HealthMenu healthMenu) {

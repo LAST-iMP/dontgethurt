@@ -17,7 +17,7 @@ public class BulletsInjuryHandler {
     public static void handleBullet(DamageSource source, float damageAmount, LivingEntity entity, LivingDamageEvent event) {
         boolean isByPass = event.getSource().is(DamageTypeTags.BYPASSES_ARMOR);
         if (!isByPass) {
-            InjuryEventHandler.handleEntityAttack(source, damageAmount, entity, event);
+            InjuryEventHandler.handleEntityAttack(source, damageAmount, entity);
         } else {
             handleBulletByPass(source, damageAmount, entity, event);
         }

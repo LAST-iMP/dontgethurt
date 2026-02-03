@@ -207,25 +207,25 @@ public class BodyCondition {
     public static final ResourceLocation BURN = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "burn"),
             (name) -> create(name)
                     .setHealing(0.5f / Config.base_self_healing_time, 0.25f)
-                    .setValues(0.0f, 0.0f, 2.0f)
+                    .setValues(0.0f, 0.0f, 2.01f)
                     .isInjury().eyeVisible().build()
     );
     public static final ResourceLocation INTERNAL_INJURY = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "internal_injury"),
             (name) -> create(name)
                     .setHealing(0.5f / Config.base_self_healing_time, 0.5f)
-                    .setValues(0.0f, 0.0f, 2.0f)
+                    .setValues(0.0f, 0.0f, 2.01f)
                     .isInjury().build()
     );
     public static final ResourceLocation OPEN_WOUND = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "open_wound"),
             (name) -> create(name)
                     .setHealing(0.5f / Config.base_self_healing_time, 0.25f)
-                    .setValues(0.0f, 0.0f, 2.0f)
+                    .setValues(0.0f, 0.0f, 2.01f)
                     .isInjury().eyeVisible().build()
     );
     public static final ResourceLocation PASS_THROUGH = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "pass_through"),
             (name) -> create(name)
                     .setHealing(0.5f / Config.base_self_healing_time, 0.25f)
-                    .setValues(0.0f, 0.0f, 2.0f)
+                    .setValues(0.0f, 0.0f, 2.01f)
                     .isInjury().eyeVisible().build()
     );
     public static final ResourceLocation BLEED = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "bleeding"),
@@ -412,7 +412,7 @@ public class BodyCondition {
     );
     public static final ResourceLocation BRAIN_DAMAGE = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "brain_damage"),
             (name) -> create(name)
-                    .setValues(0.0f, 0.0f, 2.1f)
+                    .setValues(0.0f, 0.0f, 2.01f)
                     .setHealing(0.001f).isInjury().build()
     );
     public static final ResourceLocation COMA = addCondition(Common.ResourceLocation(DontGetHurt.MODID, "coma"),

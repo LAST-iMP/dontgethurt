@@ -9,12 +9,12 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -79,6 +79,7 @@ public class DyingHandler {
     }
 
     public static void setLivingDead(LivingEntity entity) {
+        if (entity.isDeadOrDying()) return;
         if (entity instanceof ServerPlayer player) {
             if (checkTotemDeathProtection(player)) return;
         }
@@ -92,16 +93,18 @@ public class DyingHandler {
                 h.autoPulse().setStackInSlot(0, ItemStack.EMPTY);
             }
 
-            Entity source = null;
-            Entity directSource = null;
             var lastDamageSource = entity.getLastDamageSource();
-            if (lastDamageSource != null) {
-                source = lastDamageSource.getEntity();
-                directSource = lastDamageSource.getDirectEntity();
+            var record = HealthCapability.getAndApply(entity, HealthCapability::lastEntityDamage, null);
+            if (lastDamageSource == null || lastDamageSource.is(DamageTypeTags.IS_DROWNING)) {
+                if (record != null) {
+                    lastDamageSource = new DamageSource(getKillerDamageType(entity, h), record.getDirectEntity(), record.getEntity(), record.getSourcePosition());
+                } else {
+                    lastDamageSource = new DamageSource(getKillerDamageType(entity, h));
+                }
             }
-            h.addOriginOrganOnDeath(entity);
-            entity.setHealth(0.05f);
-            entity.hurt(new DamageSource(getKillerDamageType(entity, h), source, directSource),1);
+            entity.getCombatTracker().recordDamage(lastDamageSource, 1);
+            entity.setHealth(0);
+            entity.die(lastDamageSource);
         });
     }
 
@@ -113,14 +116,14 @@ public class DyingHandler {
             return damageType.getOrThrow(ModDamageType.SURGERY_DAMAGE);
         }
 
-        var torso = health.getComponent(TORSO);
-        if (torso.abnormal(RESPIRATORY_ARREST)) {
-            return damageType.getOrThrow(ModDamageType.CANT_BREATH_DAMAGE);
-        }
-
         var blood = health.getComponent(BLOOD);
         if (blood.getConditionValue(BLOOD_LOSS) > 0.7) {
             return damageType.getOrThrow(ModDamageType.BLEED_DAMAGE);
+        }
+
+        var torso = health.getComponent(TORSO);
+        if (torso.abnormal(RESPIRATORY_ARREST)) {
+            return damageType.getOrThrow(ModDamageType.CANT_BREATH_DAMAGE);
         }
 
         if (head.getConditionValue(BRAIN_DAMAGE) > 0.9) {
