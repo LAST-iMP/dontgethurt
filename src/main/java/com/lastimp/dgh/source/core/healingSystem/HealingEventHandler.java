@@ -7,10 +7,12 @@ import com.lastimp.dgh.config.HealthLivingEntityList;
 import com.lastimp.dgh.source.core.Utils;
 import com.lastimp.dgh.source.core.dyingSystem.DyingHandler;
 import com.lastimp.dgh.source.core.capability.HealthCapability;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
@@ -26,6 +28,7 @@ public class HealingEventHandler {
         if (livingEntity.isDeadOrDying()) return;
         if (!HealthCapability.has(livingEntity)) return;
 
+        boolean isDying = HealthCapability.isDying(livingEntity);
         HealthCapability.getAndApply(livingEntity, h -> {
             h = h.update(livingEntity);
             if (livingEntity instanceof ServerPlayer player && Utils.checkPlayerInvincible(player)) {
@@ -35,6 +38,11 @@ public class HealingEventHandler {
             }
             h.SYNIfDirty(livingEntity);
         });
+        if (!isDying && HealthCapability.isDying(livingEntity) && canLieDown(-1, livingEntity)) {
+            var name = livingEntity instanceof Player ? livingEntity.getScoreboardName() : livingEntity.getName().getString();
+            Utils.broadcastMessageToTeam(livingEntity, livingEntity.getCombatTracker().getDeathMessage());
+            Utils.broadcastMessageToTeam(livingEntity, Component.literal(name + "重伤倒地！"));
+        }
     }
 
     private static void updateLivingHealth(HealthCapability health, LivingEntity entity) {

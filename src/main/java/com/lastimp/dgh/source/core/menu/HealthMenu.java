@@ -108,8 +108,11 @@ public class HealthMenu extends AbstractContainerMenu {
             if (index < 9) {
                 if (!this.moveItemStackTo(stackInSlot, 9, 35, false))
                     return ItemStack.EMPTY;
-            } else {
+            } else if (index < 36) {
                 if (!this.moveItemStackTo(stackInSlot, 0, 8, false))
+                    return ItemStack.EMPTY;
+            } else {
+                if (!this.moveItemStackTo(stackInSlot, 0, 35, false))
                     return ItemStack.EMPTY;
             }
 
@@ -144,8 +147,7 @@ public class HealthMenu extends AbstractContainerMenu {
         }
         // 动态背包内部
         for (int row = 0; row < 9; row++) {
-            int index = row;
-            var newSlot = new DynamicSlot(null, index, 234, 22 + row * 18);
+            var newSlot = new DynamicSlot(null, row, 234, 22 + row * 18);
             this.addSlot(newSlot);
             this.bagSlots.add(newSlot);
         }

@@ -2,6 +2,7 @@ package com.lastimp.dgh.source.core;
 
 import com.lastimp.dgh.source.core.capability.HealthCapability;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.scores.Team;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +24,26 @@ import static com.lastimp.dgh.source.core.damageSystem.InjuryEventHandler.INJURY
 
 public abstract class Utils {
     public static final RandomSource randomSource = RandomSource.create(987654321);
+
+    public static void broadcastMessageToTeam(ServerPlayer player, Component component) {
+        Team team = player.getTeam();
+        if (team != null && team.getDeathMessageVisibility() != Team.Visibility.ALWAYS) {
+            if (team.getDeathMessageVisibility() == Team.Visibility.HIDE_FOR_OTHER_TEAMS) {
+                player.server.getPlayerList().broadcastSystemToTeam(player, component);
+            } else if (team.getDeathMessageVisibility() == Team.Visibility.HIDE_FOR_OWN_TEAM) {
+                player.server.getPlayerList().broadcastSystemToAllExceptTeam(player, component);
+            }
+        } else {
+            player.server.getPlayerList().broadcastSystemMessage(component, false);
+        }
+    }
+
+    public static void broadcastMessageToTeam(LivingEntity livingEntity, Component component) {
+        var server = livingEntity.getServer();
+        if (server != null) {
+            server.getPlayerList().broadcastSystemMessage(component, false);
+        }
+    }
 
     public static float[] getAttackPart(LivingEntity attacker, LivingEntity target, int strickLevel) {
         if (!(attacker instanceof Player)) return INJURY_WEIGHT;

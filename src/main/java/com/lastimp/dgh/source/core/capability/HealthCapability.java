@@ -25,6 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -45,7 +46,7 @@ import static com.lastimp.dgh.api.enums.OperationType.SYN;
 
 public class HealthCapability implements INBTSerializable<CompoundTag> {
     public static final String HEALTH_RECORD = "health_record";
-
+    //持久属性
     private final WholeBody body = new WholeBody();
     private final DynamicItemHandler oxygenMask = new DynamicItemHandler();
     private final DynamicItemHandler autoPulse = new DynamicItemHandler();
@@ -56,13 +57,8 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     private int nearBedTick = 0;
     private float outerHealing = 0;
     private float outerHealingDelta = 0;
-    private boolean isInfected = false;
-    private int oxygenMaskCoolDown = 0;
-    private int autoPulseCoolDown = 0;
-    private boolean abnormal = true;
-    public LivingEntity currentHealer = null;
-    private boolean haveKidney = true;
-
+    private UUID lastHealer = UUID.randomUUID();
+    //同步属性
     private int armBreak = 0;
     private int availableEye = 2;
     private int maxAirSupply = 300;
@@ -71,10 +67,15 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     private boolean leftLegVisible = true;
     private boolean rightLegVisible = true;
     private boolean isDown = false;
-
-    private UUID lastHealer = UUID.randomUUID();
-
+    //临时属性
     private boolean isDirty = true;
+    private boolean haveKidney = true;
+    private boolean isInfected = false;
+    private boolean abnormal = true;
+    private int oxygenMaskCoolDown = 0;
+    private int autoPulseCoolDown = 0;
+    public LivingEntity currentHealer = null;
+    private DamageSource lastEntityDamage;
 
     private final List<InjuryRecord> directInjury = new LinkedList<>();
     private final List<InjuryRecord> lastDeathDirectInjury = new LinkedList<>();
@@ -109,6 +110,34 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         if (has(entity)) {
             HealthCapability.getAndApply(entity, HealthCapability::handPulse);
         }
+    }
+
+    public static boolean isDown(LivingEntity entity) {
+        return HealthCapability.getAndApply(entity, h -> {
+            if (entity.level().isClientSide()){
+                return h.isDown;
+            } else {
+                if (entity instanceof ServerPlayer player && Utils.checkPlayerInvincible(player)) return false;
+                if (isDying(entity)) return true;
+                if (entity.hasEffect(ModEffects.ANALGESIA_POISON_EFFECT)) return true;
+                if (h.getComponent(HEAD).getConditionValue(COMA) > 0.5f) return true;
+                if (h.isFrozen()) return true;
+                return false;
+            }
+        }, false);
+    }
+
+    public static boolean isFootLostDown(LivingEntity entity) {
+        return HealthCapability.getAndApply(entity, h -> !h.rightLegVisible && !h.leftLegVisible, false);
+    }
+
+    public static boolean isDying(LivingEntity entity) {
+        return entity.getHealth() < 0.05 && !entity.isDeadOrDying();
+    }
+
+    public static void recordEntityDamage(LivingEntity livingEntity, DamageSource source) {
+        if (source == null || source.getEntity() == null) return;
+        HealthCapability.getAndApply(livingEntity, h -> h.setLastEntityDamage(source));
     }
 
     public AbstractBody getComponent(BodyComponents component) {
@@ -200,6 +229,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
         if (!this.abnormal) {
             this.directInjury.clear();
             this.currentHealer = null;
+            this.lastEntityDamage = null;
         }
         this.isDown = updateIfDirty(isDown(entity), this.isDown);
     }
@@ -326,6 +356,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
     public void respawnDeserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         this.body.respawnDeserializeNBT(provider, nbt.getCompound("body"));
         deserializeRecord("directInjury", this.lastDeathDirectInjury, nbt, provider);
+        this.isDirty = true;
     }
 
     @Override
@@ -346,6 +377,7 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
         deserializeRecord("directInjury", this.directInjury, nbt, provider);
         deserializeRecord("lastDeathDirectInjury", this.lastDeathDirectInjury, nbt, provider);
+        this.isDirty = true;
     }
 
     private static void deserializeRecord(String key, List<InjuryRecord> recordList, CompoundTag nbt, HolderLookup.Provider provider) {
@@ -361,29 +393,6 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
                 this.getComponent(RIGHT_LEG).abnormal(INTENSE_PAIN) ||
                 this.getComponent(HEAD).abnormal(INTENSE_PAIN) ||
                 this.getComponent(TORSO).abnormal(INTENSE_PAIN);
-    }
-
-    public static boolean isFootLostDown(LivingEntity entity) {
-        return HealthCapability.getAndApply(entity, h -> !h.rightLegVisible && !h.leftLegVisible, false);
-    }
-
-    public static boolean isDown(LivingEntity entity) {
-        return HealthCapability.getAndApply(entity, h -> {
-            if (entity.level().isClientSide()){
-                return h.isDown;
-            } else {
-                if (entity instanceof ServerPlayer player && Utils.checkPlayerInvincible(player)) return false;
-                if (isDying(entity)) return true;
-                if (entity.hasEffect(ModEffects.ANALGESIA_POISON_EFFECT)) return true;
-                if (h.getComponent(HEAD).getConditionValue(COMA) > 0.5f) return true;
-                if (h.isFrozen()) return true;
-                return false;
-            }
-        }, false);
-    }
-
-    public static boolean isDying(LivingEntity entity) {
-        return entity.getHealth() < 0.05 && !entity.isDeadOrDying();
     }
 
     public float bloodOxygenFactor() {
@@ -486,6 +495,14 @@ public class HealthCapability implements INBTSerializable<CompoundTag> {
 
     public int maxAirSupply() {
         return this.maxAirSupply;
+    }
+
+    public DamageSource lastEntityDamage() {
+        return lastEntityDamage;
+    }
+
+    public void setLastEntityDamage(DamageSource lastEntityDamage) {
+        this.lastEntityDamage = lastEntityDamage;
     }
 
     public boolean isFrozen() {

@@ -206,13 +206,13 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add("death.attack."+SURGERY_DAMAGE.location(), "%1$s 死于手术事故");
         this.add("death.attack."+CANT_BREATH_DAMAGE.location(), "%1$s 无法呼吸");
 
-        this.add("death.attack."+OPEN_WOUND_DAMAGE.location()+".player", "%1$s 的身体被撕碎了");
-        this.add("death.attack."+INTERNAL_INJURY_DAMAGE.location()+".player", "%1$s 体内一塌糊涂");
-        this.add("death.attack."+BURN_DAMAGE.location()+".player", "%1$s 变成了黑碳");
-        this.add("death.attack."+BRAIN_DAMAGE.location()+".player", "%1$s 变成了植物人");
-        this.add("death.attack."+BLEED_DAMAGE.location()+".player", "%1$s 失血过多");
+        this.add("death.attack."+OPEN_WOUND_DAMAGE.location()+".player", "%1$s 的身体被%2$s撕碎了");
+        this.add("death.attack."+INTERNAL_INJURY_DAMAGE.location()+".player", "%1$s 的体内被%2$s打烂了");
+        this.add("death.attack."+BURN_DAMAGE.location()+".player", "%1$s 被%2$s变成了黑碳");
+        this.add("death.attack."+BRAIN_DAMAGE.location()+".player", "%1$s 被%2$s变成了植物人");
+        this.add("death.attack."+BLEED_DAMAGE.location()+".player", "%1$s 由于%2$s失血过多");
         this.add("death.attack."+SURGERY_DAMAGE.location()+".player", "%1$s 死于手术事故");
-        this.add("death.attack."+CANT_BREATH_DAMAGE.location()+".player", "%1$s 无法呼吸");
+        this.add("death.attack."+CANT_BREATH_DAMAGE.location()+".player", "%1$s 由于%2$s无法呼吸");
 
         this.add("entity.minecraft.villager.dgh.doctor", "医生");
 
