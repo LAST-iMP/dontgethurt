@@ -125,8 +125,11 @@ public class HealthMenu extends AbstractContainerMenu {
             if (index < 9) {
                 if (!this.moveItemStackTo(stackInSlot, 9, 35, false))
                     return ItemStack.EMPTY;
-            } else {
+            } else if (index < 36) {
                 if (!this.moveItemStackTo(stackInSlot, 0, 8, false))
+                    return ItemStack.EMPTY;
+            } else {
+                if (!this.moveItemStackTo(stackInSlot, 0, 35, false))
                     return ItemStack.EMPTY;
             }
 

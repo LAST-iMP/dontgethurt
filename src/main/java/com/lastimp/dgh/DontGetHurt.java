@@ -10,6 +10,7 @@ import com.lastimp.dgh.source.register.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.GameRules;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -64,6 +65,10 @@ public class DontGetHurt
             GameRules gameRules = level.getGameRules();
             gameRules.getRule(GameRules.RULE_NATURAL_REGENERATION).set(false, server);
         });
+    }
+
+    @SubscribeEvent
+    public void onServerAboutToStart(ServerAboutToStartEvent event) {
         BodyCondition.init();
     }
 
