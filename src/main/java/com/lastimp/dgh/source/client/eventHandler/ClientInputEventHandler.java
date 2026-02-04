@@ -120,7 +120,7 @@ public class ClientInputEventHandler {
     @SubscribeEvent
     public static void onMouseInput(InputEvent.MouseButton.Pre event) {
         ClientAccessor.getPlayer().ifPresent(player -> {
-            if (HealthCapability.isDying(player)) {
+            if (HealthCapability.isDown(player)) {
                 if (callForHelpTick <= 0 && event.getAction() == GLFW.GLFW_PRESS) {
                     Common.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.CALL_FOR_HELP, 0));
                     callForHelpTick = 80;
@@ -132,12 +132,12 @@ public class ClientInputEventHandler {
     }
 
     @SubscribeEvent
-    public static void onInputTick(TickEvent.PlayerTickEvent event) {
+    public static void onInputTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
         ClientAccessor.getPlayer().ifPresent(player -> {
-            if (!event.player.getUUID().equals(player.getUUID()) || !Config.enable_self_suicide) return;
+            if (!Config.enable_self_suicide) return;
 
-            if (KeyBinding.GIVE_UP.isDown() && HealthCapability.isDying(event.player)) {
+            if (KeyBinding.GIVE_UP.isDown() && HealthCapability.isDown(player)) {
                 giveUpTick++;
                 if (giveUpTick >= 100) {
                     Common.sendToServer(MyKeyPressedData.getInstance(KeyPressedType.GIVE_UP, 0));

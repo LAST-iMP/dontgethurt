@@ -29,6 +29,7 @@ public class HealingEventHandler {
         if (!HealthCapability.has(livingEntity)) return;
 
         boolean isDying = HealthCapability.isDying(livingEntity);
+        boolean isDown = HealthCapability.isDown(livingEntity);
         HealthCapability.getAndApply(livingEntity, h -> {
             h = h.update(livingEntity);
             if (livingEntity instanceof ServerPlayer player && Utils.checkPlayerInvincible(player)) {
@@ -38,10 +39,12 @@ public class HealingEventHandler {
             }
             h.SYNIfDirty(livingEntity);
         });
+        var name = livingEntity instanceof Player ? livingEntity.getScoreboardName() : livingEntity.getName().getString();
         if (!isDying && HealthCapability.isDying(livingEntity) && canLieDown(-1, livingEntity)) {
-            var name = livingEntity instanceof Player ? livingEntity.getScoreboardName() : livingEntity.getName().getString();
             Utils.broadcastMessageToTeam(livingEntity, livingEntity.getCombatTracker().getDeathMessage());
-            Utils.broadcastMessageToTeam(livingEntity, Component.literal(name + "重伤倒地！"));
+            Utils.broadcastMessageToTeam(livingEntity, Component.literal(name + "重伤濒死！"));
+        } else if (!isDown && HealthCapability.isDown(livingEntity)) {
+            Utils.broadcastMessageToTeam(livingEntity, Component.literal(name + "晕倒了！"));
         }
     }
 

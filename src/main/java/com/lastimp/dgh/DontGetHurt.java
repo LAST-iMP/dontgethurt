@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh;
 
+import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.source.core.bodyPart.base.BodyCondition;
 import com.lastimp.dgh.config.BlackList;
 import com.lastimp.dgh.config.Config;
@@ -67,11 +68,6 @@ public class DontGetHurt
         });
     }
 
-    @SubscribeEvent
-    public void onServerAboutToStart(ServerAboutToStartEvent event) {
-        BodyCondition.init();
-    }
-
     private void commonSetup(final FMLCommonSetupEvent event)
     {
         LOGGER.info("HELLO FROM COMMON SETUP");
@@ -79,6 +75,7 @@ public class DontGetHurt
         event.enqueueWork(() -> {
             BlackList.loadExternalBlacklist();
             HealthLivingEntityList.loadExternallist();
+            ConditionAccessor.init();
         });
     }
 }

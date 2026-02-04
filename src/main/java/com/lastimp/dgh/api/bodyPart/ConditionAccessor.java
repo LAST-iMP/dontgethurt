@@ -1,13 +1,14 @@
 package com.lastimp.dgh.api.bodyPart;
 
-import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.api.event.DghBodyConditionRegisterEvent;
-import com.lastimp.dgh.source.core.bodyPart.base.BodyCondition;
+import com.lastimp.dgh.source.core.bodyPart.Blood;
+import com.lastimp.dgh.source.core.bodyPart.Head;
+import com.lastimp.dgh.source.core.bodyPart.Torso;
+import com.lastimp.dgh.source.core.bodyPart.base.*;
+import com.lastimp.dgh.source.item.medicine.Sutures;
+import com.lastimp.dgh.source.item.tool.Scalpel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.*;
@@ -15,7 +16,6 @@ import java.util.function.Function;
 
 import static com.lastimp.dgh.source.core.bodyPart.base.BodyCondition.*;
 
-@Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ConditionAccessor {
     public static final Map<ResourceLocation, Lazy<BodyCondition>> conditions = new HashMap<>();
     public static final List<ResourceLocation> bloodConditions = new LinkedList<>();
@@ -37,9 +37,8 @@ public class ConditionAccessor {
         return conditions.get(location).get();
     }
 
-    @SubscribeEvent
-    public static void registerCondition(DghBodyConditionRegisterEvent event) {
-        event.visibleBody().addAll(List.of(
+    public static void init() {
+        AbstractVisibleBody.addCondition(List.of(
                 SURGERY_INCISION,
                 CLAMPED_BLEEDING,
                 RETRACTED_SKIN,
@@ -80,19 +79,19 @@ public class ConditionAccessor {
                 INTERNAL_RES,
                 OPEN_WOUND_RES
         ));
-        event.extremities().addAll(List.of(
+        AbstractExtremities.addCondition(List.of(
                 DISLOCATION,
                 GANGRENE,
                 SURGICAL_AMPUTATION,
                 TRAUMATIC_AMPUTATION
         ));
-        event.head().addAll(List.of(
+        Head.addCondition(List.of(
                 WITHDRAW,
                 TRAUMATIC_SHOCK,
                 BRAIN_DAMAGE,
                 COMA
         ));
-        event.blood().addAll(List.of(
+        Blood.addCondition(List.of(
                 SEPSIS,
                 HEMOTRANSFUSION,
                 BLOOD_LOSS,
@@ -106,7 +105,7 @@ public class ConditionAccessor {
                 ANTIBIOTICS,
                 HARDENER
         ));
-        event.torso().addAll(List.of(
+        Torso.addCondition(List.of(
                 ANALGESIA,
                 RESPIRATORY_ARREST,
                 AORTIC_RUPTURE,
@@ -118,9 +117,11 @@ public class ConditionAccessor {
                 PNEUMOTHORAX_NEEDLE
         ));
 
-        event.underSkin().add(SAWED_BONES);
+        Sutures.addCoverOnHeal(SAWED_BONES);
+        Scalpel.addDiscoverOnHeal(SAWED_BONES);
         for (var key : bones.keySet()) {
-            event.underSkin().add(key);
+            Sutures.addCoverOnHeal(key);
+            Scalpel.addDiscoverOnHeal(key);
         }
     }
 }

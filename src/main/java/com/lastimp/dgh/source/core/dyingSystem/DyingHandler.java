@@ -94,7 +94,7 @@ public class DyingHandler {
             }
 
             var lastDamageSource = entity.getLastDamageSource();
-            var record = HealthCapability.getAndApply(entity, HealthCapability::lastEntityDamage, null);
+            var record = h.lastEntityDamage();
             if (lastDamageSource == null || lastDamageSource.is(DamageTypeTags.IS_DROWNING)) {
                 if (record != null) {
                     lastDamageSource = new DamageSource(getKillerDamageType(entity, h), record.getDirectEntity(), record.getEntity(), record.getSourcePosition());

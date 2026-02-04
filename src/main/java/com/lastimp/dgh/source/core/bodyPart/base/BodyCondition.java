@@ -1,14 +1,8 @@
 package com.lastimp.dgh.source.core.bodyPart.base;
 
-import com.lastimp.dgh.api.event.EventHooks;
 import com.lastimp.dgh.config.Config;
 import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.neoforge.Common;
-import com.lastimp.dgh.source.core.bodyPart.Head;
-import com.lastimp.dgh.source.core.bodyPart.Blood;
-import com.lastimp.dgh.source.core.bodyPart.Torso;
-import com.lastimp.dgh.source.item.medicine.Sutures;
-import com.lastimp.dgh.source.item.tool.Scalpel;
 import com.lastimp.dgh.source.register.ModItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -448,26 +442,6 @@ public class BodyCondition {
             (name) -> create(name)
                     .setHealing(0.01f, 1.0f).isBlood().selfHealing().build()
     );
-
-    private static boolean initialized = false;
-    public static void init() {
-        if (initialized) return;
-        var event = EventHooks.fireDghBodyConditionRegisterEvent();
-
-        AbstractVisibleBody.addCondition(event.visibleBody());
-        AbstractExtremities.addCondition(event.extremities());
-        AbstractArm.addCondition(event.arms());
-        AbstractLeg.addCondition(event.legs());
-        Head.addCondition(event.head());
-        Blood.addCondition(event.blood());
-        Torso.addCondition(event.torso());
-
-        event.underSkin().forEach(key -> {
-            Sutures.addCoverOnHeal(key);
-            Scalpel.addDiscoverOnHeal(key);
-        });
-        initialized = true;
-    }
 }
 
 

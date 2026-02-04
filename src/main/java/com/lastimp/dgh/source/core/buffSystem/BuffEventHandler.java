@@ -38,8 +38,8 @@ public class BuffEventHandler {
     }
 
     private static void updateDyingEffects(LivingEntity entity) {
-        var isDying = HealthCapability.isDying(entity);
-        if (isDying && Config.player_glowing)
+        var isDown = HealthCapability.isDown(entity);
+        if (isDown && Config.player_glowing)
             entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 19));
     }
 

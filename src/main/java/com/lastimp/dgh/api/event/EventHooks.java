@@ -17,10 +17,4 @@ public class EventHooks {
         MinecraftForge.EVENT_BUS.post(event);
         return event;
     }
-
-    public static DghBodyConditionRegisterEvent fireDghBodyConditionRegisterEvent() {
-        var event = new DghBodyConditionRegisterEvent();
-        MinecraftForge.EVENT_BUS.post(event);
-        return event;
-    }
 }

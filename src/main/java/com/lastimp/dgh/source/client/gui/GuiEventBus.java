@@ -116,7 +116,7 @@ public class GuiEventBus {
     }
 
     private static void renderDyingOverlay(LocalPlayer player, GuiGraphics graphics) {
-        if (!HealthCapability.isDying(player)) return;
+        if (!HealthCapability.isDown(player)) return;
         graphics.drawCenteredString(ClientAccessor.mc().font,
                 Component.literal("按下鼠标求救"),
                 graphics.guiWidth() / 2, graphics.guiHeight() / 2 - 50, 0xFFFFFFFF
