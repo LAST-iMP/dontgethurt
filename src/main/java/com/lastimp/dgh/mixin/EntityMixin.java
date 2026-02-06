@@ -1,9 +1,7 @@
 package com.lastimp.dgh.mixin;
 
-import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.common.capability.HealthCapability;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;

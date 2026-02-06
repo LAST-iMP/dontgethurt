@@ -1,6 +1,6 @@
 package com.lastimp.dgh.mixin.client;
 
-import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.common.capability.HealthCapability;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;

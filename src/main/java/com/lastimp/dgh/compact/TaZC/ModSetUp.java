@@ -1,12 +1,12 @@
 package com.lastimp.dgh.compact.TaZC;
 
-import com.lastimp.dgh.DontGetHurt;
+import com.lastimp.dgh.common.utils.Utils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
-@Mod.EventBusSubscriber(modid = DontGetHurt.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = Utils.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModSetUp {
     @SubscribeEvent
     public static void onAttachCapabilities(final FMLCommonSetupEvent event) {

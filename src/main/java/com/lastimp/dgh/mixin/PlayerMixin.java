@@ -1,6 +1,6 @@
 package com.lastimp.dgh.mixin;
 
-import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.common.capability.HealthCapability;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

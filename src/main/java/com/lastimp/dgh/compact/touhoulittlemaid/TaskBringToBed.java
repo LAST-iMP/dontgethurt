@@ -1,39 +1,31 @@
 package com.lastimp.dgh.compact.touhoulittlemaid;
 
 import com.github.tartaricacid.touhoulittlemaid.api.task.IMaidTask;
-import com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.task.MaidArriveAtBlockTask;
-import com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.task.MaidMoveToPredicateBlockTask;
 import com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.task.MaidWalkToLivingEntityTask;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.google.common.collect.Lists;
 import com.lastimp.dgh.DontGetHurt;
-import com.lastimp.dgh.neoforge.Common;
-import com.lastimp.dgh.source.block.OperatingBedBlock;
-import com.lastimp.dgh.source.core.capability.HealthCapability;
-import com.lastimp.dgh.source.entity.StretcherEntity;
-import com.lastimp.dgh.source.item.tool.StretcherItem;
-import com.lastimp.dgh.source.register.ModItems;
+import com.lastimp.dgh.common.capability.HealthCapability;
+import com.lastimp.dgh.common.item.tool.StretcherItem;
+import com.lastimp.dgh.common.entry.register.ModItems;
+import com.lastimp.dgh.common.utils.ResourceHelper;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.BehaviorControl;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public class TaskBringToBed implements IMaidTask {
-    public static final ResourceLocation ID = Common.ResourceLocation(DontGetHurt.MODID, "bring_to_bed");
+    public static final ResourceLocation ID = ResourceHelper.ModResource("bring_to_bed");
 
     @Override
     public ResourceLocation getUid() {

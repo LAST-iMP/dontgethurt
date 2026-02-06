@@ -1,0 +1,127 @@
+package com.lastimp.dgh.common.capability.healthCore.damageSystem;
+
+import com.lastimp.dgh.common.PlatformService;
+import com.lastimp.dgh.common.capability.bodyPart.base.AbstractArm;
+import com.lastimp.dgh.common.capability.bodyPart.base.AbstractExtremities;
+import com.lastimp.dgh.common.capability.bodyPart.base.AbstractVisibleBody;
+import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.common.utils.Utils;
+import com.lastimp.dgh.common.capability.bodyPart.bodies.Head;
+import com.lastimp.dgh.common.capability.bodyPart.bodies.Torso;
+import com.lastimp.dgh.common.capability.HealthCapability;
+import com.lastimp.dgh.common.entry.register.ModItems;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+
+import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
+
+public abstract class FollowInjuryHandler {
+    public static void dislocationHandler(AbstractExtremities body, HealthCapability health, float damageAmount) {
+        float factor = (0.9f - PlatformService.CONFIG.BASE_DISLOCATION_THRESHOLD()) / PlatformService.CONFIG.BASE_DISLOCATION_MAX_PROB();
+        dislocationHandler(
+                body, health, damageAmount,
+                PlatformService.CONFIG.BASE_DISLOCATION_THRESHOLD(), factor, 0, PlatformService.CONFIG.BASE_DISLOCATION_MAX_PROB(), body.fractCheckTimes(health)
+        );
+    }
+
+    public static void dislocationHandler(AbstractExtremities body, HealthCapability health, float damageAmount, float threshold, float factor, float p_min, float p_max, int check) {
+        if (!body.canHurtBone()) return;
+
+        if (Utils.randomCheck(damageAmount, threshold, factor, p_min, p_max, check)) {
+            if (!body.isBadBandaged() && !body.isBadBandaged()) {
+                body.setConditionValue(DISLOCATION, ConditionAccessor.get(DISLOCATION).maxValue());
+                health.addDirectInjury(body.getComponent(), Component.literal("脱臼"), 1);
+            }
+        }
+    }
+
+    public static void fractionHandler(AbstractVisibleBody body, HealthCapability health, float damageAmount) {
+        float threshold = body.fractThreshold();
+        float factor = (0.9f - threshold) / PlatformService.CONFIG.BASE_FRACTURE_MAX_PROB();
+        fractionHandler(body, health, damageAmount, threshold, factor, 0, PlatformService.CONFIG.BASE_FRACTURE_MAX_PROB(), body.fractCheckTimes(health));
+    }
+
+    public static void fractionHandler(AbstractVisibleBody body, HealthCapability health, float damageAmount, float threshold, float factor, float p_min, float p_max, int check) {
+        if (!body.canHurtBone()) return;
+
+        if (Utils.randomCheck(damageAmount, threshold, factor, p_min, p_max, check)) {
+            body.setConditionValue(FRACTURE, ConditionAccessor.get(FRACTURE).maxValue());
+            health.addDirectInjury(body.getComponent(), Component.literal("骨折"), 1);
+            if (body.abnormal(PLASTER_CAST))
+                body.setConditionValue(PLASTER_CAST, ConditionAccessor.get(PLASTER_CAST).defaultValue());
+            arterialBleedingByFractionHandler(body, health);
+        }
+    }
+
+    public static void arterialBleedingByFractionHandler(AbstractVisibleBody body, HealthCapability health) {
+        if ((body instanceof AbstractExtremities || body instanceof Head) && Mth.randomBetween(Utils.randomSource, 0f, 1.0f) < PlatformService.CONFIG.FRACTURE_ARTERIAL_PROB()) {
+            body.injury(ARTERIAL_BLEEDING, ConditionAccessor.get(ARTERIAL_BLEEDING).maxValue());
+            health.addDirectInjury(body.getComponent(), Component.literal("动脉出血"),  1);
+        }
+    }
+
+    public static void arterialBleedingHandler(AbstractVisibleBody body, HealthCapability health) {
+        if (body.getConditionValue(BLEED) > 0.8) {
+            handleArterialBleeding(body, health, 1);
+        }
+    }
+
+    private static void handleArterialBleeding(AbstractVisibleBody body, HealthCapability health, int level) {
+        if ((body instanceof AbstractExtremities || body instanceof Head)) {
+            body.injury(ARTERIAL_BLEEDING, ConditionAccessor.get(ARTERIAL_BLEEDING).maxValue());
+            health.addDirectInjury(body.getComponent(), Component.literal("动脉出血"),  level);
+        } else if (body instanceof Torso torso) {
+            torso.injury(AORTIC_RUPTURE, ConditionAccessor.get(AORTIC_RUPTURE).maxValue());
+            health.addDirectInjury(body.getComponent(), Component.literal("主动脉破裂"), level);
+        }
+    }
+
+    public static void pneumothoraxHandler(AbstractVisibleBody body, HealthCapability health) {
+        if (!(body instanceof Torso torso)) return;
+        if (Mth.randomBetween(Utils.randomSource, 0f, 1.0f) > PlatformService.CONFIG.BASE_PNEUMOTHORAX_PROB()) return;
+
+        torso.injury(PNEUMOTHORAX, ConditionAccessor.get(PNEUMOTHORAX).maxValue());
+        health.addDirectInjury(body.getComponent(), Component.literal("气胸"), 1);
+    }
+
+    public static void traumaticAmputationHandler(LivingEntity entity, AbstractVisibleBody body, HealthCapability health, float damageAmount, float threshold, float factor, float p_min, float p_max) {
+        if (!(body instanceof AbstractExtremities)) return;
+        if (!body.canHurtBone()) return;
+        if (!body.abnormal(FRACTURE)) return;
+        if (body.abnormal(TRAUMATIC_AMPUTATION)) return;
+
+        if (Utils.randomCheck(damageAmount, threshold, factor, p_min, p_max)) {
+            body.injury(TRAUMATIC_AMPUTATION, ConditionAccessor.get(TRAUMATIC_AMPUTATION).maxValue());
+            body.injury(ARTERIAL_BLEEDING, ConditionAccessor.get(ARTERIAL_BLEEDING).maxValue());
+            body.injury(DISLOCATION, -ConditionAccessor.get(DISLOCATION).maxValue());
+            body.injury(FRACTURE, -ConditionAccessor.get(FRACTURE).maxValue());
+            Item limb = body instanceof AbstractArm ? ModItems.HUMAN_HAND.get() : ModItems.HUMAN_LEG.get();
+            Utils.drop(limb, entity, 1);
+            health.addDirectInjury(body.getComponent(), Component.literal("创伤性截肢"), 1);
+            health.addDirectInjury(body.getComponent(), Component.literal("动脉出血"),  1);
+        }
+    }
+
+    public static void foreignObjectHandler(AbstractVisibleBody body, HealthCapability health, float currentDamage, float prob) {
+        if (Utils.randomBetween(0, 1) > prob) return;
+
+        float damage = Math.min(0.2f, currentDamage * 0.25f);
+        body.injury(FOREIGN_OBJECT, damage);
+        health.addDirectInjury(body.getComponent(), Component.literal("体内异物"), damage,  1);
+        if (body.getConditionValue(FOREIGN_OBJECT) > 0.2f) {
+            handleArterialBleeding(body, health, 1);
+        }
+    }
+
+    public static void brainDamageHandler(AbstractVisibleBody body, HealthCapability health, float currentDamage, float threshold, float prob) {
+        if (!(body instanceof Head head)) return;
+        if (currentDamage < threshold) return;
+        if (Utils.randomBetween(0, 1) > prob) return;
+
+        float ratio = Utils.randomBetween(0.1f, 0.4f);
+        head.injury(BRAIN_DAMAGE, currentDamage * ratio);
+        health.addDirectInjury(body.getComponent(), ConditionAccessor.get(BRAIN_DAMAGE).getComponent(), currentDamage * ratio,  1);
+    }
+}

@@ -1,17 +1,16 @@
 
 package com.lastimp.dgh;
 
-import com.lastimp.dgh.api.bodyPart.ConditionAccessor;
-import com.lastimp.dgh.source.core.bodyPart.base.BodyCondition;
-import com.lastimp.dgh.config.BlackList;
-import com.lastimp.dgh.config.Config;
-import com.lastimp.dgh.config.HealthLivingEntityList;
-import com.lastimp.dgh.network.message.Network;
-import com.lastimp.dgh.source.register.*;
+import com.lastimp.dgh.common.PlatformService;
+import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.common.utils.Utils;
+import com.lastimp.dgh.common.config.HealthLivingEntityList;
+import com.lastimp.dgh.forge.config.ConfigNF;
+import com.lastimp.dgh.forge.network.ModNetwork;
+import com.lastimp.dgh.forge.entry.RegistryHandlerNF;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.GameRules;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,17 +18,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.slf4j.Logger;
 
-import com.mojang.logging.LogUtils;
-
-@Mod(DontGetHurt.MODID)
-public class DontGetHurt
-{
-    public static final String MODID = "dgh";
-    public static final Logger LOGGER = LogUtils.getLogger();
-    public static final float DELTA = 0.05f;
-    public static final float EPS = 0.0001f;
+@Mod(Utils.MODID)
+public class DontGetHurt {
 
     @SuppressWarnings("removal")
     public DontGetHurt() {
@@ -42,17 +33,21 @@ public class DontGetHurt
     }
 
     private void init(IEventBus modEventBus, FMLJavaModLoadingContext context) {
-        context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        context.registerConfig(ModConfig.Type.COMMON, ConfigNF.SPEC);
 
-        ModBlocks.register(modEventBus);
-        ModItems.register(modEventBus);
-        ModMenus.register(modEventBus);
-        ModEffects.register(modEventBus);
-        ModPotions.register(modEventBus);
-        ModSounds.register(modEventBus);
-        ModCreativeModTabs.register(modEventBus);
-        ModEntities.register(modEventBus);
-        ModVillagers.register(modEventBus);
+        PlatformService.REGISTRY_HANDLER.register();
+
+        RegistryHandlerNF.BLOCKS.register(modEventBus);
+        RegistryHandlerNF.BLOCK_ENTITIES.register(modEventBus);
+        RegistryHandlerNF.ITEMS.register(modEventBus);
+        RegistryHandlerNF.MENU_TYPES.register(modEventBus);
+        RegistryHandlerNF.MOB_EFFECTS.register(modEventBus);
+        RegistryHandlerNF.MOD_POTIONS.register(modEventBus);
+        RegistryHandlerNF.SOUNDS.register(modEventBus);
+        RegistryHandlerNF.CREATIVE_MODE_TABS.register(modEventBus);
+        RegistryHandlerNF.ENTITY_TYPES.register(modEventBus);
+        RegistryHandlerNF.POI_TYPES.register(modEventBus);
+        RegistryHandlerNF.VILLAGER_PROFESSION.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 
@@ -70,10 +65,9 @@ public class DontGetHurt
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-        LOGGER.info("HELLO FROM COMMON SETUP");
-        Network.registerMessage();
+        Utils.LOGGER.info("HELLO FROM COMMON SETUP");
+        ModNetwork.registerMessage();
         event.enqueueWork(() -> {
-            BlackList.loadExternalBlacklist();
             HealthLivingEntityList.loadExternallist();
             ConditionAccessor.init();
         });
