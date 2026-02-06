@@ -1,6 +1,5 @@
 package com.lastimp.dgh.common.client.renderer;
 
-import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.common.block.OperatingBedBlock;
 import com.lastimp.dgh.common.utils.ResourceHelper;
 import com.mojang.blaze3d.vertex.PoseStack;

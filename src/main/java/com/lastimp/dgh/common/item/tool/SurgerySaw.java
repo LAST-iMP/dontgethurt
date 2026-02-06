@@ -1,6 +1,5 @@
 package com.lastimp.dgh.common.item.tool;
 
-import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.common.enums.BodyComponents;
 import com.lastimp.dgh.common.item.bases.AbstractPartlyHealItem;

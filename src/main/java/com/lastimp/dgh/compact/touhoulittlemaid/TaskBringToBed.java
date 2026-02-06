@@ -4,7 +4,6 @@ import com.github.tartaricacid.touhoulittlemaid.api.task.IMaidTask;
 import com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.task.MaidWalkToLivingEntityTask;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.google.common.collect.Lists;
-import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.item.tool.StretcherItem;
 import com.lastimp.dgh.common.entry.register.ModItems;

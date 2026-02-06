@@ -2,64 +2,16 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
-    id 'org.spongepowered.mixin' version '0.7.+'   // Mixin Gradle 插件
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+//    id 'org.spongepowered.mixin' version '0.7.+'   // Mixin Gradle 插件
 }
 
-version = mod_version
-group = mod_group_id
+version = project.mod_version
+group = project.maven_group
 
 base {
-    archivesName = mod_id
+    archivesName = project.archives_base_name
 }
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-minecraft {
-    mappings channel: mapping_channel, version: mapping_version
-
-    copyIdeResources = true
-
-    runs {
-        configureEach {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        client {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-        }
-
-        server {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
-        }
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
-
-        data {
-            workingDirectory project.file('run-data')
-
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-        }
-    }
-}
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven {
@@ -77,85 +29,120 @@ repositories {
     }
 }
 
-mixin {
-    add sourceSets.main, 'dgh.refmap.json'
-    config 'dgh.mixins.json'
-    config 'dgh.TaZC.mixins.json'
-    config 'dgh.touhoulittlemaid.mixins.json'
+loom {
+    splitEnvironmentSourceSets()
+
+    mods {
+        "dgh" {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
+
+}
+
+fabricApi {
+    configureDataGeneration {
+        client = true
+    }
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    // To change the versions see the gradle.properties file
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:15.20.0.129")
+    // Fabric API. This is technically optional, but you probably want it anyway.
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-84.1-FORGE:api")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-84.1-FORGE")
 
-    compileOnly fg.deobf("curse.maven:timeless-and-classics-zero-1028108:7278003-sources-7278003")
-    runtimeOnly fg.deobf("curse.maven:timeless-and-classics-zero-1028108:7278003-sources-7278003")
+//
+//    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:15.20.0.129")
+//
+//    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-84.1-FORGE:api")
+//    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-84.1-FORGE")
+//
+//    compileOnly fg.deobf("curse.maven:timeless-and-classics-zero-1028108:7278003-sources-7278003")
+//    runtimeOnly fg.deobf("curse.maven:timeless-and-classics-zero-1028108:7278003-sources-7278003")
+//
+//    compileOnly fg.deobf("curse.maven:touhou-little-maid-355044:7307720-sources-7307731")
+//    runtimeOnly fg.deobf("curse.maven:touhou-little-maid-355044:7307720-sources-7307731")
+//
+//    // MixinExtras
+//    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))
+//    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")) {
+//        jarJar.ranged(it, "[0.5.0,)")
+//    }
+//
+//    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
 
-    compileOnly fg.deobf("curse.maven:touhou-little-maid-355044:7307720-sources-7307731")
-    runtimeOnly fg.deobf("curse.maven:touhou-little-maid-355044:7307720-sources-7307731")
+processResources {
+    inputs.property "version", project.version
 
-    // MixinExtras
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))
-    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")) {
-        jarJar.ranged(it, "[0.5.0,)")
+    filesMatching("fabric.mod.json") {
+        expand "version": inputs.properties.version
     }
-
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.annotationProcessorPath = configurations.annotationProcessor
+    it.options.release = 17
 }
 
+java {
+    withSourcesJar()
 
-tasks.named('processResources', ProcessResources).configure {
-    var replaceProperties = [
-            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
-            forge_version: forge_version, forge_version_range: forge_version_range,
-            loader_version_range: loader_version_range,
-            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors: mod_authors, mod_description: mod_description,
-    ]
-    inputs.properties replaceProperties
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
+jar {
+    inputs.property "archivesName", project.base.archivesName
+
+    from("LICENSE") {
+        rename { "${it}_${inputs.properties.archivesName}"}
     }
 }
 
-tasks.named('jar', Jar).configure {
-    manifest {
-        attributes([
-                'Specification-Title'     : mod_id,
-                'Specification-Vendor'    : mod_authors,
-                'Specification-Version'   : '1', // We are version 1 of ourselves
-                'Implementation-Title'    : project.name,
-                'Implementation-Version'  : project.jar.archiveVersion,
-                'Implementation-Vendor'   : mod_authors,
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-
-    finalizedBy 'reobfJar'
-}
-
+// configure the maven publication
 publishing {
     publications {
-        register('mavenJava', MavenPublication) {
-            artifact jar
+        create("mavenJava", MavenPublication) {
+            artifactId = project.archives_base_name
+            from components.java
         }
     }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
-}
+
+//
+//mixin {
+//    add sourceSets.main, 'dgh.refmap.json'
+//    config 'dgh.mixins.json'
+//    config 'dgh.TaZC.mixins.json'
+//    config 'dgh.touhoulittlemaid.mixins.json'
+//}
+//
+//
+//runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:15.20.0.129")
+//
+//compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-84.1-FABRIC")
+//runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-84.1-FABRIC")
+//
+//compileOnly fg.deobf("curse.maven:tacz-refabricated:1334246-sources-7408240")
+//runtimeOnly fg.deobf("curse.maven:tacz-refabricated:1334246-sources-7408240")
+//
+//compileOnly fg.deobf("curse.maven:forge-config-api-port:547434-sources-7260491")
+//runtimeOnly fg.deobf("curse.maven:forge-config-api-port:547434-sources-7260491")
+//
+//compileOnly fg.deobf("curse.maven:touhoulittlemaid-orihime:1311287-sources-7569327")
+//runtimeOnly fg.deobf("curse.maven:touhoulittlemaid-orihime:1311287-sources-7569327")

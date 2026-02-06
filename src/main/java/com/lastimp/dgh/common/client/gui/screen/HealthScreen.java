@@ -1,7 +1,6 @@
 
 package com.lastimp.dgh.common.client.gui.screen;
 
-import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.common.PlatformService;
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.common.capability.bodyPart.base.AbstractVisibleBody;
