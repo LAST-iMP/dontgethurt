@@ -1,6 +1,6 @@
 package com.lastimp.dgh.compact.TaZC.mixin;
 
-import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.common.capability.HealthCapability;
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.tacz.guns.api.client.animation.ObjectAnimationRunner;

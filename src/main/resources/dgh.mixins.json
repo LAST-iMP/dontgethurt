@@ -6,8 +6,7 @@
   "mixins": [
     "LivingEntityMixin",
     "EntityMixin",
-    "PlayerMixin",
-    "LivingEntityAccessor"
+    "PlayerMixin"
   ],
   "client": [
     "client.LocalPlayerAccessor",

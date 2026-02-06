@@ -3,7 +3,7 @@ package com.lastimp.dgh.compact.touhoulittlemaid;
 import com.github.tartaricacid.touhoulittlemaid.api.event.MaidAndItemTransformEvent;
 import com.github.tartaricacid.touhoulittlemaid.api.event.MaidTombstoneEvent;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemFilm;
-import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.common.capability.HealthCapability;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

@@ -1,6 +1,6 @@
 package com.lastimp.dgh.compact.TaZC.mixin;
 
-import com.lastimp.dgh.source.core.capability.HealthCapability;
+import com.lastimp.dgh.common.capability.HealthCapability;
 import com.tacz.guns.item.ModernKineticGunScriptAPI;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;

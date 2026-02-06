@@ -1,0 +1,51 @@
+package com.lastimp.dgh.common.item.medicine;
+
+import com.lastimp.dgh.common.enums.BodyComponents;
+import com.lastimp.dgh.common.item.bases.AbstractDirectHealItems;
+import com.lastimp.dgh.common.utils.Utils;
+import com.lastimp.dgh.common.capability.bodyPart.bodies.Blood;
+import com.lastimp.dgh.common.capability.HealthCapability;
+import com.lastimp.dgh.common.entry.register.ModItems;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+
+import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.BLOOD_LOSS;
+import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.BLOOD_PRESSURE;
+
+public class BloodPacks extends AbstractDirectHealItems {
+
+    public BloodPacks(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public boolean heal(@NotNull LivingEntity source, @NotNull LivingEntity entity) {
+        return HealthCapability.getAndApply(entity, health -> {
+            Blood blood = (Blood) health.getComponent(BodyComponents.BLOOD);
+            if (!blood.abnormal(BLOOD_LOSS) && !blood.abnormal(BLOOD_PRESSURE)) return false;
+
+            blood.healing(BLOOD_LOSS, -0.25f);
+            blood.healing(BLOOD_PRESSURE, 0.25f);
+
+            if (source instanceof Player player) {
+                Utils.drop(new ItemStack(ModItems.BLOOD_PACK_EMPTY.get()), player);
+            }
+            return true;
+        }, false);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.add(Component.literal("治疗"));
+        tooltipComponents.add(Component.literal("·失血").withStyle(ChatFormatting.BLUE));
+        tooltipComponents.add(Component.literal("造成"));
+        tooltipComponents.add(Component.literal("·高血压").withStyle(ChatFormatting.RED));
+    }
+}
