@@ -1,0 +1,41 @@
+package com.lastimp.dgh.common.utils;
+
+import com.lastimp.dgh.common.capability.InjuryRecord;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.network.Filterable;
+import net.minecraft.world.item.component.WrittenBookContent;
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class BookHelper {
+    public static WrittenBookContent getBookTag(Component title, Component author, List<InjuryRecord> recordList) {
+        var pages = new LinkedList<Filterable<Component>>();
+        writeToBook(recordList, pages);
+        return new WrittenBookContent(Filterable.passThrough(title.getString()), author.getString(), 0, pages, true);
+    }
+
+    private static void writeToBook(List<InjuryRecord> recordList, List<Filterable<Component>> pages) {
+        int lineCount = 0;
+        StringBuilder builder = new StringBuilder();
+
+        for (var e : recordList) {
+            for (var record : e.toString().split("\n")) {
+                while (!record.isEmpty()) {
+                    if (lineCount >= 14) {
+                        pages.add(Filterable.passThrough(Component.literal(builder.toString())));
+                        builder.setLength(0);;
+                        lineCount = 0;
+                    }
+                    var maxLength = Math.min(16, record.length());
+                    builder.append(record.substring(0, maxLength).trim()).append("\n");
+                    record = record.substring(maxLength);
+                    lineCount++;
+                }
+            }
+        }
+        if (!builder.isEmpty()) {
+            pages.add(Filterable.passThrough(Component.literal(builder.toString())));
+        }
+    }
+}

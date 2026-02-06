@@ -1,0 +1,41 @@
+package com.lastimp.dgh.common.buffs.buff;
+
+import com.lastimp.dgh.common.PlatformService;
+import com.lastimp.dgh.common.enums.BodyComponents;
+
+import com.lastimp.dgh.common.capability.HealthCapability;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
+
+public class FoodConsumerEffect extends MobEffect {
+    public FoodConsumerEffect(int color) {
+        super(MobEffectCategory.BENEFICIAL, color);
+    }
+
+    @Override
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+        return duration % 60 == 0;
+    }
+
+    @Override
+    public boolean applyEffectTick(LivingEntity livingEntity, int amplifier) {
+        if (!HealthCapability.has(livingEntity)) return false;
+        HealthCapability.getAndApply(livingEntity, h -> {
+            if (livingEntity instanceof Player player) {
+                var food = player.getFoodData();
+                if (food.getFoodLevel() < 12) return;
+                food.addExhaustion(6);
+            }
+            float block = 0.5f / 3f / (livingEntity.getMaxHealth() * PlatformService.CONFIG.BODY_LIFE_FACTOR());
+            for (var component : BodyComponents.VISIBLE_BODIES) {
+                h.getComponent(component).addConditionHidden(BURN_RES, block);
+                h.getComponent(component).addConditionHidden(INTERNAL_RES, block);
+                h.getComponent(component).addConditionHidden(OPEN_WOUND_RES, block);
+            }
+        });
+        return true;
+    }
+}
