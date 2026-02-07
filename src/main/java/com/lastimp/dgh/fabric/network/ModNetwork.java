@@ -8,35 +8,32 @@ import com.lastimp.dgh.common.network.message.MyServerConfigSynData;
 import com.lastimp.dgh.common.utils.ResourceHelper;
 import com.lastimp.dgh.fabric.network.handler.ClientPayloadHandler;
 import com.lastimp.dgh.fabric.network.handler.ServerPayloadHandler;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraft.resources.ResourceLocation;
 
+import java.util.Map;
 import java.util.Optional;
 
 public class ModNetwork {
-    public static SimpleChannel SERVER_INSTANCE;
-    public static SimpleChannel CLIENT_INSTANCE;
-    private static int ID = 0;
-
-    public static int nextID() {
-        return ID++;
-    }
+    public static Map<Class<?>, NetworkPacket> PLAY_TO_CLIENT;
+    public static Map<Class<?>, NetworkPacket> PLAY_TO_SERVER;
 
     public static void registerMessage() {
-        SERVER_INSTANCE = NetworkRegistry.newSimpleChannel(
-                ResourceHelper.ModResource("server_networking"),
-                () -> "1.0",
-                (s) -> true,
-                (s) -> true
-        );
+        PLAY_TO_CLIENT.put(MyReadAllConditionData.class, new NetworkPacket(
+                ResourceHelper.ModResource("MyReadAllConditionData")
+        ));
+        PLAY_TO_CLIENT.put(MyServerConfigSynData.class, new NetworkPacket(
+                ResourceHelper.ModResource("MyServerConfigSynData")
+        ));
 
-        CLIENT_INSTANCE = NetworkRegistry.newSimpleChannel(
-                ResourceHelper.ModResource("client_networking"),
-                () -> "2.0",
-                (s) -> true,
-                (s) -> true
-        );
+        PLAY_TO_SERVER.put(MyReadAllConditionData.class, new NetworkPacket(
+                ResourceHelper.ModResource("MyReadAllConditionData")
+        ));
+        PLAY_TO_SERVER.put(MyKeyPressedData.class, new NetworkPacket(
+                ResourceHelper.ModResource("MyKeyPressedData")
+        ));
+        PLAY_TO_SERVER.put(MyHealingItemUseData.class, new NetworkPacket(
+                ResourceHelper.ModResource("MyHealingItemUseData")
+        ));
 
         CLIENT_INSTANCE.registerMessage(
                 nextID(),
@@ -79,4 +76,8 @@ public class ModNetwork {
                 Optional.of(NetworkDirection.PLAY_TO_SERVER)
         );
     }
+
+    public record NetworkPacket(
+            ResourceLocation id
+    ) { }
 }

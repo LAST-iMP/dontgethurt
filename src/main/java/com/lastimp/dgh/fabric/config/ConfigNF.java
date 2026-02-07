@@ -2,8 +2,11 @@
 package com.lastimp.dgh.fabric.config;
 
 import com.lastimp.dgh.common.config.IConfig;
+import com.lastimp.dgh.common.utils.Utils;
+import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.fml.config.ModConfig;
 
 import java.nio.file.Path;
 
@@ -155,9 +158,13 @@ public class ConfigNF implements IConfig {
     // 构建配置
     public static final ForgeConfigSpec SPEC = BUILDER.pop().build();
 
+    public static void init() {
+        ForgeConfigRegistry.INSTANCE.register(Utils.MODID, ModConfig.Type.COMMON, SPEC, "dgh-common.toml");
+    }
+
     @Override
     public Path getConfigRoot() {
-        return FMLPaths.CONFIGDIR.get();
+        return FabricLoader.getInstance().getConfigDir();
     }
 
     @Override

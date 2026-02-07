@@ -32,7 +32,7 @@ public class DynamicSlot extends Slot {
 
     public boolean mayPlace(ItemStack stack) {
         if (handler == null) return false;
-        return !stack.isEmpty() && this.handler.isItemValid(this.getSlotIndex(), stack);
+        return !stack.isEmpty() && this.handler.isItemValid(index, stack);
     }
 
     public int getMaxStackSize() {

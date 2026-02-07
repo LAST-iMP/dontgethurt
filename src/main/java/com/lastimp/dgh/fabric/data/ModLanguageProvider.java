@@ -9,7 +9,6 @@ import com.lastimp.dgh.common.entry.register.ModItems;
 import com.lastimp.dgh.common.entry.register.ModPotions;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraftforge.common.data.LanguageProvider;
 
 import static com.lastimp.dgh.common.tags.ModDamageType.*;
 
@@ -20,7 +19,7 @@ public class ModLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        this.add("itemGroup.dgh", "dgh");
+        this.add("itemGroup.dgh", "无伤大雅");
 
 
         this.add(BodyCondition.BURN.toString(), "烧伤");
@@ -96,7 +95,7 @@ public class ModLanguageProvider extends LanguageProvider {
 
 
         this.add("gui.dgh.health_gui.title", "健康状态");
-        this.add(KeyBinding.KEY_CATEGORY_DGH, "DGH");
+        this.add(KeyBinding.KEY_CATEGORY_DGH, "无伤大雅");
         this.add(KeyBinding.KEY_HEALTH_MENU, "健康面板");
         this.add(KeyBinding.KEY_GIVE_UP, "放弃生命");
         this.add(KeyBinding.KEY_CALL_FOR_HELP, "呼叫救援");

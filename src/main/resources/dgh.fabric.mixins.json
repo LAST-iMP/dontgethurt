@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.lastimp.dgh.fabric.mixin",
+  "refmap": "dgh.fabric.refmap.json",
+  "mixins": [
+    "LivingEntityMixin",
+    "ItemStackMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

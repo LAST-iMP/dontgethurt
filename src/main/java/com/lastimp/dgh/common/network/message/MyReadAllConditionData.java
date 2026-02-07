@@ -3,12 +3,13 @@ package com.lastimp.dgh.common.network.message;
 
 import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.enums.OperationType;
+import com.lastimp.dgh.common.network.IPayload;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.UUID;
 
-public class MyReadAllConditionData {
+public class MyReadAllConditionData implements IPayload<MyReadAllConditionData> {
     private long id_most;
     private long id_least;
     private int entityID;
@@ -31,12 +32,18 @@ public class MyReadAllConditionData {
         this.oper = operation.name();
     }
 
+    @Override
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeLong(this.id_most);
         buf.writeLong(this.id_least);
         buf.writeInt(this.entityID);
         buf.writeNbt(this.tag);
         buf.writeUtf(this.oper);
+    }
+
+    @Override
+    public MyReadAllConditionData fromBytes(FriendlyByteBuf buf) {
+        return new MyReadAllConditionData(buf);
     }
 
     public static MyReadAllConditionData getInstance(UUID uuid, int entityID, CompoundTag tag, OperationType operation) {

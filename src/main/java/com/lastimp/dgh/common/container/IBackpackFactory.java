@@ -6,6 +6,8 @@ import net.minecraft.world.item.ItemStack;
 public interface IBackpackFactory {
     IBackpackInventory get(ItemStack itemStack);
 
+    void set(ItemStack itemStack, IBackpackInventory inventory);
+
     default NonNullList<ItemStack> getContext(ItemStack itemStack) {
         NonNullList<ItemStack> nonnulllist = NonNullList.create();
         IBackpackInventory inv = this.get(itemStack);

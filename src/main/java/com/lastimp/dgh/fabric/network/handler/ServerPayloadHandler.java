@@ -16,13 +16,11 @@ import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.capability.healthCore.healingSystem.HealingHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
 
 public class ServerPayloadHandler {
-
     public static void handleReadAllConditionData(final MyReadAllConditionData data, final Supplier<NetworkEvent.Context> ctx) {
         var context = ctx.get();
         context.enqueueWork(() -> {

@@ -33,7 +33,7 @@ public class ModVillagers {
             )
     );
 
-    public static void addCustomTrades(VillagerProfession type, Int2ObjectMap<List<VillagerTrades.ItemListing>> trades) {
+    public static Int2ObjectMap<List<VillagerTrades.ItemListing>> addCustomTrades(VillagerProfession type, Int2ObjectMap<List<VillagerTrades.ItemListing>> trades) {
         if (type == DOCTOR_MAKER.get()) {
             List<VillagerTrades.ItemListing> level1Trades = trades.get(1);
             List<VillagerTrades.ItemListing> level2Trades = trades.get(2);
@@ -151,6 +151,7 @@ public class ModVillagers {
                     new ItemStack(ModItems.MANNITOL.get(), 1),
                     4, 30, 0.2F
             ));
+            return trades;
         }
     }
 

@@ -3,7 +3,6 @@ package com.lastimp.dgh.fabric.capability;
 import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.capability.ICapabilityHelper;
 import com.lastimp.dgh.common.config.HealthLivingEntityList;
-import com.lastimp.dgh.fabric.entry.register.ModCapabilities;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +19,8 @@ public class CapabilityHelperNF implements ICapabilityHelper {
 
     @Override
     public Optional<HealthCapability> getHealth(LivingEntity entity) {
-        return entity.getCapability(ModCapabilities.HEALTH, null).resolve();
+        if (!hasHealth(entity)) return Optional.empty();
+        return Optional.of(((HealthHolder)entity).dgh$getHealthProvider().getCapability());
     }
 
     @Override

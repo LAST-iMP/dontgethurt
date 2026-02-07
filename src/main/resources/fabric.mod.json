@@ -24,7 +24,10 @@
 		]
 	},
 	"mixins": [
-		"dgh.mixins.json",
+      "dgh.mixins.json",
+      "dgh.fabric.mixins.json",
+      "dgh.TaZC.mixins.json",
+      "dgh.touhoulittlemaid.mixins.json",
 		{
 			"config": "dgh.client.mixins.json",
 			"environment": "client"

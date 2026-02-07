@@ -1,9 +1,7 @@
 plugins {
-    id 'eclipse'
+	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+	id 'maven-publish'
     id 'idea'
-    id 'maven-publish'
-    id 'net.fabricmc.fabric-loom' version "${loom_version}"
-//    id 'org.spongepowered.mixin' version '0.7.+'   // Mixin Gradle 插件
 }
 
 version = project.mod_version
@@ -26,6 +24,10 @@ repositories {
         content {
             includeGroup "curse.maven"
         }
+    }
+    maven {// Forge Config API Port
+        name = "Fuzs Mod Resources"
+        url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
     }
 }
 
@@ -56,20 +58,21 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
+    runtimeOnly "curse.maven:jei-238222:7391694"
 
-//
-//    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:15.20.0.129")
-//
-//    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-84.1-FORGE:api")
-//    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-84.1-FORGE")
-//
-//    compileOnly fg.deobf("curse.maven:timeless-and-classics-zero-1028108:7278003-sources-7278003")
-//    runtimeOnly fg.deobf("curse.maven:timeless-and-classics-zero-1028108:7278003-sources-7278003")
-//
-//    compileOnly fg.deobf("curse.maven:touhou-little-maid-355044:7307720-sources-7307731")
-//    runtimeOnly fg.deobf("curse.maven:touhou-little-maid-355044:7307720-sources-7307731")
-//
-//    // MixinExtras
+    compileOnly "curse.maven:patchouli-fabric-393236:6164574"
+    runtimeOnly "curse.maven:patchouli-fabric-393236:6164574"
+
+    runtimeOnly "curse.maven:forge-config-api-port-547434:7260491"
+    compileOnly "curse.maven:tacz-refabricated-1334246:7408240"
+    runtimeOnly "curse.maven:tacz-refabricated-1334246:7408240"
+
+    compileOnly "curse.maven:touhoulittlemaid-orihime-1311287:7569327"
+    runtimeOnly "curse.maven:touhoulittlemaid-orihime-1311287:7569327"
+
+    modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:8.0.2"
+
+//     MixinExtras
 //    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))
 //    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")) {
 //        jarJar.ranged(it, "[0.5.0,)")
@@ -107,42 +110,18 @@ jar {
 
 // configure the maven publication
 publishing {
-    publications {
-        create("mavenJava", MavenPublication) {
-            artifactId = project.archives_base_name
-            from components.java
-        }
-    }
+	publications {
+		create("mavenJava", MavenPublication) {
+			artifactId = project.archives_base_name
+			from components.java
+		}
+	}
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
-    }
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
+	}
 }
-
-
-//
-//mixin {
-//    add sourceSets.main, 'dgh.refmap.json'
-//    config 'dgh.mixins.json'
-//    config 'dgh.TaZC.mixins.json'
-//    config 'dgh.touhoulittlemaid.mixins.json'
-//}
-//
-//
-//runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:15.20.0.129")
-//
-//compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-84.1-FABRIC")
-//runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.20.1-84.1-FABRIC")
-//
-//compileOnly fg.deobf("curse.maven:tacz-refabricated:1334246-sources-7408240")
-//runtimeOnly fg.deobf("curse.maven:tacz-refabricated:1334246-sources-7408240")
-//
-//compileOnly fg.deobf("curse.maven:forge-config-api-port:547434-sources-7260491")
-//runtimeOnly fg.deobf("curse.maven:forge-config-api-port:547434-sources-7260491")
-//
-//compileOnly fg.deobf("curse.maven:touhoulittlemaid-orihime:1311287-sources-7569327")
-//runtimeOnly fg.deobf("curse.maven:touhoulittlemaid-orihime:1311287-sources-7569327")

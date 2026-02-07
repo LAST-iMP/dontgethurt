@@ -1,12 +1,12 @@
 package com.lastimp.dgh.fabric.menu;
 
 import com.lastimp.dgh.common.menu.IMenuFactory;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.network.IContainerFactory;
 
-public class MenuFactoryNF<T extends AbstractContainerMenu> implements IMenuFactory<T>, IContainerFactory<T> {
+public class MenuFactoryNF<T extends AbstractContainerMenu> implements IMenuFactory<T>, ExtendedScreenHandlerType.ExtendedFactory<T> {
     private final IMenuFactory<T> factory;
 
     public MenuFactoryNF(IMenuFactory<T> factory) {

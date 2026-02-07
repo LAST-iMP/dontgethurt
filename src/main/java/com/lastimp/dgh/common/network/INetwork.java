@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 public interface INetwork {
     void openScreen(ServerPlayer player, MenuProvider containerSupplier, Consumer<FriendlyByteBuf> extraDataWriter);
-    <MSG> void sendToServer(MSG payload);
-    <MSG> void sendToPlayer(ServerPlayer player, MSG payload);
-    <MSG> void sendToPlayersNear(ServerLevel level, ServerPlayer excluded, double x, double y, double z, double radius, MSG payload);
+    <MSG extends IPayload<?>> void sendToServer(MSG payload);
+    <MSG extends IPayload<?>> void sendToPlayer(ServerPlayer player, MSG payload);
+    <MSG extends IPayload<?>> void sendToPlayersNear(ServerLevel level, ServerPlayer excluded, double x, double y, double z, double radius, MSG payload);
 }

@@ -1,11 +1,12 @@
 package com.lastimp.dgh.common.network.message;
 
 import com.lastimp.dgh.common.enums.BodyComponents;
+import com.lastimp.dgh.common.network.IPayload;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.UUID;
 
-public class MyHealingItemUseData {
+public class MyHealingItemUseData implements IPayload<MyHealingItemUseData> {
     public static final int HAND_PULSE = -255;
     private long id_most;
     private long id_least;
@@ -26,11 +27,17 @@ public class MyHealingItemUseData {
         this.component = components;
     }
 
+    @Override
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeLong(this.id_most);
         buf.writeLong(this.id_least);
         buf.writeInt(this.slotNum);
         buf.writeUtf(this.component);
+    }
+
+    @Override
+    public MyHealingItemUseData fromBytes(FriendlyByteBuf buf) {
+        return new MyHealingItemUseData(buf);
     }
 
     public static MyHealingItemUseData getInstance(UUID targetId, int slotNum, BodyComponents components) {

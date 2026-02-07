@@ -23,7 +23,7 @@ public interface IRegistryHandler {
 
     IEntry<Block> registerBlock(String name, Supplier<Block> factory);
     <T extends BlockEntity> IEntry<BlockEntityType<T>> registerBlockEntity(String name, Supplier<BlockEntityType<?>> factory);
-    <T extends Item> IEntry<T> registerItem(String name, Supplier<? extends Item> factory);
+     IEntry<Item> registerItem(String name, Supplier<? extends Item> factory);
     IEntry<MobEffect> registerEffect(String name, Supplier<MobEffect> factory);
     IEntry<Potion> registerPotion(String name, Supplier<Potion> factory);
     IEntry<SoundEvent> registerSoundEvent(String name, Supplier<SoundEvent> factory);

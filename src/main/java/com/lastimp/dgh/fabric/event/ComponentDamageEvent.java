@@ -3,8 +3,6 @@ package com.lastimp.dgh.fabric.event;
 import com.lastimp.dgh.common.enums.BodyComponents;
 import com.lastimp.dgh.common.event.IComponentDamageEvent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
 public class ComponentDamageEvent extends Event implements IComponentDamageEvent {

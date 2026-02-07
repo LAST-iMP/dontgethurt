@@ -1,49 +1,36 @@
 package com.lastimp.dgh.fabric.capability.provider;
 
-import com.lastimp.dgh.common.container.IBackpackInventory;
+import com.lastimp.dgh.common.utils.Lazy;
+import com.lastimp.dgh.common.utils.Serializable;
 import com.lastimp.dgh.fabric.container.BackpackInventoryNF;
-import com.lastimp.dgh.fabric.entry.register.ModCapabilities;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class BagItemInventoryProvider implements ICapabilitySerializable<CompoundTag> {
+public class BagItemInventoryProvider implements Serializable {
     private BackpackInventoryNF inv;
-    private final LazyOptional<BackpackInventoryNF> optional;
+    private final Lazy<BackpackInventoryNF> optional;
 
     public BagItemInventoryProvider(BackpackInventoryNF inv, ItemStack stack) {
         this.inv = inv;
-        this.optional = LazyOptional.of(() -> this.inv);
-        this.deserializeNBT(stack.getOrCreateTag());
+        this.optional = Lazy.of(() -> this.inv);
+        this.deserialize(stack.getOrCreateTag());
     }
 
-    public static IBackpackInventory getBackPackHandler(ItemStack bagStack) {
-        return bagStack.getCapability(ModCapabilities.BAG_INV)
-                .orElseThrow(() -> new IllegalStateException("No item handler"));
-    }
-
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return cap == ModCapabilities.BAG_INV
-                ? optional.cast()
-                : LazyOptional.empty();
+    public @NotNull BackpackInventoryNF getCapability() {
+        return optional.get();
     }
 
     @Override
-    public CompoundTag serializeNBT() {
+    public CompoundTag serialize() {
         CompoundTag tag = new CompoundTag();
-        tag.put("inv", inv.serializeNBT());
+        tag.put("inv", inv.serialize());
         return tag;
     }
 
     @Override
-    public void deserializeNBT(CompoundTag nbt) {
+    public void deserialize(CompoundTag nbt) {
         if (nbt != null)
-            inv.deserializeNBT(nbt.getCompound("inv"));
+            inv.deserialize(nbt.getCompound("inv"));
     }
 }

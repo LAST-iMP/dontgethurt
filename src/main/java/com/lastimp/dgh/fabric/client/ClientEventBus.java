@@ -5,14 +5,7 @@ import com.lastimp.dgh.common.client.eventHandler.ClientTickEventHandler;
 import com.lastimp.dgh.common.client.eventHandler.GuiEventHandler;
 import com.lastimp.dgh.common.client.renderer.ModelRenderEventBus;
 import com.lastimp.dgh.common.utils.Utils;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = Utils.MODID, value = Dist.CLIENT)
 public class ClientEventBus {
