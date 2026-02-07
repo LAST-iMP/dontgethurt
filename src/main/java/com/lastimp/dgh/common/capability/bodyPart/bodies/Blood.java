@@ -3,6 +3,7 @@ package com.lastimp.dgh.common.capability.bodyPart.bodies;
 
 import com.lastimp.dgh.common.PlatformService;
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition;
 import com.lastimp.dgh.common.enums.BodyComponents;
 import com.lastimp.dgh.common.capability.bodyPart.base.AbstractBody;
 import com.lastimp.dgh.common.capability.bodyPart.base.AbstractExtremities;
@@ -188,6 +189,10 @@ public class Blood extends AbstractBody {
         this.sepsis += gangrene * ConditionAccessor.get(SEPSIS).healingSpeed() / 0.15f;
         this.sepsis += foreign_object * ConditionAccessor.get(SEPSIS).healingSpeed() / 0.15f;
         health.getComponent(BLOOD).injury(SEPSIS, this.sepsis * Utils.DELTA);
+
+        if (this.abnormal(ANTIBIOTICS) && this.getConditionValue(OXYGEN) < 0.3f && this.getConditionValue(BLOOD_PRESSURE) > 0.7f) {
+            this.healing(SEPSIS, -ConditionAccessor.get(SEPSIS).healingSpeed() * Utils.DELTA * 2);
+        }
     }
 
     private void handleCombatStimulant(HealthCapability health, LivingEntity entity) {
