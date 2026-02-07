@@ -75,7 +75,8 @@ public class GameEventBus {
 
     @SubscribeEvent
     public static void onBreath(LivingBreatheEvent event) {
-        event.setCanBreathe(LivingEntityEventHandler.onBreath(event.getEntity()));
+        if (event.canBreathe())
+            event.setCanBreathe(LivingEntityEventHandler.onBreath(event.getEntity()));
     }
 
     @SubscribeEvent
