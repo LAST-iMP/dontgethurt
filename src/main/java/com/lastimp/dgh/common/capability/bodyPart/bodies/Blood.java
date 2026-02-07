@@ -153,10 +153,6 @@ public class Blood extends AbstractBody {
             this.injury(OXYGEN, ConditionAccessor.get(OXYGEN).healingSpeed() * Utils.DELTA);
             oxygenLost = true;
         }
-        if (!oxygenLost && !torso.abnormal(RESPIRATORY_ARREST) && torso.getConditionValue(PNEUMOTHORAX) < 0.1 && entity.getAirSupply() >= 2) {
-            this.healing(OXYGEN, -ConditionAccessor.get(OXYGEN).healingSpeed() * Utils.DELTA);
-            entity.setAirSupply(entity.getAirSupply() - 1);
-        }
     }
 
     private void handleOpiateAddicted(HealthCapability health, LivingEntity entity) {

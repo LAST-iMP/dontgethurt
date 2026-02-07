@@ -205,10 +205,6 @@ public class Torso extends AbstractVisibleBody {
         } else if (this.abnormal(BodyCondition.PNEUMOTHORAX_NEEDLE) && this.abnormal(BodyCondition.PNEUMOTHORAX)) {
             this.setConditionValue(BodyCondition.PNEUMOTHORAX, 0.05f);
         }
-
-        if (this.getConditionValue(BodyCondition.PNEUMOTHORAX) > 0.3 && this.getHeartRateLevel() < 0.5f) {
-            this.addHeartRate(Utils.DELTA / 20.0f);
-        }
     }
 
     private boolean isFibrillation(HealthCapability health, LivingEntity entity) {
