@@ -1,12 +1,10 @@
 package com.lastimp.dgh.common.client.eventHandler;
 
 import com.google.common.collect.ImmutableSet;
-import com.lastimp.dgh.common.PlatformService;
 import com.lastimp.dgh.mixin.client.LocalPlayerAccessor;
 import com.lastimp.dgh.mixin.client.MinecraftAccessor;
 import com.lastimp.dgh.common.client.ClientAccessor;
 import com.lastimp.dgh.common.client.gui.screen.HealthScreen;
-import com.lastimp.dgh.common.client.hotkey.KeyBinding;
 import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.entry.register.ModEffects;
 import net.minecraft.client.Minecraft;
@@ -15,8 +13,6 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
@@ -89,34 +85,11 @@ public class GuiEventHandler {
     public static void onRenderMyOverlay(GuiGraphics graphics) {
         ClientAccessor.getPlayer().ifPresent(player -> {
             Minecraft mc = ClientAccessor.mc();
-            renderEyeOverlay(player, graphics);
+            ModOverlay.renderEyeOverlay(player, graphics);
+            ModOverlay.renderConditionOverlay(player, graphics);
             if (!mc.options.hideGui) {
-                renderDyingOverlay(player, graphics);
+                ModOverlay.renderDyingOverlay(player, graphics);
             }
         });
-    }
-
-    private static void renderEyeOverlay(LocalPlayer player, GuiGraphics graphics) {
-        if (player.isDeadOrDying()) return;
-        HealthCapability.getAndApply(player, h -> {
-            int avaEye = h.availableEye();
-            if (avaEye >= 2) return;
-            int color = avaEye == 1 ? 0x80000000 : 0xEF000000;
-            graphics.fill(0, 0, graphics.guiWidth(), graphics.guiHeight(), color);
-        });
-    }
-
-    private static void renderDyingOverlay(LocalPlayer player, GuiGraphics graphics) {
-        if (!HealthCapability.isDown(player)) return;
-        graphics.drawCenteredString(ClientAccessor.mc().font,
-                Component.literal("按下鼠标求救"),
-                graphics.guiWidth() / 2, graphics.guiHeight() / 2 - 50, 0xFFFFFFFF
-        );
-        if (PlatformService.CONFIG.ENABLE_SELF_SUICIDE()) {
-            graphics.drawCenteredString(ClientAccessor.mc().font,
-                    Component.literal("按住").append(KeyBinding.GIVE_UP.getTranslatedKeyMessage()).append("键5秒放弃治疗"),
-                    graphics.guiWidth() / 2, graphics.guiHeight() / 2 + 15 - 50, 0xFFFFFFFF
-            );
-        }
     }
 }

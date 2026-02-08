@@ -1,7 +1,6 @@
 
 package com.lastimp.dgh.common.client.gui.screen;
 
-import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.common.PlatformService;
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.common.capability.bodyPart.base.AbstractVisibleBody;
@@ -31,7 +30,6 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.HashMap;
@@ -141,24 +139,10 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
         if (this.componentWidgets.isEmpty()) return;
 
         for (BodyComponents component : BodyComponents.VISIBLE_BODIES) {
-            AbstractBody body = healthData.getComponent(component);
-            float injury = 0.0f;
-            float pain = 0.0f;
-            float comfort = 0.0f;
-            for (var key : body.getBodyConditions()) {
-                var condition = ConditionAccessor.get(key);
-                if (!this.visibilityCheck(body, key)) continue;
-                float value = body.getCondition(key).getDisplayValue();
-                if (!condition.abnormal(value)) continue;
-                if (condition.isInjury()) injury += Mth.abs(value - condition.defaultValue());
-                else if (condition.isPain()) pain += Mth.abs(value - condition.defaultValue());
-                else if (condition.isComfort()) comfort += Mth.abs(value - condition.defaultValue());
-            }
-            float condition = (injury >= 0.01) ? injury : (pain > 0.01)? pain : (comfort > 0.01)? comfort : 0.0f;
-            this.componentWidgets.get(component).setConditionValue(Mth.clamp(condition, 0.0f, 1.0f) * 0.7f);
-            if (injury >= 0.01)     this.componentWidgets.get(component).setRedAndGreen(1.0f, 0.0f);
-            else if (pain > 0.01)   this.componentWidgets.get(component).setRedAndGreen(1.0f, 1.0f);
-            else if (comfort > 0.01)this.componentWidgets.get(component).setRedAndGreen(0.0f, 1.0f);
+            AbstractVisibleBody body = (AbstractVisibleBody) healthData.getComponent(component);
+            HealthComponentWidget widget = this.componentWidgets.get(component);
+            widget.setConditionValue(body.conditionDisplayValue());
+            widget.setRedAndGreen(body.getColor());
         }
     }
 

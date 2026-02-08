@@ -152,6 +152,18 @@ public class ConfigNF implements IConfig {
             .comment("启用放弃治疗")
             .define("ENABLE_SELF_SUICIDE", true);
 
+    private static final ForgeConfigSpec.IntValue SMALL_CONDITION_X = BUILDER
+            .comment("健康小人ui的x位置")
+            .defineInRange("SMALL_CONDITION_X", 308, 0, Integer.MAX_VALUE);
+
+    private static final ForgeConfigSpec.IntValue SMALL_CONDITION_Y = BUILDER
+            .comment("健康小人ui的y位置")
+            .defineInRange("SMALL_CONDITION_Y", 214, 0, Integer.MAX_VALUE);
+
+    private static final ForgeConfigSpec.IntValue SMALL_CONDITION_DISAPPEAR_DELAY = BUILDER
+            .comment("健康小人ui的渐隐时间(-1为永不消失, -2为永不显示)")
+            .defineInRange("SMALL_CONDITION_DISAPPEAR_DELAY", 3, -1, Integer.MAX_VALUE);
+
     // 构建配置
     public static final ForgeConfigSpec SPEC = BUILDER.pop().build();
 
@@ -333,5 +345,20 @@ public class ConfigNF implements IConfig {
     @Override
     public boolean ENABLE_SELF_SUICIDE() {
         return ENABLE_SELF_SUICIDE.get();
+    }
+
+    @Override
+    public int SMALL_CONDITION_X() {
+        return SMALL_CONDITION_X.get();
+    }
+
+    @Override
+    public int SMALL_CONDITION_Y() {
+        return SMALL_CONDITION_Y.get();
+    }
+
+    @Override
+    public int SMALL_CONDITION_DISAPPEAR_DELAY() {
+        return SMALL_CONDITION_DISAPPEAR_DELAY.get();
     }
 }

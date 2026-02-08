@@ -23,7 +23,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import static com.lastimp.dgh.common.utils.Utils.DELTA;
 import static com.lastimp.dgh.common.utils.Utils.EPS;
@@ -249,6 +248,10 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         return tag;
     }
 
+    public CompoundTag lightSerializeNBT() {
+        return new CompoundTag();
+    }
+
     @Override
     public @UnknownNullability CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
@@ -269,6 +272,9 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         this.organ.deserialize(nbt.getCompound("organ"));
     }
 
+    public void lightDeserializeNBT(CompoundTag nbt) {
+    }
+
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         for (var key : this.getBodyConditions()) {
@@ -282,12 +288,6 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         this.organ1Level = nbt.getInt("organ1Level");
         this.organ2Level = nbt.getInt("organ2Level");
         this.organ3Level = nbt.getInt("organ3Level");
-    }
-
-    public static <T extends AbstractBody> AbstractBody buildFromNBT(CompoundTag nbt, Supplier<T> constructor) {
-        T body = constructor.get();
-        body.deserializeNBT(nbt);
-        return body;
     }
 
     protected int organ1BaseLevel() {

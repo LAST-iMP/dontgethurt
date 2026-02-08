@@ -83,6 +83,12 @@ public class WholeBody implements Serializable {
         this.components.values().forEach(body -> body.healingAll(healPain));
     }
 
+    public CompoundTag lightSerializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        this.components.keySet().forEach(key -> tag.put(key.name(), this.getComponent(key).lightSerializeNBT()));
+        return tag;
+    }
+
     @Override
     public CompoundTag serialize() {
         CompoundTag tag = new CompoundTag();
@@ -94,6 +100,10 @@ public class WholeBody implements Serializable {
         CompoundTag tag = new CompoundTag();
         this.components.keySet().forEach(key -> tag.put(key.name(), this.getComponent(key).deathSerializeNBT()));
         return tag;
+    }
+
+    public void lightDeserializeNBT(CompoundTag nbt) {
+        this.components.keySet().forEach(key -> components.get(key).lightDeserializeNBT(nbt.getCompound(key.name())));
     }
 
     @Override

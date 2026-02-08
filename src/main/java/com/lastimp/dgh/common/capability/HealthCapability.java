@@ -225,7 +225,7 @@ public class HealthCapability implements Serializable {
         this.isDown = updateIfDirty(isDown(entity), this.isDown);
     }
 
-    private <T> T updateIfDirty(T value, T oldValue) {
+    public <T> T updateIfDirty(T value, T oldValue) {
         if (value != oldValue) {
             this.isDirty = true;
         }
@@ -295,6 +295,8 @@ public class HealthCapability implements Serializable {
         tag.putInt("availableEye", this.availableEye);
         tag.putBoolean("isDown", this.isDown);
         tag.putInt("maxAirSupply", this.maxAirSupply);
+        tag.putBoolean("abnormal", this.abnormal);
+        tag.put("body", this.body.lightSerializeNBT());
         return tag;
     }
 
@@ -342,6 +344,8 @@ public class HealthCapability implements Serializable {
         this.availableEye = nbt.getInt("availableEye");
         this.isDown = nbt.getBoolean("isDown");
         this.maxAirSupply = nbt.getInt("maxAirSupply");
+        this.abnormal = nbt.getBoolean("abnormal");
+        this.body.lightDeserializeNBT(nbt.getCompound("body"));
     }
 
     public void respawnDeserializeNBT(CompoundTag nbt) {
