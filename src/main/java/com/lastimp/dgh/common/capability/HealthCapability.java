@@ -120,7 +120,7 @@ public class HealthCapability implements Serializable {
                 if (h.isFrozen()) return true;
                 return false;
             }
-        }, false);
+        }, entity.hasEffect(ModEffects.ANALGESIA_POISON_EFFECT));
     }
 
     public static boolean isFootLostDown(LivingEntity entity) {

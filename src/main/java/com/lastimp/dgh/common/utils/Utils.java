@@ -86,7 +86,7 @@ public abstract class Utils {
     }
 
     public static float[] getAttackPart(LivingEntity attacker, LivingEntity target, int strickLevel) {
-        if (!(attacker instanceof Player)) return INJURY_WEIGHT;
+        if (!(attacker instanceof Player)) return INJURY_WEIGHT();
         var attackerEye = attacker.getEyePosition(0.5f);
         var attackerLookAngel = attacker.getLookAngle();
         var distance_upbound = target.distanceTo(attacker) + 4;
@@ -112,7 +112,7 @@ public abstract class Utils {
                 return new float[]{0f,0.8f,0.8f,0.8f,1f,1f};
             }
         }
-        return INJURY_WEIGHT;
+        return INJURY_WEIGHT();
     }
 
     public static void addParticlesAroundSelf(ParticleOptions particleOption, LivingEntity target) {

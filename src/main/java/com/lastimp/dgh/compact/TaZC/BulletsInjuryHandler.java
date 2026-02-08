@@ -24,7 +24,7 @@ public class BulletsInjuryHandler {
 
     public static void handleBulletByPass(DamageSource source, float damageAmount, LivingEntity entity) {
         HealthCapability.getAndApply(entity, h -> {
-            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(INJURY_WEIGHT)));
+            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(INJURY_WEIGHT())));
             PassThroughHandler.handleEntityAttack(source, entity, h, (AbstractVisibleBody) body, damageAmount);
         });
     }
