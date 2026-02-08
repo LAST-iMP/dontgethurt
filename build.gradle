@@ -57,6 +57,7 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    modImplementation "curse.maven:architectury-api-419699:5137936"
 
     runtimeOnly "curse.maven:jei-238222:7391694"
 
@@ -64,10 +65,10 @@ dependencies {
     runtimeOnly "curse.maven:patchouli-fabric-393236:6164574"
 
     runtimeOnly "curse.maven:forge-config-api-port-547434:7260491"
-    compileOnly "curse.maven:tacz-refabricated-1334246:7408240"
+    compileOnly "curse.maven:tacz-refabricated-1334246:7408244"
     runtimeOnly "curse.maven:tacz-refabricated-1334246:7408240"
 
-    compileOnly "curse.maven:touhoulittlemaid-orihime-1311287:7569327"
+    compileOnly "curse.maven:touhoulittlemaid-orihime-1311287:7569333"
     runtimeOnly "curse.maven:touhoulittlemaid-orihime-1311287:7569327"
 
     modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:8.0.2"

@@ -14,7 +14,7 @@ public class LivingEntityEventHandler {
         if (livingEntity.level().isClientSide()) return;
         var key = "dgh_version";
         var value = "version_1.3.0";
-        var data = livingEntity.getPersistentData();
+        var data = livingEntity.save().getPersistentData();
 
         if (livingEntity instanceof Player player) {
             var persistedTag = data.getCompound(Player.PERSISTED_NBT_TAG);

@@ -153,10 +153,6 @@ public class Blood extends AbstractBody {
             this.injury(OXYGEN, ConditionAccessor.get(OXYGEN).healingSpeed() * Utils.DELTA);
             oxygenLost = true;
         }
-        if (!oxygenLost && !torso.abnormal(RESPIRATORY_ARREST) && torso.getConditionValue(PNEUMOTHORAX) < 0.1 && entity.getAirSupply() >= 2) {
-            this.healing(OXYGEN, -ConditionAccessor.get(OXYGEN).healingSpeed() * Utils.DELTA);
-            entity.setAirSupply(entity.getAirSupply() - 1);
-        }
     }
 
     private void handleOpiateAddicted(HealthCapability health, LivingEntity entity) {
@@ -201,6 +197,10 @@ public class Blood extends AbstractBody {
         this.sepsis += gangrene * ConditionAccessor.get(SEPSIS).healingSpeed() / 0.15f;
         this.sepsis += foreign_object * ConditionAccessor.get(SEPSIS).healingSpeed() / 0.15f;
         health.getComponent(BLOOD).injury(SEPSIS, this.sepsis * Utils.DELTA);
+
+        if (this.abnormal(ANTIBIOTICS) && this.getConditionValue(OXYGEN) < 0.3f && this.getConditionValue(BLOOD_PRESSURE) > 0.7f) {
+            this.healing(SEPSIS, -ConditionAccessor.get(SEPSIS).healingSpeed() * Utils.DELTA * 2);
+        }
     }
 
     private void handleCombatStimulant(HealthCapability health, LivingEntity entity) {

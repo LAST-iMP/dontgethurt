@@ -2,9 +2,8 @@ package com.lastimp.dgh.fabric.event;
 
 import com.lastimp.dgh.common.event.IHealthDamageEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraftforge.eventbus.api.Event;
 
-public class HealthDamageEvent extends Event implements IHealthDamageEvent {
+public class HealthDamageEvent implements IHealthDamageEvent {
     private final DamageSource source;
     private final float sourceDamage;
     private float newDamage;

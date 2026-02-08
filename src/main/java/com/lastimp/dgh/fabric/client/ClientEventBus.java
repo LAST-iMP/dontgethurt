@@ -4,40 +4,39 @@ import com.lastimp.dgh.common.client.eventHandler.ClientInputEventHandler;
 import com.lastimp.dgh.common.client.eventHandler.ClientTickEventHandler;
 import com.lastimp.dgh.common.client.eventHandler.GuiEventHandler;
 import com.lastimp.dgh.common.client.renderer.ModelRenderEventBus;
-import com.lastimp.dgh.common.utils.Utils;
-import net.minecraft.world.entity.LivingEntity;
+import com.lastimp.dgh.fabric.client.event.RenderLivingCallback;
+import com.lastimp.dgh.fabric.client.event.ScreenCallback;
+import dev.architectury.event.EventResult;
+import dev.architectury.event.events.client.ClientGuiEvent;
+import dev.architectury.event.events.client.ClientLifecycleEvent;
+import dev.architectury.event.events.client.ClientPlayerEvent;
+import dev.architectury.event.events.client.ClientScreenInputEvent;
 
-@Mod.EventBusSubscriber(modid = Utils.MODID, value = Dist.CLIENT)
 public class ClientEventBus {
-    @SubscribeEvent
-    public static void onKeyRegister(RegisterKeyMappingsEvent event) {
-
+    public static void onRenderPlayerPre() {
+        RenderLivingCallback.Pre.EVENT.register(ModelRenderEventBus::onRenderPlayer);
     }
 
-    @SubscribeEvent
-    public static void onRenderPlayer(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> event) {
-        ModelRenderEventBus.onRenderPlayer(event.getEntity(), event.getRenderer());
+    public static void onRenderPlayerPost() {
+        RenderLivingCallback.Post.EVENT.register(ModelRenderEventBus::onRenderPlayerPost);
     }
 
-    @SubscribeEvent
-    public static void onRenderPlayerPost(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {
-        ModelRenderEventBus.onRenderPlayerPost(event.getEntity(), event.getRenderer());
+    public static void screenOpen() {
+        ScreenCallback.Opening.EVENT.register(GuiEventHandler::screenOpen);
     }
 
-    @SubscribeEvent
-    public static void screenOpen(ScreenEvent.Opening event) {
-        if (!GuiEventHandler.screenOpen(event.getNewScreen(), event.getCurrentScreen()))
-            event.setCanceled(true);
+    public static void onGuiRenderPre() {
+        ClientGuiEvent.RENDER_PRE.register(((screen, guiGraphics, i, i1, v) -> {
+            GuiEventHandler.onGuiRender();
+            return EventResult.pass();
+        }));
     }
 
-    @SubscribeEvent
-    public static void onGuiRenderPre(RenderGuiEvent.Pre event) {
-        GuiEventHandler.onGuiRender();
-    }
+    public static void onGuiRenderPost() {
+        ClientGuiEvent.RENDER_POST.register(((screen, guiGraphics, i, i1, v) ->
+                GuiEventHandler.onRenderMyOverlay(guiGraphics))
+        );
 
-    @SubscribeEvent
-    public static void onGuiRenderPost(RenderGuiEvent.Post event) {
-        GuiEventHandler.onRenderMyOverlay(event.getGuiGraphics());
     }
 
     @SubscribeEvent
@@ -48,6 +47,14 @@ public class ClientEventBus {
 
     @SubscribeEvent
     public static void onScannerPressPre(ScreenEvent.MouseButtonPressed.Pre event) {
+        ClientScreenInputEvent.MOUSE_CLICKED_PRE.register(((minecraft, screen, v, v1, i) -> {
+            boolean canceled = false;
+            if (!ClientInputEventHandler.onScannerHealing(event.getButton(), event.getScreen()))
+                canceled = true;
+            if (!ClientInputEventHandler.onUseMenuItem(event.getButton(), event.getScreen()))
+                canceled = true;
+            return EventResult.interruptDefault()
+        }));
         if (!ClientInputEventHandler.onScannerHealing(event.getButton(), event.getScreen()))
             event.setCanceled(true);
         if (!ClientInputEventHandler.onUseMenuItem(event.getButton(), event.getScreen()))
@@ -85,5 +92,13 @@ public class ClientEventBus {
     @SubscribeEvent
     public static void playerTick(TickEvent.PlayerTickEvent event) {
         ClientTickEventHandler.playerTick(event.player);
+    }
+
+    public static void init() {
+        onRenderPlayerPre();
+        onRenderPlayerPost();
+        screenOpen();
+        onGuiRenderPre();
+        onGuiRenderPost();
     }
 }

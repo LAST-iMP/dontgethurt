@@ -1,14 +1,14 @@
 package com.lastimp.dgh.fabric.event.eventBus;
 
-import cn.sh1rocu.tacz.api.event.LivingEvent;
 import com.lastimp.dgh.common.buffs.buff.KeepLivingEffect;
-import com.lastimp.dgh.common.capability.bodyPart.base.AbstractArm;
 import com.lastimp.dgh.common.capability.bodyPart.base.AbstractLeg;
 import com.lastimp.dgh.common.utils.command.Command;
 import com.lastimp.dgh.common.entry.register.ModVillagers;
 import com.lastimp.dgh.common.event.eventHandler.LivingEntityEventHandler;
 import com.lastimp.dgh.common.event.eventHandler.PlayerEventHandler;
 import com.lastimp.dgh.common.event.eventHandler.VillagerEventHandler;
+import com.lastimp.dgh.fabric.event.callback.LivingEventCallBack;
+import com.lastimp.dgh.fabric.event.callback.PlayerEventCallBack;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -17,7 +17,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.Villager;
@@ -89,46 +88,48 @@ public class GameEventBus {
         });
     }
 
-    @SubscribeEvent
-    public static void onEntityTick(LivingEvent.LivingTickEvent event) {
-        LivingEntityEventHandler.tickPre(event.getEntity());
+    public static void onEntityTick() {
+        LivingEventCallBack.LivingTickEvent.EVENT.register(LivingEntityEventHandler::tickPre);
     }
 
-    @SubscribeEvent
-    public static void onBreath(LivingBreatheEvent event) {
-        event.setCanBreathe(LivingEntityEventHandler.onBreath(event.getEntity()));
+    public static void onBreath() {
+        LivingEventCallBack.BreathEvent.EVENT.register(LivingEntityEventHandler::onBreath);
     }
 
-    @SubscribeEvent
-    public static void onInjury(LivingDamageEvent event) {
-        var damage = LivingEntityEventHandler.onInjury(event.getEntity(), event.getSource(), event.getAmount());
-        event.setAmount(damage);
+    public static void onInjury() {
+        LivingEventCallBack.DamageEvent.EVENT.register(LivingEntityEventHandler::onInjury);
     }
 
-    @SubscribeEvent
-    public static void onHealing(LivingHealEvent event) {
-        LivingEntityEventHandler.onHealing(event.getEntity(), event.getAmount());
+    public static void onHealing() {
+        LivingEventCallBack.HealingEvent.EVENT.register(LivingEntityEventHandler::onHealing);
     }
 
-    @SubscribeEvent
-    public static void onLivingDeath(LivingDeathEvent event) {
-        LivingEntityEventHandler.onLivingDeath(event.getEntity());
+    public static void onLivingDeath() {
+        LivingEventCallBack.DeathEvent.EVENT.register(LivingEntityEventHandler::onLivingDeath);
     }
 
-    @SubscribeEvent
-    public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        float modifier = KeepLivingEffect.onBreakSpeed(event.getEntity());
-        modifier *= AbstractArm.onBreakSpeed(event.getEntity());
-        event.setNewSpeed(event.getOriginalSpeed() * modifier);
+    public static void onBreakSpeed() {
+        PlayerEventCallBack.BreakSpeed.EVENT.register(KeepLivingEffect::onBreakSpeed);
     }
 
-    @SubscribeEvent
-    public static void onFall(LivingFallEvent event) {
-        int safeDistance = AbstractLeg.onFall(event.getEntity());
-        event.setDistance(Math.max(0, event.getDistance() - safeDistance));
+    public static void onFall() {
+        LivingEventCallBack.FallEvent.EVENT.register(AbstractLeg::onFall);
     }
 
     public static void init() {
-
+        onRegisterCommands();
+        addCustomTrades();
+        onEntityJoin();
+        logIn();
+        logOut();
+        onPlayerInteractEntity();
+        onPlayerRespawn();
+        onEntityTick();
+        onBreath();
+        onInjury();
+        onHealing();
+        onLivingDeath();
+        onBreakSpeed();
+        onFall();
     }
 }

@@ -5,6 +5,7 @@ import com.lastimp.dgh.common.PlatformService;
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.common.config.HealthLivingEntityList;
 import com.lastimp.dgh.fabric.config.ConfigNF;
+import com.lastimp.dgh.fabric.event.eventBus.GameEventBus;
 import com.lastimp.dgh.fabric.network.ModNetwork;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -14,6 +15,7 @@ public class DontGetHurt implements ModInitializer {
     @Override
     public void onInitialize() {
         ConfigNF.init();
+        GameEventBus.init();
 
         PlatformService.REGISTRY_HANDLER.register();
 

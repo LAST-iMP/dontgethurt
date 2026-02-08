@@ -4,9 +4,12 @@
   "refmap": "dgh.fabric.refmap.json",
   "mixins": [
     "LivingEntityMixin",
-    "ItemStackMixin"
+    "ItemStackMixin",
+    "PlayerMixin"
   ],
   "client": [
+    "client.LivingEntityRendererMixin",
+    "client.MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1
