@@ -29,7 +29,9 @@ import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
 import static com.lastimp.dgh.common.enums.BodyComponents.*;
 
 public class InjuryEventHandler {
-    public static final float[] INJURY_WEIGHT = {1.2f,1.5f,1.5f,1.5f,1.2f,1.2f};
+    public static float[] INJURY_WEIGHT() {
+        return new float[]{1.2f, 1.5f, 1.5f, 1.5f, 1.2f, 1.2f};
+    }
 
     public static boolean onBreath(LivingEntity livingEntity) {
         if (livingEntity.level().isClientSide()) return true;
@@ -154,7 +156,7 @@ public class InjuryEventHandler {
 
     public static void handleExplosion(DamageSource source, float damageAmount, LivingEntity entity) {
         HealthCapability.getAndApply(entity, h -> {
-            float[] weight = Utils.getRandom(INJURY_WEIGHT);
+            float[] weight = Utils.getRandom(INJURY_WEIGHT());
             for (int i = 0; i < VISIBLE_BODIES.size(); i++) {
                 var body = h.getComponent(VISIBLE_BODIES.get(i));
                 OpenWoundHandler.handleExplosion(source, entity, h, (AbstractVisibleBody) body, 0.5f * damageAmount * weight[i]);
@@ -166,7 +168,7 @@ public class InjuryEventHandler {
 
     public static void handleArrow(DamageSource source, float damageAmount, LivingEntity entity) {
         HealthCapability.getAndApply(entity, h -> {
-            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(INJURY_WEIGHT)));
+            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(INJURY_WEIGHT())));
             PassThroughHandler.handleEntityAttack(source, entity, h, (AbstractVisibleBody) body, damageAmount);
         });
     }
@@ -180,21 +182,21 @@ public class InjuryEventHandler {
 
     public static void handleMagicDamage(DamageSource source, float damageAmount, LivingEntity entity) {
         HealthCapability.getAndApply(entity, h -> {
-            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(INJURY_WEIGHT)));
+            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(INJURY_WEIGHT())));
             InternalInjuryHandler.handle(source, h, (AbstractVisibleBody) body, damageAmount * 1.5f);
         });
     }
 
     public static void handleStarveDamage(DamageSource source, float damageAmount, LivingEntity entity) {
         HealthCapability.getAndApply(entity, h -> {
-            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(INJURY_WEIGHT)));
+            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(INJURY_WEIGHT())));
             InternalInjuryHandler.handle(source, h, (AbstractVisibleBody) body, damageAmount);
         });
     }
 
     public static void handleDefaultDamage(DamageSource source, float damageAmount, LivingEntity entity) {
         HealthCapability.getAndApply(entity, h -> {
-            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(INJURY_WEIGHT)));
+            var body = h.getComponent(VISIBLE_BODIES.get(Utils.getRandomIndex(INJURY_WEIGHT())));
             InternalInjuryHandler.handle(source, h, (AbstractVisibleBody) body, damageAmount);
         });
     }
