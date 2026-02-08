@@ -3,6 +3,7 @@ package com.lastimp.dgh.common.capability.bodyPart.base;
 
 import com.lastimp.dgh.common.PlatformService;
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.common.item.tool.HealthScanner;
 import com.lastimp.dgh.common.tags.ModTags;
 import com.lastimp.dgh.common.utils.ResourceHelper;
 import com.lastimp.dgh.common.utils.Utils;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
@@ -47,6 +49,10 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     private ResourceLocation uuid_bone_netherite;
 
     private int nextFractureTick = 1200;
+    private float conditionDisplayValue;
+    private float red;
+    private float green;
+    private float blue;
 
     public static void addCondition(Collection<ResourceLocation> key) {
         uniqueConditions.addAll(key);
@@ -82,6 +88,13 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     public AbstractBody updatePre(HealthCapability health, LivingEntity entity) {
         super.updatePre(health, entity);
         this.nextTickBleed = 0;
+        return this;
+    }
+
+    @Override
+    public AbstractBody updatePost(HealthCapability health, LivingEntity entity) {
+        super.updatePost(health, entity);
+        this.updateBodyColor(health);
         return this;
     }
 
@@ -129,6 +142,38 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         slowDown += this.abnormal(PLASTER_CAST)? 2 : 0;
         if (this.abnormal(SURGERY_INCISION)) slowDown += 20;
         return slowDown;
+    }
+
+    private void updateBodyColor(HealthCapability health) {
+        float injury = 0.0f;
+        float pain = 0.0f;
+        float comfort = 0.0f;
+        float amputation = 0.0f;
+        for (var key : this.getBodyConditions()) {
+            var condition = ConditionAccessor.get(key);
+            if (!this.visibilityCheck(this, key)) continue;
+            float value = this.getCondition(key).getDisplayValue();
+            if (!condition.abnormal(value)) continue;
+            float difference = Mth.abs(value - condition.defaultValue());
+            if (condition.isInjury()) injury += difference;
+            else if (key == SURGICAL_AMPUTATION || key == TRAUMATIC_AMPUTATION) amputation += difference;
+            else if (condition.isPain()) pain += difference;
+            else if (condition.isComfort()) comfort += difference;
+        }
+        float condition = (injury >= 0.01) ? injury : (pain > 0.01)? pain : (comfort > 0.01)? comfort : (amputation > 0.01)? amputation : 0.0f;
+        this.conditionDisplayValue = health.updateIfDirty(Mth.clamp(condition, 0.0f, 1.0f) * 0.7f, this.conditionDisplayValue);
+        if (injury >= 0.01)     this.setColor(health, 1.0f, 0.0f, 0.2f);
+        else if (pain > 0.01)   this.setColor(health, 1.0f, 1.0f, 0.2f);
+        else if (comfort > 0.01) this.setColor(health, 0.0f, 1.0f, 0.2f);
+        else if (amputation > 0.01) this.setColor(health, 0.1f, 0.1f, 0.1f);
+    }
+
+    protected boolean visibilityCheck(AbstractBody body, ResourceLocation key) {
+        if (!HealthScanner.healthScannerConditions().contains(key)) return false;
+//        if (!this.menu.isDevice && !HealthScanner.eyesightConditions().contains(key)) return false;
+        if (ConditionAccessor.resistConditions.contains(key) && body.abnormalWithHidden(key)) return true;
+        if (!ConditionAccessor.get(key).abnormal(body.getCondition(key).getDisplayValue())) return false;
+        return true;
     }
 
     private void handleBandaged() {
@@ -508,16 +553,55 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         return this.getConditionValue(INFECTION) > 0.1;
     }
 
+    public CompoundTag lightSerializeNBT() {
+        var nbt = super.lightSerializeNBT();
+        nbt.putFloat("conditionDisplayValue", this.conditionDisplayValue);
+        nbt.putFloat("red", this.red);
+        nbt.putFloat("green", this.green);
+        nbt.putFloat("blue", this.blue);
+        return nbt;
+    }
+
     @Override
     public @UnknownNullability CompoundTag serialize(HolderLookup.Provider provider) {
         var nbt = super.serialize(provider);
         nbt.putInt("nextFractureTick", this.nextFractureTick);
+        nbt.putFloat("conditionDisplayValue", this.conditionDisplayValue);
+        nbt.putFloat("red", this.red);
+        nbt.putFloat("green", this.green);
+        nbt.putFloat("blue", this.blue);
         return nbt;
+    }
+
+    public void lightDeserializeNBT(CompoundTag nbt) {
+        this.conditionDisplayValue = nbt.getFloat("conditionDisplayValue");
+        this.red = nbt.getFloat("red");
+        this.green = nbt.getFloat("green");
+        this.blue = nbt.getFloat("blue");
+        super.lightDeserializeNBT(nbt);
     }
 
     @Override
     public void deserialize(HolderLookup.Provider provider, CompoundTag nbt) {
         this.nextFractureTick = nbt.getInt("nextFractureTick");
+        this.conditionDisplayValue = nbt.getFloat("conditionDisplayValue");
+        this.red = nbt.getFloat("red");
+        this.green = nbt.getFloat("green");
+        this.blue = nbt.getFloat("blue");
         super.deserialize(provider, nbt);
+    }
+
+    public float conditionDisplayValue() {
+        return conditionDisplayValue;
+    }
+
+    public void setColor(HealthCapability health, float red, float green, float blue) {
+        this.red = health.updateIfDirty(red, this.red);
+        this.green = health.updateIfDirty(green, this.green);
+        this.blue = health.updateIfDirty(blue, this.blue);
+    }
+
+    public Triple<Float, Float, Float> getColor() {
+        return Triple.of(this.red, this.green, this.blue);
     }
 }

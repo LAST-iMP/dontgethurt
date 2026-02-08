@@ -151,6 +151,18 @@ public class ConfigNF implements IConfig {
     private static final ModConfigSpec.BooleanValue ENABLE_SELF_SUICIDE = BUILDER
             .comment("启用放弃治疗")
             .define("ENABLE_SELF_SUICIDE", true);
+
+    private static final ModConfigSpec.IntValue SMALL_CONDITION_X = BUILDER
+            .comment("健康小人ui的x位置")
+            .defineInRange("SMALL_CONDITION_X", 308, 0, Integer.MAX_VALUE);
+
+    private static final ModConfigSpec.IntValue SMALL_CONDITION_Y = BUILDER
+            .comment("健康小人ui的y位置")
+            .defineInRange("SMALL_CONDITION_Y", 214, 0, Integer.MAX_VALUE);
+
+    private static final ModConfigSpec.IntValue SMALL_CONDITION_DISAPPEAR_DELAY = BUILDER
+            .comment("健康小人ui的渐隐时间(-1为永不消失, -2为永不显示)")
+            .defineInRange("SMALL_CONDITION_DISAPPEAR_DELAY", 3, -1, Integer.MAX_VALUE);
     // 构建配置
     public static final ModConfigSpec SPEC = BUILDER.pop().build();
 
@@ -332,5 +344,20 @@ public class ConfigNF implements IConfig {
     @Override
     public boolean ENABLE_SELF_SUICIDE() {
         return ENABLE_SELF_SUICIDE.getAsBoolean();
+    }
+
+    @Override
+    public int SMALL_CONDITION_X() {
+        return SMALL_CONDITION_X.getAsInt();
+    }
+
+    @Override
+    public int SMALL_CONDITION_Y() {
+        return SMALL_CONDITION_Y.getAsInt();
+    }
+
+    @Override
+    public int SMALL_CONDITION_DISAPPEAR_DELAY() {
+        return SMALL_CONDITION_DISAPPEAR_DELAY.getAsInt();
     }
 }

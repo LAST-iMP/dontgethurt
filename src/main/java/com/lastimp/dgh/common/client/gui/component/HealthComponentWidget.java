@@ -8,6 +8,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.apache.commons.lang3.tuple.Triple;
+
+import java.awt.*;
 
 public class HealthComponentWidget extends Button {
     public static final ResourceLocation SPRITES_HEAD = ResourceHelper.ModResource("textures/gui/sprites/widget/health_hud_head.png");
@@ -29,6 +32,7 @@ public class HealthComponentWidget extends Button {
     private float conditionValue;
     public float red;
     private float green;
+    private float blue;
 
     public HealthComponentWidget(int x, int y, int width, int height, Component message, OnPress onPress, BodyComponents id, ResourceLocation resource, ResourceLocation resourceLighted) {
         super(x, y, width, height, message, onPress, DEFAULT_NARRATION);
@@ -39,7 +43,7 @@ public class HealthComponentWidget extends Button {
 
     @Override
     protected void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
-        gui.setColor(this.red, this.green, 0.2F, this.conditionValue);
+        gui.setColor(this.red, this.green, this.blue, this.conditionValue);
 
         RenderSystem.enableBlend();
         gui.blit(this.resource, this.getX(), this.getY(), 0, 0, this.width, this.height, this.width, this.height);
@@ -53,8 +57,9 @@ public class HealthComponentWidget extends Button {
         this.conditionValue = conditionValue;
     }
 
-    public void setRedAndGreen(float red, float green) {
-        this.red = red;
-        this.green = green;
+    public void setRedAndGreen(Triple<Float, Float, Float> color) {
+        this.red = color.getLeft();
+        this.green = color.getMiddle();
+        this.blue = color.getRight();
     }
 }

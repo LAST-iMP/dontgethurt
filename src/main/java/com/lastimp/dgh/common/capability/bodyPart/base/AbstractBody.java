@@ -24,7 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public abstract class AbstractBody implements Serializable {
     public static final int ORGAN_1_START = 0;
@@ -247,6 +246,10 @@ public abstract class AbstractBody implements Serializable {
         return tag;
     }
 
+    public CompoundTag lightSerializeNBT() {
+        return new CompoundTag();
+    }
+
     @Override
     public CompoundTag serialize(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
@@ -267,6 +270,9 @@ public abstract class AbstractBody implements Serializable {
         this.organ.deserialize(provider, nbt.getCompound("organ"));
     }
 
+    public void lightDeserializeNBT(CompoundTag nbt) {
+    }
+
     @Override
     public void deserialize(HolderLookup.Provider provider, CompoundTag nbt) {
         for (var key : this.getBodyConditions()) {
@@ -280,12 +286,6 @@ public abstract class AbstractBody implements Serializable {
         this.organ1Level = nbt.getInt("organ1Level");
         this.organ2Level = nbt.getInt("organ2Level");
         this.organ3Level = nbt.getInt("organ3Level");
-    }
-
-    public static <T extends AbstractBody> AbstractBody buildFromNBT(HolderLookup.Provider provider, CompoundTag nbt, Supplier<T> constructor) {
-        T body = constructor.get();
-        body.deserialize(provider, nbt);
-        return body;
     }
 
     protected int organ1BaseLevel() {

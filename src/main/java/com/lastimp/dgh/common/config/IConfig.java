@@ -40,4 +40,7 @@ public interface IConfig {
     boolean LIMITED_BODY_PART_VITALITY_LOST();
     boolean ENABLE_LIVING_EFFECT();
     boolean ENABLE_SELF_SUICIDE();
+    int SMALL_CONDITION_X();
+    int SMALL_CONDITION_Y();
+    int SMALL_CONDITION_DISAPPEAR_DELAY();
 }

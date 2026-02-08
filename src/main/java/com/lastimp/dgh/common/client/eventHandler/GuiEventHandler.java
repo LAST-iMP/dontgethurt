@@ -91,34 +91,11 @@ public class GuiEventHandler {
     public static void onRenderMyOverlay(GuiGraphics graphics) {
         ClientAccessor.getPlayer().ifPresent(player -> {
             Minecraft mc = ClientAccessor.mc();
-            renderEyeOverlay(player, graphics);
+            ModOverlay.renderEyeOverlay(player, graphics);
+            ModOverlay.renderConditionOverlay(player, graphics);
             if (!mc.options.hideGui) {
-                renderDyingOverlay(player, graphics);
+                ModOverlay.renderDyingOverlay(player, graphics);
             }
         });
-    }
-
-    private static void renderEyeOverlay(LocalPlayer player, GuiGraphics graphics) {
-        if (player.isDeadOrDying()) return;
-        HealthCapability.getAndApply(player, h -> {
-            int avaEye = h.availableEye();
-            if (avaEye >= 2) return;
-            int color = avaEye == 1 ? 0x80000000 : 0xEF000000;
-            graphics.fill(0, 0, graphics.guiWidth(), graphics.guiHeight(), color);
-        });
-    }
-
-    private static void renderDyingOverlay(LocalPlayer player, GuiGraphics graphics) {
-        if (!HealthCapability.isDown(player)) return;
-        graphics.drawCenteredString(ClientAccessor.mc().font,
-                Component.literal("按下鼠标求救"),
-                graphics.guiWidth() / 2, graphics.guiHeight() / 2 - 50, 0xFFFFFFFF
-        );
-        if (PlatformService.CONFIG.ENABLE_SELF_SUICIDE()) {
-            graphics.drawCenteredString(ClientAccessor.mc().font,
-                    Component.literal("按住").append(KeyBinding.GIVE_UP.getTranslatedKeyMessage()).append("键5秒放弃治疗"),
-                    graphics.guiWidth() / 2, graphics.guiHeight() / 2 + 15 - 50, 0xFFFFFFFF
-            );
-        }
     }
 }
