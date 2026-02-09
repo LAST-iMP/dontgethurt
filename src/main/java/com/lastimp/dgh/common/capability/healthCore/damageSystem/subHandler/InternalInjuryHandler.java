@@ -13,12 +13,12 @@ import net.minecraft.world.entity.LivingEntity;
 import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
 
 public abstract class InternalInjuryHandler {
-    public static boolean handle(DamageSource source, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
+    public static boolean handle(DamageSource source, LivingEntity entity, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
         return InjuryHandler.handle(source.getEntity(), health, body, INTERNAL_INJURY, INTERNAL_RES, Component.literal("内伤"), damageAmount);
     }
 
     public static void handleBluntTrauma(DamageSource source, LivingEntity entity, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
-        if (!handle(source, health, body, damageAmount)) return;
+        if (!handle(source, entity, health, body, damageAmount)) return;
         float damage = body.getConditionValue(INTERNAL_INJURY) + body.getConditionHidden(INTERNAL_INJURY);
         if (body instanceof AbstractExtremities extremities)
             FollowInjuryHandler.dislocationHandler(extremities, health, damage);
@@ -29,7 +29,7 @@ public abstract class InternalInjuryHandler {
     }
 
     public static void handleExplosion(DamageSource source, LivingEntity entity, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
-        if (!handle(source, health, body, damageAmount)) return;
+        if (!handle(source, entity, health, body, damageAmount)) return;
         float damage = body.getConditionValue(INTERNAL_INJURY) + body.getConditionHidden(INTERNAL_INJURY);
         if (body instanceof AbstractExtremities extremities)
             FollowInjuryHandler.dislocationHandler(extremities, health, damage, PlatformService.CONFIG.BASE_DISLOCATION_THRESHOLD(), 1, 0.15f, 0.36f, 0);

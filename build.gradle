@@ -98,6 +98,8 @@ dependencies {
     compileOnly fg.deobf("curse.maven:touhou-little-maid-355044:7307720-sources-7307731")
     runtimeOnly fg.deobf("curse.maven:touhou-little-maid-355044:7307720-sources-7307731")
 
+    runtimeOnly fg.deobf("curse.maven:touhou-little-maid-spell-1290017:7534684")
+
     // MixinExtras
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")) {

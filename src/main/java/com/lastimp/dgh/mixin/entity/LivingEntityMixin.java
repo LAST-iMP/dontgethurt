@@ -1,10 +1,12 @@
 package com.lastimp.dgh.mixin.entity;
 
 import com.lastimp.dgh.common.PlatformService;
+import com.lastimp.dgh.common.capability.healthCore.damageSystem.InjuryEventHandler;
 import com.lastimp.dgh.common.config.HealthLivingEntityList;
 import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.utils.Utils;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,5 +36,13 @@ public class LivingEntityMixin {
         LivingEntity livingEntity = (LivingEntity) (Object)this;
         boolean attackable = !HealthCapability.has(livingEntity) || !HealthCapability.isDying(livingEntity) || HealthLivingEntityList.canBeSeenWhenLying(livingEntity.getType());
         cir.setReturnValue(cir.getReturnValue() && attackable);
+    }
+
+    @Inject(method = "getDamageAfterArmorAbsorb", at = @At("HEAD"), cancellable = true)
+    protected void getDamageAfterArmorAbsorb(DamageSource damageSource, float damageAmount, CallbackInfoReturnable<Float> cir) {
+        LivingEntity livingEntity = (LivingEntity) (Object)this;
+        if (InjuryEventHandler.canInjuryBody(livingEntity, damageSource)) {
+            cir.setReturnValue(damageAmount);
+        }
     }
 }

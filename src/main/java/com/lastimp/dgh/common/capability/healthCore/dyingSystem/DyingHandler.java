@@ -74,7 +74,7 @@ public class DyingHandler {
             } else {
                 lastDamageSource = new DamageSource(getKillerDamageType(entity, h));
             }
-            entity.hurt(lastDamageSource, entity.getMaxHealth());
+            entity.hurt(lastDamageSource, entity.getHealth() + 1);
             if (!entity.isDeadOrDying()) {
                 entity.getCombatTracker().recordDamage(lastDamageSource, 1);
                 entity.setHealth(0);
