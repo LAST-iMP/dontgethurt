@@ -70,16 +70,17 @@ public class DyingHandler {
 
             var lastDamageSource = entity.getLastDamageSource();
             var record = h.lastEntityDamage();
-            if (lastDamageSource == null || lastDamageSource.is(DamageTypeTags.IS_DROWNING)) {
-                if (record != null) {
-                    lastDamageSource = new DamageSource(getKillerDamageType(entity, h), record.getDirectEntity(), record.getEntity(), record.getSourcePosition());
-                } else {
-                    lastDamageSource = new DamageSource(getKillerDamageType(entity, h));
-                }
+            if (record != null) {
+                lastDamageSource = new DamageSource(getKillerDamageType(entity, h), record.getDirectEntity(), record.getEntity(), record.getSourcePosition());
+            } else {
+                lastDamageSource = new DamageSource(getKillerDamageType(entity, h));
             }
-            entity.getCombatTracker().recordDamage(lastDamageSource, 1);
-            entity.setHealth(0);
-            entity.die(lastDamageSource);
+            entity.hurt(lastDamageSource, entity.getMaxHealth());
+            if (!entity.isDeadOrDying()) {
+                entity.getCombatTracker().recordDamage(lastDamageSource, 1);
+                entity.setHealth(0);
+                entity.die(lastDamageSource);
+            }
         });
     }
 
