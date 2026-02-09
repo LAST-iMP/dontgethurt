@@ -216,7 +216,7 @@ public class HealthCapability implements Serializable {
         this.rightLegVisible = updateIfDirty(AbstractExtremities.visible(this, RIGHT_LEG), this.rightLegVisible);
         this.availableEye = updateIfDirty(this.getComponent(HEAD).countOrganMatch(ModTags.EYE), this.availableEye);
         this.maxAirSupply = updateIfDirty(((Torso)this.getComponent(TORSO)).additionAir() + 150, this.maxAirSupply);
-        this.abnormal = this.body.abnormal();
+        this.abnormal = updateIfDirty(this.body.abnormal(), this.abnormal);
         if (!this.abnormal) {
             this.directInjury.clear();
             this.currentHealer = null;

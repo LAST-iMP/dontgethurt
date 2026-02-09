@@ -1,7 +1,7 @@
 package com.lastimp.dgh.common.client.eventHandler;
 
 import com.google.common.collect.ImmutableSet;
-import com.lastimp.dgh.mixin.client.LocalPlayerAccessor;
+import com.lastimp.dgh.mixin.client.entity.LocalPlayerAccessor;
 import com.lastimp.dgh.mixin.client.MinecraftAccessor;
 import com.lastimp.dgh.common.client.ClientAccessor;
 import com.lastimp.dgh.common.client.gui.screen.HealthScreen;

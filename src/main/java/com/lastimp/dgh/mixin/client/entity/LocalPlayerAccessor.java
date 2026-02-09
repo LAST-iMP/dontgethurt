@@ -1,4 +1,4 @@
-package com.lastimp.dgh.mixin.client;
+package com.lastimp.dgh.mixin.client.entity;
 
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
