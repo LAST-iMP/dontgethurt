@@ -1,4 +1,4 @@
-package com.lastimp.dgh.mixin;
+package com.lastimp.dgh.mixin.entity;
 
 import com.lastimp.dgh.common.capability.HealthCapability;
 import net.minecraft.world.entity.Entity;

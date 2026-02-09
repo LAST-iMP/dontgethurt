@@ -1,4 +1,4 @@
-package com.lastimp.dgh.mixin.client;
+package com.lastimp.dgh.mixin.client.entity;
 
 import com.lastimp.dgh.common.capability.HealthCapability;
 import com.mojang.authlib.GameProfile;

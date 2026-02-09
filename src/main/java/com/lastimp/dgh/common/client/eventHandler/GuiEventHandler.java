@@ -1,13 +1,11 @@
 package com.lastimp.dgh.common.client.eventHandler;
 
 import com.google.common.collect.ImmutableSet;
-import com.lastimp.dgh.common.PlatformService;
 
-import com.lastimp.dgh.mixin.client.LocalPlayerAccessor;
+import com.lastimp.dgh.mixin.client.entity.LocalPlayerAccessor;
 import com.lastimp.dgh.mixin.client.MinecraftAccessor;
 import com.lastimp.dgh.common.client.ClientAccessor;
 import com.lastimp.dgh.common.client.gui.screen.HealthScreen;
-import com.lastimp.dgh.common.client.hotkey.KeyBinding;
 import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.entry.register.ModEffects;
 import net.minecraft.client.Minecraft;
@@ -16,8 +14,6 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
