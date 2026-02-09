@@ -11,64 +11,41 @@ import com.lastimp.dgh.common.item.limbs.HumanLeg;
 import net.minecraft.world.item.*;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.lastimp.dgh.common.entry.register.ModBlocks.OPERATING_BED_BLOCK;
 
 public class ModItems {
-    public static final HashSet<IEntry<?>> ITEMS_SET = new HashSet<>();
+    public static final HashSet<IEntry<Item>> ITEMS_SET = new LinkedHashSet<>();
 
+    //核心工具
     public static final IEntry<Item> OPERATING_BED_BLOCK_ITEM = registerItem(
             "operating_bed", () -> new BedItem(
                     OPERATING_BED_BLOCK.get(),
                     new Item.Properties().stacksTo(1)
             ));
 
+    public static final IEntry<Item> STRETCHER = registerItem(
+            "stretcher", StretcherItem::new,
+            new Item.Properties().stacksTo(1)
+    );
+
     public static final IEntry<Item> HEALTH_SCANNER = registerItem(
-            "health_scanner", () -> new HealthScanner(
-                    new Item.Properties().stacksTo(1)
-            ));
-
-    public static final IEntry<Item> BLOOD_PACK = registerItem(
-            "blood_pack", () -> new BloodPacks(
-                    new Item.Properties().stacksTo(16)
-            ));
-
-    public static final IEntry<Item> BLOOD_PACK_EMPTY = registerItem(
-            "blood_pack_empty", () -> new BloodPacksEmpty(
-                    new Item.Properties().stacksTo(16)
-            ));
+            "health_scanner", HealthScanner::new,
+            new Item.Properties().stacksTo(1)
+    );
 
     public static final IEntry<Item> BLOOD_SCANNER = registerItem(
-            "blood_scanner", () -> new BloodScanner(
-                    new Item.Properties().stacksTo(1)
-            ));
-
-    public static final IEntry<Item> BANDAGE = registerItem(
-            "bandage", () -> new Bandages(
-                    new Item.Properties().stacksTo(64)
-            ));
-
-    public static final IEntry<Item> MORPHINE = registerItem(
-            "morphine", () -> new Morphine(
-                    new Item.Properties().stacksTo(16)
-            ));
-
-    public static final IEntry<Item> GYPSUM = registerItem(
-            "gypsum", () -> new Gypsum(
-                    new Item.Properties().stacksTo(16)
-            ));
-
-    public static final IEntry<Item> SUTURE = registerItem(
-            "suture", () -> new Sutures(
-                    new Item.Properties().stacksTo(64)
-            ));
-
+            "blood_scanner", BloodScanner::new,
+            new Item.Properties().stacksTo(1)
+    );
+    //背包
     public static final IEntry<Item> HEALTH_CARE_BAG = registerItem(
-            "health_care_bag", () -> new HealthCareBag(
-                    new Item.Properties().stacksTo(1)
-            ));
+            "health_care_bag", HealthCareBag::new,
+            new Item.Properties().stacksTo(1)
+    );
 
     public static final IEntry<Item> SURGERY_TOOL_BAG = registerItem(
             "surgery_tool_bag", SurgeryToolBag::new,
@@ -77,14 +54,154 @@ public class ModItems {
 
     public static final IEntry<Item> LIMB_REF_BEG = registerItem(
             "limb_ref_beg", LimbRefBeg::new,
-            new Item.Properties().stacksTo(1));
+            new Item.Properties().stacksTo(1)
+    );
 
+    public static final IEntry<Item> AUTO_USE_BAG = registerItem(
+            "auto_use_bag", AutoUseBag::new,
+            new Item.Properties().stacksTo(1)
+    );
+
+    public static final IEntry<Item> MEDICINE_BAG = registerItem(
+            "medicine_bag", MedicineBag::new,
+            new Item.Properties().stacksTo(1)
+    );
+    //治疗工具
     public static final IEntry<Item> WOOD_WRENCH = registerItem(
-            "wood_wrench", () -> new WoodWrench(
-                    new Item.Properties().stacksTo(1)
-                            .durability(60)
-            ));
+            "wood_wrench", WoodWrench::new,
+            new Item.Properties().stacksTo(1).durability(60)
+    );
 
+    public static final IEntry<Item> WALKING_STICK = registerItem(
+            "walking_stick", Item::new,
+            new Item.Properties().stacksTo(2)
+    );
+
+    public static final IEntry<Item> BLOOD_PACK = registerItem(
+            "blood_pack", BloodPacks::new,
+            new Item.Properties().stacksTo(16)
+    );
+
+    public static final IEntry<Item> BLOOD_PACK_EMPTY = registerItem(
+            "blood_pack_empty", BloodPacksEmpty::new,
+            new Item.Properties().stacksTo(16)
+    );
+
+    public static final IEntry<Item> ANTISEPTIC_SPRAYER = registerItem(
+            "antiseptic_sprayer", AntisepticSprayer::new,
+            new Item.Properties().stacksTo(1).durability(10)
+    );
+
+    public static final IEntry<Item> OXYGEN_MASK = registerItem(
+            "oxygen_mask", OxygenMask::new,
+            new Item.Properties().stacksTo(1).durability(400)
+    );
+
+    public static final IEntry<Item> AUTOPULSE = registerItem(
+            "autopulse", Autopulse::new,
+            new Item.Properties().stacksTo(1).durability(400)
+    );
+
+    public static final IEntry<Item> AED = registerItem(
+            "aed", AED::new,
+            new Item.Properties().stacksTo(1).durability(20).setNoRepair()
+    );
+
+    public static final IEntry<Item> STASIS_BAG = registerItem(
+            "stasis_bag", StasisBag::new,
+            new Item.Properties().stacksTo(1).durability(400)
+    );
+    //急救用品
+    public static final IEntry<Item> HERB_BANDAGE = registerItem(
+            "herb_bandage", HerbBandage::new,
+            new Item.Properties().stacksTo(64)
+    );
+
+    public static final IEntry<Item> BANDAGE = registerItem(
+            "bandage", Bandages::new,
+            new Item.Properties().stacksTo(64)
+    );
+
+    public static final IEntry<Item> PLASTIC_SKIN = registerItem(
+            "plastic_skin", PlasticSkin::new,
+            new Item.Properties().stacksTo(64)
+    );
+
+    public static final IEntry<Item> CLAMP = registerItem(
+            "clamp", Clamp::new,
+            new Item.Properties().stacksTo(16)
+    );
+
+    public static final IEntry<Item> GYPSUM = registerItem(
+            "gypsum", Gypsum::new,
+            new Item.Properties().stacksTo(16)
+    );
+
+    public static final IEntry<Item> ANTIBIOTIC_OINTMENT = registerItem(
+            "antibiotic_ointment", AntibioticOintment::new,
+            new Item.Properties().stacksTo(1).durability(4).setNoRepair()
+    );
+
+    public static final IEntry<Item> ANTIBIOTIC_GLUE = registerItem(
+            "antibiotic_glue", AntibioticGlue::new,
+            new Item.Properties().stacksTo(1).durability(4)
+    );
+
+    public static final IEntry<Item> TOURNIQUET = registerItem(
+            "tourniquet", Tourniquet::new,
+            new Item.Properties().stacksTo(16)
+    );
+
+    public static final IEntry<Item> NEEDLE = registerItem(
+            "needle", Needle::new,
+            new Item.Properties().stacksTo(16)
+    );
+    //药剂
+    public static final IEntry<Item> MORPHINE = registerItem(
+            "morphine", Morphine::new,
+            new Item.Properties().stacksTo(16)
+    );
+
+    public static final IEntry<Item> FENTANYL = registerItem(
+            "fentanyl", Fentanyl::new,
+            new Item.Properties().stacksTo(16)
+    );
+
+    public static final IEntry<Item> NALOXONE = registerItem(
+            "naloxone", Naloxone::new,
+            new Item.Properties().stacksTo(16)
+    );
+
+    public static final IEntry<Item> ANTIBIOTICS = registerItem(
+            "antibiotics", Antibiotics::new,
+            new Item.Properties().stacksTo(16)
+    );
+
+    public static final IEntry<Item> ADRENALINE = registerItem(
+            "adrenaline", Adrenaline::new,
+            new Item.Properties().stacksTo(16)
+    );
+
+    public static final IEntry<Item> MANNITOL = registerItem(
+            "mannitol", Mannitol::new,
+            new Item.Properties().stacksTo(16)
+    );
+
+    public static final IEntry<Item> HARDENER = registerItem(
+            "hardener", Hardener::new,
+            new Item.Properties().stacksTo(16)
+    );
+
+    public static final IEntry<Item> HYPERZINE = registerItem(
+            "hyperzine", Hyperzine::new,
+            new Item.Properties().stacksTo(16)
+    );
+
+    public static final IEntry<Item> FOOD_CONSUMER = registerItem(
+            "food_consumer", FoodConsumer::new,
+            new Item.Properties().stacksTo(16)
+    );
+    //手术工具
     public static final IEntry<Item> SCALPEL = registerItem(
             "scalpel", Scalpel::new,
             new Item.Properties().stacksTo(1).durability(300)
@@ -93,6 +210,7 @@ public class ModItems {
     public static final IEntry<Item> HEMOSTAT = registerItem(
             "hemostat", Hemostat::new,
             new Item.Properties().stacksTo(1).durability(300)
+
     );
 
     public static final IEntry<Item> RETRACTOR = registerItem(
@@ -105,11 +223,30 @@ public class ModItems {
             new Item.Properties().stacksTo(1).durability(300)
     );
 
+    public static final IEntry<Item> SURGERY_SAW = registerItem(
+            "surgery_saw", SurgerySaw::new,
+            new Item.Properties().stacksTo(1).durability(300)
+    );
+
     public static final IEntry<Item> TWEEZER = registerItem(
             "tweezer", Tweezer::new,
             new Item.Properties().stacksTo(1).durability(300)
     );
 
+    public static final IEntry<Item> SUTURE = registerItem(
+            "suture", Sutures::new,
+            new Item.Properties().stacksTo(64)
+    );
+    //手术用品
+    public static final IEntry<Item> MEDICAL_STENT = registerItem(
+            "medical_stent", MedicalStent::new,
+            new Item.Properties().stacksTo(16)
+    );
+    public static final IEntry<Item> DRAINAGE = registerItem(
+            "drainage", Drainage::new,
+            new Item.Properties().stacksTo(16)
+    );
+    //骨头植入物
     public static final IEntry<Item> BONE_IMPLANTS = registerItem(
             "bone_implants", BoneImplants::new,
             new Item.Properties().stacksTo(1).durability(8)
@@ -148,11 +285,6 @@ public class ModItems {
     public static final IEntry<Item> BONE_IMPLANTS_NETHERITE = registerItem(
             "bone_implants_netherite", (properties) -> new BoneImplants(properties, BodyCondition.BONE_NETHERITE),
             new Item.Properties().stacksTo(1).durability(8)
-    );
-
-    public static final IEntry<Item> SURGERY_SAW = registerItem(
-            "surgery_saw", SurgerySaw::new,
-            new Item.Properties().stacksTo(1).durability(300)
     );
 
     public static final IEntry<Item> BONE_NATURAL = registerItem(
@@ -194,67 +326,7 @@ public class ModItems {
             "bone_netherite", (properties) -> new SurgeryBones(properties, BodyCondition.BONE_NETHERITE),
             new Item.Properties().stacksTo(16)
     );
-
-    public static final IEntry<Item> NALOXONE = registerItem(
-            "naloxone", Naloxone::new,
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> MEDICAL_STENT = registerItem(
-            "medical_stent", MedicalStent::new,
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> TOURNIQUET = registerItem(
-            "tourniquet", Tourniquet::new,
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> NEEDLE = registerItem(
-            "needle", Needle::new,
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> DRAINAGE = registerItem(
-            "drainage", Drainage::new,
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> ADRENALINE = registerItem(
-            "adrenaline", Adrenaline::new,
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> OXYGEN_MASK = registerItem(
-            "oxygen_mask", OxygenMask::new,
-            new Item.Properties().stacksTo(1).durability(400)
-    );
-
-    public static final IEntry<Item> ANTIBIOTIC_OINTMENT = registerItem(
-            "antibiotic_ointment", AntibioticOintment::new,
-            new Item.Properties().stacksTo(1).durability(4).setNoRepair()
-    );
-
-    public static final IEntry<Item> ANTISEPTIC_SPRAYER = registerItem(
-            "antiseptic_sprayer", AntisepticSprayer::new,
-            new Item.Properties().stacksTo(1).durability(10)
-    );
-
-    public static final IEntry<Item> ANTISEPTIC = registerItem(
-            "antiseptic", Item::new,
-            new Item.Properties().stacksTo(64)
-    );
-
-    public static final IEntry<Item> AUTOPULSE = registerItem(
-            "autopulse", Autopulse::new,
-            new Item.Properties().stacksTo(1).durability(400)
-    );
-
-    public static final IEntry<Item> ANTIBIOTICS = registerItem(
-            "antibiotics", Antibiotics::new,
-            new Item.Properties().stacksTo(16)
-    );
-
+    //器官
     public static final IEntry<Item> HUMAN_HAND = registerItem(
             "human_hand", HumanHand::new,
             new Item.Properties().stacksTo(1)
@@ -265,88 +337,13 @@ public class ModItems {
             new Item.Properties().stacksTo(1)
     );
 
-    public static final IEntry<Item> PLASTIC_SKIN = registerItem(
-            "plastic_skin", PlasticSkin::new,
-            new Item.Properties().stacksTo(64)
-    );
-
-    public static final IEntry<Item> ANTIBIOTIC_GLUE = registerItem(
-            "antibiotic_glue", AntibioticGlue::new,
-            new Item.Properties().stacksTo(1).durability(4)
-    );
-
-    public static final IEntry<Item> STASIS_BAG = registerItem(
-            "stasis_bag", StasisBag::new,
-            new Item.Properties().stacksTo(1).durability(400)
-    );
-
-    public static final IEntry<Item> WALKING_STICK = registerItem(
-            "walking_stick", Item::new,
-            new Item.Properties().stacksTo(2)
-    );
-
-    public static final IEntry<Item> STRETCHER = registerItem(
-            "stretcher", StretcherItem::new,
-            new Item.Properties().stacksTo(1)
-    );
-
-    public static final IEntry<Item> MANNITOL = registerItem(
-            "mannitol", Mannitol::new,
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> AUTO_USE_BAG = registerItem(
-            "auto_use_bag", AutoUseBag::new,
-            new Item.Properties().stacksTo(1)
-    );
-
-    public static final IEntry<Item> MEDICINE_BAG = registerItem(
-            "medicine_bag", MedicineBag::new,
-            new Item.Properties().stacksTo(1)
-    );
-
-    public static final IEntry<Item> HERB_BANDAGE = registerItem(
-            "herb_bandage", HerbBandage::new,
-            new Item.Properties().stacksTo(64)
-    );
-
-    public static final IEntry<Item> CLAMP = registerItem(
-            "clamp", Clamp::new,
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> GRASS_STRING = registerItem(
-            "grass_string", Item::new,
-            new Item.Properties().stacksTo(64)
-    );
-
-    public static final IEntry<Item> AED = registerItem(
-            "aed", com.lastimp.dgh.common.item.tool.AED::new,
-            new Item.Properties().stacksTo(1).durability(20).setNoRepair()
-    );
-
-    public static final IEntry<Item> FOOD_CONSUMER = registerItem(
-            "food_consumer", FoodConsumer::new,
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> FENTANYL = registerItem(
-            "fentanyl", Fentanyl::new,
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> HYPERZINE = registerItem(
-            "hyperzine", Hyperzine::new,
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> HARDENER = registerItem(
-            "hardener", Hardener::new,
-            new Item.Properties().stacksTo(16)
-    );
-
     public static final IEntry<Item> BRAIN = registerItem(
             "brain", Brain::new,
+            new Item.Properties().stacksTo(1)
+    );
+
+    public static final IEntry<Item> SPINAL_CORD = registerItem(
+            "spinal_cord", SpinalCord::new,
             new Item.Properties().stacksTo(1)
     );
 
@@ -375,6 +372,11 @@ public class ModItems {
             new Item.Properties().stacksTo(1)
     );
 
+    public static final IEntry<Item> STOMACH = registerItem(
+            "stomach", Stomach::new,
+            new Item.Properties().stacksTo(1)
+    );
+
     public static final IEntry<Item> MUSCLE = registerItem(
             "muscle", Muscle::new,
             new Item.Properties().stacksTo(1)
@@ -389,15 +391,15 @@ public class ModItems {
             "skin", Skin::new,
             new Item.Properties().stacksTo(1)
     );
-
-    public static final IEntry<Item> SPINAL_CORD = registerItem(
-            "spinal_cord", SpinalCord::new,
-            new Item.Properties().stacksTo(1)
+    //材料
+    public static final IEntry<Item> ANTISEPTIC = registerItem(
+            "antiseptic", Item::new,
+            new Item.Properties().stacksTo(64)
     );
 
-    public static final IEntry<Item> STOMACH = registerItem(
-            "stomach", Stomach::new,
-            new Item.Properties().stacksTo(1)
+    public static final IEntry<Item> GRASS_STRING = registerItem(
+            "grass_string", Item::new,
+            new Item.Properties().stacksTo(64)
     );
 
     public static void register() {

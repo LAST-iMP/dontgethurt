@@ -63,11 +63,11 @@ public class HealthCapability implements Serializable {
     private boolean leftLegVisible = true;
     private boolean rightLegVisible = true;
     private boolean isDown = false;
+    private boolean abnormal = true;
     //临时属性
     private boolean isDirty = true;
     private boolean haveKidney = true;
     private boolean isInfected = false;
-    private boolean abnormal = true;
     private int oxygenMaskCoolDown = 0;
     private int autoPulseCoolDown = 0;
     public LivingEntity currentHealer = null;
