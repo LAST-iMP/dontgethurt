@@ -162,7 +162,7 @@ public class ConfigNF implements IConfig {
 
     private static final ModConfigSpec.IntValue SMALL_CONDITION_DISAPPEAR_DELAY = BUILDER
             .comment("健康小人ui的渐隐时间(-1为永不消失, -2为永不显示)")
-            .defineInRange("SMALL_CONDITION_DISAPPEAR_DELAY", 3, -1, Integer.MAX_VALUE);
+            .defineInRange("SMALL_CONDITION_DISAPPEAR_DELAY", 3, -2, Integer.MAX_VALUE);
     // 构建配置
     public static final ModConfigSpec SPEC = BUILDER.pop().build();
 
