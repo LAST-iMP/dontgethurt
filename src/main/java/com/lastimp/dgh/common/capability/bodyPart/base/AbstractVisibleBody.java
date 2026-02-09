@@ -24,10 +24,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.UnknownNullability;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
 import static com.lastimp.dgh.common.enums.BodyComponents.*;
@@ -126,14 +123,14 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         float shield = heal / 2;
         heal *= PlatformService.CONFIG.RESISTANCE_CONVERT_RATIO();
         if (key == BURN) {
-            this.addConditionValue(BURN_RES, heal);
-            this.addConditionHidden(BURN_RES, shield);
+            this.addConditionValue(BURN_RES, shield);
+            this.addConditionHidden(BURN_RES, heal);
         } else if (key == OPEN_WOUND || key == PASS_THROUGH) {
-            this.addConditionValue(OPEN_WOUND_RES, heal);
-            this.addConditionHidden(OPEN_WOUND_RES, shield);
+            this.addConditionValue(OPEN_WOUND_RES, shield);
+            this.addConditionHidden(OPEN_WOUND_RES, heal);
         } else if (key == INTERNAL_INJURY) {
-            this.addConditionValue(INTERNAL_RES, heal);
-            this.addConditionHidden(INTERNAL_RES, shield);
+            this.addConditionValue(INTERNAL_RES, shield);
+            this.addConditionHidden(INTERNAL_RES, heal);
         }
     }
 
@@ -551,6 +548,27 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     public boolean isInfected() {
         return this.getConditionValue(INFECTION) > 0.1;
+    }
+
+    public ResourceLocation boneUUID() {
+        ResourceLocation bone = this.boneCrafted();
+        if (bone.equals(BONE_STONE)) return uuid_bone_stone;
+        if (bone.equals(BONE_COPPER)) return uuid_bone_copper;
+        if (bone.equals(BONE_IRON)) return uuid_bone_iron;
+        if (bone.equals(BONE_GOLD)) return uuid_bone_gold;
+        if (bone.equals(BONE_DIMOND)) return uuid_bone_dimond;
+        if (bone.equals(BONE_NETHERITE)) return uuid_bone_netherite;
+        return null;
+    }
+
+    public float getArmor() {
+        var bone = this.boneUUID();
+        return bone != null ? (float) this.armor.getModifier(bone).amount() : 0;
+    }
+
+    public float getRoughness() {
+        var bone = this.boneUUID();
+        return bone != null ? (float) this.armor_toughness.getModifier(bone).amount() : 0;
     }
 
     public CompoundTag lightSerializeNBT() {

@@ -43,4 +43,6 @@ public interface IConfig {
     int SMALL_CONDITION_X();
     int SMALL_CONDITION_Y();
     int SMALL_CONDITION_DISAPPEAR_DELAY();
+    boolean ARMOR_RECALCULATE();
+    float BLOCK_RECOVER_DELAY();
 }

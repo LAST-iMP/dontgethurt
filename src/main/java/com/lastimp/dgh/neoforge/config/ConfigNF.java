@@ -163,6 +163,14 @@ public class ConfigNF implements IConfig {
     private static final ModConfigSpec.IntValue SMALL_CONDITION_DISAPPEAR_DELAY = BUILDER
             .comment("健康小人ui的渐隐时间(-1为永不消失, -2为永不显示)")
             .defineInRange("SMALL_CONDITION_DISAPPEAR_DELAY", 3, -2, Integer.MAX_VALUE);
+
+    private static final ModConfigSpec.BooleanValue ARMOR_RECALCULATE = BUILDER
+            .comment("启用改型护甲计算")
+            .define("ARMOR_RECALCULATE", true);
+
+    private static final ModConfigSpec.DoubleValue BLOCK_RECOVER_DELAY = BUILDER
+            .comment("护甲格挡恢复延迟")
+            .defineInRange("BLOCK_RECOVER_DELAY", 0.8, 0, 1.0);
     // 构建配置
     public static final ModConfigSpec SPEC = BUILDER.pop().build();
 
@@ -359,5 +367,15 @@ public class ConfigNF implements IConfig {
     @Override
     public int SMALL_CONDITION_DISAPPEAR_DELAY() {
         return SMALL_CONDITION_DISAPPEAR_DELAY.getAsInt();
+    }
+
+    @Override
+    public boolean ARMOR_RECALCULATE() {
+        return ARMOR_RECALCULATE.getAsBoolean();
+    }
+
+    @Override
+    public float BLOCK_RECOVER_DELAY() {
+        return (float) BLOCK_RECOVER_DELAY.getAsDouble();
     }
 }

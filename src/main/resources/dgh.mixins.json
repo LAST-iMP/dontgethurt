@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "dgh.refmap.json",
   "mixins": [
+    "entity.LivingEntityAccessor",
     "entity.LivingEntityMixin",
     "entity.EntityMixin",
     "entity.PlayerMixin"

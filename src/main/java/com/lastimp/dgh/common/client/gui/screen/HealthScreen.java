@@ -172,7 +172,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
                 widget.setAdditionValueAndColor(addition, 0xFF7E0000);
             } else if (ConditionAccessor.resistConditions.contains(condition)) {
                 float addition = Math.max(0, bodyPart.getCondition(condition).getHiddenValue());
-                widget.setAdditionValueAndColor(addition, 0xFF99ffa3);
+                widget.setAdditionValueAndColor(addition, 0xFFF4FFA7);
             }
 
             widget.setPosition(

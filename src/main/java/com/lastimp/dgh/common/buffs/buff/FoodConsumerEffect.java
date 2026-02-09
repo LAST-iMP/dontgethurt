@@ -31,9 +31,9 @@ public class FoodConsumerEffect extends MobEffect {
             }
             float block = 0.5f / 3f / (livingEntity.getMaxHealth() * PlatformService.CONFIG.BODY_LIFE_FACTOR());
             for (var component : BodyComponents.VISIBLE_BODIES) {
-                h.getComponent(component).addConditionHidden(BURN_RES, block);
-                h.getComponent(component).addConditionHidden(INTERNAL_RES, block);
-                h.getComponent(component).addConditionHidden(OPEN_WOUND_RES, block);
+                h.getComponent(component).addConditionValue(BURN_RES, block);
+                h.getComponent(component).addConditionValue(INTERNAL_RES, block);
+                h.getComponent(component).addConditionValue(OPEN_WOUND_RES, block);
             }
         });
         return true;

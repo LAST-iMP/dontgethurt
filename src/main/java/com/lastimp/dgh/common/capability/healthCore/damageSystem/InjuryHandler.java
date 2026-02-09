@@ -25,14 +25,14 @@ public class InjuryHandler {
     }
 
     public static boolean handle(Entity entity, HealthCapability health, AbstractBody body, ResourceLocation damageType, ResourceLocation resistType, Component name, float damageAmount) {
-        float block = Math.min(damageAmount, body.getConditionHidden(resistType));
-        float resist = body.getConditionValue(resistType) * PlatformService.CONFIG.RESISTANCE_MAX();
+        float block = Math.min(damageAmount, body.getConditionValue(resistType));
+        float resist = body.getConditionHidden(resistType) * PlatformService.CONFIG.RESISTANCE_MAX();
         resist += health.getComponent(BLOOD).getConditionValue(HARDENER) / 2;
 
         var event = PlatformService.EVENT_HOOK.fireDghComponentDamageEvent(block, body.getBodyType(), damageAmount, resist, damageType);
         if (event.isCanceled()) return false;
         damageAmount -= event.block();
-        body.addConditionHidden(resistType, -event.block());
+        body.addConditionValue(resistType, -event.block());
         damageAmount *= (1.0f - Math.min(1, event.resist()));
 
         body.injury(damageType, damageAmount);
