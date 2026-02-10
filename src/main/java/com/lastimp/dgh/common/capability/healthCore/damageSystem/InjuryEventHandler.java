@@ -263,8 +263,10 @@ public class InjuryEventHandler {
                         bodyRoughness += item.getToughness();
                     } else {
                         extraArmor += item.getDefense();
-                        extraArmor += item.getToughness();
+                        bodyRoughness += item.getToughness();
                     }
+                    extraArmor += HealthCapability.getAndApply(entity, h -> (h.getComponent(data.component()) instanceof AbstractVisibleBody visibleBody) ? visibleBody.getArmor() : 0, 0).floatValue();
+                    bodyRoughness += HealthCapability.getAndApply(entity, h -> (h.getComponent(data.component()) instanceof AbstractVisibleBody visibleBody) ? visibleBody.getRoughness() : 0, 0).floatValue();
                 }
                 valindaArmor -= extraArmor + bodyArmor;
                 valindaRoughness -= extraRoughness + bodyRoughness;

@@ -145,7 +145,7 @@ public class BodyCondition {
 
         public ConditionBuilder isResist() {
             resistConditions.add(this.instance.name);
-            setColor(0xFFF4FFA7);
+            setColor(0xFF99ffa3);
             return this;
         }
 
