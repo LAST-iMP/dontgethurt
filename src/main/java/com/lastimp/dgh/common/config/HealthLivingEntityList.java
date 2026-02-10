@@ -2,6 +2,7 @@ package com.lastimp.dgh.common.config;
 
 import com.google.gson.*;
 import com.lastimp.dgh.common.PlatformService;
+import com.lastimp.dgh.common.config.record.WhiteListRecord;
 import com.lastimp.dgh.common.utils.Utils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
