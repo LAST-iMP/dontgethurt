@@ -1,4 +1,4 @@
-package com.lastimp.dgh.common.config;
+package com.lastimp.dgh.common.config.record;
 
 import net.minecraft.nbt.CompoundTag;
 

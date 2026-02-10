@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.lastimp.dgh.common.PlatformService;
+import com.lastimp.dgh.common.config.record.WhiteListRecord;
 import com.lastimp.dgh.common.utils.Utils;
 
 import net.minecraft.nbt.CompoundTag;
