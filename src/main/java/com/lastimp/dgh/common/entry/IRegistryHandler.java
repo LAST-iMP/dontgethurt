@@ -1,6 +1,7 @@
 package com.lastimp.dgh.common.entry;
 
 import com.lastimp.dgh.common.menu.IMenuFactory;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
@@ -20,6 +21,8 @@ import java.util.function.Supplier;
 
 public interface IRegistryHandler {
     void register();
+
+    ResourceLocation itemID(Item item);
 
     IEntry<Block> registerBlock(String name, Supplier<Block> factory);
     <T extends BlockEntity> IEntry<BlockEntityType<T>> registerBlockEntity(String name, Supplier<BlockEntityType<?>> factory);

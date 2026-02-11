@@ -1,21 +1,28 @@
 package com.lastimp.dgh.common.client.eventHandler;
 
 import com.google.common.collect.ImmutableSet;
+import com.lastimp.dgh.common.config.impl.ArmorList;
 import com.lastimp.dgh.mixin.client.entity.LocalPlayerAccessor;
 import com.lastimp.dgh.mixin.client.MinecraftAccessor;
 import com.lastimp.dgh.common.client.ClientAccessor;
 import com.lastimp.dgh.common.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.entry.register.ModEffects;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ItemStack;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class GuiEventHandler {
@@ -91,5 +98,25 @@ public class GuiEventHandler {
                 ModOverlay.renderDyingOverlay(player, graphics);
             }
         });
+    }
+
+    public static void onItemTooltip(ItemStack stack, List<Component> list) {
+        if (ArmorList.has(stack.getItem())) {
+            var data = ArmorList.getData(stack.getItem());
+            if (data.open_resist() > 0) {
+                Component valueText = Component.literal(String.format(Locale.ROOT, "%+.0f%%", data.open_resist()));
+                list.add(Component.translatable("tooltip.dgh.open_resist", valueText).withStyle(ChatFormatting.BLUE));
+            }
+        }
+        if (stack.getItem() instanceof ArmorItem item) {
+            float armor = item.getDefense();
+            float toughness = item.getToughness();
+            if (armor > 0) {
+                list.add(Component.literal("+"+armor * 10+"% 外伤格挡").withStyle(ChatFormatting.BLUE));
+            }
+            if (toughness > 0) {
+                list.add(Component.literal("+"+toughness * 10+"% 格挡恢复").withStyle(ChatFormatting.BLUE));
+            }
+        }
     }
 }

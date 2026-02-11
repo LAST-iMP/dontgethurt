@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -92,5 +93,10 @@ public class ClientEventBus {
     @SubscribeEvent
     public static void playerTick(TickEvent.PlayerTickEvent event) {
         ClientTickEventHandler.playerTick(event.player);
+    }
+
+    @SubscribeEvent
+    public static void onItemTooltip(ItemTooltipEvent event) {
+        GuiEventHandler.onItemTooltip(event.getItemStack(), event.getToolTip());
     }
 }

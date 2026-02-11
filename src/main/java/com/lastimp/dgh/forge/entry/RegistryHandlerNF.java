@@ -8,6 +8,7 @@ import com.lastimp.dgh.common.menu.IMenuFactory;
 import com.lastimp.dgh.common.utils.Utils;
 import com.lastimp.dgh.forge.menu.MenuFactoryNF;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
@@ -53,6 +54,11 @@ public class RegistryHandlerNF implements IRegistryHandler {
         ModMenus.register();
         ModCreativeModTabs.register();
         ModVillagers.register();
+    }
+
+    @Override
+    public ResourceLocation itemID(Item item) {
+        return ForgeRegistries.ITEMS.getKey(item);
     }
 
     @Override
