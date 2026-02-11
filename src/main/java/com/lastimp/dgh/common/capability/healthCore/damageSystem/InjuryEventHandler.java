@@ -7,7 +7,7 @@ import com.lastimp.dgh.common.capability.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.common.enums.BodyComponents;
 import com.lastimp.dgh.common.tags.ModDamageType;
-import com.lastimp.dgh.common.config.HealthLivingEntityList;
+import com.lastimp.dgh.common.config.impl.HealthLivingEntityList;
 import com.lastimp.dgh.common.utils.Utils;
 import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.capability.healthCore.damageSystem.subHandler.BurnHandler;

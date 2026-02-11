@@ -2,7 +2,7 @@ package com.lastimp.dgh.mixin.entity;
 
 import com.lastimp.dgh.common.PlatformService;
 import com.lastimp.dgh.common.capability.healthCore.damageSystem.InjuryEventHandler;
-import com.lastimp.dgh.common.config.HealthLivingEntityList;
+import com.lastimp.dgh.common.config.impl.HealthLivingEntityList;
 import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.utils.Utils;
 import net.minecraft.core.particles.ParticleTypes;

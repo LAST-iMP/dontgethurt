@@ -1,8 +1,8 @@
 
 package com.lastimp.dgh.forge.network.handler;
 
+import com.lastimp.dgh.common.config.ModConfigs;
 import com.lastimp.dgh.common.enums.OperationType;
-import com.lastimp.dgh.common.config.HealthLivingEntityList;
 import com.lastimp.dgh.common.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.common.network.message.MyServerConfigSynData;
 import com.lastimp.dgh.common.client.ClientAccessor;
@@ -35,7 +35,7 @@ public class ClientPayloadHandler {
 
     public static void handleServerConfigSYNData(final MyServerConfigSynData data, final Supplier<NetworkEvent.Context> ctx) {
         var context = ctx.get();
-        context.enqueueWork(() -> HealthLivingEntityList.loadServerData(data.tag()));
+        context.enqueueWork(() -> ModConfigs.loadServerData(data.configType(), data.tag()));
         context.setPacketHandled(true);
     }
 }

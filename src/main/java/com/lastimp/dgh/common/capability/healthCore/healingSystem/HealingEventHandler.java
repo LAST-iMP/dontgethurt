@@ -2,7 +2,7 @@
 package com.lastimp.dgh.common.capability.healthCore.healingSystem;
 
 import com.lastimp.dgh.common.PlatformService;
-import com.lastimp.dgh.common.config.HealthLivingEntityList;
+import com.lastimp.dgh.common.config.impl.HealthLivingEntityList;
 import com.lastimp.dgh.common.utils.Utils;
 import com.lastimp.dgh.common.capability.healthCore.dyingSystem.DyingHandler;
 import com.lastimp.dgh.common.capability.HealthCapability;
