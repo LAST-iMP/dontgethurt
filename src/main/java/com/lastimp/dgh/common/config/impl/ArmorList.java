@@ -90,58 +90,58 @@ public class ArmorList implements IConfigLoader<Map.Entry<ResourceLocation, Armo
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:leather_helmet\",\n" +
-                "    \"OPEN_RESIST\":10,\n" +
+                "    \"OPEN_RESIST\":15,\n" +
                 "    \"INTERNAL_RESIST\":10\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:leather_chestplate\",\n" +
                 "    \"OPEN_RESIST\":30,\n" +
-                "    \"INTERNAL_RESIST\":10\n" +
+                "    \"INTERNAL_RESIST\":20\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:leather_leggings\",\n" +
-                "    \"OPEN_RESIST\":20,\n" +
+                "    \"OPEN_RESIST\":15,\n" +
                 "    \"INTERNAL_RESIST\":10\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:leather_boots\",\n" +
                 "    \"OPEN_RESIST\":10,\n" +
-                "    \"INTERNAL_RESIST\":10\n" +
+                "    \"INTERNAL_RESIST\":5\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:golden_helmet\",\n" +
-                "    \"OPEN_RESIST\":20,\n" +
-                "    \"INTERNAL_RESIST\":40\n" +
+                "    \"OPEN_RESIST\":25,\n" +
+                "    \"INTERNAL_RESIST\":25\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:golden_chestplate\",\n" +
                 "    \"OPEN_RESIST\":50,\n" +
-                "    \"INTERNAL_RESIST\":100\n" +
+                "    \"INTERNAL_RESIST\":50\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:golden_leggings\",\n" +
-                "    \"OPEN_RESIST\":30,\n" +
-                "    \"INTERNAL_RESIST\":60\n" +
+                "    \"OPEN_RESIST\":25,\n" +
+                "    \"INTERNAL_RESIST\":25\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:golden_boots\",\n" +
                 "    \"OPEN_RESIST\":10,\n" +
-                "    \"INTERNAL_RESIST\":20\n" +
+                "    \"INTERNAL_RESIST\":10\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:chainmail_helmet\",\n" +
-                "    \"OPEN_RESIST\":20,\n" +
-                "    \"INTERNAL_RESIST\":40\n" +
+                "    \"OPEN_RESIST\":25,\n" +
+                "    \"INTERNAL_RESIST\":35\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:chainmail_chestplate\",\n" +
                 "    \"OPEN_RESIST\":50,\n" +
-                "    \"INTERNAL_RESIST\":100\n" +
+                "    \"INTERNAL_RESIST\":60\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:chainmail_leggings\",\n" +
-                "    \"OPEN_RESIST\":40,\n" +
-                "    \"INTERNAL_RESIST\":80\n" +
+                "    \"OPEN_RESIST\":35,\n" +
+                "    \"INTERNAL_RESIST\":45\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:chainmail_boots\",\n" +
@@ -150,7 +150,7 @@ public class ArmorList implements IConfigLoader<Map.Entry<ResourceLocation, Armo
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:iron_helmet\",\n" +
-                "    \"OPEN_RESIST\":20\n" +
+                "    \"OPEN_RESIST\":25\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:iron_chestplate\",\n" +
@@ -158,7 +158,7 @@ public class ArmorList implements IConfigLoader<Map.Entry<ResourceLocation, Armo
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:iron_leggings\",\n" +
-                "    \"OPEN_RESIST\":50\n" +
+                "    \"OPEN_RESIST\":45\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:iron_boots\",\n" +
@@ -166,7 +166,7 @@ public class ArmorList implements IConfigLoader<Map.Entry<ResourceLocation, Armo
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:diamond_helmet\",\n" +
-                "    \"OPEN_RESIST\":30,\n" +
+                "    \"OPEN_RESIST\":35,\n" +
                 "    \"OPEN_TOUGH\":20\n" +
                 "  },\n" +
                 "  {\n" +
@@ -176,7 +176,7 @@ public class ArmorList implements IConfigLoader<Map.Entry<ResourceLocation, Armo
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:diamond_leggings\",\n" +
-                "    \"OPEN_RESIST\":60,\n" +
+                "    \"OPEN_RESIST\":55,\n" +
                 "    \"OPEN_TOUGH\":20\n" +
                 "  },\n" +
                 "  {\n" +
@@ -186,7 +186,7 @@ public class ArmorList implements IConfigLoader<Map.Entry<ResourceLocation, Armo
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:netherite_helmet\",\n" +
-                "    \"OPEN_RESIST\":30,\n" +
+                "    \"OPEN_RESIST\":35,\n" +
                 "    \"OPEN_TOUGH\":30\n" +
                 "  },\n" +
                 "  {\n" +
@@ -196,7 +196,7 @@ public class ArmorList implements IConfigLoader<Map.Entry<ResourceLocation, Armo
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:netherite_leggings\",\n" +
-                "    \"OPEN_RESIST\":60,\n" +
+                "    \"OPEN_RESIST\":55,\n" +
                 "    \"OPEN_TOUGH\":30\n" +
                 "  },\n" +
                 "  {\n" +
