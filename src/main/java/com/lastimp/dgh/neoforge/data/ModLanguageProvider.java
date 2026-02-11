@@ -217,6 +217,13 @@ public class ModLanguageProvider extends LanguageProvider {
 
         this.add("task.dgh.bring_to_bed", "猫车");
         this.add("task.dgh.bring_to_bed.desc", "把倒下的主人救回出生点");
+
+        this.add("tooltip.dgh.open_resist", "%s 外伤格挡");
+        this.add("tooltip.dgh.internal_resist", "%s 内伤格挡");
+        this.add("tooltip.dgh.burn_resist", "%s 烧伤格挡");
+        this.add("tooltip.dgh.open_tough", "%s 外伤格挡恢复");
+        this.add("tooltip.dgh.internal_tough", "%s 内伤格挡恢复");
+        this.add("tooltip.dgh.burn_tough", "%s 烧伤格挡恢复");
     }
 
     private void addPotion(IEntry<Potion, Potion> potion, String translation) {

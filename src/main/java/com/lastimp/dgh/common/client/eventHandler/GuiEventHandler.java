@@ -108,19 +108,29 @@ public class GuiEventHandler {
     public static void onItemTooltip(ItemStack stack, List<Component> list) {
         if (ArmorList.has(stack.getItem())) {
             var data = ArmorList.getData(stack.getItem());
+            if (data.burn_resist() > 0) {
+                Component valueText = Component.literal(String.format(Locale.ROOT, "%.0f%%", data.burn_resist()));
+                list.add(Component.translatable("tooltip.dgh.burn_resist", valueText).withStyle(ChatFormatting.BLUE));
+            }
             if (data.open_resist() > 0) {
-                Component valueText = Component.literal(String.format(Locale.ROOT, "%+.0f%%", data.open_resist()));
+                Component valueText = Component.literal(String.format(Locale.ROOT, "%.0f%%", data.open_resist()));
                 list.add(Component.translatable("tooltip.dgh.open_resist", valueText).withStyle(ChatFormatting.BLUE));
             }
-        }
-        if (stack.getItem() instanceof ArmorItem item) {
-            float armor = item.getDefense();
-            float toughness = item.getToughness();
-            if (armor > 0) {
-                list.add(Component.literal("+"+armor * 10+"% 外伤格挡").withStyle(ChatFormatting.BLUE));
+            if (data.internal_resist() > 0) {
+                Component valueText = Component.literal(String.format(Locale.ROOT, "%.0f%%", data.internal_resist()));
+                list.add(Component.translatable("tooltip.dgh.internal_resist", valueText).withStyle(ChatFormatting.BLUE));
             }
-            if (toughness > 0) {
-                list.add(Component.literal("+"+toughness * 10+"% 格挡恢复").withStyle(ChatFormatting.BLUE));
+            if (data.burn_tough() > 0) {
+                Component valueText = Component.literal(String.format(Locale.ROOT, "%.0f%%", data.burn_tough()));
+                list.add(Component.translatable("tooltip.dgh.burn_tough", valueText).withStyle(ChatFormatting.BLUE));
+            }
+            if (data.open_tough() > 0) {
+                Component valueText = Component.literal(String.format(Locale.ROOT, "%.0f%%", data.open_tough()));
+                list.add(Component.translatable("tooltip.dgh.open_tough", valueText).withStyle(ChatFormatting.BLUE));
+            }
+            if (data.internal_tough() > 0) {
+                Component valueText = Component.literal(String.format(Locale.ROOT, "%.0f%%", data.internal_tough()));
+                list.add(Component.translatable("tooltip.dgh.internal_tough", valueText).withStyle(ChatFormatting.BLUE));
             }
         }
     }
