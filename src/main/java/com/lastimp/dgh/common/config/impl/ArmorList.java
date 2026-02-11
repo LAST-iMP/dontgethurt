@@ -63,21 +63,147 @@ public class ArmorList implements IConfigLoader<Map.Entry<ResourceLocation, Armo
         JsonObject json = (JsonObject) element;
 
         var id = ResourceLocation.parse(json.get("id").getAsString());
-        float burn_resist = IConfigLoader.readOrWriteDefault(json, "burn_resist", 0);
-        float open_resist = IConfigLoader.readOrWriteDefault(json, "open_resist", 0);
-        float internal_resist = IConfigLoader.readOrWriteDefault(json, "internal_resist", 0);
-        float burn_tough = IConfigLoader.readOrWriteDefault(json, "burn_tough", 0);
-        float open_tough = IConfigLoader.readOrWriteDefault(json, "open_tough", 0);
-        float internal_tough = IConfigLoader.readOrWriteDefault(json, "internal_tough", 0);
+        float burn_resist = IConfigLoader.readOrWriteDefault(json, "BURN_RESIST", 0);
+        float open_resist = IConfigLoader.readOrWriteDefault(json, "OPEN_RESIST", 0);
+        float internal_resist = IConfigLoader.readOrWriteDefault(json, "INTERNAL_RESIST", 0);
+        float burn_tough = IConfigLoader.readOrWriteDefault(json, "BURN_TOUGH", 0);
+        float open_tough = IConfigLoader.readOrWriteDefault(json, "OPEN_TOUGH", 0);
+        float internal_tough = IConfigLoader.readOrWriteDefault(json, "INTERNAL_TOUGH", 0);
         this.put(id, new ArmorListRecord(burn_resist, open_resist, internal_resist, burn_tough, open_tough, internal_tough));
-    }
-
-    @Override
-    public String example() {
-        return "";
     }
 
     private void put(ResourceLocation id, ArmorListRecord record) {
         ARMOR_LIST.put(id, record);
+    }
+
+    @Override
+    public String example() {
+        return "[\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:turtle_helmet\",\n" +
+                "    \"BURN_RESIST\":0,\n" +
+                "    \"OPEN_RESIST\":20,\n" +
+                "    \"INTERNAL_RESIST\":0,\n" +
+                "    \"BURN_TOUGH\":0,\n" +
+                "    \"OPEN_TOUGH\":0,\n" +
+                "    \"INTERNAL_TOUGH\":0\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:leather_helmet\",\n" +
+                "    \"OPEN_RESIST\":10,\n" +
+                "    \"INTERNAL_RESIST\":10\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:leather_chestplate\",\n" +
+                "    \"OPEN_RESIST\":30,\n" +
+                "    \"INTERNAL_RESIST\":10\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:leather_leggings\",\n" +
+                "    \"OPEN_RESIST\":20,\n" +
+                "    \"INTERNAL_RESIST\":10\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:leather_boots\",\n" +
+                "    \"OPEN_RESIST\":10,\n" +
+                "    \"INTERNAL_RESIST\":10\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:golden_helmet\",\n" +
+                "    \"OPEN_RESIST\":20,\n" +
+                "    \"INTERNAL_RESIST\":40\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:golden_chestplate\",\n" +
+                "    \"OPEN_RESIST\":50,\n" +
+                "    \"INTERNAL_RESIST\":100\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:golden_leggings\",\n" +
+                "    \"OPEN_RESIST\":30,\n" +
+                "    \"INTERNAL_RESIST\":60\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:golden_boots\",\n" +
+                "    \"OPEN_RESIST\":10,\n" +
+                "    \"INTERNAL_RESIST\":20\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:chainmail_helmet\",\n" +
+                "    \"OPEN_RESIST\":20,\n" +
+                "    \"INTERNAL_RESIST\":40\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:chainmail_chestplate\",\n" +
+                "    \"OPEN_RESIST\":50,\n" +
+                "    \"INTERNAL_RESIST\":100\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:chainmail_leggings\",\n" +
+                "    \"OPEN_RESIST\":40,\n" +
+                "    \"INTERNAL_RESIST\":80\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:chainmail_boots\",\n" +
+                "    \"OPEN_RESIST\":10,\n" +
+                "    \"INTERNAL_RESIST\":20\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:iron_helmet\",\n" +
+                "    \"OPEN_RESIST\":20\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:iron_chestplate\",\n" +
+                "    \"OPEN_RESIST\":60\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:iron_leggings\",\n" +
+                "    \"OPEN_RESIST\":50\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:iron_boots\",\n" +
+                "    \"OPEN_RESIST\":20\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:diamond_helmet\",\n" +
+                "    \"OPEN_RESIST\":30,\n" +
+                "    \"OPEN_TOUGH\":20\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:diamond_chestplate\",\n" +
+                "    \"OPEN_RESIST\":80,\n" +
+                "    \"OPEN_TOUGH\":20\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:diamond_leggings\",\n" +
+                "    \"OPEN_RESIST\":60,\n" +
+                "    \"OPEN_TOUGH\":20\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:diamond_boots\",\n" +
+                "    \"OPEN_RESIST\":30,\n" +
+                "    \"OPEN_TOUGH\":20\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:netherite_helmet\",\n" +
+                "    \"OPEN_RESIST\":30,\n" +
+                "    \"OPEN_TOUGH\":30\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:netherite_chestplate\",\n" +
+                "    \"OPEN_RESIST\":80,\n" +
+                "    \"OPEN_TOUGH\":30\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:netherite_leggings\",\n" +
+                "    \"OPEN_RESIST\":60,\n" +
+                "    \"OPEN_TOUGH\":30\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"id\":\"minecraft:netherite_boots\",\n" +
+                "    \"OPEN_RESIST\":30,\n" +
+                "    \"OPEN_TOUGH\":30\n" +
+                "  }\n" +
+                "]";
     }
 }

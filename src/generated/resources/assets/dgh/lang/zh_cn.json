@@ -183,5 +183,11 @@
   "key.dgh.give_up": "放弃生命",
   "key.dgh.health_menu": "健康面板",
   "task.dgh.bring_to_bed": "猫车",
-  "task.dgh.bring_to_bed.desc": "把倒下的主人救回出生点"
+  "task.dgh.bring_to_bed.desc": "把倒下的主人救回出生点",
+  "tooltip.dgh.burn_resist": "%s 烧伤格挡",
+  "tooltip.dgh.burn_tough": "%s 烧伤格挡恢复",
+  "tooltip.dgh.internal_resist": "%s 内伤格挡",
+  "tooltip.dgh.internal_tough": "%s 内伤格挡恢复",
+  "tooltip.dgh.open_resist": "%s 外伤格挡",
+  "tooltip.dgh.open_tough": "%s 外伤格挡恢复"
 }
