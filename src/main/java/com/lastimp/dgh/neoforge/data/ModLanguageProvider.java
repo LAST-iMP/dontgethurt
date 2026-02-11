@@ -37,9 +37,9 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(BodyCondition.OINTMENT.toString(), "药膏涂抹");
         this.add(BodyCondition.HERB_BANDAGED.toString(), "草药涂抹");
 
-        this.add(BodyCondition.BURN_RES.toString(), "烧伤抗性");
-        this.add(BodyCondition.INTERNAL_RES.toString(), "内伤抗性");
-        this.add(BodyCondition.OPEN_WOUND_RES.toString(), "外伤抗性");
+        this.add(BodyCondition.BURN_RES.toString(), "烧伤吸收");
+        this.add(BodyCondition.INTERNAL_RES.toString(), "内伤吸收");
+        this.add(BodyCondition.OPEN_WOUND_RES.toString(), "外伤吸收");
 
         this.add(BodyCondition.BONE_DAMAGE.toString(), "骨损伤");
         this.add(BodyCondition.BONE_DEATH.toString(), "骨坏死");

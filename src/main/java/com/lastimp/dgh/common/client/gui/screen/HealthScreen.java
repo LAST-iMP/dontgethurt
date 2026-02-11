@@ -4,6 +4,8 @@ package com.lastimp.dgh.common.client.gui.screen;
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.common.PlatformService;
 import com.lastimp.dgh.common.capability.bodyPart.base.AbstractVisibleBody;
+import com.lastimp.dgh.common.client.gui.component.DynamicBarHealthWidget;
+import com.lastimp.dgh.common.client.gui.component.MaskableHealthWidget;
 import com.lastimp.dgh.common.enums.KeyPressedType;
 import com.lastimp.dgh.common.utils.ResourceHelper;
 import com.lastimp.dgh.common.network.message.MyHealingItemUseData;
@@ -109,9 +111,14 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
     }
 
     protected void addConditionWidget(BodyCondition condition) {
-        HealthConditionWidget w = new HealthConditionWidget(
-                70, 16, condition.getComponent(), condition.texture, condition.color()
-        );
+        HealthConditionWidget w;
+        if (condition.isInjury()) {
+            w = new MaskableHealthWidget(condition);
+        } else if (condition.isResist()) {
+            w = new DynamicBarHealthWidget(condition, 0xFFF4FFA7);
+        } else {
+            w = new HealthConditionWidget(condition);
+        }
         conditionWidgets.put(ResourceHelper.ResourceBySeperator(condition.name(), ':'), w);
         this.addRenderableWidget(w);
     }
@@ -167,12 +174,9 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
                 var bone = visibleBody.boneCrafted();
                 int color = bone == null ? ConditionAccessor.get(FRACTURE).color() : ConditionAccessor.get(bone).color();
                 widget.setPortionColor(color);
-            } else if (ConditionAccessor.injuryConditions.contains(condition)) {
-                float addition = Math.max(0, bodyPart.getCondition(condition).getDisplayValue() - 1);
-                widget.setAdditionValueAndColor(addition, 0xFF7E0000);
             } else if (ConditionAccessor.resistConditions.contains(condition)) {
                 float addition = Math.max(0, bodyPart.getCondition(condition).getHiddenValue());
-                widget.setAdditionValueAndColor(addition, 0xFFF4FFA7);
+                ((DynamicBarHealthWidget) widget).setBarSeverity(addition);
             }
 
             widget.setPosition(

@@ -25,6 +25,7 @@ public class BodyCondition {
     private boolean isInjury = false;
     private boolean isPain = false;
     private boolean isComfort = false;
+    private boolean isResist = false;
 
     private BodyCondition(ResourceLocation name) {
         this.name = name;
@@ -45,6 +46,10 @@ public class BodyCondition {
 
     public boolean isComfort() {
         return this.isComfort;
+    }
+
+    public boolean isResist() {
+        return isResist;
     }
 
     public int color() {
@@ -144,6 +149,7 @@ public class BodyCondition {
         }
 
         public ConditionBuilder isResist() {
+            this.instance.isResist = true;
             resistConditions.add(this.instance.name);
             setColor(0xFF99ffa3);
             return this;
