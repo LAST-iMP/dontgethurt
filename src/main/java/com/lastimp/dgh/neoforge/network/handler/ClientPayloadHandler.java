@@ -1,8 +1,8 @@
 
 package com.lastimp.dgh.neoforge.network.handler;
 
+import com.lastimp.dgh.common.config.ModConfigs;
 import com.lastimp.dgh.common.enums.OperationType;
-import com.lastimp.dgh.common.config.HealthLivingEntityList;
 import com.lastimp.dgh.common.network.message.MyReadAllConditionData;
 import com.lastimp.dgh.common.network.message.MyServerConfigSynData;
 import com.lastimp.dgh.common.client.ClientAccessor;
@@ -32,7 +32,7 @@ public class ClientPayloadHandler {
     }
 
     public static void handleServerConfigSYNData(final MyServerConfigSynData data, final IPayloadContext context) {
-        context.enqueueWork(() -> HealthLivingEntityList.loadServerData(data.tag()))
+        context.enqueueWork(() -> ModConfigs.loadServerData(data.configType(), data.tag()))
         .exceptionally(e -> {
             context.disconnect(Component.translatable("dgh.networking.failed", e.getMessage()));
             return null;

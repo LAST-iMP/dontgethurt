@@ -3,10 +3,10 @@ package com.lastimp.dgh.neoforge;
 
 import com.lastimp.dgh.common.PlatformService;
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
+import com.lastimp.dgh.common.config.ModConfigs;
 import com.lastimp.dgh.common.utils.Utils;
 import com.lastimp.dgh.neoforge.config.ConfigNF;
 
-import com.lastimp.dgh.common.config.HealthLivingEntityList;
 import com.lastimp.dgh.neoforge.entry.RegistryHandlerNF;
 import com.lastimp.dgh.neoforge.entry.register.ModCapabilities;
 import net.minecraft.server.MinecraftServer;
@@ -60,7 +60,7 @@ public class DontGetHurt {
     {
         Utils.LOGGER.info("HELLO FROM COMMON SETUP");
         event.enqueueWork(() -> {
-            HealthLivingEntityList.loadExternallist();
+            ModConfigs.loadExternalList();
             ConditionAccessor.init();
         });
     }

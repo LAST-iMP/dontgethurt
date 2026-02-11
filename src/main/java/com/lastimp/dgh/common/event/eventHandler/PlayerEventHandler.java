@@ -1,9 +1,7 @@
 package com.lastimp.dgh.common.event.eventHandler;
 
+import com.lastimp.dgh.common.config.ModConfigs;
 import com.lastimp.dgh.common.item.bases.AbstractHealingItem;
-import com.lastimp.dgh.common.PlatformService;
-import com.lastimp.dgh.common.config.HealthLivingEntityList;
-import com.lastimp.dgh.common.network.message.MyServerConfigSynData;
 import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.entry.register.ModItems;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,7 +26,7 @@ public class PlayerEventHandler {
             persistedTag.putBoolean(key, true);
             data.put(Player.PERSISTED_NBT_TAG, persistedTag);
         }
-        PlatformService.NETWORK.sendToPlayer((ServerPlayer) player, MyServerConfigSynData.getInstance(HealthLivingEntityList.getConfig()));
+        ModConfigs.synToPlayer((ServerPlayer) player);
     }
 
     public static void logOut(Player player) {
