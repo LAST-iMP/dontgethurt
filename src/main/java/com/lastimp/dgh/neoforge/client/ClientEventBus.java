@@ -11,6 +11,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -91,5 +92,10 @@ public class ClientEventBus {
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Post event) {
         ClientTickEventHandler.playerTick(event.getEntity());
+    }
+
+    @SubscribeEvent
+    public static void onItemTooltip(ItemTooltipEvent event) {
+        GuiEventHandler.onItemTooltip(event.getItemStack(), event.getToolTip());
     }
 }
