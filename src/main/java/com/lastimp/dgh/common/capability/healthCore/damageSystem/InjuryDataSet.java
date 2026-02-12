@@ -52,10 +52,27 @@ public record InjuryDataSet(
         }
     }
 
+    public static InjuryPart componentToPart(BodyComponents component) {
+        switch (component) {
+            case LEFT_LEG, RIGHT_LEG -> {
+                return InjuryPart.FEET;
+            }
+            case TORSO, RIGHT_ARM, LEFT_ARM -> {
+                return InjuryPart.BODY;
+            }
+            case HEAD -> {
+                return InjuryPart.HEAD;
+            }
+            default -> {
+                return InjuryPart.DEFAULT;
+            }
+        }
+    }
+
     public static class InjuryData<T extends AbstractBody> {
         private final BodyComponents component;
         private float factor;
-        private InjuryHandler<T> handler;
+        private final InjuryDataSet.InjuryHandler<T> handler;
 
         public InjuryData(BodyComponents component, float factor, InjuryHandler<T> handler) {
             this.component = component;
@@ -82,10 +99,6 @@ public record InjuryDataSet(
 
         public InjuryHandler<T> handler() {
             return handler;
-        }
-
-        public void setHandler(InjuryHandler<T> handler) {
-            this.handler = handler;
         }
     }
 

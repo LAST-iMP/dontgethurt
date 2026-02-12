@@ -45,4 +45,5 @@ public interface IConfig {
     int SMALL_CONDITION_DISAPPEAR_DELAY();
     boolean ARMOR_RECALCULATE();
     float BLOCK_RECOVER_DELAY();
+    float BLOCK_RECOVER_SPEED();
 }

@@ -4,10 +4,10 @@ import com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition;
 import net.minecraft.client.gui.GuiGraphics;
 
 public class DynamicBarHealthWidget extends MaskableHealthWidget{
-    protected int barColor;
-    protected float barSeverity = 0;
+    protected int[] barColor;
+    protected float[] barSeverity;
 
-    public DynamicBarHealthWidget(BodyCondition condition, int barColor) {
+    public DynamicBarHealthWidget(BodyCondition condition, int ...barColor) {
         super(condition);
         this.barColor = barColor;
     }
@@ -15,7 +15,12 @@ public class DynamicBarHealthWidget extends MaskableHealthWidget{
     @Override
     protected void renderBorder(GuiGraphics guiGraphics) {
         super.renderBorder(guiGraphics);
-        this.renderOutLine(guiGraphics, this.barSeverity, 0, this.barColor);
+        int level = 0;
+        for (int i = 0; i < barSeverity.length; i++) {
+            if (this.barSeverity[i] > 0) {
+                this.renderOutLine(guiGraphics, this.barSeverity[i], level++, this.barColor[i]);
+            }
+        }
     }
 
     protected void renderOutLine(GuiGraphics guiGraphics, float ratio, int shrink, int color) {
@@ -34,13 +39,19 @@ public class DynamicBarHealthWidget extends MaskableHealthWidget{
         if (length >= width) {
             guiGraphics.fill(x + width, y, x + width + 1, y + height, color);
         }
+
+        ratio = Math.max(0, ratio - 1);
+        while (ratio > 0) {
+            renderOutLine(guiGraphics, ratio, shrink, this.maskColor);
+            ratio = Math.max(0, ratio - 1);
+        }
     }
 
-    public void setBarColor(int barColor) {
+    public void setBarColor(int ...barColor) {
         this.barColor = barColor;
     }
 
-    public void setBarSeverity(float barSeverity) {
+    public void setBarSeverity(float ...barSeverity) {
         this.barSeverity = barSeverity;
     }
 }
