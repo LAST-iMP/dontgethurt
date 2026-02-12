@@ -4,10 +4,10 @@ import com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition;
 import net.minecraft.client.gui.GuiGraphics;
 
 public class DynamicBarHealthWidget extends MaskableHealthWidget{
-    protected int barColor;
-    protected float barSeverity = 0;
+    protected int[] barColor;
+    protected float[] barSeverity;
 
-    public DynamicBarHealthWidget(BodyCondition condition, int barColor) {
+    public DynamicBarHealthWidget(BodyCondition condition, int ...barColor) {
         super(condition);
         this.barColor = barColor;
     }
@@ -15,25 +15,43 @@ public class DynamicBarHealthWidget extends MaskableHealthWidget{
     @Override
     protected void renderBorder(GuiGraphics guiGraphics) {
         super.renderBorder(guiGraphics);
-        int length = (int) (this.width * Math.min(this.barSeverity, 1.0));
-        if (length >= 1) {
-//            guiGraphics.fill(this.getX(), this.getY(), this.height, this.width, this.barColor);
-            guiGraphics.fill(this.getX(), this.getY(), this.getX() + 1, this.getY() + this.height, this.barColor);
-        }
-        if (length > 1) {
-            guiGraphics.fill(this.getX(), this.getY(), this.getX() + length, this.getY() + 1, this.barColor);
-            guiGraphics.fill(this.getX(), this.getY() + this.height, this.getX() + length, this.getY() + 1, this.barColor);
-        }
-        if (length >= this.width) {
-            guiGraphics.fill(this.getX() + this.width, this.getY(), this.getX() + 1, this.getY() + this.height, this.barColor);
+        int level = 0;
+        for (int i = 0; i < barSeverity.length; i++) {
+            if (this.barSeverity[i] > 0) {
+                this.renderOutLine(guiGraphics, this.barSeverity[i], level++, this.barColor[i]);
+            }
         }
     }
 
-    public void setBarColor(int barColor) {
+    protected void renderOutLine(GuiGraphics guiGraphics, float ratio, int shrink, int color) {
+        int x = this.getX() + shrink;
+        int y = this.getY() + shrink;
+        int height = this.height - shrink * 2;
+        int width = this.width - shrink * 2;
+        int length = (int) ((this.width - shrink * 2) * Math.min(ratio, 1.0));
+        if (length >= 1) {
+            guiGraphics.fill(x, y, x + 1, y + height, color);
+        }
+        if (length > 1) {
+            guiGraphics.fill(x, y, x + length, y + 1, color);
+            guiGraphics.fill(x, y + height - 1, x + length, y + height, color);
+        }
+        if (length >= width) {
+            guiGraphics.fill(x + width, y, x + width + 1, y + height, color);
+        }
+
+        ratio = Math.max(0, ratio - 1);
+        while (ratio > 0) {
+            renderOutLine(guiGraphics, ratio, shrink, this.maskColor);
+            ratio = Math.max(0, ratio - 1);
+        }
+    }
+
+    public void setBarColor(int ...barColor) {
         this.barColor = barColor;
     }
 
-    public void setBarSeverity(float barSeverity) {
+    public void setBarSeverity(float ...barSeverity) {
         this.barSeverity = barSeverity;
     }
 }

@@ -552,12 +552,12 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     public ResourceLocation boneUUID() {
         ResourceLocation bone = this.boneCrafted();
-        if (bone.equals(BONE_STONE)) return uuid_bone_stone;
-        if (bone.equals(BONE_COPPER)) return uuid_bone_copper;
-        if (bone.equals(BONE_IRON)) return uuid_bone_iron;
-        if (bone.equals(BONE_GOLD)) return uuid_bone_gold;
-        if (bone.equals(BONE_DIMOND)) return uuid_bone_dimond;
-        if (bone.equals(BONE_NETHERITE)) return uuid_bone_netherite;
+        if (BONE_STONE.equals(bone)) return uuid_bone_stone;
+        if (BONE_COPPER.equals(bone)) return uuid_bone_copper;
+        if (BONE_IRON.equals(bone)) return uuid_bone_iron;
+        if (BONE_GOLD.equals(bone)) return uuid_bone_gold;
+        if (BONE_DIMOND.equals(bone)) return uuid_bone_dimond;
+        if (BONE_NETHERITE.equals(bone)) return uuid_bone_netherite;
         return null;
     }
 

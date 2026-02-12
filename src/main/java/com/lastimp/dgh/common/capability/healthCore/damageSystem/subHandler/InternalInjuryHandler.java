@@ -14,7 +14,7 @@ import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
 
 public abstract class InternalInjuryHandler {
     public static boolean handle(DamageSource source, LivingEntity entity, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
-        return InjuryHandler.handle(source.getEntity(), health, body, INTERNAL_INJURY, INTERNAL_RES, Component.literal("内伤"), damageAmount);
+        return InjuryHandler.handle(source, health, body, INTERNAL_INJURY, INTERNAL_RES, Component.literal("内伤"), damageAmount);
     }
 
     public static void handleBluntTrauma(DamageSource source, LivingEntity entity, HealthCapability health, AbstractVisibleBody body, float damageAmount) {

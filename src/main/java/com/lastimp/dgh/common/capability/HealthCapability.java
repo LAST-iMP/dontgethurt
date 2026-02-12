@@ -3,6 +3,7 @@ package com.lastimp.dgh.common.capability;
 
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.common.PlatformService;
+import com.lastimp.dgh.common.capability.bodyPart.base.ArmorData;
 import com.lastimp.dgh.common.capability.bodyPart.bodies.Torso;
 import com.lastimp.dgh.common.capability.bodyPart.WholeBody;
 import com.lastimp.dgh.common.capability.bodyPart.base.AbstractBody;
@@ -56,14 +57,12 @@ public class HealthCapability implements Serializable {
     private float outerHealing = 0;
     private float outerHealingDelta = 0;
     private UUID lastHealer = UUID.randomUUID();
+    private final ArmorData armorData = new ArmorData();
     //同步属性
     private int armBreak = 0;
     private int availableEye = 2;
     private int maxAirSupply = 300;
-    private boolean leftArmVisible = true;
-    private boolean rightArmVisible = true;
-    private boolean leftLegVisible = true;
-    private boolean rightLegVisible = true;
+    private boolean leftArmVisible = true, rightArmVisible = true, leftLegVisible = true, rightLegVisible = true;
     private boolean isDown = false;
     private boolean abnormal = true;
     //临时属性
@@ -82,7 +81,7 @@ public class HealthCapability implements Serializable {
         oxygenMask.addAllowed(ModTags.OXYGEN_SUPPLIERS);
         autoPulse.addAllowed(ModTags.AUTOPULSE);
     }
-
+    //*********************全局方法*********************//
     public static boolean has(Entity entity) {
         return PlatformService.CAPABILITY_HELPER.hasHealth(entity);
     }
@@ -136,6 +135,7 @@ public class HealthCapability implements Serializable {
         HealthCapability.getAndApply(livingEntity, h -> h.setLastEntityDamage(source));
     }
 
+    //*********************查询方法*********************//
     public AbstractBody getComponent(BodyComponents component) {
         return this.body.getComponent(component);
     }
@@ -160,6 +160,32 @@ public class HealthCapability implements Serializable {
         return null;
     }
 
+    public boolean intensePain() {
+        return  this.getComponent(LEFT_ARM).abnormal(INTENSE_PAIN) ||
+                this.getComponent(RIGHT_ARM).abnormal(INTENSE_PAIN) ||
+                this.getComponent(LEFT_LEG).abnormal(INTENSE_PAIN) ||
+                this.getComponent(RIGHT_LEG).abnormal(INTENSE_PAIN) ||
+                this.getComponent(HEAD).abnormal(INTENSE_PAIN) ||
+                this.getComponent(TORSO).abnormal(INTENSE_PAIN);
+    }
+
+    public float bloodOxygenFactor() {
+        return 300.f / this.maxAirSupply;
+    }
+
+    public boolean canEat() {
+        return this.getComponent(TORSO).countOrganMatch(ModTags.STOMACH) > 0;
+    }
+
+    public boolean safeSurgery() {
+        return this.nearBedTick > 0 || ((Torso)this.getComponent(TORSO)).safeSurgery();
+    }
+
+    public boolean isFrozen() {
+        return this.autoPulse.getStackInSlot(0).is(ModItems.STASIS_BAG.get());
+    }
+
+    //*********************状态更新*********************//
     public HealthCapability update(LivingEntity entity) {
         this.updateALLEquipments(entity);
         if (!this.isFrozen())
@@ -195,9 +221,9 @@ public class HealthCapability implements Serializable {
     }
 
     private void updateLabels(LivingEntity entity) {
-        if (this.livingTick + 1 > 0) this.livingTick++;
-        var newArmBreak = (AbstractExtremities.available(this, LEFT_ARM) ? 0 : 1) + (AbstractExtremities.available(this, RIGHT_ARM) ? 0 : 1);
-        this.armBreak = updateIfDirty(newArmBreak, this.armBreak);
+        //持久属性
+        this.vitality = 1.0f - this.body.updateVitalityLost(this, entity);
+        this.vitality = (this.vitality > 0.999f) ? 1.0f : this.vitality;
         this.slowDown = this.body.slowDownLevel(this);
         if (entity instanceof Player player) {
             if (player.getMainHandItem().is(ModItems.WALKING_STICK.get()))
@@ -205,16 +231,15 @@ public class HealthCapability implements Serializable {
             if (player.getOffhandItem().is(ModItems.WALKING_STICK.get()))
                 this.slowDown = Math.max(0, this.slowDown - 3);
         }
-        this.vitality = 1.0f - this.body.updateVitalityLost(this, entity);
-        this.vitality = (this.vitality > 0.999f) ? 1.0f : this.vitality;
-        this.handleAdrenaline(entity);
+        this.livingTick = Math.min(Integer.MAX_VALUE, this.livingTick + 1);
         this.almostDead = Math.min(this.almostDead, this.vitality);
-        this.nearBedTick--;
+        this.nearBedTick = Math.max(0 ,this.nearBedTick);
         this.outerHealing = Math.max(0, this.outerHealing - this.outerHealingDelta);
         this.outerHealingDelta = this.outerHealing <= 0 ? 0 : this.outerHealingDelta + 1.0f / PlatformService.CONFIG.HEALTH_SHIELD_REDU() / 20;
-        this.isInfected = this.body.isInfected();
-        this.haveKidney = this.getComponent(TORSO).countOrganMatch(ModTags.KIDNEY) > 0;
-
+        this.armorData.update(entity);
+        //同步属性
+        var newArmBreak = (AbstractExtremities.available(this, LEFT_ARM) ? 0 : 1) + (AbstractExtremities.available(this, RIGHT_ARM) ? 0 : 1);
+        this.armBreak = updateIfDirty(newArmBreak, this.armBreak);
         this.leftArmVisible = updateIfDirty(AbstractExtremities.visible(this, LEFT_ARM), this.leftArmVisible);
         this.rightArmVisible = updateIfDirty(AbstractExtremities.visible(this, RIGHT_ARM), this.rightArmVisible);
         this.leftLegVisible = updateIfDirty(AbstractExtremities.visible(this, LEFT_LEG), this.leftLegVisible);
@@ -222,12 +247,16 @@ public class HealthCapability implements Serializable {
         this.availableEye = updateIfDirty(this.getComponent(HEAD).countOrganMatch(ModTags.EYE), this.availableEye);
         this.maxAirSupply = updateIfDirty(((Torso)this.getComponent(TORSO)).additionAir() + 150, this.maxAirSupply);
         this.abnormal = updateIfDirty(this.body.abnormal(), this.abnormal);
+        //临时属性
+        this.handleAdrenaline(entity);
+        this.isInfected = this.body.isInfected();
+        this.haveKidney = this.getComponent(TORSO).countOrganMatch(ModTags.KIDNEY) > 0;
+        this.isDown = updateIfDirty(isDown(entity), this.isDown);
         if (!this.abnormal) {
             this.directInjury.clear();
             this.currentHealer = null;
             this.lastEntityDamage = null;
         }
-        this.isDown = updateIfDirty(isDown(entity), this.isDown);
     }
 
     public  <T> T updateIfDirty(T value, T oldValue) {
@@ -246,6 +275,7 @@ public class HealthCapability implements Serializable {
         this.isDirty = false;
     }
 
+    //*********************响应方法*********************//
     public void handPulse() {
         if (this.autoPulseCoolDown() > 0) return;
         if (this.isFrozen()) return;
@@ -290,6 +320,35 @@ public class HealthCapability implements Serializable {
         this.resetAlmostDead();
     }
 
+    public float hurtAfterArmor(BodyComponents component, ResourceLocation resistType, float amount) {
+        return this.armorData.hurt(component, resistType, amount);
+    }
+
+    public float armorResist(BodyComponents component, ResourceLocation resistType) {
+        return this.armorData.getResist(component, resistType);
+    }
+
+    public void refreshArmor() {
+        this.armorData.setDirty();
+    }
+
+    public void addDirectInjury(Entity source, Component body, Component condition, float value) {
+        this.addDirectInjury(source != null ? source.getName() : Component.literal("环境"), body, condition, value);
+    }
+
+    public void addDirectInjury(Component body, Component condition, float value, int level) {
+        this.directInjury.add(new InjuryRecord("", body.getString(), condition.getString(), value, level));
+    }
+
+    public void addDirectInjury(Component body, Component condition, int level) {
+        this.directInjury.add(new InjuryRecord("", body.getString(), condition.getString(), -1, level));
+    }
+
+    public void addToLastDeathDirectInjury(Collection<InjuryRecord> lastDeathDirectInjury) {
+        this.lastDeathDirectInjury.addAll(lastDeathDirectInjury);
+    }
+
+    //*********************序列化*********************//
     public CompoundTag lightSerializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.putInt("armBreak", this.armBreak);
@@ -327,6 +386,7 @@ public class HealthCapability implements Serializable {
         tag.putInt("oxygenMaskCoolDown", this.oxygenMaskCoolDown);
         tag.putInt("autoPulseCoolDown", this.autoPulseCoolDown);
         tag.putUUID("lastHealer", this.lastHealer);
+        tag.put("armor", this.armorData.serialize(provider));
 
         serializeRecord("directInjury", this.directInjury, tag, provider);
         serializeRecord("lastDeathDirectInjury", this.lastDeathDirectInjury, tag, provider);
@@ -374,6 +434,7 @@ public class HealthCapability implements Serializable {
         this.autoPulseCoolDown = nbt.getInt("autoPulseCoolDown");
         if (nbt.get("lastHealer") != null)
             this.lastHealer = nbt.getUUID("lastHealer");
+        this.armorData.deserialize(provider, nbt.getCompound("armor"));
 
         deserializeRecord("directInjury", this.directInjury, nbt, provider);
         deserializeRecord("lastDeathDirectInjury", this.lastDeathDirectInjury, nbt, provider);
@@ -386,27 +447,7 @@ public class HealthCapability implements Serializable {
         listTag.forEach((tag -> recordList.add(InjuryRecord.phrase(provider, (CompoundTag) tag))));
     }
 
-    public boolean intensePain() {
-        return  this.getComponent(LEFT_ARM).abnormal(INTENSE_PAIN) ||
-                this.getComponent(RIGHT_ARM).abnormal(INTENSE_PAIN) ||
-                this.getComponent(LEFT_LEG).abnormal(INTENSE_PAIN) ||
-                this.getComponent(RIGHT_LEG).abnormal(INTENSE_PAIN) ||
-                this.getComponent(HEAD).abnormal(INTENSE_PAIN) ||
-                this.getComponent(TORSO).abnormal(INTENSE_PAIN);
-    }
-
-    public float bloodOxygenFactor() {
-        return 300.f / this.maxAirSupply;
-    }
-
-    public boolean canEat() {
-        return this.getComponent(TORSO).countOrganMatch(ModTags.STOMACH) > 0;
-    }
-
-    public boolean safeSurgery() {
-        return this.nearBedTick > 0 || ((Torso)this.getComponent(TORSO)).safeSurgery();
-    }
-
+    //*********************getter setter*********************//
     public float vitality() {
         return vitality;
     }
@@ -505,24 +546,8 @@ public class HealthCapability implements Serializable {
         this.lastEntityDamage = lastEntityDamage;
     }
 
-    public boolean isFrozen() {
-        return this.autoPulse.getStackInSlot(0).is(ModItems.STASIS_BAG.get());
-    }
-
     public void addDirectInjury(Component source, Component body, Component condition, float value) {
         this.directInjury.add(new InjuryRecord(source.getString(), body.getString(), condition.getString(), value));
-    }
-
-    public void addDirectInjury(Entity source, Component body, Component condition, float value) {
-        this.addDirectInjury(source != null ? source.getName() : Component.literal("环境"), body, condition, value);
-    }
-
-    public void addDirectInjury(Component body, Component condition, float value, int level) {
-        this.directInjury.add(new InjuryRecord("", body.getString(), condition.getString(), value, level));
-    }
-
-    public void addDirectInjury(Component body, Component condition, int level) {
-        this.directInjury.add(new InjuryRecord("", body.getString(), condition.getString(), -1, level));
     }
 
     public List<InjuryRecord> directInjury() {
@@ -531,10 +556,6 @@ public class HealthCapability implements Serializable {
 
     public void clearDirectInjury() {
         this.directInjury.clear();
-    }
-
-    public void addToLastDeathDirectInjury(Collection<InjuryRecord> lastDeathDirectInjury) {
-        this.lastDeathDirectInjury.addAll(lastDeathDirectInjury);
     }
 
     public List<InjuryRecord> lastDeathDirectInjury() {

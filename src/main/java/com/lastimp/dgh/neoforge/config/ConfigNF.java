@@ -10,7 +10,7 @@ import java.nio.file.Path;
 public class ConfigNF implements IConfig {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder()
             .comment("General settings")
-            .push("general_1.3.0");
+            .push("general_1.3.3");
 
     private static final ModConfigSpec.DoubleValue BODY_LIFE_FACTOR = BUILDER
             .comment("肢体血量系数")
@@ -170,7 +170,11 @@ public class ConfigNF implements IConfig {
 
     private static final ModConfigSpec.DoubleValue BLOCK_RECOVER_DELAY = BUILDER
             .comment("护甲格挡恢复延迟")
-            .defineInRange("BLOCK_RECOVER_DELAY", 0.8, 0, 1.0);
+            .defineInRange("BLOCK_RECOVER_DELAY", 5, 0, Float.MAX_VALUE);
+
+    private static final ModConfigSpec.DoubleValue BLOCK_RECOVER_SPEED = BUILDER
+            .comment("护甲格挡恢复速度")
+            .defineInRange("BLOCK_RECOVER_SPEED", 0.1, 0, 1.0);
     // 构建配置
     public static final ModConfigSpec SPEC = BUILDER.pop().build();
 
@@ -377,5 +381,10 @@ public class ConfigNF implements IConfig {
     @Override
     public float BLOCK_RECOVER_DELAY() {
         return (float) BLOCK_RECOVER_DELAY.getAsDouble();
+    }
+
+    @Override
+    public float BLOCK_RECOVER_SPEED() {
+        return (float) BLOCK_RECOVER_SPEED.getAsDouble();
     }
 }

@@ -7,8 +7,12 @@ import com.lastimp.dgh.common.utils.Utils;
 import com.lastimp.dgh.common.capability.HealthCapability;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Equipable;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -44,5 +48,12 @@ public abstract class LivingEntityMixin {
         if (InjuryEventHandler.canInjuryBody(livingEntity, damageSource)) {
             cir.setReturnValue(damageAmount);
         }
+    }
+
+    @Inject(method = "onEquipItem", at = @At("TAIL"))
+    public void onEquipItem(EquipmentSlot slot, ItemStack oldItem, ItemStack newItem, CallbackInfo ci) {
+        LivingEntity livingEntity = (LivingEntity) (Object)this;
+        if (!HealthCapability.has(livingEntity)) return;
+        HealthCapability.getAndApply(livingEntity, HealthCapability::refreshArmor);
     }
 }

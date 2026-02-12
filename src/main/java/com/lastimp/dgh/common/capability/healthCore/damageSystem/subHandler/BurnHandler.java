@@ -11,6 +11,6 @@ import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
 
 public class BurnHandler {
     public static boolean handle(DamageSource source, LivingEntity entity, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
-        return InjuryHandler.handle(source.getEntity(), health, body, BURN, BURN_RES, Component.literal("烧伤"), damageAmount);
+        return InjuryHandler.handle(source, health, body, BURN, BURN_RES, Component.literal("烧伤"), damageAmount);
     }
 }

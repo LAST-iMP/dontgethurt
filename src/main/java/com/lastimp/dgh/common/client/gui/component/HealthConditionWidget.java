@@ -46,8 +46,8 @@ public class HealthConditionWidget extends AbstractWidget {
         if (!this.visible || !this.active) return;
 
         this.renderBackGround(guiGraphics);
-        this.renderBorder(guiGraphics);
         this.renderFiller(guiGraphics);
+        this.renderBorder(guiGraphics);
         this.renderIcon(guiGraphics);
         this.renderText(guiGraphics);
     }
@@ -57,14 +57,14 @@ public class HealthConditionWidget extends AbstractWidget {
         guiGraphics.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, bgColor);
     }
 
-    protected void renderBorder(GuiGraphics guiGraphics) {
-        int borderColor = 0xFF000000;
-        guiGraphics.renderOutline(this.getX(), this.getY(), this.width, this.height, borderColor);
-    }
-
     protected void renderFiller(GuiGraphics guiGraphics) {
         int filled = (int) (this.width * Math.min(severity, 1.0));
         guiGraphics.fill(this.getX() + 1, this.getY() + 1, Mth.clamp(this.getX() + filled, this.getX() + 1, this.getX() + this.width - 1), this.getY() + this.height - 1, fgColor);
+    }
+
+    protected void renderBorder(GuiGraphics guiGraphics) {
+        int borderColor = 0xFF000000;
+        guiGraphics.renderOutline(this.getX(), this.getY(), this.width, this.height, borderColor);
     }
 
     protected void renderIcon(GuiGraphics guiGraphics) {

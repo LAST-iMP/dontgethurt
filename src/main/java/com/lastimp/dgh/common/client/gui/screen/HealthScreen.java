@@ -115,7 +115,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
         if (condition.isInjury()) {
             w = new MaskableHealthWidget(condition);
         } else if (condition.isResist()) {
-            w = new DynamicBarHealthWidget(condition, 0xFFF4FFA7);
+            w = new DynamicBarHealthWidget(condition, 0xFFF4FFA7, 0xFF00F0FF);
         } else {
             w = new HealthConditionWidget(condition);
         }
@@ -176,7 +176,8 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
                 widget.setPortionColor(color);
             } else if (ConditionAccessor.resistConditions.contains(condition)) {
                 float addition = Math.max(0, bodyPart.getCondition(condition).getHiddenValue());
-                ((DynamicBarHealthWidget) widget).setBarSeverity(addition);
+                float armorRes = healthData.armorResist(this.selectedComponent, condition);
+                ((DynamicBarHealthWidget) widget).setBarSeverity(addition, armorRes);
             }
 
             widget.setPosition(
@@ -192,7 +193,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
         if (this.onOrgan) return false;
         if (!HealthScanner.healthScannerConditions().contains(key)) return false;
         if (!this.menu.isDevice && !HealthScanner.eyesightConditions().contains(key)) return false;
-        if (ConditionAccessor.resistConditions.contains(key) && body.abnormalWithHidden(key)) return true;
+        if (ConditionAccessor.resistConditions.contains(key) && (body.abnormalWithHidden(key) || healthData.armorResist(this.selectedComponent, key) > 0)) return true;
         if (!ConditionAccessor.get(key).abnormal(body.getCondition(key).getDisplayValue())) return false;
         return true;
     }

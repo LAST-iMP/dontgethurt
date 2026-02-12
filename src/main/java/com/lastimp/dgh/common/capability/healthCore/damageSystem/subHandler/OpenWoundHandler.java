@@ -13,7 +13,7 @@ import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
 
 public class OpenWoundHandler {
     public static boolean handle(DamageSource source, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
-        return InjuryHandler.handle(source.getEntity(), health, body, OPEN_WOUND, OPEN_WOUND_RES, Component.literal("撕裂伤"), damageAmount);
+        return InjuryHandler.handle(source, health, body, OPEN_WOUND, OPEN_WOUND_RES, Component.literal("撕裂伤"), damageAmount);
     }
 
     public static void handleEntityAttack(DamageSource source, LivingEntity entity, HealthCapability health, AbstractVisibleBody body, float damageAmount) {
