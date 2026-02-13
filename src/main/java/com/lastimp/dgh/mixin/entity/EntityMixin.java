@@ -15,10 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public class EntityMixin {
-    @Final
-    @Shadow
-    private static EntityDataAccessor<Integer> DATA_AIR_SUPPLY_ID;
-
     @Inject(method = "isEffectiveAi", at = @At("RETURN"), cancellable = true)
     private void isEffectiveAi(CallbackInfoReturnable<Boolean> cir) {
         if ((Entity) (Object)this instanceof Mob mob) {
@@ -35,8 +31,7 @@ public class EntityMixin {
 
     @Inject(method = "getMaxAirSupply", at = @At("RETURN"), cancellable = true)
     private void getMaxAirSupply(CallbackInfoReturnable<Integer> cir) {
-        if ((Entity) (Object)this instanceof LivingEntity livingEntity) {
-            if (!livingEntity.getEntityData().hasItem(DATA_AIR_SUPPLY_ID)) return;
+        if ((Entity) (Object)this instanceof LivingEntity livingEntity && HealthCapability.has(livingEntity)) {
             HealthCapability.getAndApply(livingEntity, h -> cir.setReturnValue(h.maxAirSupply()));
         }
     }
