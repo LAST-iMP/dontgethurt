@@ -28,7 +28,8 @@ public abstract class ModOverlay {
     public static void renderConditionOverlay(LocalPlayer player, GuiGraphics graphics) {
         if (player.isDeadOrDying()) return;
         HealthCapability.getAndApply(player, h -> {
-            if (ClientTickEventHandler.ABNORMAL_DELAY <= 0) return;
+            if (PlatformService.CONFIG.SMALL_CONDITION_DISAPPEAR_DELAY() == -2) return;
+            if (ClientTickEventHandler.ABNORMAL_DELAY <= 0 && PlatformService.CONFIG.SMALL_CONDITION_DISAPPEAR_DELAY() != -1) return;
 
             renderBodyCondition((AbstractVisibleBody) h.getComponent(BodyComponents.HEAD), graphics, 5,0,6,6);
             renderBodyCondition((AbstractVisibleBody) h.getComponent(BodyComponents.TORSO), graphics, 4,8,8,12);
