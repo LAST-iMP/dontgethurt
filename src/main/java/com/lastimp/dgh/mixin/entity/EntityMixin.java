@@ -28,8 +28,7 @@ public class EntityMixin {
 
     @Inject(method = "getMaxAirSupply", at = @At("RETURN"), cancellable = true)
     private void getMaxAirSupply(CallbackInfoReturnable<Integer> cir) {
-        if ((Entity) (Object)this instanceof LivingEntity livingEntity) {
-            if (livingEntity.getEntityData() == null) return;
+        if ((Entity) (Object)this instanceof LivingEntity livingEntity && HealthCapability.has(livingEntity)) {
             HealthCapability.getAndApply(livingEntity, h -> cir.setReturnValue(h.maxAirSupply()));
         }
     }
