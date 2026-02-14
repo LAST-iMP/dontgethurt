@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "package": "com.lastimp.dgh.compact.iseng.mixin",
+  "refmap": "dgh.refmap.json",
+  "mixins": [
+    "ReturnByDeathHandlerMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}
