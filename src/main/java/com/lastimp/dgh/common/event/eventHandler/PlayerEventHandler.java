@@ -52,10 +52,15 @@ public class PlayerEventHandler {
         if (player.level().isClientSide()) return;
         var data = player.getPersistentData();
         var persistedTag = data.getCompound(Player.PERSISTED_NBT_TAG);
-        HealthCapability.getAndApply(player, newHealth ->
-                newHealth.respawnDeserializeNBT(player.registryAccess(), persistedTag.getCompound(HealthCapability.HEALTH_RECORD))
-        );
-        persistedTag.remove(HealthCapability.HEALTH_RECORD);
+        var key = persistedTag.contains(HealthCapability.HEALTH_RECORD + "_win") ? HealthCapability.HEALTH_RECORD + "_win" : HealthCapability.HEALTH_RECORD;
+        HealthCapability.getAndApply(player, newHealth -> {
+            if (persistedTag.contains(key)) {
+                newHealth.deserialize(player.registryAccess(), persistedTag.getCompound(key));
+            } else {
+                newHealth.respawnDeserializeNBT(player.registryAccess(), persistedTag.getCompound(key));
+            }
+            persistedTag.remove(key);
+        });
         data.put(Player.PERSISTED_NBT_TAG, persistedTag);
     }
 }

@@ -105,7 +105,6 @@ dependencies {
     localRuntime "curse.maven:touhou-little-maid-355044:7307724-sources-7307734"
 
     compileOnly files('libs/iseng-1.1.jar')
-    runtimeOnly files('libs/iseng-1.1.jar')
 }
 
 

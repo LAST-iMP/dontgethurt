@@ -7,7 +7,8 @@
     "entity.LivingEntityAccessor",
     "entity.LivingEntityMixin",
     "entity.EntityMixin",
-    "entity.PlayerMixin"
+    "entity.PlayerMixin",
+    "entity.ServerPlayerMixin"
   ],
   "client": [
     "client.entity.LocalPlayerAccessor",
