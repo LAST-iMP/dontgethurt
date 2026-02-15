@@ -4,6 +4,8 @@ import com.lastimp.dgh.common.config.ModConfigs;
 import com.lastimp.dgh.common.item.bases.AbstractHealingItem;
 import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.entry.register.ModItems;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -12,6 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 
 public class PlayerEventHandler {
     public static void logIn(Player player) {
@@ -50,15 +53,35 @@ public class PlayerEventHandler {
         return InteractionResult.CONSUME;
     }
 
+    public static void onPlayerTravelDimension(ServerPlayer player, ResourceKey<Level> target) {
+        if (!HealthCapability.has(player)) return;
+
+        var data = player.getPersistentData();
+        var persistedTag = data.getCompound(Player.PERSISTED_NBT_TAG);
+        ResourceKey<Level> resourcekey = player.serverLevel().dimension();
+        if (resourcekey == Level.END && target == Level.OVERWORLD && !player.wonGame) {
+            HealthCapability.getAndApply(player, h ->
+                    persistedTag.put(HealthCapability.HEALTH_RECORD + "_win", h.serialize())
+            );
+        } else if (persistedTag.contains(HealthCapability.HEALTH_RECORD + "_win")) {
+            persistedTag.remove(HealthCapability.HEALTH_RECORD + "_win");
+        }
+        data.put(Player.PERSISTED_NBT_TAG, persistedTag);
+    }
+
     public static void onPlayerRespawn(Player player) {
         if (player.level().isClientSide()) return;
         var data = player.getPersistentData();
         var persistedTag = data.getCompound(Player.PERSISTED_NBT_TAG);
+        var key = persistedTag.contains(HealthCapability.HEALTH_RECORD + "_win") ? HealthCapability.HEALTH_RECORD + "_win" : HealthCapability.HEALTH_RECORD;
         HealthCapability.getAndApply(player, newHealth -> {
-            newHealth.deserialize(new HealthCapability().serialize());
-            newHealth.respawnDeserializeNBT(persistedTag.getCompound(HealthCapability.HEALTH_RECORD));
+            if (persistedTag.contains(key)) {
+                newHealth.deserialize(persistedTag.getCompound(key));
+            } else {
+                newHealth.respawnDeserializeNBT(persistedTag.getCompound(key));
+            }
+            persistedTag.remove(key);
         });
-        persistedTag.remove(HealthCapability.HEALTH_RECORD);
         data.put(Player.PERSISTED_NBT_TAG, persistedTag);
     }
 }

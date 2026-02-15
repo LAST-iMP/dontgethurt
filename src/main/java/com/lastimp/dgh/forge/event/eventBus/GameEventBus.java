@@ -17,6 +17,7 @@ import com.lastimp.dgh.forge.capability.provider.HealthProvider;
 import com.lastimp.dgh.forge.container.BackpackInventoryNF;
 import com.lastimp.dgh.forge.entry.register.ModCapabilities;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.Villager;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -101,6 +103,12 @@ public class GameEventBus {
             event.setCanceled(true);
             event.setCancellationResult(result);
         }
+    }
+
+    @SubscribeEvent
+    public static void onEntityTravelDimension(EntityTravelToDimensionEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player)
+            PlayerEventHandler.onPlayerTravelDimension(player, event.getDimension());
     }
 
     @SubscribeEvent
