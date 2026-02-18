@@ -213,6 +213,8 @@ public class InjuryEventHandler {
             var targetHeight = targetBox.maxY - targetBox.minY;
 
             var hitResult = targetBox.clip(attackerEye, attackerEye.add(attackerLookAngel.multiply(new Vec3(distance_upbound, distance_upbound, distance_upbound))));
+            if (hitResult.isEmpty())
+                return InjuryPart.DEFAULT;
             var hit = hitResult.get();
             var hitHeight = hit.y - targetBox.minY;
 
