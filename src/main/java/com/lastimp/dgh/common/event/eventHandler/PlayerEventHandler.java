@@ -17,6 +17,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 
 public class PlayerEventHandler {
+    private static final String WINNING = HealthCapability.HEALTH_RECORD + "_win";
     public static void logIn(Player player) {
         if (player.level().isClientSide) return;
 
@@ -59,12 +60,12 @@ public class PlayerEventHandler {
         var data = player.getPersistentData();
         var persistedTag = data.getCompound(Player.PERSISTED_NBT_TAG);
         ResourceKey<Level> resourcekey = player.serverLevel().dimension();
-        if (resourcekey == Level.END && target == Level.OVERWORLD && !player.wonGame) {
+        if (resourcekey == Level.END && target == Level.OVERWORLD) {
             HealthCapability.getAndApply(player, h ->
-                    persistedTag.put(HealthCapability.HEALTH_RECORD + "_win", h.serialize())
+                    persistedTag.put(WINNING, h.serialize())
             );
-        } else if (persistedTag.contains(HealthCapability.HEALTH_RECORD + "_win")) {
-            persistedTag.remove(HealthCapability.HEALTH_RECORD + "_win");
+        } else if (persistedTag.contains(WINNING)) {
+            persistedTag.remove(WINNING);
         }
         data.put(Player.PERSISTED_NBT_TAG, persistedTag);
     }
@@ -73,7 +74,7 @@ public class PlayerEventHandler {
         if (player.level().isClientSide()) return;
         var data = player.getPersistentData();
         var persistedTag = data.getCompound(Player.PERSISTED_NBT_TAG);
-        var key = persistedTag.contains(HealthCapability.HEALTH_RECORD + "_win") ? HealthCapability.HEALTH_RECORD + "_win" : HealthCapability.HEALTH_RECORD;
+        var key = persistedTag.contains(WINNING) ? WINNING : HealthCapability.HEALTH_RECORD;
         HealthCapability.getAndApply(player, newHealth -> {
             if (persistedTag.contains(key)) {
                 newHealth.deserialize(persistedTag.getCompound(key));
