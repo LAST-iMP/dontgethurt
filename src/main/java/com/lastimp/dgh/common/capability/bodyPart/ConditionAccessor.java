@@ -119,6 +119,8 @@ public class ConditionAccessor {
                 PNEUMOTHORAX_NEEDLE
         ));
 
+        conditions.values().forEach(Lazy::get);
+
         Sutures.addCoverOnHeal(SAWED_BONES);
         Scalpel.addDiscoverOnHeal(SAWED_BONES);
         for (var key : bones.keySet()) {
