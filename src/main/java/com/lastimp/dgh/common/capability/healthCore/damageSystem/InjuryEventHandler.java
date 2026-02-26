@@ -259,13 +259,14 @@ public class InjuryEventHandler {
 
                 float extraArmor = 0, extraRoughness = 0, bodyArmor = 0, bodyRoughness = 0;
                 for (var slot : entity.getArmorSlots()) {
-                    if (!(slot.getItem() instanceof ArmorItem item)) continue;
-                    if (Arrays.stream(slots).anyMatch(equip -> equip == item.getEquipmentSlot())) {
-                        bodyArmor += item.getDefense();
-                        bodyRoughness += item.getToughness();
-                    } else {
-                        extraArmor += item.getDefense();
-                        bodyRoughness += item.getToughness();
+                    if (slot.getItem() instanceof ArmorItem item) {
+                        if (Arrays.stream(slots).anyMatch(equip -> equip == item.getEquipmentSlot())) {
+                            bodyArmor += item.getDefense();
+                            bodyRoughness += item.getToughness();
+                        } else {
+                            extraArmor += item.getDefense();
+                            bodyRoughness += item.getToughness();
+                        }
                     }
                     extraArmor += HealthCapability.getAndApply(entity, h -> (h.getComponent(data.component()) instanceof AbstractVisibleBody visibleBody) ? visibleBody.getArmor() : 0, 0).floatValue();
                     bodyRoughness += HealthCapability.getAndApply(entity, h -> (h.getComponent(data.component()) instanceof AbstractVisibleBody visibleBody) ? visibleBody.getRoughness() : 0, 0).floatValue();
