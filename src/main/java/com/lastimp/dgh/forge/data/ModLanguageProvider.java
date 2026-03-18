@@ -1,4 +1,3 @@
-
 package com.lastimp.dgh.forge.data;
 
 import com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition;
@@ -168,6 +167,14 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.FENTANYL.get(), "芬太尼");
         this.add(ModItems.HYPERZINE.get(), "加速粉剂");
         this.add(ModItems.HARDENER.get(), "钢化粉剂");
+        this.add(ModItems.LAMIVUDINE_CAPSULE.get(), "拉米夫定胶囊");
+        this.add(ModItems.DEXTROMETHORPHAN.get(), "右美沙芬");
+        this.add(ModItems.IBUPROFEN.get(), "布洛芬");
+        this.add(ModItems.ORAL_LIQUID.get(), "口服液");
+        this.add(ModItems.TARGETING_AGENT.get(), "靶向剂");
+        this.add(ModItems.SEDATIVE.get(), "镇静剂");
+        this.add(ModItems.BLOCKER.get(), "阻断剂");
+        this.add(ModItems.RIBAVIRIN.get(), "利巴韦林");
         this.add(ModItems.BRAIN.get(), "人类大脑");
         this.add(ModItems.EYE.get(), "人类眼睛");
         this.add(ModItems.SPINAL_CORD.get(), "人类脊髓");
