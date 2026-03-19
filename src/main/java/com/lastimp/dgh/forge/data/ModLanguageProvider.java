@@ -10,7 +10,6 @@ import com.lastimp.dgh.common.entry.register.ModPotions;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.common.data.LanguageProvider;
-import net.minecraftforge.registries.RegistryObject;
 
 import static com.lastimp.dgh.common.tags.ModDamageType.*;
 

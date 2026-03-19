@@ -113,6 +113,11 @@ dependencies {
 
 tasks.withType(JavaCompile).configureEach {
     options.annotationProcessorPath = configurations.annotationProcessor
+    options.compilerArgs += [
+            '-Xlint:deprecation',
+            '-Xlint:unchecked',
+            '-Xlint:rawtypes'
+    ]
 }
 
 

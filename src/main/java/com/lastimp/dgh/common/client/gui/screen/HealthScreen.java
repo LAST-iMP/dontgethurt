@@ -447,11 +447,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
             }
         });
     }
-
-    private int getNutrientSummaryHeight() {
-        return 36;
-    }
-
+    
     private int nutrientColor(float value) {
         if (value < 0.25f) {
             return 0xFFFF6666;

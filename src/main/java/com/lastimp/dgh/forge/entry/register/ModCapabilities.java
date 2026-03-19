@@ -1,6 +1,5 @@
 package com.lastimp.dgh.forge.entry.register;
 
-import com.lastimp.dgh.DontGetHurt;
 import com.lastimp.dgh.common.utils.ResourceHelper;
 import com.lastimp.dgh.forge.container.BackpackInventoryNF;
 import com.lastimp.dgh.common.capability.HealthCapability;

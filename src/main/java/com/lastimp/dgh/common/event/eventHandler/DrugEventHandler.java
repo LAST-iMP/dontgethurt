@@ -1,7 +1,6 @@
 package com.lastimp.dgh.common.event.eventHandler;
 
 import com.lastimp.dgh.common.system.drug.DrugRuleEngine;
-import com.lastimp.dgh.common.capability.DiseaseCapability;
 import net.minecraft.world.entity.player.Player;
 
 public class DrugEventHandler {

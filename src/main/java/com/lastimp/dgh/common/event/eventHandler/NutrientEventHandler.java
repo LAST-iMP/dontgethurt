@@ -8,13 +8,13 @@ import com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition;
 import com.lastimp.dgh.common.config.impl.NutrientFoodList;
 import com.lastimp.dgh.common.config.record.NutrientFoodRecord;
 import com.lastimp.dgh.common.enums.BodyComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class NutrientEventHandler {
     private static final String PENDING_FOOD_ID = "dgh_pending_food_id";
@@ -53,7 +53,7 @@ public class NutrientEventHandler {
         if (!usingItem.isEdible()) {
             return;
         }
-        var key = BuiltInRegistries.ITEM.getKey(usingItem.getItem());
+        var key = ForgeRegistries.ITEMS.getKey(usingItem.getItem());
         var data = player.getPersistentData();
         data.putString(PENDING_FOOD_ID, key.toString());
         data.putInt(PENDING_FOOD_LEVEL, player.getFoodData().getFoodLevel());
