@@ -1,4 +1,3 @@
-
 package com.lastimp.dgh.forge.data;
 
 import com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition;
@@ -21,7 +20,6 @@ public class ModLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         this.add("itemGroup.dgh", "dgh");
-
 
         this.add(BodyCondition.BURN.toString(), "烧伤");
         this.add(BodyCondition.INTERNAL_INJURY.toString(), "内伤");
@@ -93,7 +91,6 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(BodyCondition.BONE_GOLD.toString(), "金骨植入");
         this.add(BodyCondition.BONE_DIMOND.toString(), "钻骨植入");
         this.add(BodyCondition.BONE_NETHERITE.toString(), "下界骨植入");
-
 
         this.add("gui.dgh.health_gui.title", "健康状态");
         this.add("gui.dgh.health_gui.nutrient_panel_title", "[ 营养状态 ]");
@@ -257,12 +254,14 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.FENTANYL.get(), "芬太尼");
         this.add(ModItems.HYPERZINE.get(), "加速粉剂");
         this.add(ModItems.HARDENER.get(), "钢化粉剂");
+        this.add(ModItems.LAMIVUDINE_CAPSULE.get(), "拉米夫定胶囊");
         this.add(ModItems.DEXTROMETHORPHAN.get(), "右美沙芬");
         this.add(ModItems.IBUPROFEN.get(), "布洛芬");
-        this.add(ModItems.RIBAVIRIN.get(), "利巴韦林");
-        this.add(ModItems.BLOCKER.get(), "阻断剂");
+        this.add(ModItems.ORAL_LIQUID.get(), "口服液");
+        this.add(ModItems.TARGETING_AGENT.get(), "靶向剂");
         this.add(ModItems.SEDATIVE.get(), "镇静剂");
-        this.add(ModItems.LAMIVUDINE.get(), "拉米夫定");
+        this.add(ModItems.BLOCKER.get(), "阻断剂");
+        this.add(ModItems.RIBAVIRIN.get(), "利巴韦林");
         this.add(ModItems.BRAIN.get(), "人类大脑");
         this.add(ModItems.EYE.get(), "人类眼睛");
         this.add(ModItems.SPINAL_CORD.get(), "人类脊髓");
@@ -274,7 +273,6 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(ModItems.MUSCLE.get(), "人类肌肉");
         this.add(ModItems.NEURO.get(), "人类神经");
         this.add(ModItems.SKIN.get(), "人类皮肤");
-
 
         this.add(ModEffects.STAGGER_EFFECT.get(), "缓行");
         this.add(ModEffects.INTENSE_PAIN_EFFECT.get(), "剧痛");
@@ -295,21 +293,21 @@ public class ModLanguageProvider extends LanguageProvider {
         this.addPotion(ModPotions.COMBAT_STIMULANT_POTION, "战斗兴奋剂");
         this.addPotion(ModPotions.ANALGESIA_POISON_POTION, "眩晕毒剂");
 
-        this.add("death.attack."+OPEN_WOUND_DAMAGE.location(), "%1$s 的身体被撕碎了");
-        this.add("death.attack."+INTERNAL_INJURY_DAMAGE.location(), "%1$s 体内一塌糊涂");
-        this.add("death.attack."+BURN_DAMAGE.location(), "%1$s 变成了黑碳");
-        this.add("death.attack."+BRAIN_DAMAGE.location(), "%1$s 变成了植物人");
-        this.add("death.attack."+BLEED_DAMAGE.location(), "%1$s 失血过多");
-        this.add("death.attack."+SURGERY_DAMAGE.location(), "%1$s 死于手术事故");
-        this.add("death.attack."+CANT_BREATH_DAMAGE.location(), "%1$s 无法呼吸");
+        this.add("death.attack." + OPEN_WOUND_DAMAGE.location(), "%1$s 的身体被撕碎了");
+        this.add("death.attack." + INTERNAL_INJURY_DAMAGE.location(), "%1$s 体内一塌糊涂");
+        this.add("death.attack." + BURN_DAMAGE.location(), "%1$s 变成了黑碳");
+        this.add("death.attack." + BRAIN_DAMAGE.location(), "%1$s 变成了植物人");
+        this.add("death.attack." + BLEED_DAMAGE.location(), "%1$s 失血过多");
+        this.add("death.attack." + SURGERY_DAMAGE.location(), "%1$s 死于手术事故");
+        this.add("death.attack." + CANT_BREATH_DAMAGE.location(), "%1$s 无法呼吸");
 
-        this.add("death.attack."+OPEN_WOUND_DAMAGE.location()+".player", "%1$s 的身体被%2$s撕碎了");
-        this.add("death.attack."+INTERNAL_INJURY_DAMAGE.location()+".player", "%1$s 的体内被%2$s打烂了");
-        this.add("death.attack."+BURN_DAMAGE.location()+".player", "%1$s 被%2$s变成了黑碳");
-        this.add("death.attack."+BRAIN_DAMAGE.location()+".player", "%1$s 被%2$s变成了植物人");
-        this.add("death.attack."+BLEED_DAMAGE.location()+".player", "%1$s 由于%2$s失血过多");
-        this.add("death.attack."+SURGERY_DAMAGE.location()+".player", "%1$s 死于手术事故");
-        this.add("death.attack."+CANT_BREATH_DAMAGE.location()+".player", "%1$s 由于%2$s无法呼吸");
+        this.add("death.attack." + OPEN_WOUND_DAMAGE.location() + ".player", "%1$s 的身体被%2$s撕碎了");
+        this.add("death.attack." + INTERNAL_INJURY_DAMAGE.location() + ".player", "%1$s 的体内被%2$s打烂了");
+        this.add("death.attack." + BURN_DAMAGE.location() + ".player", "%1$s 被%2$s变成了黑碳");
+        this.add("death.attack." + BRAIN_DAMAGE.location() + ".player", "%1$s 被%2$s变成了植物人");
+        this.add("death.attack." + BLEED_DAMAGE.location() + ".player", "%1$s 由于%2$s失血过多");
+        this.add("death.attack." + SURGERY_DAMAGE.location() + ".player", "%1$s 死于手术事故");
+        this.add("death.attack." + CANT_BREATH_DAMAGE.location() + ".player", "%1$s 由于%2$s无法呼吸");
 
         this.add("entity.minecraft.villager.dgh.doctor", "医生");
 

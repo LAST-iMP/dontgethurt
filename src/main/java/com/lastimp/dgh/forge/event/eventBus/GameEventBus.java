@@ -22,6 +22,7 @@ import com.lastimp.dgh.forge.capability.provider.HealthProvider;
 import com.lastimp.dgh.forge.capability.provider.NutrientProvider;
 import com.lastimp.dgh.forge.container.BackpackInventoryNF;
 import com.lastimp.dgh.forge.entry.register.ModCapabilities;
+import com.lastimp.dgh.common.capability.healthCore.diseaseSystem.DiseaseEventHandler;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,8 +36,6 @@ import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -129,26 +128,6 @@ public class GameEventBus {
     }
 
     @SubscribeEvent
-    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        DiseaseEventHandler.onRainAction(event.getEntity());
-    }
-
-    @SubscribeEvent
-    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
-        DiseaseEventHandler.onRainAction(event.getEntity());
-    }
-
-    @SubscribeEvent
-    public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
-        DiseaseEventHandler.onRainAction(event.getEntity());
-    }
-
-    @SubscribeEvent
-    public static void onAttackEntity(AttackEntityEvent event) {
-        DiseaseEventHandler.onRainAction(event.getEntity());
-    }
-
-    @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         PlayerEventHandler.onPlayerRespawn(event.getEntity());
     }
@@ -198,9 +177,6 @@ public class GameEventBus {
     @SubscribeEvent
     public static void onInjury(LivingDamageEvent event) {
         var damage = LivingEntityEventHandler.onInjury(event.getEntity(), event.getSource(), event.getAmount());
-        if (event.getEntity() instanceof Player player) {
-            damage = NutrientEventHandler.modifyIncomingDamage(player, damage);
-        }
         event.setAmount(damage);
         if (event.getEntity() instanceof Player player) {
             NutrientEventHandler.onPlayerDamaged(player, damage);
