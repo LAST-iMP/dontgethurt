@@ -191,6 +191,7 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add("dgh.landing_text", "未经过审批，需要谨慎使用。");
         this.add(ModItems.HEALTH_SCANNER.get(), "健康扫描仪");
         this.add(ModItems.BLOOD_SCANNER.get(), "血液扫描仪");
+        this.add(ModItems.NUTRIENT_SCANNER.get(), "营养扫描仪");
         this.add(ModItems.BLOOD_PACK.get(), "血袋");
         this.add(ModItems.BLOOD_PACK_EMPTY.get(), "空血袋");
         this.add(ModItems.BANDAGE.get(), "绷带");

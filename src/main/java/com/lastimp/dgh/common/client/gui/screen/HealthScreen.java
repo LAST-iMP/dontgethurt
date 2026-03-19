@@ -3,7 +3,6 @@ package com.lastimp.dgh.common.client.gui.screen;
 
 import com.lastimp.dgh.common.PlatformService;
 import com.lastimp.dgh.common.capability.DiseaseCapability;
-import com.lastimp.dgh.common.capability.NutrientCapability;
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.common.capability.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.common.client.gui.component.DynamicBarHealthWidget;
@@ -280,28 +279,11 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
     }
 
     protected void renderSelectedComponentHint(GuiGraphics guiGraphics) {
-        if (selectedComponent == null) return;
-        if (healthData == null) return;
-        if (this.visibleConditionCount + this.visibleDiseaseCount > 0) return;
-
-        guiGraphics.drawString(font,
-                Component.translatable("gui.dgh.health_gui.no_visible_condition"),
-                86, 14, 0xFF8A8A8A, false);
     }
 
     protected void renderDiseaseSummary(GuiGraphics guiGraphics) {
         // 只在未选中部位时渲染（避免与 conditionWidgets 区域重叠）
         if (selectedComponent != null) return;
-
-        final int panelX = 86;
-        final int baseY  = 25;
-
-        // 标题
-        guiGraphics.drawString(font,
-            Component.translatable("gui.dgh.health_gui.nutrient_panel_title"),
-                panelX, baseY, 0xFFAAFFCC, false);
-
-        this.renderNutrientSummary(guiGraphics, panelX, baseY + 10);
     }
 
     private void renderDiseaseCell(GuiGraphics guiGraphics, int x, int y, DiseaseRow row) {
@@ -349,6 +331,10 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
     }
 
     private ResourceLocation diseaseIconTexture(String diseaseKey) {
+        ResourceLocation specific = ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/" + diseaseKey + ".png");
+        if (Minecraft.getInstance().getResourceManager().getResource(specific).isPresent()) {
+            return specific;
+        }
         return switch (diseaseKey) {
             case "upper_respiratory_infection" -> ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/respiratory_arrest.png");
             case "sepsis" -> ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/infection.png");
@@ -426,41 +412,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
         };
     }
 
-    private void renderNutrientSummary(GuiGraphics guiGraphics, int panelX, int y) {
-        var player = ClientAccessor.getPlayerOrThrow();
-        NutrientCapability.getAndApply(player, nutrient -> {
-            NutrientRow[] rows = new NutrientRow[]{
-                    new NutrientRow("gui.dgh.health_gui.nutrient.hydration", nutrient.hydration(), 0, 0),
-                    new NutrientRow("gui.dgh.health_gui.nutrient.carbohydrate", nutrient.carbohydrate(), 70, 0),
-                    new NutrientRow("gui.dgh.health_gui.nutrient.fat", nutrient.fat(), 0, 9),
-                    new NutrientRow("gui.dgh.health_gui.nutrient.protein", nutrient.protein(), 70, 9),
-                    new NutrientRow("gui.dgh.health_gui.nutrient.minerals", nutrient.minerals(), 0, 18),
-                    new NutrientRow("gui.dgh.health_gui.nutrient.vitamins", nutrient.vitamins(), 70, 18),
-                    new NutrientRow("gui.dgh.health_gui.nutrient.dietary_fiber", nutrient.dietaryFiber(), 0, 27)
-            };
-
-            for (NutrientRow row : rows) {
-                String label = Component.translatable(row.labelKey()).getString();
-                String value = String.format("%d%%", Math.round(row.value() * 100));
-                guiGraphics.drawString(font, label + ":", panelX + row.offsetX(), y + row.offsetY(), 0xFF7E8FA5, false);
-                guiGraphics.drawString(font, value, panelX + row.offsetX() + 36, y + row.offsetY(), nutrientColor(row.value()), false);
-            }
-        });
-    }
-    
-    private int nutrientColor(float value) {
-        if (value < 0.25f) {
-            return 0xFFFF6666;
-        }
-        if (value > 0.80f) {
-            return 0xFFFFC14D;
-        }
-        return 0xFF88CC88;
-    }
-
     private record DiseaseRow(String key, int stage, int progress) {}
-
-    private record NutrientRow(String labelKey, float value, int offsetX, int offsetY) {}
 
     protected void renderHeartBeat(GuiGraphics guiGraphics) {
         int panelX = (guiGraphics.guiWidth() - PANEL_WIDTH) / 2 + HEART_BEAT_X;
@@ -593,6 +545,12 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
             this.setOnOrgan(false);
         }
         this.selectedComponent = null;
+        for (HealthConditionWidget widget : this.conditionWidgets.values()) {
+            widget.visible = false;
+        }
+        this.selectedDiseaseRows.clear();
+        this.visibleConditionCount = 0;
+        this.visibleDiseaseCount = 0;
     }
 
     private void setOnOrgan(boolean onOrgan) {

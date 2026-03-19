@@ -146,7 +146,7 @@ public class ModVillagers {
             ));
             level4Trades.add((trader, rand) -> new MerchantOffer(
                     new ItemStack(Items.EMERALD, 12),
-                    new ItemStack(ModItems.LAMIVUDINE.get(), 1),
+                    new ItemStack(ModItems.LAMIVUDINE_CAPSULE.get(), 1),
                     6, 15, 0.2F
             ));
             level4Trades.add((trader, rand) -> new MerchantOffer(

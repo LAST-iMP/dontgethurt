@@ -22,7 +22,6 @@ import com.lastimp.dgh.forge.capability.provider.HealthProvider;
 import com.lastimp.dgh.forge.capability.provider.NutrientProvider;
 import com.lastimp.dgh.forge.container.BackpackInventoryNF;
 import com.lastimp.dgh.forge.entry.register.ModCapabilities;
-import com.lastimp.dgh.common.capability.healthCore.diseaseSystem.DiseaseEventHandler;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,7 +33,7 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -89,8 +88,7 @@ public class GameEventBus {
                     for (var state : ModBlocks.OPERATING_BED_BLOCK.get().getStateDefinition().getPossibleStates()) {
                         GameData.getBlockStatePointOfInterestTypeMap().put(state, ModVillagers.DOCTOR_POI.get());
                     }
-                }
-        );
+                });
     }
 
     @SubscribeEvent
@@ -100,10 +98,12 @@ public class GameEventBus {
 
     @SubscribeEvent
     public static void onEntityJoin(EntityJoinLevelEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity livingEntity)) return;
+        if (!(event.getEntity() instanceof LivingEntity livingEntity))
+            return;
         LivingEntityEventHandler.addOrgan(livingEntity);
 
-        if (!(livingEntity instanceof Villager villager)) return;
+        if (!(livingEntity instanceof Villager villager))
+            return;
         VillagerEventHandler.addBrain(villager);
     }
 

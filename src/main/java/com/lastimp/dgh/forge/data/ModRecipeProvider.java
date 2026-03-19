@@ -67,6 +67,16 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('d', Items.GLASS)
                 .unlockedBy("has_blood_pack_empty", has(ModItems.BLOOD_PACK_EMPTY.get()))
                 .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.NUTRIENT_SCANNER.get(), 1)
+                .pattern(" d ")
+                .pattern("bcb")
+                .pattern("aaa")
+                .define('a', Items.IRON_INGOT)
+                .define('b', Items.REDSTONE)
+                .define('c', Items.WHEAT_SEEDS)
+                .define('d', Items.GLASS)
+                .unlockedBy("has_wheat_seeds", has(Items.WHEAT_SEEDS))
+                .save(recipeOutput);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.HEALTH_SCANNER.get(), 1)
                 .pattern(" d ")
                 .pattern("bcb")
@@ -597,7 +607,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(recipeOutput, ResourceHelper.ModResource("blocker_cleaned"));
 
         // M5 拉米夫定胶囊：安印席山 + 吸水石 + 玻璃瓶
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.LAMIVUDINE.get())
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.LAMIVUDINE_CAPSULE.get())
                 .requires(ModItems.ANTIBIOTICS.get())
                 .requires(ModItems.MORPHINE.get())
                 .requires(Items.GLASS_BOTTLE)

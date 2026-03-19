@@ -42,6 +42,11 @@ public class ModItems {
             "blood_scanner", BloodScanner::new,
             new Item.Properties().stacksTo(1)
     );
+
+    public static final IEntry<Item> NUTRIENT_SCANNER = registerItem(
+            "nutrient_scanner", NutrientScanner::new,
+            new Item.Properties().stacksTo(1)
+    );
     //背包
     public static final IEntry<Item> HEALTH_CARE_BAG = registerItem(
             "health_care_bag", HealthCareBag::new,
@@ -241,47 +246,6 @@ public class ModItems {
 
     public static final IEntry<Item> RIBAVIRIN = registerItem(
             "ribavirin", (properties) -> new DiseaseDirectMedicine(properties, DiseaseState.MED_RIBAVIRIN, "·快速压制重型/中型上呼吸道感染"),
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> LAMIVUDINE_CAPSULE = registerItem(
-            "lamivudine_capsule", (properties) -> new DelayedCapsuleMedicine(properties, DiseaseState.MED_LAMIVUDINE, "·艾滋病"),
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> DEXTROMETHORPHAN = registerItem(
-            "dextromethorphan", (properties) -> new DelayedCapsuleMedicine(properties, DiseaseState.MED_DEXTROMETHORPHAN, "·上呼吸道感染"),
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> IBUPROFEN = registerItem(
-            "ibuprofen", (properties) -> new DelayedCapsuleMedicine(properties, DiseaseState.MED_IBUPROFEN, "·缓解上呼吸道感染症状"),
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> ORAL_LIQUID = registerItem(
-            "oral_liquid", (properties) -> new DiseaseDirectMedicine(properties, DiseaseState.MED_ORAL_LIQUID, "·辅助缓解上呼吸道感染"),
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> TARGETING_AGENT = registerItem(
-            "targeting_agent", (properties) -> new DiseaseDirectMedicine(properties, DiseaseState.MED_TARGETING_AGENT, "·缓解尸毒恶化"),
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> SEDATIVE = registerItem(
-            "sedative", (properties) -> new DiseaseDirectMedicine(properties, DiseaseState.MED_SEDATIVE, "·缓解创伤后应激障碍"),
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> BLOCKER = registerItem(
-            "blocker", (properties) -> new DiseaseDirectMedicine(properties, DiseaseState.MED_BLOCKER, "·短时间阻断尸毒感染"),
-            new Item.Properties().stacksTo(16)
-    );
-
-    public static final IEntry<Item> RIBAVIRIN = registerItem(
-            "ribavirin", (properties) -> new DiseaseDirectMedicine(properties, DiseaseState.MED_RIBAVIRIN, "·快速压制重型/中型上呼吸道感染"),
->>>>>>> 8014105b7d98c2603f433f2befef981b70fcf770
             new Item.Properties().stacksTo(16)
     );
     //手术工具
