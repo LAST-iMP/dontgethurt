@@ -2,6 +2,8 @@
 package com.lastimp.dgh.common.client.gui.screen;
 
 import com.lastimp.dgh.common.PlatformService;
+import com.lastimp.dgh.common.capability.DiseaseCapability;
+import com.lastimp.dgh.common.capability.NutrientCapability;
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.common.capability.bodyPart.base.AbstractVisibleBody;
 import com.lastimp.dgh.common.client.gui.component.DynamicBarHealthWidget;
@@ -29,12 +31,15 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
 import static com.lastimp.dgh.common.enums.BodyComponents.*;
@@ -61,7 +66,11 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
     protected final HashMap<ResourceLocation, HealthConditionWidget> conditionWidgets = new HashMap<>();
     protected BodyComponents selectedComponent = null;
     protected static HealthCapability healthData = null;
+    protected static DiseaseCapability diseaseData = null;
     protected boolean onOrgan = false;
+    protected int visibleConditionCount = 0;
+    protected int visibleDiseaseCount = 0;
+    protected final List<DiseaseRow> selectedDiseaseRows = new ArrayList<>();
 
     public HealthScreen(T menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -141,6 +150,16 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        boolean clickedBodyComponent = this.isBodyComponentClick(mouseX, mouseY);
+        boolean handled = super.mouseClicked(mouseX, mouseY, button);
+        if (!clickedBodyComponent) {
+            this.clearComponentSelection();
+        }
+        return handled;
+    }
+
     protected void refreshComponent() {
         if (healthData == null) return;
         if (this.componentWidgets.isEmpty()) return;
@@ -156,6 +175,10 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
     protected void refreshCondition() {
         if (selectedComponent == null) return;
         if (healthData == null) return;
+
+        this.visibleConditionCount = 0;
+        this.visibleDiseaseCount = 0;
+        this.selectedDiseaseRows.clear();
 
         for (HealthConditionWidget widget : this.conditionWidgets.values()){
             widget.visible = false;
@@ -186,12 +209,32 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
             widget.visible = true;
             widgetCount += 1;
         }
+        this.visibleConditionCount = widgetCount;
+
+        // 将“当前部位相关疾病”并入原条件面板格子区显示，保持点击部位后的阅读路径一致。
+        if (diseaseData != null) {
+            List<DiseaseRow> mapped = buildActiveDiseasesForComponent(this.selectedComponent);
+            int freeSlots = Math.max(0, 12 - this.visibleConditionCount);
+            if (mapped.size() > freeSlots) {
+                mapped = mapped.subList(0, freeSlots);
+            }
+            this.selectedDiseaseRows.addAll(mapped);
+            this.visibleDiseaseCount = this.selectedDiseaseRows.size();
+        }
     }
 
     protected boolean visibilityCheck(AbstractBody body, ResourceLocation key) {
         if (this.onOrgan) return false;
         if (!HealthScanner.healthScannerConditions().contains(key)) return false;
-        if (!this.menu.isDevice && !HealthScanner.eyesightConditions().contains(key)) return false;
+
+        // 非扫描仪模式下，仍允许显示“已经异常”的状态，避免点击部位后面板空白。
+        if (!this.menu.isDevice && !HealthScanner.eyesightConditions().contains(key)) {
+            if (ConditionAccessor.resistConditions.contains(key)) {
+                return body.abnormalWithHidden(key) || healthData.armorResist(this.selectedComponent, key) > 0;
+            }
+            return ConditionAccessor.get(key).abnormal(body.getCondition(key).getDisplayValue());
+        }
+
         if (ConditionAccessor.resistConditions.contains(key) && (body.abnormalWithHidden(key) || healthData.armorResist(this.selectedComponent, key) > 0)) return true;
         if (!ConditionAccessor.get(key).abnormal(body.getCondition(key).getDisplayValue())) return false;
         return true;
@@ -210,13 +253,218 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
     @Override
     public void onClose() {
         setHealthData(null);
+        setDiseaseData(null);
         GuiOpenWrapper.setHealthScreen(null);
         super.onClose();
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        this.renderDiseaseSummary(guiGraphics);
+        this.renderSelectedComponentDiseases(guiGraphics);
+        this.renderSelectedComponentHint(guiGraphics);
     }
+
+    protected void renderSelectedComponentDiseases(GuiGraphics guiGraphics) {
+        if (selectedComponent == null) return;
+        if (this.selectedDiseaseRows.isEmpty()) return;
+
+        int startIndex = this.visibleConditionCount;
+        for (int i = 0; i < this.selectedDiseaseRows.size(); i++) {
+            DiseaseRow row = this.selectedDiseaseRows.get(i);
+            int slotIndex = startIndex + i;
+            int x = 85 + (slotIndex % 2) * 72;
+            int y = 11 + (slotIndex / 2) * 18;
+            this.renderDiseaseCell(guiGraphics, x, y, row);
+        }
+    }
+
+    protected void renderSelectedComponentHint(GuiGraphics guiGraphics) {
+        if (selectedComponent == null) return;
+        if (healthData == null) return;
+        if (this.visibleConditionCount + this.visibleDiseaseCount > 0) return;
+
+        guiGraphics.drawString(font,
+                Component.translatable("gui.dgh.health_gui.no_visible_condition"),
+                86, 14, 0xFF8A8A8A, false);
+    }
+
+    protected void renderDiseaseSummary(GuiGraphics guiGraphics) {
+        // 只在未选中部位时渲染（避免与 conditionWidgets 区域重叠）
+        if (selectedComponent != null) return;
+
+        final int panelX = 86;
+        final int baseY  = 25;
+
+        // 标题
+        guiGraphics.drawString(font,
+            Component.translatable("gui.dgh.health_gui.nutrient_panel_title"),
+                panelX, baseY, 0xFFAAFFCC, false);
+
+        this.renderNutrientSummary(guiGraphics, panelX, baseY + 10);
+    }
+
+    private void renderDiseaseCell(GuiGraphics guiGraphics, int x, int y, DiseaseRow row) {
+        int width = 70;
+        int height = 16;
+        int bgColor = 0xFF3A3C3B;
+        int borderColor = 0xFF000000;
+        int fillColor = diseaseProgressColor(row.stage());
+        int fillW = Math.max(1, Math.min(width - 2, (int) ((width - 2) * (row.progress() / 100.0f))));
+
+        guiGraphics.fill(x, y, x + width, y + height, bgColor);
+        guiGraphics.fill(x + 1, y + 1, x + 1 + fillW, y + height - 1, fillColor);
+        guiGraphics.renderOutline(x, y, width, height, borderColor);
+        this.renderDiseaseIcon(guiGraphics, x, y, row.key());
+
+        String diseaseName = abbreviateDiseaseName(row.key());
+        String stageText = Component.translatable("disease.dgh.stage." + row.stage()).getString();
+        String shortText = diseaseName + " " + stageText;
+        guiGraphics.drawString(font, shortText, x + 17, y + 4, 0xFF000000, false);
+    }
+
+    private void renderDiseaseIcon(GuiGraphics guiGraphics, int x, int y, String diseaseKey) {
+        ResourceLocation texture = diseaseIconTexture(diseaseKey);
+        guiGraphics.pose().pushPose();
+        float scale = 12f / 64f;
+        guiGraphics.pose().scale(scale, scale, 1f);
+        guiGraphics.blit(
+                texture,
+                (int) ((x + 2) / scale), (int) ((y + 2) / scale),
+                0,
+                0f, 0f,
+                64, 64,
+                64, 64
+        );
+        guiGraphics.pose().popPose();
+    }
+
+    private String abbreviateDiseaseName(String diseaseKey) {
+        String diseaseName = Component.translatable("disease.dgh." + diseaseKey).getString();
+        if (Minecraft.getInstance().font.width(diseaseName) <= 36) {
+            return diseaseName;
+        }
+        int end = Math.min(4, diseaseName.length());
+        return diseaseName.substring(0, end);
+    }
+
+    private ResourceLocation diseaseIconTexture(String diseaseKey) {
+        return switch (diseaseKey) {
+            case "upper_respiratory_infection" -> ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/respiratory_arrest.png");
+            case "sepsis" -> ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/infection.png");
+            case "undead_infection" -> ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/gangrene.png");
+            case "dietary_complication" -> ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/withdraw.png");
+            case "ptsd" -> ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/withdraw.png");
+            case "fracture_dislocation" -> ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/dislocation.png");
+            case "aids" -> ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/infection.png");
+            case "tetanus" -> ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/intense_pain.png");
+            case "crimson_disease" -> ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/burn.png");
+            case "hippocratic_syndrome" -> ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/internal_injury.png");
+            case "ender_erosion" -> ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/brain_damage.png");
+            default -> ResourceHelper.ModResource("textures/gui/sprites/container/condition_icons/infection.png");
+        };
+    }
+
+    private List<DiseaseRow> buildActiveDiseasesForComponent(BodyComponents component) {
+        List<DiseaseRow> all = buildActiveDiseases();
+        List<DiseaseRow> mapped = new ArrayList<>();
+        for (DiseaseRow row : all) {
+            if (diseaseBelongsToComponent(row.key(), component)) {
+                mapped.add(row);
+            }
+        }
+        return mapped;
+    }
+
+    private boolean diseaseBelongsToComponent(String diseaseKey, BodyComponents component) {
+        return switch (diseaseKey) {
+            case "ptsd", "ender_erosion" -> component == HEAD;
+            case "fracture_dislocation" -> component == LEFT_ARM || component == RIGHT_ARM || component == LEFT_LEG || component == RIGHT_LEG;
+            case "upper_respiratory_infection", "sepsis", "undead_infection", "dietary_complication",
+                    "aids", "tetanus", "crimson_disease", "hippocratic_syndrome" -> component == TORSO;
+            default -> false;
+        };
+    }
+
+    private List<DiseaseRow> buildActiveDiseases() {
+        List<DiseaseRow> list = new ArrayList<>();
+        if (diseaseData == null) return list;
+        addIfActive(list, "upper_respiratory_infection",
+                diseaseData.upperRespiratoryInfectionStage(), diseaseData.upperRespiratoryInfectionProgress());
+        addIfActive(list, "sepsis",
+                diseaseData.sepsisStage(), diseaseData.sepsisProgress());
+        addIfActive(list, "undead_infection",
+                diseaseData.undeadInfectionStage(), diseaseData.undeadInfectionProgress());
+        addIfActive(list, "dietary_complication",
+                diseaseData.dietaryComplicationStage(), diseaseData.dietaryComplicationProgress());
+        addIfActive(list, "ptsd",
+                diseaseData.ptsdStage(), diseaseData.ptsdProgress());
+        addIfActive(list, "fracture_dislocation",
+                diseaseData.fractureDislocationStage(), diseaseData.fractureDislocationProgress());
+        addIfActive(list, "aids",
+                diseaseData.aidsStage(), diseaseData.aidsProgress());
+        addIfActive(list, "tetanus",
+                diseaseData.tetanusStage(), diseaseData.tetanusProgress());
+        addIfActive(list, "crimson_disease",
+                diseaseData.crimsonDiseaseStage(), diseaseData.crimsonDiseaseProgress());
+        addIfActive(list, "hippocratic_syndrome",
+            diseaseData.hippocraticSyndromeStage(), diseaseData.hippocraticSyndromeProgress());
+        addIfActive(list, "ender_erosion",
+            diseaseData.enderErosionStage(), diseaseData.enderErosionProgress());
+        return list;
+    }
+
+    private static void addIfActive(List<DiseaseRow> list, String key, int stage, int progress) {
+        if (stage > 0) list.add(new DiseaseRow(key, stage, progress));
+    }
+
+    private static int diseaseProgressColor(int stage) {
+        return switch (stage) {
+            case 1  -> 0xFF4488FF;
+            case 2  -> 0xFFCC8800;
+            default -> 0xFFFF3300;
+        };
+    }
+
+    private void renderNutrientSummary(GuiGraphics guiGraphics, int panelX, int y) {
+        var player = ClientAccessor.getPlayerOrThrow();
+        NutrientCapability.getAndApply(player, nutrient -> {
+            NutrientRow[] rows = new NutrientRow[]{
+                    new NutrientRow("gui.dgh.health_gui.nutrient.hydration", nutrient.hydration(), 0, 0),
+                    new NutrientRow("gui.dgh.health_gui.nutrient.carbohydrate", nutrient.carbohydrate(), 70, 0),
+                    new NutrientRow("gui.dgh.health_gui.nutrient.fat", nutrient.fat(), 0, 9),
+                    new NutrientRow("gui.dgh.health_gui.nutrient.protein", nutrient.protein(), 70, 9),
+                    new NutrientRow("gui.dgh.health_gui.nutrient.minerals", nutrient.minerals(), 0, 18),
+                    new NutrientRow("gui.dgh.health_gui.nutrient.vitamins", nutrient.vitamins(), 70, 18),
+                    new NutrientRow("gui.dgh.health_gui.nutrient.dietary_fiber", nutrient.dietaryFiber(), 0, 27)
+            };
+
+            for (NutrientRow row : rows) {
+                String label = Component.translatable(row.labelKey()).getString();
+                String value = String.format("%d%%", Math.round(row.value() * 100));
+                guiGraphics.drawString(font, label + ":", panelX + row.offsetX(), y + row.offsetY(), 0xFF7E8FA5, false);
+                guiGraphics.drawString(font, value, panelX + row.offsetX() + 36, y + row.offsetY(), nutrientColor(row.value()), false);
+            }
+        });
+    }
+
+    private int getNutrientSummaryHeight() {
+        return 36;
+    }
+
+    private int nutrientColor(float value) {
+        if (value < 0.25f) {
+            return 0xFFFF6666;
+        }
+        if (value > 0.80f) {
+            return 0xFFFFC14D;
+        }
+        return 0xFF88CC88;
+    }
+
+    private record DiseaseRow(String key, int stage, int progress) {}
+
+    private record NutrientRow(String labelKey, float value, int offsetX, int offsetY) {}
 
     protected void renderHeartBeat(GuiGraphics guiGraphics) {
         int panelX = (guiGraphics.guiWidth() - PANEL_WIDTH) / 2 + HEART_BEAT_X;
@@ -326,6 +574,29 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
     public void setHealthData(HealthCapability healthData) {
         HealthScreen.healthData = healthData;
         if (healthData != null) this.menu.setEquipments(healthData);
+    }
+
+    public void setDiseaseData(DiseaseCapability diseaseData) {
+        HealthScreen.diseaseData = diseaseData;
+    }
+
+    private boolean isBodyComponentClick(double mouseX, double mouseY) {
+        for (HealthComponentWidget widget : this.componentWidgets.values()) {
+            if (widget.isMouseOver(mouseX, mouseY)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void clearComponentSelection() {
+        if (this.selectedComponent == null) {
+            return;
+        }
+        if (this.onOrgan && healthData != null) {
+            this.setOnOrgan(false);
+        }
+        this.selectedComponent = null;
     }
 
     private void setOnOrgan(boolean onOrgan) {

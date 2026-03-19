@@ -201,6 +201,37 @@ public class ModItems {
             "food_consumer", FoodConsumer::new,
             new Item.Properties().stacksTo(16)
     );
+    // M3: 疾病药物
+    /** 右美沙芬胶囊：治疗上呼吸道感染 */
+    public static final IEntry<Item> DEXTROMETHORPHAN = registerItem(
+            "dextromethorphan", p -> new DiseaseCapsule(p, "dextromethorphan"),
+            new Item.Properties().stacksTo(16)
+    );
+    /** 布洛芬胶囊：缓解上呼吸道感染症状 */
+    public static final IEntry<Item> IBUPROFEN = registerItem(
+            "ibuprofen", p -> new DiseaseCapsule(p, "ibuprofen"),
+            new Item.Properties().stacksTo(16)
+    );
+    /** 利巴韦林药针：立即将重/中型上呼吸道感染降为轻型 */
+    public static final IEntry<Item> RIBAVIRIN = registerItem(
+            "ribavirin", p -> new DiseaseNeedle(p, "ribavirin"),
+            new Item.Properties().stacksTo(16)
+    );
+    /** 阻断剂药针：短时间内不会感染/恶化尸毒 */
+    public static final IEntry<Item> BLOCKER = registerItem(
+            "blocker", p -> new DiseaseNeedle(p, "blocker"),
+            new Item.Properties().stacksTo(16)
+    );
+    /** 镇静剂口服液：减轻 PTSD */
+    public static final IEntry<Item> SEDATIVE = registerItem(
+            "sedative", p -> new DiseaseOralLiquid(p, "sedative"),
+            new Item.Properties().stacksTo(16)
+    );
+    /** 拉米夫定胶囊：治疗艾滋病（10%概率） */
+    public static final IEntry<Item> LAMIVUDINE = registerItem(
+            "lamivudine", p -> new DiseaseCapsule(p, "lamivudine"),
+            new Item.Properties().stacksTo(16)
+    );
     //手术工具
     public static final IEntry<Item> SCALPEL = registerItem(
             "scalpel", Scalpel::new,

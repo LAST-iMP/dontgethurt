@@ -1,5 +1,6 @@
 package com.lastimp.dgh.common.event.eventHandler;
 
+import com.lastimp.dgh.common.capability.DiseaseCapability;
 import com.lastimp.dgh.common.config.ModConfigs;
 import com.lastimp.dgh.common.item.bases.AbstractHealingItem;
 import com.lastimp.dgh.common.capability.HealthCapability;
@@ -58,7 +59,14 @@ public class PlayerEventHandler {
             newHealth.deserialize(new HealthCapability().serialize());
             newHealth.respawnDeserializeNBT(persistedTag.getCompound(HealthCapability.HEALTH_RECORD));
         });
+        DiseaseCapability.getAndApply(player, disease -> {
+            disease.deserialize(new DiseaseCapability().serialize());
+            if (persistedTag.contains(DiseaseCapability.DISEASE_RECORD)) {
+                disease.deserializeRespawnPersistent(persistedTag.getCompound(DiseaseCapability.DISEASE_RECORD));
+            }
+        });
         persistedTag.remove(HealthCapability.HEALTH_RECORD);
+        persistedTag.remove(DiseaseCapability.DISEASE_RECORD);
         data.put(Player.PERSISTED_NBT_TAG, persistedTag);
     }
 }

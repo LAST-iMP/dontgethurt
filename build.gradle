@@ -98,7 +98,9 @@ dependencies {
     compileOnly fg.deobf("curse.maven:touhou-little-maid-355044:7307720-sources-7307731")
     runtimeOnly fg.deobf("curse.maven:touhou-little-maid-355044:7307720-sources-7307731")
 
-    runtimeOnly fg.deobf("curse.maven:touhou-little-maid-spell-1290017:7534684")
+    if (Boolean.parseBoolean((project.findProperty("enable_tlm_spell_runtime") ?: "false").toString())) {
+        runtimeOnly fg.deobf("curse.maven:touhou-little-maid-spell-1290017:7534684")
+    }
 
     // MixinExtras
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))
