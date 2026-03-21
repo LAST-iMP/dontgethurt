@@ -4,6 +4,10 @@ import com.lastimp.dgh.common.client.eventHandler.ClientInputEventHandler;
 import com.lastimp.dgh.common.client.eventHandler.ClientTickEventHandler;
 import com.lastimp.dgh.common.client.eventHandler.GuiEventHandler;
 import com.lastimp.dgh.common.client.renderer.ModelRenderEventBus;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import net.minecraft.world.entity.player.Player;
+import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.utils.Utils;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,6 +28,20 @@ public class ClientEventBus {
 
     @SubscribeEvent
     public static void onRenderPlayer(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> event) {
+        var entity = event.getEntity();
+        try {
+            PoseStack poseStack = event.getPoseStack();
+            if (HealthCapability.has(entity) && (HealthCapability.isDown(entity) || HealthCapability.isFootLostDown(entity))) {
+                if (!(entity instanceof Player)) {
+                    float rotationYaw = entity.getYRot();
+                    poseStack.mulPose(Axis.YP.rotationDegrees(180F - rotationYaw));
+                    poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
+                    poseStack.translate(0, -0.7, 0);
+                }
+            }
+        } catch (Throwable t) {
+            // ignore if reflection/method not present; rendering will continue normally
+        }
         ModelRenderEventBus.onRenderPlayer(event.getEntity(), event.getRenderer());
     }
 

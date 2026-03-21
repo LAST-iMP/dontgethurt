@@ -36,6 +36,33 @@ public class LivingEntityEventHandler {
         HealingEventHandler.onHealthUpdate(livingEntity);
         BuffEventHandler.onBuffUpdate(livingEntity);
         DyingHandler.checkIfDown(livingEntity);
+        // If entity is a mob and is down, disable AI to mimic mixin isEffectiveAi behavior
+        try {
+            if (livingEntity instanceof net.minecraft.world.entity.Mob) {
+                net.minecraft.world.entity.Mob mob = (net.minecraft.world.entity.Mob) livingEntity;
+                boolean down = HealthCapability.isDown(mob);
+                mob.setNoAi(down);
+                // clear attack target if it is down and should not be seen as enemy
+                try {
+                    var brain = mob.getBrain();
+                    var maybeTarget = brain.getMemory(net.minecraft.world.entity.ai.memory.MemoryModuleType.ATTACK_TARGET);
+                    if (maybeTarget.isPresent()) {
+                        var target = (net.minecraft.world.entity.LivingEntity) maybeTarget.get();
+                        boolean attackable = !HealthCapability.has(target) || !HealthCapability.isDying(target) || com.lastimp.dgh.common.config.impl.HealthLivingEntityList.canBeSeenWhenLying(target.getType());
+                        if (!attackable) {
+                            brain.eraseMemory(net.minecraft.world.entity.ai.memory.MemoryModuleType.ATTACK_TARGET);
+                        }
+                    }
+                } catch (Throwable ignored) {}
+            }
+        } catch (Throwable ignored) {}
+        // stop horizontal motion for downed entities
+        try {
+            if (HealthCapability.isDown(livingEntity) || HealthCapability.isFootLostDown(livingEntity)) {
+                var mv = livingEntity.getDeltaMovement();
+                livingEntity.setDeltaMovement(0, mv.y, 0);
+            }
+        } catch (Throwable ignored) {}
     }
 
     public static boolean onBreath(LivingEntity livingEntity) {

@@ -3,17 +3,10 @@
   "package": "com.lastimp.dgh.mixin",
   "refmap": "dgh.refmap.json",
   "mixins": [
-    "entity.LivingEntityMixin",
     "entity.EntityMixin",
     "entity.PlayerMixin"
   ],
-  "client": [
-    "client.entity.LocalPlayerAccessor",
-    "client.MinecraftAccessor",
-    "client.LivingEntityRendererMixin",
-    "client.PlayerSkinMixin",
-    "client.entity.PlayerMixin"
-  ],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   }
