@@ -2,10 +2,9 @@
   "required": true,
   "package": "com.lastimp.dgh.mixin",
   "refmap": "dgh.refmap.json",
-  "mixins": [
-    "entity.EntityMixin",
-    "entity.PlayerMixin"
-  ],
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [],
   "client": [],
   "injectors": {
     "defaultRequire": 1
