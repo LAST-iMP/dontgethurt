@@ -89,7 +89,10 @@ public class DoctorVillagerBehavior extends Behavior<Villager> {
             this.coolDown += 20;
             this.target.heal(this.level);
         }
-        if (this.coolDown > 0) this.target.level().broadcastEntityEvent(this.target, (byte) 14);
+        if (this.coolDown > 0) {
+            // spawn happy villager particles around healed target instead of broadcasting entity event
+            com.lastimp.dgh.common.utils.Utils.addParticlesAroundSelf(net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER, this.target);
+        }
     }
 
     private boolean livingTest(LivingEntity entity) {

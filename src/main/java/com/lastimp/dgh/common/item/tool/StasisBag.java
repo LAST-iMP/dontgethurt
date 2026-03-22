@@ -33,7 +33,7 @@ public class StasisBag extends AbstractHealingEquipment {
             Torso torso = (Torso) h.getComponent(BodyComponents.TORSO);
             torso.addHeartRate(3);
             torso.injury(RESPIRATORY_ARREST, ConditionAccessor.get(RESPIRATORY_ARREST).maxValue());
-            entity.setAirSupply(entity.getMaxAirSupply());
+            entity.setAirSupply(h.maxAirSupply());
             return true;
         }, false);
     }

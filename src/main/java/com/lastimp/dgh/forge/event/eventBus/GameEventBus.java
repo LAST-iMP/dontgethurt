@@ -104,6 +104,22 @@ public class GameEventBus {
     }
 
     @SubscribeEvent
+    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+        var player = event.getEntity();
+        if (player == null) return;
+        try {
+            var stack = event.getItemStack();
+            if (stack.isEdible()) {
+                boolean canEat = com.lastimp.dgh.common.capability.HealthCapability.getAndApply(player, h -> h.canEat(), true);
+                if (!canEat) {
+                    event.setCanceled(true);
+                    event.setCancellationResult(net.minecraft.world.InteractionResult.FAIL);
+                }
+            }
+        } catch (Throwable ignored) {}
+    }
+
+    @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         PlayerEventHandler.onPlayerRespawn(event.getEntity());
     }
@@ -123,6 +139,15 @@ public class GameEventBus {
     public static void onInjury(LivingDamageEvent event) {
         var damage = LivingEntityEventHandler.onInjury(event.getEntity(), event.getSource(), event.getAmount());
         event.setAmount(damage);
+    }
+
+    @SubscribeEvent
+    public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
+        var ent = event.getEntity();
+        if (!(ent instanceof LivingEntity)) return;
+        LivingEntity livingEntity = (LivingEntity) ent;
+        if (!HealthCapability.has(livingEntity)) return;
+        HealthCapability.getAndApply(livingEntity, HealthCapability::refreshArmor);
     }
 
     @SubscribeEvent

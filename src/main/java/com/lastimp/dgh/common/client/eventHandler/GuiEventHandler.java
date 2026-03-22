@@ -2,8 +2,7 @@ package com.lastimp.dgh.common.client.eventHandler;
 
 import com.google.common.collect.ImmutableSet;
 import com.lastimp.dgh.common.config.impl.ArmorList;
-import com.lastimp.dgh.mixin.client.entity.LocalPlayerAccessor;
-import com.lastimp.dgh.mixin.client.MinecraftAccessor;
+import com.lastimp.dgh.common.client.ClientReflection;
 import com.lastimp.dgh.common.client.ClientAccessor;
 import com.lastimp.dgh.common.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.common.capability.HealthCapability;
@@ -59,11 +58,11 @@ public class GuiEventHandler {
     public static void onGuiRender() {
         ClientAccessor.getPlayer().ifPresent(player -> {
             if (HealthCapability.isDown(player)) {
-                ((LocalPlayerAccessor) player).setHandsBusy(true);
-                ((MinecraftAccessor) Minecraft.getInstance()).setMissTime(2);
+                ClientReflection.setHandsBusy(player, true);
+                ClientReflection.setMissTime(2);
                 onDying = true;
             } else if (onDying) {
-                ((LocalPlayerAccessor) player).setHandsBusy(false);
+                ClientReflection.setHandsBusy(player, false);
                 onDying = false;
             }
         });

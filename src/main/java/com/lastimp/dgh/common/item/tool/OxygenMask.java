@@ -20,8 +20,9 @@ public class OxygenMask extends AbstractHealingEquipment {
     @Override
     public boolean heal(@NotNull LivingEntity entity) {
         return HealthCapability.getAndApply(entity, health -> {
-            if (entity.getAirSupply() == entity.getMaxAirSupply()) return false;
-            entity.setAirSupply(entity.getMaxAirSupply());
+            int max = health.maxAirSupply();
+            if (entity.getAirSupply() == max) return false;
+            entity.setAirSupply(max);
             return true;
         }, false);
     }

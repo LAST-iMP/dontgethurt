@@ -2,18 +2,10 @@
   "required": true,
   "package": "com.lastimp.dgh.mixin",
   "refmap": "dgh.refmap.json",
-  "mixins": [
-    "entity.LivingEntityMixin",
-    "entity.EntityMixin",
-    "entity.PlayerMixin"
-  ],
-  "client": [
-    "client.entity.LocalPlayerAccessor",
-    "client.MinecraftAccessor",
-    "client.LivingEntityRendererMixin",
-    "client.PlayerSkinMixin",
-    "client.entity.PlayerMixin"
-  ],
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   }
