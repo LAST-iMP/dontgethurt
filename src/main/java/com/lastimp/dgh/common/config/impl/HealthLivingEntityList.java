@@ -45,6 +45,11 @@ public class HealthLivingEntityList implements IConfigLoader<Map.Entry<EntityTyp
         return HEALTH_WHITE_LIST.get(entityType).CAN_BE_SEEN_WHEN_LYING();
     }
 
+    public static boolean callWhenDying(EntityType<?> entityType) {
+        if (!isEntityWhitelisted(entityType)) return false;
+        return HEALTH_WHITE_LIST.get(entityType).CALL_WHEN_DYING();
+    }
+
     @Override
     public String getID() {
         return "health_white_list_1.3.0";
@@ -84,7 +89,8 @@ public class HealthLivingEntityList implements IConfigLoader<Map.Entry<EntityTyp
         float player = IConfigLoader.readOrWriteDefault(json, "DOWN_DAMAGE_RESISTANCE_PLAYER", 0.1f);
         boolean canLieDown = IConfigLoader.readOrWriteDefault(json, "CAN_LIE_DOWN", true) && PlatformService.CONFIG.ALLOW_DOWN();
         boolean canBeSeen = IConfigLoader.readOrWriteDefault(json, "CAN_BE_SEEN_WHEN_LYING", false);
-        EntityType.byString(json.get("id").getAsString()).ifPresent(type -> HEALTH_WHITE_LIST.put(type, new WhiteListRecord(evn, entity, player, canLieDown, canBeSeen)));
+        boolean callWhenDying = IConfigLoader.readOrWriteDefault(json, "CALL_WHEN_DYING", true);
+        EntityType.byString(json.get("id").getAsString()).ifPresent(type -> HEALTH_WHITE_LIST.put(type, new WhiteListRecord(evn, entity, player, canLieDown, canBeSeen, callWhenDying)));
     }
 
     @Override
@@ -97,6 +103,7 @@ public class HealthLivingEntityList implements IConfigLoader<Map.Entry<EntityTyp
                 "    \"DOWN_DAMAGE_RESISTANCE_PLAYER\":0.1,\n" +
                 "    \"CAN_LIE_DOWN\":true,\n" +
                 "    \"CAN_BE_SEEN_WHEN_LYING\":false\n" +
+                "    \"CALL_WHEN_DYING\":true\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"minecraft:villager\",\n" +
@@ -105,6 +112,7 @@ public class HealthLivingEntityList implements IConfigLoader<Map.Entry<EntityTyp
                 "    \"DOWN_DAMAGE_RESISTANCE_PLAYER\":0.1,\n" +
                 "    \"CAN_LIE_DOWN\":true,\n" +
                 "    \"CAN_BE_SEEN_WHEN_LYING\":false\n" +
+                "    \"CALL_WHEN_DYING\":false\n" +
                 "  },\n" +
                 "  {\n" +
                 "    \"id\":\"touhou_little_maid:maid\",\n" +
@@ -113,6 +121,7 @@ public class HealthLivingEntityList implements IConfigLoader<Map.Entry<EntityTyp
                 "    \"DOWN_DAMAGE_RESISTANCE_PLAYER\":0.1,\n" +
                 "    \"CAN_LIE_DOWN\":true,\n" +
                 "    \"CAN_BE_SEEN_WHEN_LYING\":false\n" +
+                "    \"CALL_WHEN_DYING\":true\n" +
                 "  }\n" +
                 "]";
     }
