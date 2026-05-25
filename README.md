@@ -23,3 +23,15 @@ Additional Resources:
 ==========
 Community Documentation: https://docs.neoforged.net/  
 NeoForged Discord: https://discord.neoforged.net/
+
+---
+
+<div align="center">
+
+[![73Info](https://img.shields.io/badge/Platform-73Info_柒叁信息-1a237e?style=flat)](https://73info.cn)
+
+🌐 **[73Info 柒叁信息](https://73info.cn)** — 开发者资源发现 · 需求对接 · 定制协作平台
+
+*需要定制 Minecraft 模组？来 73Info 发布你的需求。*
+
+</div>
