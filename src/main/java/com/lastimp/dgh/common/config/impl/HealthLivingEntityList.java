@@ -102,7 +102,7 @@ public class HealthLivingEntityList implements IConfigLoader<Map.Entry<EntityTyp
                 "    \"DOWN_DAMAGE_RESISTANCE_ENTITY\":0.1,\n" +
                 "    \"DOWN_DAMAGE_RESISTANCE_PLAYER\":0.1,\n" +
                 "    \"CAN_LIE_DOWN\":true,\n" +
-                "    \"CAN_BE_SEEN_WHEN_LYING\":false\n" +
+                "    \"CAN_BE_SEEN_WHEN_LYING\":false,\n" +
                 "    \"CALL_WHEN_DYING\":true\n" +
                 "  },\n" +
                 "  {\n" +
@@ -111,7 +111,7 @@ public class HealthLivingEntityList implements IConfigLoader<Map.Entry<EntityTyp
                 "    \"DOWN_DAMAGE_RESISTANCE_ENTITY\":0.1,\n" +
                 "    \"DOWN_DAMAGE_RESISTANCE_PLAYER\":0.1,\n" +
                 "    \"CAN_LIE_DOWN\":true,\n" +
-                "    \"CAN_BE_SEEN_WHEN_LYING\":false\n" +
+                "    \"CAN_BE_SEEN_WHEN_LYING\":false,\n" +
                 "    \"CALL_WHEN_DYING\":false\n" +
                 "  },\n" +
                 "  {\n" +
@@ -120,7 +120,7 @@ public class HealthLivingEntityList implements IConfigLoader<Map.Entry<EntityTyp
                 "    \"DOWN_DAMAGE_RESISTANCE_ENTITY\":0.1,\n" +
                 "    \"DOWN_DAMAGE_RESISTANCE_PLAYER\":0.1,\n" +
                 "    \"CAN_LIE_DOWN\":true,\n" +
-                "    \"CAN_BE_SEEN_WHEN_LYING\":false\n" +
+                "    \"CAN_BE_SEEN_WHEN_LYING\":false,\n" +
                 "    \"CALL_WHEN_DYING\":true\n" +
                 "  }\n" +
                 "]";
