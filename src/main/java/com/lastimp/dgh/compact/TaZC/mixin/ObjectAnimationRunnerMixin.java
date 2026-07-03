@@ -8,20 +8,15 @@ import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.entity.ReloadState;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(value = ObjectAnimationRunner.class, remap = false)
 public class ObjectAnimationRunnerMixin {
-    private @Unique long dgh$lastTimeUnscaled;
-    private @Unique long dgh$lastTimeScaled;
+    private @Shadow long lastUpdateNs;
 
     static {
         MixinExtrasBootstrap.init();
-    }
-
-    {
-        dgh$lastTimeScaled = dgh$lastTimeUnscaled = System.nanoTime();
     }
 
     @ModifyExpressionValue(
@@ -29,17 +24,17 @@ public class ObjectAnimationRunnerMixin {
             at = @At(value = "INVOKE", target = "Ljava/lang/System;nanoTime()J"))
     private long timeScaler(long original) {
         var player = Minecraft.getInstance().player;
-        return HealthCapability.getAndApply(player, (health) -> {
+        HealthCapability.getAndApply(player, (health) -> {
             var reloadState = IGunOperator.fromLivingEntity(player).getSynReloadState();
             boolean check = reloadState.getStateType() != ReloadState.StateType.NOT_RELOADING;
             check |= IGunOperator.fromLivingEntity(player).getSynIsBolting();
 
             var scale = check ? 1.0 - 0.4 * health.armBreak() : 1;
+            if (scale >= 1) return;
 
-            var deltaUnscaled = original - dgh$lastTimeUnscaled;
-            dgh$lastTimeUnscaled += deltaUnscaled;
-            dgh$lastTimeScaled += (long) (deltaUnscaled * scale);
-            return dgh$lastTimeScaled;
-        }, original);
+            var deltaUnscaled = original - lastUpdateNs;
+            lastUpdateNs += (long) (deltaUnscaled - (deltaUnscaled * scale));
+        });
+        return original;
     }
 }
