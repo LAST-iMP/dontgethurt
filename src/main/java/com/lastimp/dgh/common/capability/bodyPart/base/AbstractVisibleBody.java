@@ -577,12 +577,16 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     public float getArmor() {
         var bone = this.boneUUID();
-        return bone != null ? (float) this.armor.getModifier(bone).getAmount() : 0;
+        if (bone == null) return 0;
+        var modifier = this.armor.getModifier(bone);
+        return modifier == null ? 0 : (float) modifier.getAmount();
     }
 
     public float getRoughness() {
         var bone = this.boneUUID();
-        return bone != null ? (float) this.armor_toughness.getModifier(bone).getAmount() : 0;
+        if (bone == null) return 0;
+        var modifier = this.armor_toughness.getModifier(bone);
+        return modifier == null ? 0 : (float) modifier.getAmount();
     }
 
     public CompoundTag lightSerializeNBT() {

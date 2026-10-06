@@ -67,14 +67,19 @@ public class DyingHandler {
                 h.autoPulse().setStackInSlot(0, ItemStack.EMPTY);
             }
 
-            var lastDamageSource = entity.getLastDamageSource();
+//            var lastDamageSource = entity.getLastDamageSource();
+//            var record = h.lastEntityDamage();
+//            if (record != null) {
+//                lastDamageSource = new DamageSource(getKillerDamageType(entity, h), record.getDirectEntity(), record.getEntity(), record.getSourcePosition());
+//            } else {
+//                lastDamageSource = new DamageSource(getKillerDamageType(entity, h));
+//            }
+
             var record = h.lastEntityDamage();
-            if (record != null) {
-                lastDamageSource = new DamageSource(getKillerDamageType(entity, h), record.getDirectEntity(), record.getEntity(), record.getSourcePosition());
-            } else {
-                lastDamageSource = new DamageSource(getKillerDamageType(entity, h));
-            }
-            entity.hurt(lastDamageSource, entity.getHealth() + 1);
+            var lastDamageSource = (record == null) ?
+                    new DamageSource(getKillerDamageType(entity, h)) :
+                    new DamageSource(getKillerDamageType(entity, h), record.getDirectEntity(), record.getEntity(), record.getSourcePosition());
+            entity.hurt(lastDamageSource, Float.MAX_VALUE);
         });
     }
 
