@@ -1,131 +1,131 @@
 package com.lastimp.dgh.common.capability.bodyPart;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.lastimp.dgh.api.ComponentLevel;
+import com.lastimp.dgh.api.DGH_API;
+import com.lastimp.dgh.common.capability.bodyPart.base.*;
 import com.lastimp.dgh.common.capability.bodyPart.bodies.Blood;
 import com.lastimp.dgh.common.capability.bodyPart.bodies.Head;
 import com.lastimp.dgh.common.capability.bodyPart.bodies.Torso;
-import com.lastimp.dgh.common.capability.bodyPart.base.AbstractExtremities;
-import com.lastimp.dgh.common.capability.bodyPart.base.AbstractVisibleBody;
-import com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition;
-import com.lastimp.dgh.common.entry.IEntry;
 import com.lastimp.dgh.common.item.medicine.Sutures;
 import com.lastimp.dgh.common.item.tool.Scalpel;
-import com.lastimp.dgh.common.utils.Lazy;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 
 import java.util.*;
-import java.util.function.Function;
 
 import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
 
 public class ConditionAccessor {
-    public static final Map<ResourceLocation, Lazy<BodyCondition>> conditions = new HashMap<>();
-    public static final List<ResourceLocation> bloodConditions = new LinkedList<>();
-    public static final List<ResourceLocation> injuryConditions = new LinkedList<>();
-    public static final List<ResourceLocation> surgeryConditions = new LinkedList<>();
-    public static final List<ResourceLocation> painConditions = new LinkedList<>();
-    public static final List<ResourceLocation> comfortConditions = new LinkedList<>();
-    public static final List<ResourceLocation> resistConditions = new LinkedList<>();
-    public static final Set<ResourceLocation> eyeVisible = new HashSet<>();
-    public static final Set<ResourceLocation> selfHealing = new HashSet<>();
-    public static final Map<ResourceLocation, IEntry<Item>> bones = new HashMap<>();
-
-    public static ResourceLocation addCondition(ResourceLocation name, Function<ResourceLocation, BodyCondition> func) {
-        conditions.put(name, Lazy.of(() -> func.apply(name)));
-        return name;
-    }
-
-    public static BodyCondition get(ResourceLocation location) {
-        return conditions.get(location).get();
-    }
+    private static Phase phase = Phase.REGISTERING;
+    private static Map<ResourceLocation, BodyCondition> conditions = new HashMap<>();
+    private static List<ResourceLocation> bloodConditions = new LinkedList<>();
+    private static List<ResourceLocation> bodyConditions = new LinkedList<>();
+    private static List<ResourceLocation> resistConditions = new LinkedList<>();
 
     public static void init() {
-        AbstractVisibleBody.addCondition(List.of(
-                SURGERY_INCISION,
-                CLAMPED_BLEEDING,
-                RETRACTED_SKIN,
-                DRILLED_BONES,
-                SAWED_BONES,
+        BodyCondition.registerModCondition();
 
-                ARTERIAL_BLEEDING,
+        if (phase() != ConditionAccessor.Phase.REGISTERING) throw new RuntimeException("cannot build dgh body condition after initialized");
+        phase = Phase.BUILDING;
 
-                BURN,
-                INTERNAL_INJURY,
-                OPEN_WOUND,
-                PASS_THROUGH,
-                BLEED,
-                INFECTION,
-                FOREIGN_OBJECT,
-                BANDAGED,
-                HERB_BANDAGED,
-                BANDAGED_DIRTY,
-                OINTMENT,
-                CLAMPED_ARTERIES,
+        conditionInit();
+        handlerInit();
 
-                FRACTURE,
-                INTENSE_PAIN,
-                PLASTER_CAST,
-                CLAMP_PLATE,
-                BONE_DAMAGE,
-                BONE_DEATH,
-
-                BONE_WOOD,
-                BONE_STONE,
-                BONE_COPPER,
-                BONE_IRON,
-                BONE_GOLD,
-                BONE_DIMOND,
-                BONE_NETHERITE,
-
-                BURN_RES,
-                INTERNAL_RES,
-                OPEN_WOUND_RES
-        ));
-        AbstractExtremities.addCondition(List.of(
-                DISLOCATION,
-                GANGRENE,
-                SURGICAL_AMPUTATION,
-                TRAUMATIC_AMPUTATION
-        ));
-        Head.addCondition(List.of(
-                WITHDRAW,
-                TRAUMATIC_SHOCK,
-                BRAIN_DAMAGE,
-                COMA
-        ));
-        Blood.addCondition(List.of(
-                SEPSIS,
-                HEMOTRANSFUSION,
-                BLOOD_LOSS,
-                BLOOD_PRESSURE,
-                PH_LEVEL,
-                IMMUNITY,
-
-                OPIATE_OVERDOSE,
-                OPIATE_ADDICTED,
-                OXYGEN,
-                ANTIBIOTICS,
-                HARDENER
-        ));
-        Torso.addCondition(List.of(
-                ANALGESIA,
-                RESPIRATORY_ARREST,
-                AORTIC_RUPTURE,
-                HEARTRATE_INCREASE,
-                HEARTRATE_IRREGULAR,
-                HEARTRATE_STOP,
-                PNEUMOTHORAX,
-
-                PNEUMOTHORAX_NEEDLE
-        ));
-
-        conditions.values().forEach(Lazy::get);
+        phase = Phase.FROZEN;
 
         Sutures.addCoverOnHeal(SAWED_BONES);
         Scalpel.addDiscoverOnHeal(SAWED_BONES);
-        for (var key : bones.keySet()) {
-            Sutures.addCoverOnHeal(key);
-            Scalpel.addDiscoverOnHeal(key);
-        }
+    }
+
+    private static void conditionInit() {
+        DGH_API.conditionAPI.conditions().forEach((name, builder) -> {
+            var instance = builder.build();
+            conditions.put(name, instance);
+
+            if (builder.components == ComponentLevel.BLOOD) {
+                bloodConditions.add(name);
+            } else {
+                bodyConditions.add(name);
+            }
+
+            if (instance.isResist()) {
+                resistConditions.add(name);
+            }
+
+            switch (builder.components) {
+                case VISIBLE_BODY: AbstractVisibleBody.addCondition(name); break;
+                case EXTREMITIES: AbstractExtremities.addCondition(name); break;
+                case ARM: AbstractArm.addCondition(name); break;
+                case LEG: AbstractLeg.addCondition(name); break;
+                case TORSO: Torso.addCondition(name); break;
+                case HEAD: Head.addCondition(name); break;
+                case BLOOD: Blood.addCondition(name); break;
+                default:
+            }
+        });
+
+        conditions = ImmutableMap.copyOf(conditions);
+        bloodConditions = ImmutableList.copyOf(bloodConditions);
+        bodyConditions = ImmutableList.copyOf(bodyConditions);
+        resistConditions = ImmutableList.copyOf(resistConditions);
+    }
+
+    private static void handlerInit() {
+        DGH_API.conditionAPI.handlers().forEach((key, context) -> {
+            int priority = context.getLeft();
+            var handler = context.getMiddle();
+            ComponentLevel level = context.getRight();
+
+            switch (level) {
+                case VISIBLE_BODY: AbstractVisibleBody.addHandler(priority, handler); break;
+                case EXTREMITIES: AbstractExtremities.addHandler(priority, handler); break;
+                case ARM: AbstractArm.addHandler(priority, handler); break;
+                case LEG: AbstractLeg.addHandler(priority, handler); break;
+                case TORSO: Torso.addHandler(priority, handler); break;
+                case HEAD: Head.addHandler(priority, handler); break;
+                case BLOOD: Blood.addHandler(priority, handler); break;
+                default:
+            }
+        });
+    }
+
+    public static BodyCondition get(ResourceLocation location) {
+        needFrozen();
+        return conditions.get(location);
+    }
+
+    public static Map<ResourceLocation, BodyCondition> conditions() {
+        needFrozen();
+        return conditions;
+    }
+
+    public static List<ResourceLocation> bloodConditions() {
+        needFrozen();
+        return bloodConditions;
+    }
+
+    public static List<ResourceLocation> bodyConditions() {
+        needFrozen();
+        return bodyConditions;
+    }
+
+    public static List<ResourceLocation> resistConditions() {
+        needFrozen();
+        return resistConditions;
+    }
+
+    public static Phase phase() {
+        return phase;
+    }
+
+    private static void needFrozen() {
+        if (phase() != Phase.FROZEN) throw new RuntimeException("cannot operate before initialized");
+    }
+
+    public enum Phase {
+        REGISTERING,
+        BUILDING,
+        FROZEN
     }
 }

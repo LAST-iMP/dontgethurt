@@ -8,7 +8,6 @@ import com.lastimp.dgh.common.utils.Utils;
 import com.lastimp.dgh.common.capability.bodyPart.bodies.Head;
 import com.lastimp.dgh.common.capability.bodyPart.bodies.Torso;
 import com.lastimp.dgh.common.capability.HealthCapability;
-import com.lastimp.dgh.common.item.tool.SurgeryBones;
 import com.lastimp.dgh.common.entry.register.ModEffects;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -16,19 +15,26 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
 import static com.lastimp.dgh.common.enums.BodyComponents.*;
 
 public abstract class AbstractVisibleBody extends AbstractBody {
     private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
+    private static final Map<Integer, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> uniqueHandlers = new TreeMap<>();
     private static List<ResourceLocation> ANY_BODY_CONDITIONS;
+    private static Map<Integer, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> ANY_BODY_HANDLERS;
+
+    private int nextFractureTick = 1200;
+    private float conditionDisplayValue;
+    private float red;
+    private float green;
+    private float blue;
     private float nextTickBleed;
 
     private AttributeInstance armor;
@@ -42,14 +48,12 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     private UUID uuid_bone_dimond;
     private UUID uuid_bone_netherite;
 
-    private int nextFractureTick = 1200;
-    private float conditionDisplayValue;
-    private float red;
-    private float green;
-    private float blue;
+    public static void addCondition(ResourceLocation key) {
+        uniqueConditions.add(key);
+    }
 
-    public static void addCondition(Collection<ResourceLocation> key) {
-        uniqueConditions.addAll(key);
+    public static void addHandler(int priority, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>> handler) {
+        uniqueHandlers.put(priority, handler);
     }
 
     @Override
@@ -58,6 +62,14 @@ public abstract class AbstractVisibleBody extends AbstractBody {
             ANY_BODY_CONDITIONS = new ArrayList<>(uniqueConditions);
         }
         return ANY_BODY_CONDITIONS;
+    }
+
+    @Override
+    protected Map<Integer, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> getHandlers() {
+        if (ANY_BODY_HANDLERS == null) {
+            ANY_BODY_HANDLERS = new TreeMap<>(uniqueHandlers);
+        }
+        return ANY_BODY_HANDLERS;
     }
 
     @Override
@@ -72,7 +84,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         handleFracture(health);
         handleSurgery(health);
         handleBleeding();
-        updateBoneEffect(entity);
+//        updateBoneEffect(entity);
         handleBoneDamage(health);
         handleBoneDeath();
         return this;
@@ -165,8 +177,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     protected boolean visibilityCheck(AbstractBody body, ResourceLocation key) {
         if (!HealthScanner.healthScannerConditions().contains(key)) return false;
-//        if (!this.menu.isDevice && !HealthScanner.eyesightConditions().contains(key)) return false;
-        if (ConditionAccessor.resistConditions.contains(key) && body.abnormalWithHidden(key)) return true;
+        if (ConditionAccessor.resistConditions().contains(key) && body.abnormalWithHidden(key)) return true;
         if (!ConditionAccessor.get(key).abnormal(body.getCondition(key).getDisplayValue())) return false;
         return true;
     }
@@ -368,153 +379,153 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         }
     }
 
-    protected void updateBoneEffect(LivingEntity entity) {
-        if (armor == null) armor = entity.getAttribute(Attributes.ARMOR);
-        if (armor_toughness == null) armor_toughness = entity.getAttribute(Attributes.ARMOR_TOUGHNESS);
-        if (knock_back_resist == null) knock_back_resist = entity.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
-
-        updateStoneBoneEffect();
-        updateCopperBoneEffect();
-        updateIronBoneEffect();
-        updateGoldBoneEffect();
-        updateDimondBoneEffect();
-        updateNetheriteBoneEffect();
-    }
-
-    private void updateStoneBoneEffect() {
-        if (uuid_bone_stone == null)
-            uuid_bone_stone = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_STONE);
-
-        if (this.getConditionHidden(BONE_STONE) > ConditionAccessor.get(BONE_STONE).maxValue() - Utils.EPS) {
-            if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_stone) == null)
-                knock_back_resist.addPermanentModifier(new AttributeModifier(
-                        uuid_bone_stone,
-                        "bone_stone",
-                        0.15,
-                        AttributeModifier.Operation.ADDITION
-                ));
-            if (armor != null && armor.getModifier(uuid_bone_stone) == null)
-                armor.addPermanentModifier(new AttributeModifier(
-                        uuid_bone_stone,
-                        "bone_stone",
-                        0.5,
-                        AttributeModifier.Operation.ADDITION
-                ));
-        } else {
-            if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_stone) != null)
-                knock_back_resist.removeModifier(uuid_bone_stone);
-            if (armor != null && armor.getModifier(uuid_bone_stone) != null)
-                armor.removeModifier(uuid_bone_stone);
-        }
-    }
-
-    private void updateCopperBoneEffect() {
-        if (uuid_bone_copper == null)
-            uuid_bone_copper = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_COPPER);
-
-        if (this.getConditionHidden(BONE_COPPER) > ConditionAccessor.get(BONE_COPPER).maxValue() - Utils.EPS) {
-            if (armor != null && armor.getModifier(uuid_bone_copper) == null)
-                armor.addPermanentModifier(new AttributeModifier(
-                        uuid_bone_copper,
-                        "bone_copper",
-                        0.5,
-                        AttributeModifier.Operation.ADDITION
-                ));
-            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_copper) == null)
-                armor_toughness.addPermanentModifier(new AttributeModifier(
-                        uuid_bone_copper,
-                        "bone_copper",
-                        0.5,
-                        AttributeModifier.Operation.ADDITION
-                ));
-        } else {
-            if (armor != null && armor.getModifier(uuid_bone_copper) != null)
-                armor.removeModifier(uuid_bone_copper);
-            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_copper) != null)
-                armor_toughness.removeModifier(uuid_bone_copper);
-        }
-    }
-
-    private void updateIronBoneEffect() {
-        if (uuid_bone_iron == null)
-            uuid_bone_iron = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_IRON);
-
-        if (this.getConditionHidden(BONE_IRON) > ConditionAccessor.get(BONE_IRON).maxValue() - Utils.EPS) {
-            if (armor != null && armor.getModifier(uuid_bone_iron) == null)
-                armor.addPermanentModifier(new AttributeModifier(
-                        uuid_bone_iron,
-                        "bone_iron",
-                        1,
-                        AttributeModifier.Operation.ADDITION
-                ));
-        } else {
-            if (armor != null && armor.getModifier(uuid_bone_iron) != null)
-                armor.removeModifier(uuid_bone_iron);
-        }
-    }
-
-    private void updateGoldBoneEffect() {
-        if (uuid_bone_gold == null)
-            uuid_bone_gold = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_GOLD);
-
-        if (this.getConditionHidden(BONE_GOLD) > ConditionAccessor.get(BONE_GOLD).maxValue() - Utils.EPS) {
-            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_gold) == null)
-                armor_toughness.addPermanentModifier(new AttributeModifier(
-                        uuid_bone_gold,
-                        "bone_gold",
-                        2,
-                        AttributeModifier.Operation.ADDITION
-                ));
-        } else {
-            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_gold) != null)
-                armor_toughness.removeModifier(uuid_bone_gold);
-        }
-    }
-
-    private void updateDimondBoneEffect() {
-        if (uuid_bone_dimond == null)
-            uuid_bone_dimond = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_DIMOND);
-
-        if (this.getConditionHidden(BONE_DIMOND) > ConditionAccessor.get(BONE_DIMOND).maxValue() - Utils.EPS) {
-            if (armor != null && armor.getModifier(uuid_bone_dimond) == null)
-                armor.addPermanentModifier(new AttributeModifier(
-                        uuid_bone_dimond,
-                        "bone_dimond",
-                        2,
-                        AttributeModifier.Operation.ADDITION
-                ));
-        } else {
-            if (armor != null && armor.getModifier(uuid_bone_dimond) != null)
-                armor.removeModifier(uuid_bone_dimond);
-        }
-    }
-
-    private void updateNetheriteBoneEffect() {
-        if (uuid_bone_netherite == null)
-            uuid_bone_netherite = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
-
-        if (this.getConditionHidden(BONE_NETHERITE) > ConditionAccessor.get(BONE_NETHERITE).maxValue() - Utils.EPS) {
-            if (armor != null && armor.getModifier(uuid_bone_netherite) == null)
-                armor.addPermanentModifier(new AttributeModifier(
-                        uuid_bone_netherite,
-                        "arm_bone_netherite",
-                        2,
-                        AttributeModifier.Operation.ADDITION
-                ));
-            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_netherite) == null)
-                armor_toughness.addPermanentModifier(new AttributeModifier(
-                        uuid_bone_netherite,
-                        "arm_bone_netherite",
-                        1,
-                        AttributeModifier.Operation.ADDITION
-                ));
-        } else {
-            if (armor != null && armor.getModifier(uuid_bone_netherite) != null)
-                armor.removeModifier(uuid_bone_netherite);
-            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_netherite) != null)
-                armor_toughness.removeModifier(uuid_bone_netherite);
-        }
-    }
+//    protected void updateBoneEffect(LivingEntity entity) {
+//        if (armor == null) armor = entity.getAttribute(Attributes.ARMOR);
+//        if (armor_toughness == null) armor_toughness = entity.getAttribute(Attributes.ARMOR_TOUGHNESS);
+//        if (knock_back_resist == null) knock_back_resist = entity.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
+//
+//        updateStoneBoneEffect();
+//        updateCopperBoneEffect();
+//        updateIronBoneEffect();
+//        updateGoldBoneEffect();
+//        updateDimondBoneEffect();
+//        updateNetheriteBoneEffect();
+//    }
+//
+//    private void updateStoneBoneEffect() {
+//        if (uuid_bone_stone == null)
+//            uuid_bone_stone = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_STONE);
+//
+//        if (this.getConditionHidden(BONE_STONE) > ConditionAccessor.get(BONE_STONE).maxValue() - Utils.EPS) {
+//            if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_stone) == null)
+//                knock_back_resist.addPermanentModifier(new AttributeModifier(
+//                        uuid_bone_stone,
+//                        "bone_stone",
+//                        0.15,
+//                        AttributeModifier.Operation.ADDITION
+//                ));
+//            if (armor != null && armor.getModifier(uuid_bone_stone) == null)
+//                armor.addPermanentModifier(new AttributeModifier(
+//                        uuid_bone_stone,
+//                        "bone_stone",
+//                        0.5,
+//                        AttributeModifier.Operation.ADDITION
+//                ));
+//        } else {
+//            if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_stone) != null)
+//                knock_back_resist.removeModifier(uuid_bone_stone);
+//            if (armor != null && armor.getModifier(uuid_bone_stone) != null)
+//                armor.removeModifier(uuid_bone_stone);
+//        }
+//    }
+//
+//    private void updateCopperBoneEffect() {
+//        if (uuid_bone_copper == null)
+//            uuid_bone_copper = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_COPPER);
+//
+//        if (this.getConditionHidden(BONE_COPPER) > ConditionAccessor.get(BONE_COPPER).maxValue() - Utils.EPS) {
+//            if (armor != null && armor.getModifier(uuid_bone_copper) == null)
+//                armor.addPermanentModifier(new AttributeModifier(
+//                        uuid_bone_copper,
+//                        "bone_copper",
+//                        0.5,
+//                        AttributeModifier.Operation.ADDITION
+//                ));
+//            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_copper) == null)
+//                armor_toughness.addPermanentModifier(new AttributeModifier(
+//                        uuid_bone_copper,
+//                        "bone_copper",
+//                        0.5,
+//                        AttributeModifier.Operation.ADDITION
+//                ));
+//        } else {
+//            if (armor != null && armor.getModifier(uuid_bone_copper) != null)
+//                armor.removeModifier(uuid_bone_copper);
+//            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_copper) != null)
+//                armor_toughness.removeModifier(uuid_bone_copper);
+//        }
+//    }
+//
+//    private void updateIronBoneEffect() {
+//        if (uuid_bone_iron == null)
+//            uuid_bone_iron = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_IRON);
+//
+//        if (this.getConditionHidden(BONE_IRON) > ConditionAccessor.get(BONE_IRON).maxValue() - Utils.EPS) {
+//            if (armor != null && armor.getModifier(uuid_bone_iron) == null)
+//                armor.addPermanentModifier(new AttributeModifier(
+//                        uuid_bone_iron,
+//                        "bone_iron",
+//                        1,
+//                        AttributeModifier.Operation.ADDITION
+//                ));
+//        } else {
+//            if (armor != null && armor.getModifier(uuid_bone_iron) != null)
+//                armor.removeModifier(uuid_bone_iron);
+//        }
+//    }
+//
+//    private void updateGoldBoneEffect() {
+//        if (uuid_bone_gold == null)
+//            uuid_bone_gold = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_GOLD);
+//
+//        if (this.getConditionHidden(BONE_GOLD) > ConditionAccessor.get(BONE_GOLD).maxValue() - Utils.EPS) {
+//            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_gold) == null)
+//                armor_toughness.addPermanentModifier(new AttributeModifier(
+//                        uuid_bone_gold,
+//                        "bone_gold",
+//                        2,
+//                        AttributeModifier.Operation.ADDITION
+//                ));
+//        } else {
+//            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_gold) != null)
+//                armor_toughness.removeModifier(uuid_bone_gold);
+//        }
+//    }
+//
+//    private void updateDimondBoneEffect() {
+//        if (uuid_bone_dimond == null)
+//            uuid_bone_dimond = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_DIMOND);
+//
+//        if (this.getConditionHidden(BONE_DIMOND) > ConditionAccessor.get(BONE_DIMOND).maxValue() - Utils.EPS) {
+//            if (armor != null && armor.getModifier(uuid_bone_dimond) == null)
+//                armor.addPermanentModifier(new AttributeModifier(
+//                        uuid_bone_dimond,
+//                        "bone_dimond",
+//                        2,
+//                        AttributeModifier.Operation.ADDITION
+//                ));
+//        } else {
+//            if (armor != null && armor.getModifier(uuid_bone_dimond) != null)
+//                armor.removeModifier(uuid_bone_dimond);
+//        }
+//    }
+//
+//    private void updateNetheriteBoneEffect() {
+//        if (uuid_bone_netherite == null)
+//            uuid_bone_netherite = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
+//
+//        if (this.getConditionHidden(BONE_NETHERITE) > ConditionAccessor.get(BONE_NETHERITE).maxValue() - Utils.EPS) {
+//            if (armor != null && armor.getModifier(uuid_bone_netherite) == null)
+//                armor.addPermanentModifier(new AttributeModifier(
+//                        uuid_bone_netherite,
+//                        "arm_bone_netherite",
+//                        2,
+//                        AttributeModifier.Operation.ADDITION
+//                ));
+//            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_netherite) == null)
+//                armor_toughness.addPermanentModifier(new AttributeModifier(
+//                        uuid_bone_netherite,
+//                        "arm_bone_netherite",
+//                        1,
+//                        AttributeModifier.Operation.ADDITION
+//                ));
+//        } else {
+//            if (armor != null && armor.getModifier(uuid_bone_netherite) != null)
+//                armor.removeModifier(uuid_bone_netherite);
+//            if (armor_toughness != null && armor_toughness.getModifier(uuid_bone_netherite) != null)
+//                armor_toughness.removeModifier(uuid_bone_netherite);
+//        }
+//    }
 
     public boolean isBandaged() {
         return this.abnormal(BANDAGED);
@@ -530,33 +541,33 @@ public abstract class AbstractVisibleBody extends AbstractBody {
 
     public float fractThreshold () {
         float value = PlatformService.CONFIG.BASE_FRACTURE_THRESHOLD();
-        var bone = this.boneCrafted();
-        if (bone == BONE_COPPER) {
-            value += 0.1f;
-        } else if (bone == BONE_GOLD) {
-            value += 0.2f;
-        } else if (bone == BONE_IRON) {
-            value += 0.05f;
-        } else if (bone == BONE_NETHERITE) {
-            value += 0.1f;
-        }
+//        var bone = this.boneCrafted();
+//        if (bone == BONE_COPPER) {
+//            value += 0.1f;
+//        } else if (bone == BONE_GOLD) {
+//            value += 0.2f;
+//        } else if (bone == BONE_IRON) {
+//            value += 0.05f;
+//        } else if (bone == BONE_NETHERITE) {
+//            value += 0.1f;
+//        }
         return value;
     }
 
     public int fractCheckTimes (HealthCapability health) {
         var bone = this.boneCrafted();
         var base = health.getComponent(BLOOD).abnormal(HARDENER) ? 1 : 0;
-        if (bone == BONE_WOOD) return base-1;
-        if (bone == BONE_DIMOND) return base+1;
-        if (bone == BONE_NETHERITE) return base+1;
+//        if (bone == BONE_WOOD) return base-1;
+//        if (bone == BONE_DIMOND) return base+1;
+//        if (bone == BONE_NETHERITE) return base+1;
         return base;
     }
 
     public ResourceLocation boneCrafted() {
-        for (var key : ConditionAccessor.bones.keySet()) {
-            if (this.abnormalWithHidden(key))
-                return key;
-        }
+//        for (var key : ConditionAccessor.bones.keySet()) {
+//            if (this.abnormalWithHidden(key))
+//                return key;
+//        }
         return null;
     }
 
@@ -565,13 +576,13 @@ public abstract class AbstractVisibleBody extends AbstractBody {
     }
 
     public UUID boneUUID() {
-        ResourceLocation bone = this.boneCrafted();
-        if (BONE_STONE.equals(bone)) return uuid_bone_stone;
-        if (BONE_COPPER.equals(bone)) return uuid_bone_copper;
-        if (BONE_IRON.equals(bone)) return uuid_bone_iron;
-        if (BONE_GOLD.equals(bone)) return uuid_bone_gold;
-        if (BONE_DIMOND.equals(bone)) return uuid_bone_dimond;
-        if (BONE_NETHERITE.equals(bone)) return uuid_bone_netherite;
+//        ResourceLocation bone = this.boneCrafted();
+//        if (BONE_STONE.equals(bone)) return uuid_bone_stone;
+//        if (BONE_COPPER.equals(bone)) return uuid_bone_copper;
+//        if (BONE_IRON.equals(bone)) return uuid_bone_iron;
+//        if (BONE_GOLD.equals(bone)) return uuid_bone_gold;
+//        if (BONE_DIMOND.equals(bone)) return uuid_bone_dimond;
+//        if (BONE_NETHERITE.equals(bone)) return uuid_bone_netherite;
         return null;
     }
 

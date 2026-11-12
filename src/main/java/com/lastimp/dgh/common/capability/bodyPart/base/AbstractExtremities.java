@@ -10,11 +10,10 @@ import com.lastimp.dgh.common.utils.Utils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
+import org.apache.commons.lang3.tuple.Triple;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
 
 import static com.lastimp.dgh.common.enums.BodyComponents.TORSO;
 import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
@@ -22,11 +21,21 @@ import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.ANAL
 
 public abstract class AbstractExtremities extends AbstractVisibleBody {
     private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
+    private static final Map<Integer, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> uniqueHandlers = new TreeMap<>();
     private static List<ResourceLocation> EXTREMITY_CONDITIONS;
+    private static Map<Integer, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> EXTREMITY_HANDLERS;
     private int tourniquetTick = 0;
+
+    public static void addCondition(ResourceLocation key) {
+        uniqueConditions.add(key);
+    }
 
     public static void addCondition(Collection<ResourceLocation> key) {
         uniqueConditions.addAll(key);
+    }
+
+    public static void addHandler(int priority, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>> handler) {
+        uniqueHandlers.put(priority, handler);
     }
 
     @Override
@@ -41,6 +50,15 @@ public abstract class AbstractExtremities extends AbstractVisibleBody {
             EXTREMITY_CONDITIONS.addAll(uniqueConditions);
         }
         return EXTREMITY_CONDITIONS;
+    }
+
+    @Override
+    protected Map<Integer, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> getHandlers() {
+        if (EXTREMITY_HANDLERS == null) {
+            EXTREMITY_HANDLERS = new TreeMap<>(super.getHandlers());
+            EXTREMITY_HANDLERS.putAll(uniqueHandlers);
+        }
+        return EXTREMITY_HANDLERS;
     }
 
     @Override

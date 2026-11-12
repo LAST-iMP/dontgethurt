@@ -99,7 +99,7 @@ public class Command {
         CommandSourceStack source = context.getSource();
         source.sendSuccess(() -> {
                     var message = Component.empty();
-                    for (var condition : ConditionAccessor.conditions.keySet())
+                    for (var condition : ConditionAccessor.conditions().keySet())
                         message.append(condition + ", ");
                     return message;
                 },true

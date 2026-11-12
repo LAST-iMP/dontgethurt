@@ -44,7 +44,7 @@ public class BloodScanner extends AbstractHealingItem {
     public static void scanHealth(Player player, HealthCapability health, String name) {
         Blood blood = (Blood) health.getComponent(BodyComponents.BLOOD);
         boolean hasAbnormal = false;
-        for (var condition : ConditionAccessor.bloodConditions) {
+        for (var condition : ConditionAccessor.bloodConditions()) {
             float value = blood.getConditionValue(condition);
             if (blood.abnormal(condition)) {
                 if (!hasAbnormal)

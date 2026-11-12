@@ -34,7 +34,6 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     public static final int ORGAN_2_END = 24;
     public static final int ORGAN_3_START = 24;
     public static final int ORGAN_3_END = 36;
-    private static final HashMap<String, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> handlers = new LinkedHashMap<>();
 
     private final DynamicValidItemHandler organ = new DynamicValidItemHandler(36, 64);
     private final HashMap<ResourceLocation, ConditionState> state = new HashMap<>();
@@ -51,11 +50,9 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
         this.addOriginOrgan(null, true);
     }
 
-    public static void addHandler(String ID, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>> handler) {
-        handlers.put(ID, handler);
-    }
-
     public abstract List<ResourceLocation> getBodyConditions();
+
+    protected abstract Map<Integer, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> getHandlers();
 
     public abstract float getVitalityWeight();
 
@@ -159,7 +156,7 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
     }
 
     public AbstractBody update(HealthCapability health, LivingEntity entity) {
-        for (var handler : handlers.values()) {
+        for (var handler : this.getHandlers().values()) {
             handler.accept(Triple.of(health, entity, this));
         }
         return this;
@@ -199,7 +196,7 @@ public abstract class AbstractBody implements INBTSerializable<CompoundTag> {
 
     private void selfHealing() {
         for (var key : this.getBodyConditions()) {
-            if (!ConditionAccessor.selfHealing.contains(key)) continue;
+            if (!ConditionAccessor.get(key).isSelfHealing()) continue;
             if (!this.abnormal(key)) continue;
             var condition = ConditionAccessor.get(key);
             if (this.getConditionValue(key) < condition.healingTS() + EPS)

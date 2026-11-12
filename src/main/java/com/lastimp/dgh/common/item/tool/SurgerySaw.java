@@ -81,8 +81,8 @@ public class SurgerySaw extends AbstractPartlyHealItem {
         if (boneKey == null) {
             Utils.drop(ModItems.BONE_NATURAL.get(), player, boneReturn);
         } else {
-            Utils.drop(ConditionAccessor.bones.get(boneKey).get(), player, boneReturn);
-            body.setConditionValue(boneKey, ConditionAccessor.get(boneKey).defaultValue());
+//            Utils.drop(ConditionAccessor.bones.get(boneKey).get(), player, boneReturn);
+//            body.setConditionValue(boneKey, ConditionAccessor.get(boneKey).defaultValue());
         }
         return true;
     }
@@ -101,18 +101,18 @@ public class SurgerySaw extends AbstractPartlyHealItem {
     }
 
     public static void sawExcept(LivingEntity source, AbstractBody body, ResourceLocation exception, int maxAmount) {
-        float returnFactor = body.getConditionValue(FRACTURE) + body.getConditionValue(BONE_DAMAGE) + body.getConditionValue(BONE_DEATH);
-        int boneReturn = (int) (maxAmount * (1.0 - Math.min(1.0, returnFactor)));
-        for (var key : ConditionAccessor.bones.keySet()) {
-            if (body.abnormal(key) && key != exception) {
-                Utils.drop(ConditionAccessor.bones.get(key).get(), source, (int)(boneReturn * body.getConditionValue(key)));
-                body.setConditionValue(key, ConditionAccessor.get(key).defaultValue());
-            }
-        }
-        if (exception != null) {
-            Utils.drop(ModItems.BONE_NATURAL.get(), source, (int)(boneReturn * (1.0f - body.getConditionValue(SAWED_BONES))));
-            body.setConditionValue(SAWED_BONES, ConditionAccessor.get(SAWED_BONES).maxValue());
-        }
+//        float returnFactor = body.getConditionValue(FRACTURE) + body.getConditionValue(BONE_DAMAGE) + body.getConditionValue(BONE_DEATH);
+//        int boneReturn = (int) (maxAmount * (1.0 - Math.min(1.0, returnFactor)));
+//        for (var key : ConditionAccessor.bones.keySet()) {
+//            if (body.abnormal(key) && key != exception) {
+//                Utils.drop(ConditionAccessor.bones.get(key).get(), source, (int)(boneReturn * body.getConditionValue(key)));
+//                body.setConditionValue(key, ConditionAccessor.get(key).defaultValue());
+//            }
+//        }
+//        if (exception != null) {
+//            Utils.drop(ModItems.BONE_NATURAL.get(), source, (int)(boneReturn * (1.0f - body.getConditionValue(SAWED_BONES))));
+//            body.setConditionValue(SAWED_BONES, ConditionAccessor.get(SAWED_BONES).maxValue());
+//        }
     }
 
     private boolean sawHead(LivingEntity source, LivingEntity entity) {

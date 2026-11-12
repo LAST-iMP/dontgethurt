@@ -173,7 +173,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
                 var bone = visibleBody.boneCrafted();
                 int color = bone == null ? ConditionAccessor.get(FRACTURE).color() : ConditionAccessor.get(bone).color();
                 widget.setPortionColor(color);
-            } else if (ConditionAccessor.resistConditions.contains(condition)) {
+            } else if (ConditionAccessor.resistConditions().contains(condition)) {
                 float addition = Math.max(0, bodyPart.getCondition(condition).getHiddenValue());
                 float armorRes = healthData.armorResist(this.selectedComponent, condition);
                 ((DynamicBarHealthWidget) widget).setBarSeverity(addition, armorRes);
@@ -192,7 +192,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
         if (this.onOrgan) return false;
         if (!HealthScanner.healthScannerConditions().contains(key)) return false;
         if (!this.menu.isDevice && !HealthScanner.eyesightConditions().contains(key)) return false;
-        if (ConditionAccessor.resistConditions.contains(key) && (body.abnormalWithHidden(key) || healthData.armorResist(this.selectedComponent, key) > 0)) return true;
+        if (ConditionAccessor.resistConditions().contains(key) && (body.abnormalWithHidden(key) || healthData.armorResist(this.selectedComponent, key) > 0)) return true;
         if (!ConditionAccessor.get(key).abnormal(body.getCondition(key).getDisplayValue())) return false;
         return true;
     }

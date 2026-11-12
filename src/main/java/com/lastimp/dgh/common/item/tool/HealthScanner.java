@@ -28,11 +28,8 @@ public class HealthScanner extends AbstractHealingItem {
     public static List<ResourceLocation> healthScannerConditions() {
         if (HEALTH_SCANNER_CONDITIONS == null) {
             HEALTH_SCANNER_CONDITIONS = new LinkedList<>();
-            HEALTH_SCANNER_CONDITIONS.addAll(ConditionAccessor.injuryConditions);
-            HEALTH_SCANNER_CONDITIONS.addAll(ConditionAccessor.surgeryConditions);
-            HEALTH_SCANNER_CONDITIONS.addAll(ConditionAccessor.painConditions);
-            HEALTH_SCANNER_CONDITIONS.addAll(ConditionAccessor.comfortConditions);
-            HEALTH_SCANNER_CONDITIONS.addAll(ConditionAccessor.resistConditions);
+            HEALTH_SCANNER_CONDITIONS.addAll(ConditionAccessor.bodyConditions());
+            HEALTH_SCANNER_CONDITIONS.addAll(ConditionAccessor.resistConditions());
         }
         return HEALTH_SCANNER_CONDITIONS;
     }
@@ -42,7 +39,7 @@ public class HealthScanner extends AbstractHealingItem {
         if (EYESIGHT_CONDITIONS == null) {
             EYESIGHT_CONDITIONS = new LinkedList<>();
             for (var condition : HEALTH_SCANNER_CONDITIONS) {
-                if (ConditionAccessor.eyeVisible.contains(condition))
+                if (ConditionAccessor.get(condition).eyeVisible())
                     EYESIGHT_CONDITIONS.add(condition);
             }
         }

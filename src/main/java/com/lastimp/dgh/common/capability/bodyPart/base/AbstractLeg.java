@@ -3,25 +3,59 @@ package com.lastimp.dgh.common.capability.bodyPart.base;
 import com.lastimp.dgh.common.enums.BodyComponents;
 import com.lastimp.dgh.common.tags.ModTags;
 import com.lastimp.dgh.common.capability.HealthCapability;
-import com.lastimp.dgh.common.item.tool.SurgeryBones;
 import com.lastimp.dgh.common.utils.Utils;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
+import org.apache.commons.lang3.tuple.Triple;
 
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
 
 import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.BONE_NETHERITE;
-import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.BONE_WOOD;
 
 public abstract class AbstractLeg extends AbstractExtremities{
+    private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
+    private static final Map<Integer, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> uniqueHandlers = new TreeMap<>();
+    private static List<ResourceLocation> LEG_CONDITIONS;
+    private static Map<Integer, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> LEG_HANDLERS;
+
     private AttributeInstance move_speed;
     private AttributeInstance jump_strength;
 
     private UUID uuid_bone_wood;
     private UUID uuid_bone_netherite;
+
+    public static void addCondition(ResourceLocation key) {
+        uniqueConditions.add(key);
+    }
+
+    public static void addCondition(Collection<ResourceLocation> key) {
+        uniqueConditions.addAll(key);
+    }
+
+    public static void addHandler(int priority, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>> handler) {
+        uniqueHandlers.put(priority, handler);
+    }
+
+    @Override
+    public List<ResourceLocation> getBodyConditions() {
+        if (LEG_CONDITIONS == null) {
+            LEG_CONDITIONS = new ArrayList<>(super.getBodyConditions());
+            LEG_CONDITIONS.addAll(uniqueConditions);
+        }
+        return LEG_CONDITIONS;
+    }
+
+    @Override
+    protected Map<Integer, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> getHandlers() {
+        if (LEG_HANDLERS == null) {
+            LEG_HANDLERS = new TreeMap<>(super.getHandlers());
+            LEG_HANDLERS.putAll(uniqueHandlers);
+        }
+        return LEG_HANDLERS;
+    }
 
     @Override
     public int slowDownLevel(HealthCapability health) {
@@ -34,51 +68,51 @@ public abstract class AbstractLeg extends AbstractExtremities{
         this.organ().addAllowed(ModTags.ORGAN_LEG);
     }
 
-    @Override
-    protected void updateBoneEffect(LivingEntity entity) {
-        super.updateBoneEffect(entity);
-        if (move_speed == null) move_speed = entity.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (jump_strength == null) jump_strength = entity.getAttribute(Attributes.JUMP_STRENGTH);
-
-        updateWoodBoneEffect();
-        updateNetheriteBoneEffect();
-    }
-
-    private void updateWoodBoneEffect() {
-        if (uuid_bone_wood == null)
-            uuid_bone_wood = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_WOOD);
-
-        if (this.getConditionHidden(BONE_WOOD) > ConditionAccessor.get(BONE_WOOD).maxValue() - Utils.EPS) {
-            if (move_speed != null && move_speed.getModifier(uuid_bone_wood) == null)
-                move_speed.addPermanentModifier(new AttributeModifier(
-                        uuid_bone_wood,
-                        "arm_bone_wood",
-                        0.1,
-                        AttributeModifier.Operation.MULTIPLY_BASE
-                ));
-        } else {
-            if (move_speed != null && move_speed.getModifier(uuid_bone_wood) != null)
-                move_speed.removeModifier(uuid_bone_wood);
-        }
-    }
-
-    private void updateNetheriteBoneEffect() {
-        if (uuid_bone_netherite == null)
-            uuid_bone_netherite = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
-
-        if (this.getConditionHidden(BONE_NETHERITE) > ConditionAccessor.get(BONE_NETHERITE).maxValue() - Utils.EPS) {
-            if (jump_strength != null && jump_strength.getModifier(uuid_bone_netherite) == null)
-                jump_strength.addPermanentModifier(new AttributeModifier(
-                        uuid_bone_netherite,
-                        "arm_bone_netherite",
-                        0.1,
-                        AttributeModifier.Operation.ADDITION
-                ));
-        } else {
-            if (jump_strength != null && jump_strength.getModifier(uuid_bone_netherite) != null)
-                jump_strength.removeModifier(uuid_bone_netherite);
-        }
-    }
+//    @Override
+//    protected void updateBoneEffect(LivingEntity entity) {
+//        super.updateBoneEffect(entity);
+//        if (move_speed == null) move_speed = entity.getAttribute(Attributes.MOVEMENT_SPEED);
+//        if (jump_strength == null) jump_strength = entity.getAttribute(Attributes.JUMP_STRENGTH);
+//
+//        updateWoodBoneEffect();
+//        updateNetheriteBoneEffect();
+//    }
+//
+//    private void updateWoodBoneEffect() {
+//        if (uuid_bone_wood == null)
+//            uuid_bone_wood = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_WOOD);
+//
+//        if (this.getConditionHidden(BONE_WOOD) > ConditionAccessor.get(BONE_WOOD).maxValue() - Utils.EPS) {
+//            if (move_speed != null && move_speed.getModifier(uuid_bone_wood) == null)
+//                move_speed.addPermanentModifier(new AttributeModifier(
+//                        uuid_bone_wood,
+//                        "arm_bone_wood",
+//                        0.1,
+//                        AttributeModifier.Operation.MULTIPLY_BASE
+//                ));
+//        } else {
+//            if (move_speed != null && move_speed.getModifier(uuid_bone_wood) != null)
+//                move_speed.removeModifier(uuid_bone_wood);
+//        }
+//    }
+//
+//    private void updateNetheriteBoneEffect() {
+//        if (uuid_bone_netherite == null)
+//            uuid_bone_netherite = UUID.fromString(this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
+//
+//        if (this.getConditionHidden(BONE_NETHERITE) > ConditionAccessor.get(BONE_NETHERITE).maxValue() - Utils.EPS) {
+//            if (jump_strength != null && jump_strength.getModifier(uuid_bone_netherite) == null)
+//                jump_strength.addPermanentModifier(new AttributeModifier(
+//                        uuid_bone_netherite,
+//                        "arm_bone_netherite",
+//                        0.1,
+//                        AttributeModifier.Operation.ADDITION
+//                ));
+//        } else {
+//            if (jump_strength != null && jump_strength.getModifier(uuid_bone_netherite) != null)
+//                jump_strength.removeModifier(uuid_bone_netherite);
+//        }
+//    }
 
     public static int onFall(LivingEntity livingEntity) {
         if (!HealthCapability.has(livingEntity)) return 0;
