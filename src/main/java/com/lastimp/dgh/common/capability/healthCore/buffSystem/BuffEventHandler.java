@@ -35,20 +35,20 @@ public class BuffEventHandler {
     }
 
     private static void updateStaggerEffects(HealthCapability health, LivingEntity entity) {
-        if (health.slowDown() <= 0) return;
+        if (health.getSlowDown() <= 0) return;
         var newEffect = new MobEffectInstance(
                 ModEffects.STAGGER_EFFECT,
-                39, health.slowDown() - 1
+                39, health.getSlowDown() - 1
         );
         entity.addEffect(newEffect);
     }
 
     private static void updateArmEffects(HealthCapability health, LivingEntity entity) {
-        if (health.armBreak() == 0) return;
+        if (health.getArmBreak() == 0) return;
 
         var newEffect = new MobEffectInstance(
                 MobEffects.DIG_SLOWDOWN,
-                39, health.armBreak() - 1
+                39, health.getArmBreak() - 1
         );
         entity.addEffect(newEffect);
     }
@@ -70,7 +70,7 @@ public class BuffEventHandler {
 
     private static void updateLivingTimeEffects(HealthCapability health, LivingEntity entity) {
         if (!PlatformService.CONFIG.ENABLE_LIVING_EFFECT()) return;
-        int amp = (int) Math.sqrt((double) health.livingTick() / 1000);
+        int amp = (int) Math.sqrt((double) health.getLivingTick() / 1000);
         amp = Math.min(amp, 39);
         if (amp < 1) return;
         var newEffect = new MobEffectInstance(
@@ -82,14 +82,14 @@ public class BuffEventHandler {
     }
 
     private static void updateCureEffects(HealthCapability health, LivingEntity entity) {
-        if (health.vitality() < 0.999f) return;
-        if (health.almostDead() < -0.1f) {
+        if (health.getVitality() < 0.999f) return;
+        if (health.getMinVitBeforeCured() < -0.1f) {
             entity.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2399, 3));
-        } else if (health.almostDead() < 0.2f) {
+        } else if (health.getMinVitBeforeCured() < 0.2f) {
             entity.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2399, 2));
-        } else if (health.almostDead() < 0.5f) {
+        } else if (health.getMinVitBeforeCured() < 0.5f) {
             entity.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2399, 1));
-        } else if (health.almostDead() < 0.8f) {
+        } else if (health.getMinVitBeforeCured() < 0.8f) {
             entity.addEffect(new MobEffectInstance(ModEffects.CURE_EFFECT, 2399, 0));
         } else {
             return;

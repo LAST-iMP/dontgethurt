@@ -287,7 +287,7 @@ public class InjuryEventHandler {
 
     private static float getScaledDamage(float damageAmount, LivingEntity livingEntity, DamageSource source) {
         damageAmount /= livingEntity.getMaxHealth() * PlatformService.CONFIG.BODY_LIFE_FACTOR();
-        if (HealthCapability.isDying(livingEntity)) {
+        if (HealthCapability.getAndApply(livingEntity, HealthCapability::isDying, false)) {
             if (source.getEntity() instanceof Player)
                 damageAmount *= HealthLivingEntityList.getEntityDownResist(livingEntity.getType(), HealthLivingEntityList.PLAYER_RESIST);
             else if (source.getEntity() instanceof LivingEntity)

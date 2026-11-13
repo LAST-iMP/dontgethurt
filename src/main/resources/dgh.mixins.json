@@ -4,17 +4,18 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "dgh.refmap.json",
   "mixins": [
+    "entity.EntityMixin",
     "entity.LivingEntityAccessor",
     "entity.LivingEntityMixin",
-    "entity.EntityMixin",
     "entity.PlayerMixin",
     "entity.ServerPlayerMixin"
   ],
   "client": [
-    "client.entity.LocalPlayerAccessor",
-    "client.MinecraftAccessor",
     "client.LivingEntityRendererMixin",
+    "client.MinecraftAccessor",
     "client.PlayerSkinMixin",
+    "client.entity.LocalPlayerAccessor",
+    "client.entity.LocalPlayerMixin",
     "client.entity.PlayerMixin"
   ],
   "injectors": {

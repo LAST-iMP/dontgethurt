@@ -3,16 +3,15 @@ package com.lastimp.dgh.common.capability.healthCore.healingSystem;
 
 import com.lastimp.dgh.common.PlatformService;
 
+import com.lastimp.dgh.common.capability.healthCore.dyingSystem.HealthPhase;
 import com.lastimp.dgh.common.config.impl.HealthLivingEntityList;
 import com.lastimp.dgh.common.utils.Utils;
 import com.lastimp.dgh.common.capability.healthCore.dyingSystem.DyingHandler;
 import com.lastimp.dgh.common.capability.HealthCapability;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 
 public class HealingEventHandler {
     public static void onHealthUpdate(LivingEntity livingEntity) {
@@ -20,8 +19,6 @@ public class HealingEventHandler {
         if (livingEntity.isDeadOrDying()) return;
         if (!HealthCapability.has(livingEntity)) return;
 
-        boolean isDying = HealthCapability.isDying(livingEntity);
-        boolean isDown = HealthCapability.isDown(livingEntity);
         HealthCapability.getAndApply(livingEntity, h -> {
             h = h.update(livingEntity);
             if (livingEntity instanceof ServerPlayer player && Utils.checkPlayerInvincible(player)) {
@@ -31,38 +28,28 @@ public class HealingEventHandler {
             }
             h.SYNIfDirty(livingEntity);
         });
-        var name = livingEntity instanceof Player ? livingEntity.getScoreboardName() : livingEntity.getName().getString();
-        if (!isDying && HealthCapability.isDying(livingEntity) && canLieDown(-1, livingEntity) && HealthLivingEntityList.callWhenDying(livingEntity.getType())) {
-            Utils.broadcastMessageToTeam(livingEntity, livingEntity.getCombatTracker().getDeathMessage());
-            Utils.broadcastMessageToTeam(livingEntity, Component.literal(name + "重伤濒死！"));
-        } else if (!isDown && HealthCapability.isDown(livingEntity) && HealthLivingEntityList.callWhenDying(livingEntity.getType())) {
-            Utils.broadcastMessageToTeam(livingEntity, Component.literal(name + "晕倒了！"));
-        }
     }
 
     private static void updateLivingHealth(HealthCapability health, LivingEntity entity) {
-        float maxHealth = getHealthWithOuterHealing(health, entity);
-        if (maxHealth > 0) {
-            if ((int)maxHealth != (int)entity.getHealth())
-                entity.setHealth(maxHealth);
-        } else if (canLieDown(maxHealth, entity)) {
-            entity.setHealth(0.01f);
-        } else if (!entity.isDeadOrDying()){
+        float maxHealth = health.getHealthWithOuterHealing(entity);
+
+        if (health.getHealthPhase() == HealthPhase.DEAD) {
             DyingHandler.setLivingDead(entity);
+        } else if (health.getHealthPhase() == HealthPhase.DYING && !canLieDown(entity)) {
+            DyingHandler.setLivingDead(entity);
+        } else if (maxHealth > 0) {
+            entity.setHealth(maxHealth);
+        } else {
+            entity.setHealth(0.01f);
         }
     }
 
-    private static float getHealthWithOuterHealing(HealthCapability health, LivingEntity entity) {
-        float maxHealth = entity.getMaxHealth() * health.vitality() + health.outerHealing();
-        return Math.min(maxHealth, entity.getMaxHealth());
-    }
-
-    private static boolean canLieDown(float maxHealth, LivingEntity entity) {
+    private static boolean canLieDown(LivingEntity entity) {
         var lastDamageSource = entity.getLastDamageSource();
         if (lastDamageSource != null) {
             if (lastDamageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || lastDamageSource.is(DamageTypes.OUTSIDE_BORDER)) return false;
         }
-        return maxHealth > -entity.getMaxHealth() && HealthLivingEntityList.canEntityLieDown(entity.getType());
+        return HealthLivingEntityList.canEntityLieDown(entity.getType());
     }
 
     public static void onHealing(LivingEntity livingEntity, float healing) {
@@ -74,7 +61,7 @@ public class HealingEventHandler {
             HealingHandler.handleValindaHealing(livingEntity, amount / (livingEntity.getMaxHealth() * PlatformService.CONFIG.BODY_LIFE_FACTOR()));
         } else {
             HealthCapability.getAndApply(livingEntity, h ->
-                    h.setOuterHealing(Mth.clamp(h.outerHealing() + amount, 0, livingEntity.getMaxHealth()))
+                    h.setOuterHealing(Mth.clamp(h.getOuterHealing() + amount, 0, livingEntity.getMaxHealth()))
             );
         }
     }

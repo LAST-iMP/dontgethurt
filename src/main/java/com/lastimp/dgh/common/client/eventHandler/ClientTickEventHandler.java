@@ -12,7 +12,7 @@ public class ClientTickEventHandler {
         if (HealthCapability.isDown(player) || HealthCapability.isFootLostDown(player))
             player.setPose(Pose.SWIMMING);
         HealthCapability.getAndApply(player, h-> {
-            ABNORMAL_DELAY = h.abnormal() ? PlatformService.CONFIG.SMALL_CONDITION_DISAPPEAR_DELAY() * 20 : Math.max(0, ABNORMAL_DELAY - 1);
+            ABNORMAL_DELAY = h.isAbnormal() ? PlatformService.CONFIG.SMALL_CONDITION_DISAPPEAR_DELAY() * 20 : Math.max(0, ABNORMAL_DELAY - 1);
         });
     }
 }

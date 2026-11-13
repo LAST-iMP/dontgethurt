@@ -56,12 +56,9 @@ public class DontGetHurt {
         });
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event)
-    {
+    private void commonSetup(final FMLCommonSetupEvent event) {
         Utils.LOGGER.info("HELLO FROM COMMON SETUP");
-        event.enqueueWork(() -> {
-            ModConfigs.loadExternalList();
-            ConditionAccessor.init();
-        });
+        event.enqueueWork(ModConfigs::loadExternalList);
+        event.enqueueWork(ConditionAccessor::init);
     }
 }

@@ -174,7 +174,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
                 var bone = visibleBody.boneCrafted();
                 int color = bone == null ? ConditionAccessor.get(FRACTURE).color() : ConditionAccessor.get(bone).color();
                 widget.setPortionColor(color);
-            } else if (ConditionAccessor.resistConditions.contains(condition)) {
+            } else if (ConditionAccessor.resistConditions().contains(condition)) {
                 float addition = Math.max(0, bodyPart.getCondition(condition).getHiddenValue());
                 float armorRes = healthData.armorResist(this.selectedComponent, condition);
                 ((DynamicBarHealthWidget) widget).setBarSeverity(addition, armorRes);
@@ -193,7 +193,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
         if (this.onOrgan) return false;
         if (!HealthScanner.healthScannerConditions().contains(key)) return false;
         if (!this.menu.isDevice && !HealthScanner.eyesightConditions().contains(key)) return false;
-        if (ConditionAccessor.resistConditions.contains(key) && (body.abnormalWithHidden(key) || healthData.armorResist(this.selectedComponent, key) > 0)) return true;
+        if (ConditionAccessor.resistConditions().contains(key) && (body.abnormalWithHidden(key) || healthData.armorResist(this.selectedComponent, key) > 0)) return true;
         if (!ConditionAccessor.get(key).abnormal(body.getCondition(key).getDisplayValue())) return false;
         return true;
     }
@@ -275,7 +275,8 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
             return;
         }
         var target = ClientAccessor.getLiving(mc.level, this.menu.targetEntity, mc.player.getEyePosition(), 40);
-        if (target == null || target.isDeadOrDying() || (HealthCapability.isDown(ClientAccessor.getPlayerOrThrow()) && !ClientAccessor.getPlayerOrThrow().hasEffect(ModEffects.ADRENALINE_EFFECT))) {
+
+        if (target == null || target.isDeadOrDying() || !(HealthCapability.canApplyHealing(ClientAccessor.getPlayerOrThrow()))) {
             GuiOpenWrapper.closeScreen();
             return;
         }
@@ -313,10 +314,10 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
         var cooldowns = player.getCooldowns();
         var oxygenMask = this.menu.getSlot(45).getItem().getItem();
         if (!cooldowns.isOnCooldown(oxygenMask))
-            cooldowns.addCooldown(oxygenMask, HealthScreen.healthData.oxygenMaskCoolDown());
+            cooldowns.addCooldown(oxygenMask, HealthScreen.healthData.getOxygenMaskCoolDown());
         var autopulse = this.menu.getSlot(46).getItem().getItem();
         if (!cooldowns.isOnCooldown(autopulse))
-            cooldowns.addCooldown(autopulse, HealthScreen.healthData.autoPulseCoolDown());
+            cooldowns.addCooldown(autopulse, HealthScreen.healthData.getAutoPulseCoolDown());
     }
 
     public void setHealthData(HealthCapability healthData) {

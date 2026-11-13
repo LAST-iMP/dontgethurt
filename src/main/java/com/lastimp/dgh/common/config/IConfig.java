@@ -46,4 +46,5 @@ public interface IConfig {
     boolean ARMOR_RECALCULATE();
     float BLOCK_RECOVER_DELAY();
     float BLOCK_RECOVER_SPEED();
+    boolean HARDCORE_CAN_SELFHEAL_WHEN_DOWN();
 }

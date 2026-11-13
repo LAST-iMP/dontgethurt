@@ -32,8 +32,8 @@ public abstract class AiHealer {
 
         BodyComponents component;
         //自动使用起搏器、呼吸气囊
-        if (h.oxygenMask().getStackInSlot(0).isEmpty()) ModItems.OXYGEN_MASK.get().heal(source, target);
-        if (h.autoPulse().getStackInSlot(0).isEmpty()) ModItems.AUTOPULSE.get().heal(source, target);
+        if (h.getOxygenMask().getStackInSlot(0).isEmpty()) ModItems.OXYGEN_MASK.get().heal(source, target);
+        if (h.getAutoPulse().getStackInSlot(0).isEmpty()) ModItems.AUTOPULSE.get().heal(source, target);
 
         if (level >= 3) {
             if (head.getConditionValue(TRAUMATIC_SHOCK) > 0.15 && !torso.abnormal(ANALGESIA)) {

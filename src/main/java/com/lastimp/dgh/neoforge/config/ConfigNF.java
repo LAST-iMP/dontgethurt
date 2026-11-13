@@ -175,6 +175,11 @@ public class ConfigNF implements IConfig {
     private static final ModConfigSpec.DoubleValue BLOCK_RECOVER_SPEED = BUILDER
             .comment("护甲格挡恢复速度")
             .defineInRange("BLOCK_RECOVER_SPEED", 0.1, 0, 1.0);
+
+    private static final ModConfigSpec.BooleanValue HARDCORE_CAN_SELFHEAL_WHEN_DOWN = BUILDER
+            .comment("硬核选项-倒地时可自我治疗")
+            .define("HARDCORE_CAN_SELFHEAL_WHEN_DOWN", true);
+
     // 构建配置
     public static final ModConfigSpec SPEC = BUILDER.pop().build();
 
@@ -386,5 +391,10 @@ public class ConfigNF implements IConfig {
     @Override
     public float BLOCK_RECOVER_SPEED() {
         return (float) BLOCK_RECOVER_SPEED.getAsDouble();
+    }
+
+    @Override
+    public boolean HARDCORE_CAN_SELFHEAL_WHEN_DOWN() {
+        return HARDCORE_CAN_SELFHEAL_WHEN_DOWN.getAsBoolean();
     }
 }

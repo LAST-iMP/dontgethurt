@@ -29,7 +29,7 @@ public class ObjectAnimationRunnerMixin {
             boolean check = reloadState.getStateType() != ReloadState.StateType.NOT_RELOADING;
             check |= IGunOperator.fromLivingEntity(player).getSynIsBolting();
 
-            var scale = check ? 1.0 - 0.4 * health.armBreak() : 1;
+            var scale = check ? 1.0 - 0.4 * health.getArmBreak() : 1;
             if (scale >= 1) return;
 
             var deltaUnscaled = original - lastUpdateNs;

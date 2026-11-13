@@ -19,7 +19,7 @@ public class ModernKineticGunScriptAPIMixin {
     public void getReloadTime(CallbackInfoReturnable<Long> cir) {
         if (shooter instanceof Player player) {
             HealthCapability.getAndApply(player, health -> {
-                int armBreak = health.armBreak();
+                int armBreak = health.getArmBreak();
                 long newResult = cir.getReturnValue();
                 if (armBreak > 0) {
                     newResult = (long) (newResult * (1 - 0.4 * armBreak));
@@ -33,7 +33,7 @@ public class ModernKineticGunScriptAPIMixin {
     public void getBoltTime(CallbackInfoReturnable<Long> cir) {
         if (shooter instanceof Player player) {
             HealthCapability.getAndApply(player, health -> {
-                int armBreak = health.armBreak();
+                int armBreak = health.getArmBreak();
                 long newResult = cir.getReturnValue();
                 if (armBreak > 0) {
                     newResult = (long) (newResult * (1 - 0.4 * armBreak));

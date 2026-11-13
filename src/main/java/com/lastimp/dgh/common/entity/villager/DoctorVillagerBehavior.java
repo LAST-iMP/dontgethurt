@@ -109,6 +109,6 @@ public class DoctorVillagerBehavior extends Behavior<Villager> {
                 entity.position().distanceTo(sitePos.getCenter()) < OperatingBedBlock.AVA_DISTANCE;
         if (!closeEnoughAndAlive) return false;
         if (entity.getHealth() < entity.getMaxHealth()) return true;
-        return HealthCapability.has(entity) && HealthCapability.getAndApply(entity, h -> h.abnormal() && (h.currentHealer == null || h.currentHealer == villager), false);
+        return HealthCapability.has(entity) && HealthCapability.getAndApply(entity, h -> h.isAbnormal() && (h.currentHealer == null || h.currentHealer == villager), false);
     }
 }

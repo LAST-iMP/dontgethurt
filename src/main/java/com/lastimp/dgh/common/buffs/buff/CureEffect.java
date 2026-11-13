@@ -52,7 +52,7 @@ public class CureEffect extends MobEffect {
     private void onVillagerAddEffect(@NotNull LivingEntity entity, int amplifier) {
         if (!(entity instanceof Villager villager)) return;
         HealthCapability.getAndApply(villager, healthCapability -> {
-            var lastHealer = healthCapability.lastHealer();
+            var lastHealer = healthCapability.getLastHealer();
             villager.getGossips().add(lastHealer, GossipType.MINOR_POSITIVE, 25);
             if (amplifier >= 3) {
                 villager.getGossips().add(lastHealer, GossipType.MAJOR_POSITIVE, 20);

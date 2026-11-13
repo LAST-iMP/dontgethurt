@@ -19,21 +19,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.UnknownNullability;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
 
 import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
 import static com.lastimp.dgh.common.enums.BodyComponents.*;
 
 public class Torso extends AbstractVisibleBody {
     private static final Collection<ResourceLocation> uniqueConditions = new LinkedHashSet<>();
+    private static final Map<Integer, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> uniqueHandlers = new TreeMap<>();
     private static List<ResourceLocation> TORSO_CONDITIONS;
+    private static Map<Integer, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> TORSO_HANDLERS;
+
 
     private AttributeInstance fly_speed;
     private AttributeInstance knock_back_resist;
@@ -45,8 +45,16 @@ public class Torso extends AbstractVisibleBody {
     private int nextPneumothoraxTick = 1800;
     private int additionAir = 0;
 
+    public static void addCondition(ResourceLocation key) {
+        uniqueConditions.add(key);
+    }
+
     public static void addCondition(Collection<ResourceLocation> key) {
         uniqueConditions.addAll(key);
+    }
+
+    public static void addHandler(int priority, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>> handler) {
+        uniqueHandlers.put(priority, handler);
     }
 
     @Override
@@ -56,6 +64,15 @@ public class Torso extends AbstractVisibleBody {
             TORSO_CONDITIONS.addAll(uniqueConditions);
         }
         return TORSO_CONDITIONS;
+    }
+
+    @Override
+    protected Map<Integer, Consumer<Triple<HealthCapability, LivingEntity, ? extends AbstractBody>>> getHandlers() {
+        if (TORSO_HANDLERS == null) {
+            TORSO_HANDLERS = new TreeMap<>(super.getHandlers());
+            TORSO_HANDLERS.putAll(uniqueHandlers);
+        }
+        return TORSO_HANDLERS;
     }
 
     @Override
@@ -121,54 +138,54 @@ public class Torso extends AbstractVisibleBody {
         return this.abnormal(ANALGESIA);
     }
 
-    @Override
-    protected void updateBoneEffect(LivingEntity entity) {
-        super.updateBoneEffect(entity);
-        if (fly_speed == null) fly_speed = entity.getAttribute(Attributes.FLYING_SPEED);
-        if (knock_back_resist == null) knock_back_resist = entity.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
-
-        updateWoodBoneEffect();
-        updateNetheriteBoneEffect();
-    }
+//    @Override
+//    protected void updateBoneEffect(LivingEntity entity) {
+//        super.updateBoneEffect(entity);
+//        if (fly_speed == null) fly_speed = entity.getAttribute(Attributes.FLYING_SPEED);
+//        if (knock_back_resist == null) knock_back_resist = entity.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
+//
+//        updateWoodBoneEffect();
+//        updateNetheriteBoneEffect();
+//    }
 
     @Override
     public int organ1BaseLevel() {
         return 6;
     }
 
-    private void updateWoodBoneEffect() {
-        if (uuid_bone_wood == null)
-            uuid_bone_wood = ResourceHelper.ResourceLocation(Utils.MODID, this.getShortID() + "-" + SurgeryBones.ID_WOOD);
-
-        if (this.getConditionHidden(BONE_WOOD) > ConditionAccessor.get(BONE_WOOD).maxValue() - Utils.EPS) {
-            if (fly_speed != null && fly_speed.getModifier(uuid_bone_wood) == null)
-                fly_speed.addPermanentModifier(new AttributeModifier(
-                        uuid_bone_wood,
-                        0.2,
-                        AttributeModifier.Operation.ADD_MULTIPLIED_BASE
-                ));
-        } else {
-            if (fly_speed != null && fly_speed.getModifier(uuid_bone_wood) != null)
-                fly_speed.removeModifier(uuid_bone_wood);
-        }
-    }
-
-    private void updateNetheriteBoneEffect() {
-        if (uuid_bone_netherite == null)
-            uuid_bone_netherite = ResourceHelper.ResourceLocation(Utils.MODID, this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
-
-        if (this.getConditionHidden(BONE_NETHERITE) > ConditionAccessor.get(BONE_NETHERITE).maxValue() - Utils.EPS) {
-            if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_netherite) == null)
-                knock_back_resist.addPermanentModifier(new AttributeModifier(
-                        uuid_bone_netherite,
-                        0.25,
-                        AttributeModifier.Operation.ADD_MULTIPLIED_BASE
-                ));
-        } else {
-            if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_netherite) != null)
-                knock_back_resist.removeModifier(uuid_bone_netherite);
-        }
-    }
+//    private void updateWoodBoneEffect() {
+//        if (uuid_bone_wood == null)
+//            uuid_bone_wood = ResourceHelper.ResourceLocation(Utils.MODID, this.getShortID() + "-" + SurgeryBones.ID_WOOD);
+//
+//        if (this.getConditionHidden(BONE_WOOD) > ConditionAccessor.get(BONE_WOOD).maxValue() - Utils.EPS) {
+//            if (fly_speed != null && fly_speed.getModifier(uuid_bone_wood) == null)
+//                fly_speed.addPermanentModifier(new AttributeModifier(
+//                        uuid_bone_wood,
+//                        0.2,
+//                        AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+//                ));
+//        } else {
+//            if (fly_speed != null && fly_speed.getModifier(uuid_bone_wood) != null)
+//                fly_speed.removeModifier(uuid_bone_wood);
+//        }
+//    }
+//
+//    private void updateNetheriteBoneEffect() {
+//        if (uuid_bone_netherite == null)
+//            uuid_bone_netherite = ResourceHelper.ResourceLocation(Utils.MODID, this.getShortID() + "-" + SurgeryBones.ID_NETHERITE);
+//
+//        if (this.getConditionHidden(BONE_NETHERITE) > ConditionAccessor.get(BONE_NETHERITE).maxValue() - Utils.EPS) {
+//            if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_netherite) == null)
+//                knock_back_resist.addPermanentModifier(new AttributeModifier(
+//                        uuid_bone_netherite,
+//                        0.25,
+//                        AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+//                ));
+//        } else {
+//            if (knock_back_resist != null && knock_back_resist.getModifier(uuid_bone_netherite) != null)
+//                knock_back_resist.removeModifier(uuid_bone_netherite);
+//        }
+//    }
 
     private void handleAnalgesia(LivingEntity entity) {
         if (entity.hasEffect(ModEffects.ADRENALINE_EFFECT) && this.getConditionValue(ANALGESIA) < 0.05f) {

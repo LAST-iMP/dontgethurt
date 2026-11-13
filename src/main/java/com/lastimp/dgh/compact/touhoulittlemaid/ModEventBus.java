@@ -14,7 +14,7 @@ public class ModEventBus {
         if (!HealthCapability.has(maid)) return;
         HealthCapability.getAndApply(maid, h -> {
             h.clearLastDeathDirectInjury();
-            h.addToLastDeathDirectInjury(h.directInjury());
+            h.addToLastDeathDirectInjury(h.getDirectInjury());
             h.clearDirectInjury();
         });
 

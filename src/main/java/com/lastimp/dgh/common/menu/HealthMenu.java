@@ -8,7 +8,6 @@ import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.utils.Utils;
 import com.lastimp.dgh.common.item.bases.AbstractSmallBag;
 import com.lastimp.dgh.common.container.IBackpackInventory;
-import com.lastimp.dgh.common.entry.register.ModEffects;
 import com.lastimp.dgh.common.entry.register.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
@@ -79,8 +78,8 @@ public class HealthMenu extends AbstractContainerMenu {
     }
 
     public void setEquipments(HealthCapability health) {
-        equipments.get(0).setHandler(health.oxygenMask());
-        equipments.get(1).setHandler(health.autoPulse());
+        equipments.get(0).setHandler(health.getOxygenMask());
+        equipments.get(1).setHandler(health.getAutoPulse());
     }
 
     public ItemStack getStackBySlotNum(int slotNum) {
@@ -130,7 +129,7 @@ public class HealthMenu extends AbstractContainerMenu {
         if (this.bagStack != null && !player.getInventory().contains(this.bagStack)) {
             this.closeBag();
         }
-        return !HealthCapability.isDown(player) || player.hasEffect(ModEffects.ADRENALINE_EFFECT);
+        return HealthCapability.canApplyHealing(player);
     }
 
     // 添加玩家背包的slot和热键的栏的slot

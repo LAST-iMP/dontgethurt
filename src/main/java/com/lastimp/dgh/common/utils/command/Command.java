@@ -99,7 +99,7 @@ public class Command {
         CommandSourceStack source = context.getSource();
         source.sendSuccess(() -> {
                     var message = Component.empty();
-                    for (var condition : ConditionAccessor.conditions.keySet())
+                    for (var condition : ConditionAccessor.conditions().keySet())
                         message.append(condition + ", ");
                     return message;
                 }, true
@@ -194,8 +194,8 @@ public class Command {
 
             HealthCapability.getAndApply(livingEntity, oldHealth -> {
                 var newHealth = new HealthCapability();
-                newHealth.autoPulse().setStackInSlot(0, oldHealth.autoPulse().getStackInSlot(0));
-                newHealth.oxygenMask().setStackInSlot(0, oldHealth.oxygenMask().getStackInSlot(0));
+                newHealth.getAutoPulse().setStackInSlot(0, oldHealth.getAutoPulse().getStackInSlot(0));
+                newHealth.getOxygenMask().setStackInSlot(0, oldHealth.getOxygenMask().getStackInSlot(0));
                 oldHealth.deserialize(livingEntity.registryAccess(), newHealth.serialize(livingEntity.registryAccess()));
             });
             livingEntity.removeAllEffects();

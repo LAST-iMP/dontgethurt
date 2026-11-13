@@ -92,6 +92,9 @@ configurations {
 }
 
 dependencies {
+    implementation 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+
     compileOnly "vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api"
     localRuntime "vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}"
 

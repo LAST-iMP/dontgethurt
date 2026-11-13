@@ -6,9 +6,7 @@ import com.lastimp.dgh.common.config.impl.ArmorList;
 import com.lastimp.dgh.mixin.client.entity.LocalPlayerAccessor;
 import com.lastimp.dgh.mixin.client.MinecraftAccessor;
 import com.lastimp.dgh.common.client.ClientAccessor;
-import com.lastimp.dgh.common.client.gui.screen.HealthScreen;
 import com.lastimp.dgh.common.capability.HealthCapability;
-import com.lastimp.dgh.common.entry.register.ModEffects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,14 +14,10 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 import java.util.List;
 import java.util.Locale;
@@ -48,22 +42,21 @@ public class GuiEventHandler {
 
     public static boolean screenOpen(Screen newScreen, Screen currentScreen) {
         Player player = Minecraft.getInstance().player;
-        if (player == null || !HealthCapability.isDown(player)) return true;
+        if (player == null || HealthCapability.canApplyHealing(player)) return true;
 
         if (currentScreen == null) {
             onPause = newScreen instanceof PauseScreen;
         }
-        return onPause || screenAvaWhenDying(player, newScreen);
+        return onPause || screenAvaWhenDying(newScreen);
     }
 
-    private static boolean screenAvaWhenDying(Player player, Screen screen) {
-        if (screen instanceof DeathScreen || screen instanceof ChatScreen || screen instanceof PauseScreen) return true;
-        return player.hasEffect(ModEffects.ADRENALINE_EFFECT) && screen instanceof HealthScreen<?>;
+    private static boolean screenAvaWhenDying(Screen screen) {
+        return screen instanceof DeathScreen || screen instanceof ChatScreen || screen instanceof PauseScreen;
     }
 
     public static void onGuiRender() {
         ClientAccessor.getPlayer().ifPresent(player -> {
-            if (HealthCapability.isDown(player)) {
+            if (!HealthCapability.canApplyHealing(player)) {
                 ((LocalPlayerAccessor) player).setHandsBusy(true);
                 ((MinecraftAccessor) Minecraft.getInstance()).setMissTime(2);
                 onDying = true;
@@ -90,7 +83,7 @@ public class GuiEventHandler {
             );
         }
         return ClientAccessor.getPlayer().map(
-                player -> !HealthCapability.isDying(player) || !BLOCKED_OVERLAYS.contains(overlay)
+                player -> !HealthCapability.getAndApply(player, HealthCapability::isDying, false) || !BLOCKED_OVERLAYS.contains(overlay)
         ).orElse(true);
     }
 
