@@ -358,7 +358,7 @@ public abstract class AbstractVisibleBody extends AbstractBody {
         if (blood.abnormal(SEPSIS)) {
             this.injury(BONE_DAMAGE, blood.getConditionValue(SEPSIS) * 2 * ConditionAccessor.get(BONE_DAMAGE).healingSpeed() * Utils.DELTA);
         }
-        if (!health.haveKidney()) {
+        if (!health.isHaveKidney()) {
             this.injury(BONE_DAMAGE, blood.getConditionValue(SEPSIS) * 4 * ConditionAccessor.get(BONE_DAMAGE).healingSpeed() * Utils.DELTA);
         }
     }

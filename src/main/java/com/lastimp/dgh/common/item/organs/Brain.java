@@ -26,7 +26,7 @@ public class Brain extends AbstractOrgan {
 
     @Override
     public ItemStack update(ItemStack stack, HealthCapability health, AbstractBody body, LivingEntity entity) {
-        if (!health.haveKidney()) return stack;
+        if (!health.isHaveKidney()) return stack;
 
         Head head = (Head) health.getComponent(BodyComponents.HEAD);
         int num = head.countOrganMatch(ModTags.BRAIN);

@@ -16,6 +16,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.StandardOpenOption.CREATE_NEW;
+import static java.nio.file.StandardOpenOption.WRITE;
+
 public interface IConfigLoader<T> {
     Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -56,19 +60,31 @@ public interface IConfigLoader<T> {
     }
 
     static void write(Path path, String context) throws IOException{
-        var writer = Files.newBufferedWriter(path);
-        writer.write(context);
-        writer.close();
+        try (var writer = Files.newBufferedWriter(path, UTF_8, CREATE_NEW, WRITE)) {
+            writer.write(context);
+        }
     }
 
     static void loadExternalList(String id, Consumer<JsonElement> consumer, String example) {
-        Path path = PlatformService.CONFIG.getConfigRoot().resolve(Utils.MODID + "-" + id + ".json");
+        Path path = null;
+
         try {
-            if (!Files.exists(path))
-                IConfigLoader.write(Files.createFile(path), example);
-            loadJson(Files.newBufferedReader(path), consumer);
-        } catch (IOException e) {
-            Utils.LOGGER.error("Failed to load external health whitelist", e);
+            path = PlatformService.CONFIG.getConfigRoot()
+                    .resolve(Path.of("dgh", Utils.MODID + "-" + id + ".json"));
+
+            Files.createDirectories(path.getParent());
+            if (Files.notExists(path)) {
+                Utils.LOGGER.info("Creating dgh config file: {}", path);
+                write(path, example);
+                Utils.LOGGER.info("Created dgh config file: {}", path);
+            }
+
+            try (var reader = Files.newBufferedReader(path, UTF_8)) {
+                loadJson(reader, consumer);
+                Utils.LOGGER.info("Loaded dgh config file: {}", path);
+            }
+        } catch (Exception e) {
+            Utils.LOGGER.error("Failed to load dgh external config: id={}, path={}", id, path, e);
         }
     }
 

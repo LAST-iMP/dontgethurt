@@ -295,7 +295,7 @@ public class BodyCondition {
     public static final ResourceLocation HARDENER = ResourceHelper.ModResource("hardener");
 
     private static BodyCondition.ConditionBuilder register(ResourceLocation name, ComponentLevel components) {
-        return registerCondition(BURN, ResourceHelper.ResourceLocation(name.getNamespace(), pathRoot + name.getPath()), components);
+        return registerCondition(name, ResourceHelper.ResourceLocation(name.getNamespace(), pathRoot + name.getPath()), components);
     }
 
     public static void registerModCondition() {

@@ -43,22 +43,21 @@ public class GuiEventHandler {
 
     public static boolean screenOpen(Screen newScreen, Screen currentScreen) {
         Player player = Minecraft.getInstance().player;
-        if (player == null || !HealthCapability.isDown(player)) return true;
+        if (player == null || HealthCapability.canApplyHealing(player)) return true;
 
         if (currentScreen == null) {
             onPause = newScreen instanceof PauseScreen;
         }
-        return onPause || screenAvaWhenDying(player, newScreen);
+        return onPause || screenAvaWhenDying(newScreen);
     }
 
-    private static boolean screenAvaWhenDying(Player player, Screen screen) {
-        if (screen instanceof DeathScreen || screen instanceof ChatScreen || screen instanceof PauseScreen) return true;
-        return player.hasEffect(ModEffects.ADRENALINE_EFFECT.get()) && screen instanceof HealthScreen<?>;
+    private static boolean screenAvaWhenDying(Screen screen) {
+        return screen instanceof DeathScreen || screen instanceof ChatScreen || screen instanceof PauseScreen;
     }
 
     public static void onGuiRender() {
         ClientAccessor.getPlayer().ifPresent(player -> {
-            if (HealthCapability.isDown(player)) {
+            if (!HealthCapability.canApplyHealing(player)) {
                 ((LocalPlayerAccessor) player).setHandsBusy(true);
                 ((MinecraftAccessor) Minecraft.getInstance()).setMissTime(2);
                 onDying = true;
@@ -85,7 +84,7 @@ public class GuiEventHandler {
             );
         }
         return ClientAccessor.getPlayer().map(
-                player -> !HealthCapability.isDying(player) || !BLOCKED_OVERLAYS.contains(overlay)
+                player -> !HealthCapability.getAndApply(player, HealthCapability::isDying, false) || !BLOCKED_OVERLAYS.contains(overlay)
         ).orElse(true);
     }
 

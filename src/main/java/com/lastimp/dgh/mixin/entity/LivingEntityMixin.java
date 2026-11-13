@@ -36,7 +36,10 @@ public class LivingEntityMixin {
     @Inject(method = "canBeSeenAsEnemy", at = @At("RETURN"), cancellable = true)
     public void canBeSeenAsEnemy(CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object)this;
-        boolean attackable = !HealthCapability.has(livingEntity) || !HealthCapability.isDying(livingEntity) || HealthLivingEntityList.canBeSeenWhenLying(livingEntity.getType());
+        boolean attackable = HealthCapability.getAndApply(livingEntity,
+                h -> !h.isDying() || HealthLivingEntityList.canBeSeenWhenLying(livingEntity.getType()),
+                true
+        );
         cir.setReturnValue(cir.getReturnValue() && attackable);
     }
 

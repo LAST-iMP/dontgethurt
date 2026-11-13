@@ -1,14 +1,11 @@
 package com.lastimp.dgh.mixin.entity;
 
 import com.lastimp.dgh.common.capability.HealthCapability;
-import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -33,7 +30,7 @@ public class EntityMixin {
     private void getMaxAirSupply(CallbackInfoReturnable<Integer> cir) {
         if ((Entity) (Object)this instanceof LivingEntity livingEntity && HealthCapability.has(livingEntity)) {
             if (!livingEntity.isAddedToWorld()) return;
-            HealthCapability.getAndApply(livingEntity, h -> cir.setReturnValue(h.maxAirSupply()));
+            HealthCapability.getAndApply(livingEntity, h -> cir.setReturnValue(h.getMaxAirSupply()));
         }
     }
 }

@@ -18,7 +18,7 @@ public abstract class ModOverlay {
     public static void renderEyeOverlay(LocalPlayer player, GuiGraphics graphics) {
         if (player.isDeadOrDying()) return;
         HealthCapability.getAndApply(player, h -> {
-            int avaEye = h.availableEye();
+            int avaEye = h.getAvailableEye();
             if (avaEye >= 2) return;
             int color = avaEye == 1 ? 0x80000000 : 0xEF000000;
             graphics.fill(0, 0, graphics.guiWidth(), graphics.guiHeight(), color);
@@ -48,6 +48,17 @@ public abstract class ModOverlay {
     }
 
     public static void renderDyingOverlay(LocalPlayer player, GuiGraphics graphics) {
+        if (!HealthCapability.getAndApply(player, HealthCapability::isDying, false)) {
+            graphics.drawCenteredString(ClientAccessor.mc().font,
+                    Component.literal("暂时昏迷"),
+                    graphics.guiWidth() / 2, graphics.guiHeight() / 2 - 15 - 50, 0xFFFFFFFF
+            );
+        } else {
+            graphics.drawCenteredString(ClientAccessor.mc().font,
+                    Component.literal("濒临死亡"),
+                    graphics.guiWidth() / 2, graphics.guiHeight() / 2 - 15 - 50, 0xFFFFFFFF
+            );
+        }
         if (!HealthCapability.isDown(player)) return;
         graphics.drawCenteredString(ClientAccessor.mc().font,
                 Component.literal("按下鼠标求救"),

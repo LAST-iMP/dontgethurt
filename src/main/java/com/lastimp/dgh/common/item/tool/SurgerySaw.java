@@ -104,7 +104,7 @@ public class SurgerySaw extends AbstractPartlyHealItem {
 //        float returnFactor = body.getConditionValue(FRACTURE) + body.getConditionValue(BONE_DAMAGE) + body.getConditionValue(BONE_DEATH);
 //        int boneReturn = (int) (maxAmount * (1.0 - Math.min(1.0, returnFactor)));
 //        for (var key : ConditionAccessor.bones.keySet()) {
-//            if (body.abnormal(key) && key != exception) {
+//            if (body.isAbnormal(key) && key != exception) {
 //                Utils.drop(ConditionAccessor.bones.get(key).get(), source, (int)(boneReturn * body.getConditionValue(key)));
 //                body.setConditionValue(key, ConditionAccessor.get(key).defaultValue());
 //            }

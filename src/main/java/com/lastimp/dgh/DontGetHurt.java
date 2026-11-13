@@ -67,9 +67,7 @@ public class DontGetHurt {
     {
         Utils.LOGGER.info("HELLO FROM COMMON SETUP");
         ModNetwork.registerMessage();
-        event.enqueueWork(() -> {
-            ModConfigs.loadExternalList();
-            ConditionAccessor.init();
-        });
+        event.enqueueWork(ModConfigs::loadExternalList);
+        event.enqueueWork(ConditionAccessor::init);
     }
 }

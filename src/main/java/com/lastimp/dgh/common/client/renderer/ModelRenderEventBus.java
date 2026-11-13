@@ -13,16 +13,16 @@ public class ModelRenderEventBus {
 
         HealthCapability.getAndApply(livingEntity, health -> {
             // 左臂
-            humanoidModel.leftArm.visible = health.leftArmVisible();
+            humanoidModel.leftArm.visible = health.isLeftArmVisible();
             humanoidModel.leftSleeve.visible = humanoidModel.leftArm.visible;
             // 右臂
-            humanoidModel.rightArm.visible = health.rightArmVisible();
+            humanoidModel.rightArm.visible = health.isRightArmVisible();
             humanoidModel.rightSleeve.visible = humanoidModel.rightArm.visible;
             // 左腿
-            humanoidModel.leftLeg.visible = health.leftLegVisible();
+            humanoidModel.leftLeg.visible = health.isLeftLegVisible();
             humanoidModel.leftPants.visible = humanoidModel.leftLeg.visible;
             // 右腿
-            humanoidModel.rightLeg.visible = health.rightLegVisible();
+            humanoidModel.rightLeg.visible = health.isRightLegVisible();
             humanoidModel.rightPants.visible = humanoidModel.rightLeg.visible;
         });
     }

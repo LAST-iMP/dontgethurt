@@ -136,6 +136,7 @@ public class GameEventBus {
     @SubscribeEvent
     public static void onHealing(LivingHealEvent event) {
         LivingEntityEventHandler.onHealing(event.getEntity(), event.getAmount());
+        event.setCanceled(true);
     }
 
     @SubscribeEvent

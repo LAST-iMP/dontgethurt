@@ -53,33 +53,42 @@ public class DyingHandler {
     }
 
     public static void setLivingDead(LivingEntity entity) {
-        if (entity.isDeadOrDying()) return;
+        if (entity.level().isClientSide()) return;
+        if (entity.isRemoved() || entity.isDeadOrDying()) return;
         if (entity instanceof ServerPlayer player) {
             if (checkTotemDeathProtection(player)) return;
         }
         HealthCapability.getAndApply(entity, h -> {
-            if (!h.oxygenMask().getStackInSlot(0).isEmpty()) {
-                Utils.drop(h.oxygenMask().getStackInSlot(0), entity);
-                h.oxygenMask().setStackInSlot(0, ItemStack.EMPTY);
-            }
-            if (!h.autoPulse().getStackInSlot(0).isEmpty()) {
-                Utils.drop(h.autoPulse().getStackInSlot(0), entity);
-                h.autoPulse().setStackInSlot(0, ItemStack.EMPTY);
+            var oxygenMask = h.getOxygenMask();
+            ItemStack mask = oxygenMask.getStackInSlot(0);
+            if (!mask.isEmpty()) {
+                Utils.drop(mask, entity);
+                oxygenMask.setStackInSlot(0, ItemStack.EMPTY);
             }
 
-//            var lastDamageSource = entity.getLastDamageSource();
-//            var record = h.lastEntityDamage();
-//            if (record != null) {
-//                lastDamageSource = new DamageSource(getKillerDamageType(entity, h), record.getDirectEntity(), record.getEntity(), record.getSourcePosition());
-//            } else {
-//                lastDamageSource = new DamageSource(getKillerDamageType(entity, h));
-//            }
+            var autoPulse = h.getAutoPulse();
+            ItemStack equipment = autoPulse.getStackInSlot(0);
+            if (!equipment.isEmpty()) {
+                autoPulse.setStackInSlot(0, ItemStack.EMPTY);
+                Utils.drop(equipment, entity);
+            }
 
-            var record = h.lastEntityDamage();
-            var lastDamageSource = (record == null) ?
-                    new DamageSource(getKillerDamageType(entity, h)) :
-                    new DamageSource(getKillerDamageType(entity, h), record.getDirectEntity(), record.getEntity(), record.getSourcePosition());
-            entity.hurt(lastDamageSource, Float.MAX_VALUE);
+            var record = h.getLastEntityDamage();
+            var damageType = getKillerDamageType(entity, h);
+            var lastDamageSource = record == null
+                    ? new DamageSource(damageType)
+                    : new DamageSource(
+                    damageType,
+                    record.getDirectEntity(),
+                    record.getEntity(),
+                    record.getSourcePosition()
+            );
+            entity.getCombatTracker().recordDamage(
+                    lastDamageSource,
+                    entity.getHealth()
+            );
+            entity.setHealth(0);
+            entity.die(lastDamageSource);
         });
     }
 

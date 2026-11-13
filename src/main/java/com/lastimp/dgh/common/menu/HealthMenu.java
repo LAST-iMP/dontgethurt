@@ -90,8 +90,8 @@ public class HealthMenu extends AbstractContainerMenu {
     }
 
     public void setEquipments(HealthCapability health) {
-        equipments.get(0).setHandler(health.oxygenMask());
-        equipments.get(1).setHandler(health.autoPulse());
+        equipments.get(0).setHandler(health.getOxygenMask());
+        equipments.get(1).setHandler(health.getAutoPulse());
     }
 
     public ItemStack getStackBySlotNum(int slotNum) {
@@ -147,7 +147,7 @@ public class HealthMenu extends AbstractContainerMenu {
         if (this.bagStack != null && !player.getInventory().contains(this.bagStack)) {
             this.closeBag();
         }
-        return !HealthCapability.isDown(player) || player.hasEffect(ModEffects.ADRENALINE_EFFECT.get());
+        return HealthCapability.canApplyHealing(player);
     }
 
     // 添加玩家背包的slot和热键的栏的slot

@@ -194,8 +194,8 @@ public class Command {
 
             HealthCapability.getAndApply(livingEntity, oldHealth -> {
                 var newHealth = new HealthCapability();
-                newHealth.autoPulse().setStackInSlot(0, oldHealth.autoPulse().getStackInSlot(0));
-                newHealth.oxygenMask().setStackInSlot(0, oldHealth.oxygenMask().getStackInSlot(0));
+                newHealth.getAutoPulse().setStackInSlot(0, oldHealth.getAutoPulse().getStackInSlot(0));
+                newHealth.getOxygenMask().setStackInSlot(0, oldHealth.getOxygenMask().getStackInSlot(0));
                 oldHealth.deserialize(newHealth.serialize());
             });
             livingEntity.removeAllEffects();

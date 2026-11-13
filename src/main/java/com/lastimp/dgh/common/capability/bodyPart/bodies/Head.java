@@ -169,7 +169,7 @@ public class Head extends AbstractVisibleBody {
         if (this.countOrganMatch(ModTags.BRAIN) < 1) {
             brain_damage += 0.1f;
         }
-        if (!health.haveKidney()) {
+        if (!health.isHaveKidney()) {
             brain_damage += 0.002f;
         }
         //更新 自然回复
