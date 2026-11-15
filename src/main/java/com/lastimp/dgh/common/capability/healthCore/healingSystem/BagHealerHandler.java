@@ -8,14 +8,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 public class BagHealerHandler {
-    public static void handleBagHealing(ItemStack stack, ServerPlayer player, LivingEntity target, BodyComponents component) {
+    public static HealingResult handleBagHealing(ItemStack stack, ServerPlayer player, LivingEntity target, BodyComponents component) {
         IBackpackInventory inv = ((AbstractSmallBag)stack.getItem()).getBackPackHandler(stack);
         for (int i = 0; i < inv.getSlots(); i++) {
             var slotItem = inv.getStackInSlot(i);
-            if (HealingHandler.useItemOn(slotItem, player, target, component)) {
+            var result = HealingHandler.useItemOn(slotItem, player, target, component);
+            if (result == HealingResult.SUCCESS) {
                 inv.setStackInSlot(i, slotItem);
-                break;
+                return result;
             }
         }
+        return HealingResult.ITEM_USING_FAILED;
     }
 }

@@ -41,7 +41,6 @@ public class DyingHandler {
         if (!HealthCapability.has(livingEntity)) return;
         HealthCapability.getAndApply(livingEntity, h -> {
             h.addOriginOrganOnDeath(livingEntity);
-            h.deserialize(livingEntity.registryAccess(), h.deathSerializeNBT(livingEntity.registryAccess()));
         });
 
         if (!(livingEntity instanceof Player player)) return;

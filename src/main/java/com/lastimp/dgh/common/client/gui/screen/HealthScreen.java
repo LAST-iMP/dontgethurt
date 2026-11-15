@@ -1,6 +1,7 @@
 
 package com.lastimp.dgh.common.client.gui.screen;
 
+import com.lastimp.dgh.api.client.DGH_ClientAPI;
 import com.lastimp.dgh.common.capability.bodyPart.ConditionAccessor;
 import com.lastimp.dgh.common.PlatformService;
 import com.lastimp.dgh.common.capability.bodyPart.base.AbstractVisibleBody;
@@ -21,23 +22,22 @@ import com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition;
 import com.lastimp.dgh.common.capability.bodyPart.bodies.Torso;
 import com.lastimp.dgh.common.capability.HealthCapability;
 import com.lastimp.dgh.common.item.tool.HealthScanner;
-import com.lastimp.dgh.common.network.message.MyReadAllConditionData;
-import com.lastimp.dgh.common.entry.register.ModEffects;
 import com.lastimp.dgh.common.entry.register.ModSounds;
 import com.mojang.blaze3d.systems.RenderSystem;
+import lombok.Getter;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Inventory;
+import oshi.util.tuples.Pair;
 
 import java.util.HashMap;
+import java.util.List;
 
-import static com.lastimp.dgh.common.enums.OperationType.HEALTH_SCANN;
 import static com.lastimp.dgh.common.client.gui.component.HealthComponentWidget.*;
 import static com.lastimp.dgh.common.enums.BodyComponents.*;
 import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
@@ -60,6 +60,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
 
     protected final HashMap<BodyComponents, HealthComponentWidget> componentWidgets = new HashMap<>();
     protected final HashMap<ResourceLocation, HealthConditionWidget> conditionWidgets = new HashMap<>();
+    @Getter
     protected BodyComponents selectedComponent = null;
     protected static HealthCapability healthData = null;
     protected boolean onOrgan = false;
@@ -90,6 +91,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
             addConditionWidget(ConditionAccessor.get(key));
         }
         this.addHandPulseWidget(210, 166, 17, 16);
+        DGH_ClientAPI.beginCallingDataFromServer(this.menu.targetEntity, List.of(new Pair<>("update_screen", h -> healthData = h)));
     }
 
     protected void addHealthWidget(int x, int y, int width, int height, BodyComponents idx, ResourceLocation resource, ResourceLocation resourceLighted) {
@@ -258,7 +260,8 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
 
     @Override
     public void onClose() {
-        setHealthData(null);
+        DGH_ClientAPI.endCallingDataFromServer(this.menu.targetEntity, List.of("update_screen"));
+        healthData = null;
         GuiOpenWrapper.setHealthScreen(null);
         super.onClose();
     }
@@ -280,9 +283,7 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
             GuiOpenWrapper.closeScreen();
             return;
         }
-        PlatformService.NETWORK.sendToServer(MyReadAllConditionData.getInstance(
-                this.menu.targetEntity, 0, new CompoundTag(), HEALTH_SCANN
-        ));
+        DGH_ClientAPI.callForHealthDataFromServer(this.menu.targetEntity);
 
         if (healthData != null && (this.selectedComponent == null || !healthData.getComponent(this.selectedComponent).abnormal(RETRACTED_SKIN)) && this.onOrgan) {
             this.setOnOrgan(false);
@@ -320,11 +321,6 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
             cooldowns.addCooldown(autopulse, HealthScreen.healthData.getAutoPulseCoolDown());
     }
 
-    public void setHealthData(HealthCapability healthData) {
-        HealthScreen.healthData = healthData;
-        if (healthData != null) this.menu.setEquipments(healthData);
-    }
-
     private void setOnOrgan(boolean onOrgan) {
         this.onOrgan = onOrgan;
         this.menu.setOrganActive(onOrgan, (AbstractVisibleBody) healthData.getComponent(this.selectedComponent));
@@ -333,10 +329,6 @@ public class HealthScreen<T extends HealthMenu> extends AbstractContainerScreen<
         PlatformService.NETWORK.sendToServer(MyKeyPressedData.getInstance(
                 KeyPressedType.HEALTH_SCREEN_COMPONENT_SELECTION, componentIndex
         ));
-    }
-
-    public BodyComponents getSelectedComponent() {
-        return selectedComponent;
     }
 
     @Override

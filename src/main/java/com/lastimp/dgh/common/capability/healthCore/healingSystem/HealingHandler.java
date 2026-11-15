@@ -32,41 +32,45 @@ import static com.lastimp.dgh.common.enums.BodyComponents.HEAD;
 import static com.lastimp.dgh.common.capability.bodyPart.base.BodyCondition.*;
 
 public class HealingHandler {
-    public static void handleHealthMenuItemUse(HealthMenu healthMenu, final MyHealingItemUseData data, ServerPlayer sourcePlayer, LivingEntity target) {
+    public static HealingResult handleHealthMenuItemUse(HealthMenu healthMenu, final MyHealingItemUseData data, ServerPlayer sourcePlayer, LivingEntity target) {
         ItemStack stack = healthMenu.getStackBySlotNum(data.slotNum());
+        HealingResult result = HealingResult.SUCCESS;
         if (stack.is(ModTags.MEDICAL_TOOLS_SMALL_BAGS) && !stack.is(ModTags.MEDICAL_USAGE_BAGS)) {
             healthMenu.openBag(stack);
         } else {
             BodyComponents component = data.component().equals("NONE") ? null : BodyComponents.valueOf(data.component());
             if (stack.is(ModTags.MEDICAL_USAGE_BAGS)) {
-                BagHealerHandler.handleBagHealing(stack, sourcePlayer, target, component);
+                result = BagHealerHandler.handleBagHealing(stack, sourcePlayer, target, component);
             } else {
-                HealingHandler.useItemOn(stack, sourcePlayer, target, component);
+                result = HealingHandler.useItemOn(stack, sourcePlayer, target, component);
             }
             healthMenu.getSlot(data.slotNum()).setByPlayer(stack);
         }
+        return result;
     }
 
-    public static void handleMedicineBagMenuItemUse(BagMenu.MedicineSmallBag healthMenu, final MyHealingItemUseData data, ServerPlayer sourcePlayer, LivingEntity target) {
-        ItemStack stack = healthMenu.getStackBySlotNum(data.slotNum());
+    public static HealingResult handleMedicineBagMenuItemUse(BagMenu.MedicineSmallBag bagMenu, final MyHealingItemUseData data, ServerPlayer sourcePlayer, LivingEntity target) {
+        ItemStack stack = bagMenu.getStackBySlotNum(data.slotNum());
+        HealingResult result = HealingResult.SUCCESS;
         if (stack.getItem() instanceof PotionItem potionItem) {
             Utils.drop(potionItem.finishUsingItem(stack, target.level(), target), sourcePlayer);
         } else if (stack.getItem() instanceof AbstractDirectHealItems){
-            HealingHandler.useItemOn(stack, sourcePlayer, target, null);
+            result = HealingHandler.useItemOn(stack, sourcePlayer, target, null);
         }
-        healthMenu.getSlot(data.slotNum()).setByPlayer(stack);
+        bagMenu.getSlot(data.slotNum()).setByPlayer(stack);
+        return result;
     }
 
-    public static boolean useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, LivingEntity target, BodyComponents component) {
-        if (target == null) return false;
-        if (source.getCooldowns().isOnCooldown(itemStack.getItem())) return false;
+    public static HealingResult useItemOn(ItemStack itemStack, @NotNull ServerPlayer source, LivingEntity target, BodyComponents component) {
+        if (target == null) return HealingResult.NO_TARGET;
+        if (source.getCooldowns().isOnCooldown(itemStack.getItem())) return HealingResult.IN_COOLDOWN;
 
         if (handleCut(itemStack, target, component) || handleWrite(itemStack, target, source)) {
-            return true;
+            return HealingResult.SUCCESS;
         }
 
-        if (!(itemStack.getItem() instanceof AbstractHealingItem healingItem)) return false;
-        if (!healingItem.available(target, itemStack)) return false;
+        if (!(itemStack.getItem() instanceof AbstractHealingItem healingItem)) return HealingResult.NOT_HEALING_ITEM;
+        if (!healingItem.available(target, itemStack)) return HealingResult.ITEM_NOT_AVAILABLE;
 
         boolean success = false;
         if (healingItem instanceof AbstractDirectHealItems item) {
@@ -83,8 +87,9 @@ public class HealingHandler {
             } else {
                 itemStack.consume(1, target);
             }
+            return HealingResult.SUCCESS;
         }
-        return success;
+        return HealingResult.ITEM_USING_FAILED;
     }
 
     private static boolean handleCut(ItemStack itemStack, LivingEntity target, BodyComponents component) {

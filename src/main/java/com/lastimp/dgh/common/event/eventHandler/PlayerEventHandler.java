@@ -56,10 +56,8 @@ public class PlayerEventHandler {
         HealthCapability.getAndApply(player, newHealth -> {
             if (persistedTag.contains(key)) {
                 newHealth.deserialize(player.registryAccess(), persistedTag.getCompound(key));
-            } else {
-                newHealth.respawnDeserializeNBT(player.registryAccess(), persistedTag.getCompound(key));
+                persistedTag.remove(key);
             }
-            persistedTag.remove(key);
         });
         data.put(Player.PERSISTED_NBT_TAG, persistedTag);
     }
